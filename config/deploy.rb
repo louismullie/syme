@@ -1,5 +1,4 @@
 require 'rvm/capistrano'
-require 'bundler/capistrano'
 
 # Application configuration.
 set :application, 'asocial'
