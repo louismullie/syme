@@ -15,11 +15,11 @@ default_run_options[:pty] = true
 default_run_options[:pty] = true
 set :scm, :git
 set :scm_verbose, true
-set :repository, 'git@github.com:louismullie/asocial-showcase.git'
-set :branch, 'release'
+set :repository, 'git@github.com:louismullie/asocial-clean.git'
+set :branch, 'develop'
 
 # Deployment configuration.
-set :deploy_to, '/var/www/joinasocial.com'
+set :deploy_to, '/var/www/asocial.cc'
 set :deploy_via, :remote_cache
 
 set :ssh_options, { forward_agent: true }
