@@ -1,0 +1,28 @@
+#auth.container
+  .row
+    .span4.offset4
+      %h1 #{settings.app_title}
+
+      #auth-methods
+        %h3 Register or login
+
+        .well
+          %form#auth-form{method: 'post'}
+            .control-group
+              .controls
+                %input{type: 'text', name: 'email', placeholder: 'Email address'}
+
+            .control-group
+              .controls
+                %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
+
+            .control-group
+              .controls
+                %input{type: 'text', name: 'full_name', placeholder: 'Full name (Optional)'}
+
+            .control-group
+              .controls
+                %label.checkbox
+                  %input{type: 'checkbox', name: 'remember_me', checked: 'yes'} Remember me
+
+            %button.btn.btn-primary.btn-block{type: 'submit'} Continue

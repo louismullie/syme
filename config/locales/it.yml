@@ -1,0 +1,109 @@
+it:
+
+  # Locale configuration
+  html_lang: it
+  timestamp: Inviato il %d/%m/%Y a %H:%M
+
+  # Common words:
+  common_words:
+    username: &username Nome Utente
+    password: &password Password
+    password_confirm: &password_confirm Confirmazione
+    new_password: &new_password Nuova password
+
+  # Login
+  login:
+    username: *username
+    password: *password
+    login: Accesso
+
+  # Initialize
+  initialize:
+    text:
+      1: "Welcome to asocial."
+      2: "If you see this text, it means that you\'ve set up asocial correctly and that it connects to the mongo database."
+      3: "In order to log you in to asocial, the system will create a temporary user with administrative rights. You will then be able to change that username and password in the <b>Administration Panel</b>."
+      4: "The temporary credentials will be <code>admin</code> and <code>"
+      5: "</code>. Note them and them right away."
+    create_user: Nuovo Utente
+
+  # Navbar
+  navbar:
+    admin_panel: Amministrazione
+    account_settings: Impostazioni
+    logout: Uscire
+
+  # Feed uploader
+
+  feed_uploader:
+    uploadbutton: Upload o lasciare un file
+    cancelbutton: Cancelli
+    retrybutton: Riprova
+    failupload: Upload Mancato
+    dragzone: Lascia il file qui per l'upload
+    formatprogress_of: di
+    waitingforresponse: Caricamento...
+
+  # Feed
+  feed:
+    post: Post
+    comments: Commenti
+    show_hidden_comments: Mostra commenti nascosti
+    comment_post: Commenti il post
+    likes: "Piace a %d persone"
+    like: Mi Piace
+    unlike: Non mi piace piu
+    load_more: Carcica piu posts
+    delete_post_confirm: Vuoi veramente eliminare il post?
+    delete_comment_confirm: Vuoi veramente eliminare quel commento?
+
+  # Settings
+  settings:
+    title: Settings
+    text:
+      1: "Hello"
+      2: "Here you can change your account picture, your password, and delete your account along with everything you ever posted."
+    informations: Informations
+    settings: Settings
+    delete_account: Delete account
+    new_password: *new_password
+    password_confirm: *password_confirm
+    account_picture: Account Picture
+    upload_picture: Upload a new picture
+    update_button: Update
+
+  admin:
+    title: Administration panel
+    text:
+      1: "Hello"
+      2: "In this page, you can add, edit and delete users. Why nothing else? Because Asocial is meant to be as simple and straightforward as possible."
+    create_user: Create a user
+    invite_user: Invite a user
+    username: *username
+    password: *password
+    password_confirm: Confirmation
+    new_password: *new_password
+    privilege: Privilege
+    privilege_admin: Admin
+    privilege_mod: Mod
+    privilege_none: None
+    create: Create
+    actions: Actions
+    edit: Edit
+    update: Update
+    remove: Remove
+    last_active: Last active
+    posts: Posts
+    attachments: Attachments
+    abbr_posts: P
+    abbr_attachments: A
+
+  not_found:
+    title: 404
+    text: Oops! You've ended up somwhere weird :( It is most likely our fault.
+    button: "&lt; Go back home"
+
+  forbidden:
+    title: Forbidden
+    text: You do not have access to this page :(
+    button: "&lt; Go back home"

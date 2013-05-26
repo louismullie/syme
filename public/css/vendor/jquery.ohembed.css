@@ -1,0 +1,7 @@
+iframe {
+  width: 100%;
+  border: none;
+}
+iframe[width="1280"][height="720"] {
+  max-height: 354px;
+}

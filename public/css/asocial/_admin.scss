@@ -1,0 +1,56 @@
+.table-hover tbody tr.user-edit:hover td {
+  background-color: white;
+}
+
+td img.avatar {
+  padding-right: 5px;
+}
+
+tr.user-edit {
+  display: none;
+}
+
+.btn-group {
+  font-size: 20px;
+}
+
+tr.user-edit, tr.user-create, tr.user-invite {
+
+  td {
+    padding: 20px 0;
+  }
+
+  form {
+    margin: 0;
+
+    .pull-left {
+      width: 414px;
+    }
+
+    .pull-right {
+      padding-right: 45px;
+    }
+
+    .control-group:last-child {
+      margin-bottom: 0;
+
+      .controls {
+        line-height: 28px;
+      }
+    }
+
+    .controls .radio.inline {
+      padding-top: 0;
+    }
+  }
+}
+
+#create-user-button, #invite-user-button {
+  margin-bottom: 10px;
+}
+
+#create-user, #invite-user {
+  button.close {
+    margin-top: -2px;
+  }
+}

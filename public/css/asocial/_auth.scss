@@ -1,0 +1,35 @@
+#auth-methods {
+  form {
+    margin: 0;
+  }
+
+  button, input[type="submit"] {
+    height: 40px;
+  }
+
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    height: auto;
+
+    @include box-sizing;
+  }
+
+  label.checkbox {
+    // Temporary
+    display: none;
+  }
+
+  input[name="full_name"] {
+    display: none;
+  }
+
+  input[type="submit"] {
+    height: 40px;
+  }
+}
+
+#auth-form[data-registering] {
+  input[name="full_name"] {
+    display: inline-block;
+  }
+}

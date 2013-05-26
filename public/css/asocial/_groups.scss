@@ -1,0 +1,84 @@
+$groupPadding: 10px;
+
+#groups-container {
+  width: 100%;
+  display: table;
+
+  .group-row {
+    margin-left: -$groupPadding;
+    margin-right: -$groupPadding;
+
+    .group {
+      display: inline-block;
+
+      padding: $groupPadding;
+      @include box-sizing;
+
+      .group-infos {
+        position: absolute;
+        padding: 15px 15px 0 15px;
+
+        color: #FFF;
+
+        h4 {
+          margin: 0;
+
+          font-size: 20px;
+
+          a {
+            color: inherit;
+          }
+        }
+
+        p.user_count {
+          margin: 0;
+
+          font-size: 14px;
+        }
+      }
+
+      .group-photo {
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.9);
+      }
+
+      // Panel arrows
+      &.paneled {
+
+        @include arrow('top', 20px, 1px, 25px, #6f6b6c, rgba(255, 0, 0, 0.5));
+
+        &:before, &:after {
+          top: auto; bottom: -25px; left: 50%;
+        }
+
+        &:before {
+          margin-left: -20px;
+        }
+
+        &:after {
+          margin-left: -21px;
+        }
+      }
+    }
+  }
+
+  .group-panel-container {
+    height: 0px;
+
+    @include opacity(0);
+
+    .group-panel {
+      height: 0px;
+
+      position: absolute;
+      left: 0; right: 0;
+
+      @include opacity(0);
+
+      @include box-sizing;
+
+      border-top: 1px solid rgba(255, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(255, 0, 0, 0.5);
+      @include box-shadow(inset 0px 4px 6px -5px rgba(255, 0, 0, 0.5))
+    }
+  }
+}

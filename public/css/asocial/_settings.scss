@@ -1,0 +1,25 @@
+#account-picture-upload {
+  input {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  #main {
+    form.form-horizontal {
+      text-align: center;
+
+      &>div {
+        width: 360px;
+      }
+
+      .control-group > label {
+        text-align: center;
+      }
+
+      .last-active {
+        display: none;
+      }
+    }
+  }
+}

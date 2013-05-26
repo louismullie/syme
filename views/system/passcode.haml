@@ -1,0 +1,9 @@
+#passphrase-modal.custom-modal.container-fluid
+  .row-fluid
+    .passphrase-modal-inner.custom-modal-inner.span8.offset2
+      %i.icon-lock.huge-icon
+      %p.lead Please enter your secret passcode:
+      .control-group
+        %input{id: 'passphrase', type: 'password'}
+      %p
+        %a.btn{id: 'passphrase-submit'} Decrypt my content

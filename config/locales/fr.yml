@@ -1,0 +1,109 @@
+fr:
+
+  # Locale configuration
+  html_lang: fr
+  timestamp: Posté le %d/%m/%Y à %H:%M
+
+  # Common words:
+  common_words:
+    username: &username "Nom d'utilisateur"
+    password: &password Mot de passe
+    password_confirm: &password_confirm Confirmation
+    new_password: &new_password Nouveau mot de passe
+
+  # Login
+  login:
+    username: *username
+    password: *password
+    login: Se connecter
+
+  # Initialize
+  initialize:
+    text:
+      1: "Bienvenue sur asocial."
+      2: "Si vous voyez ce message, cela signifie que vous avez configuré asocial correctement et qu'il se connecte à la base de données mongo."
+      3: "Pour vous connecter à asocial, le système créera un utilisateur temporaire avec des droits administratifs. Vous pourrez ensuite changer son nom d'utilisateur et son mot de passe dans le  <b>Panneau d'administration</b>."
+      4: "Vos informations de connections temporaires seront <code>admin</code> et <code>"
+      5: "</code>. Notez-les par précaution."
+    create_user: Créer l'utilisateur
+
+  # Navbar
+  navbar:
+    admin_panel: Administration
+    account_settings: Paramètres du compte
+    logout: Se déconnecter
+
+  # Feed uploader
+
+  feed_uploader:
+    uploadbutton: Uploadez ou glissez un fichier
+    cancelbutton: Annuler
+    retrybutton: Réessayer
+    failupload: L'upload a échoué
+    dragzone: Glissez un fichier ici
+    formatprogress_of: sur
+    waitingforresponse: Upload en cours...
+
+  # Feed
+  feed:
+    post: Poster
+    comments: Commentaires
+    show_hidden_comments: Afficher les commentaires cachés
+    comment_post: Commenter ce post
+    likes: "%d j'aime"
+    like: "J'aime"
+    unlike: "Je n'aime plus"
+    load_more: Charger plus de posts
+    delete_post_confirm: Voulez-vous vraiment supprimer ce post?
+    delete_comment_confirm: Voulez-vous vraiment supprimer ce commentaire?
+
+  # Settings
+  settings:
+    title: Paramètres
+    text:
+      1: "Bonjour"
+      2: "Ici vous pouvez changer votre image de profil, votre mot de passe, et vous pouvez supprimer votre compte et tout votre contenu."
+    informations: Informations
+    settings: Paramètres
+    delete_account: Supprimer le compte
+    new_password: *new_password
+    password_confirm: *password_confirm
+    account_picture: Image de profil
+    upload_picture: Nouvelle image de profil
+    update_button: Mettre à jour
+
+  admin:
+    title: "Panneau d'administration"
+    text:
+      1: "Hello"
+      2: "Sur cette page, vous pouvez ajouter, modifier ou supprimer des utilisateurs. Pourquoi rien d'autre? Parce qu'asocial se veut le plus simple possible."
+    create_user: Créer un utilisateur
+    invite_user: Inviter un utilisateur
+    username: *username
+    password: *password
+    password_confirm: Confirmation
+    new_password: *new_password
+    privilege: Privilège
+    privilege_admin: Admin
+    privilege_mod: Mod
+    privilege_none: None
+    create: Créer
+    actions: Actions
+    edit: Éditer
+    update: Mettre à jour
+    remove: Supprimer
+    last_active: Dernière activité
+    posts: Posts
+    attachments: Attachments
+    abbr_posts: P
+    abbr_attachments: A
+
+  not_found:
+    title: 404
+    text: "Oups! Vous avez abouti à un endroit étrange, et c'est sûrement de notre faute :("
+    button: "&lt; Retourner à l'accueil"
+
+  forbidden:
+    title: Accès interdit
+    text: Vous n'avez pas accès à cette page :(
+    button: "&lt; Retourner à l'accueil"

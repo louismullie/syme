@@ -1,0 +1,46 @@
+.navbar {
+  position: relative;
+  z-index: 1;
+
+  height: $navbarHeight;
+
+  .nav > li > a {
+    margin-top: 0 !important;
+    color: $navbartext;
+  }
+
+  .navbar-inner {
+    background-color: $navbar;
+  }
+}
+
+#notifications-container {
+  top: $navbarHeight - 5;
+  z-index: 2;
+
+  #notifications-content {
+    padding: 5px;
+    font-size: 13px;
+
+    & > p {
+      margin: 0;
+      line-height: $popoverRowHeight;
+      text-align: center;
+    }
+
+    .notification {
+      margin-top: 5px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #eee;
+
+      &:last-child{
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      .avatar {
+        width: 40px;
+      }
+    }
+  }
+}

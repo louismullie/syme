@@ -1,0 +1,32 @@
+.comment-box{id: '{{id}}', class: '{{hidden}}'}
+
+  -# Avatar
+  {{#with commenter}} {{> feed-avatar}} {{/with}}
+
+  -# Commenter name (will dynamically be put in .collapsable's first <p>)
+  %a.commenter-name{href: '#', 'data-tip' => '{{full_time}}'} {{commenter.name}}
+
+  -# Comment tools (will dynamically be put in .collapsable's first <p>)
+  %span.comment-tools
+    {{#with likeable}}
+    %a{ href: '#', 'data-tip' => '{{liker_names}}',
+        class: 'comment-likes tip-icon {{#if liked_by_user}}active{{/if}}' }
+      %span {{like_count}}
+
+      %i.icon-heart
+    {{/with}}
+
+    {{#if deletable}}
+    &sdot;
+    %a{href: '#', 'data-tip' => 'Delete comment', class: 'comment-delete tip-icon'}
+      %i.icon-remove
+    {{/if}}
+
+  .collapsable
+    -# Encrypted content. Will be replaced entirely by decrypted content
+    .encrypted
+      {"content": {{content}}, "key": "{{key}}"}
+
+    -# Encrypted notice. Will be removed on decryption
+    .encrypted_notice
+      %i This comment is encrypted.

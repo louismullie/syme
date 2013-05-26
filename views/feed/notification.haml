@@ -1,0 +1,17 @@
+.notification.media{id: '{{id}}'}
+
+  .pull-left
+  
+    {{#with avatar}}
+    {{> feed-avatar}}
+    {{/with}}
+    
+  .media-body
+  
+    .media
+    
+      {{{html}}}
+      
+      (
+      %a.clear-notification{href: '#'} ×
+      )

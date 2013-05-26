@@ -1,0 +1,21 @@
+%p
+  %b
+    {{t 'upload.attachment'}}:
+  
+  {{filename}}
+  
+  ({{to_readable_size size}})
+  
+  &sdot;
+  
+  %a.encrypted-file{href: '#', 
+                    'data-attachment-id'       => '{{id}}',
+                    'data-attachment-filename' => '{{filename}}',
+                    'data-attachment-size'     => '{{size}}',
+                    'data-attachment-key'      => '{{key}}'}
+    
+    {{filename}}
+    
+    %span.hidden.progress_container
+
+  ({{to_readable_size size}})

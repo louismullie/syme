@@ -1,0 +1,18 @@
+development:
+  sessions:
+    default:
+      database: asocial
+      hosts:
+        - localhost:27017
+production:
+  sessions:
+    default:
+      database: asocial
+      hosts:
+        - localhost:27017
+  options:
+    allow_dynamic_fields: false
+    identity_map_enabled: true
+    scope_overwrite_exception: true
+    raise_not_found_error: false
+    skip_version_check: true

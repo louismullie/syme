@@ -1,0 +1,156 @@
+en:
+
+  # Locale configuration
+  html_lang: en
+  timestamp: "%d/%m/%Y at %H:%M"
+
+  # Common words
+
+  common_words:
+    username: &username Username
+    password: &password Password
+    password_confirm: &password_confirm Confirmation
+    new_password: &new_password New password
+    first_name: &first_name First Name
+    last_name: &last_name Last Name
+
+  # Errors
+
+  errors:
+    validation: There are problems with your fields.
+    upload: There was a problem with the upload
+    invalid_filetype: The submitted file is not a supported format.
+    bad_credentials: These credentials do not exist.
+    invalid_token: This invitation token is not valid.
+    expired_token: This invitation has expired.
+
+  login:
+    username: *username
+    password: *password
+    login: Log in
+    secret: Secret
+
+  initialize:
+    welcome: "Welcome to asocial."
+    explanation: "Please enter a username and a password."
+    create_user: Create User
+
+  navbar:
+    admin_panel: Administration
+    account_settings: Account Settings
+    logout: Log out
+
+  feed_uploader:
+    uploadbutton: Upload or drop a file
+    cancelbutton: Cancel
+    retrybutton: Retry
+    failupload: Upload failed
+    dragzone: Drop files here to upload
+    formatprogress_of: of
+    waitingforresponse: Processing
+
+  feed:
+    placeholder: Write something here...
+    post: Post
+    comments: Comments
+    show_hidden_comments: Show hidden comments
+    comment_post: Comment this post
+    likes: "%d Likes"
+    like: Like
+    unlike: Unlike
+    load_more: Load more posts
+    delete_post_confirm: Do you really want to delete this post?
+    delete_comment_confirm: Do you really want to delete this comment?
+
+  settings:
+    title: Settings
+    welcome: Hello
+    explanation: "Here you can change your account picture, your password, and delete your account along with everything you ever posted."
+    informations: Informations
+    settings: Settings
+    delete_account: Delete account
+    first_name: *first_name
+    last_name: *last_name
+    new_password: *new_password
+    password_confirm: *password_confirm
+    account_picture: Account Picture
+    upload_picture: Upload a new picture
+    update_button: Update
+
+  admin:
+    title: Administration panel
+    text:
+      1: "Hello"
+      2: "In this page, you can add, edit and delete users. Why nothing else? Because Asocial is meant to be as simple and straightforward as possible."
+    create_user: Create a user
+    invite_user: Invite a user
+    invite: Invite
+    email: Email
+    username: *username
+    first_name: *first_name
+    last_name: *last_name
+    password: *password
+    password_confirm: Confirmation
+    new_password: *new_password
+    privilege: Privilege
+    privilege_admin: Admin
+    privilege_mod: Mod
+    privilege_none: None
+    create: Create
+    actions: Actions
+    edit: Edit
+    update: Update
+    remove: Remove
+    last_active: Last active
+    posts: Posts
+    attachments: Attachments
+    abbr_posts: P
+    abbr_attachments: A
+    join_network: 'Join this network'
+    join: 'Join'
+
+
+  not_found:
+    title: 404
+    text: Oops! You've ended up somewhere weird :( It is most likely our fault.
+    button: "Go back home"
+
+  forbidden:
+    title: Forbidden
+    text: You do not have access to this page :(
+    button: "&lt; Go back home"
+
+  upload:
+    drag_and_drop_files_here: Drag and drop files here or
+    choose_a_file: choose a file.
+    attachment: Attachment
+    image: Image
+    audio: Audio
+    video: Video
+
+  notifications:
+    notifications: Notifications
+    no_new_notifications: No new notifications.
+    liked_your: liked your
+    new_post: new post
+    a_post: a post
+    your_post: your post
+    post: post
+    comment: comment
+    also_commented_on: also commented on
+    commented_on: commented on
+    posted_a: posted a
+
+  user:
+    doesnt_look_like_a_name: This doesn't look like a name.
+    password_and_confirmation_mismatch: Password and confirmation do not match.
+    password_should_be_at_least: Password should be at least N characters.
+    username_should_contain_only: Username should contain only characters X.
+
+  new_content: New content
+
+  vocab:
+    and: and
+
+  send:
+    recipient_not_online: Can't transfer file because this user is not online.

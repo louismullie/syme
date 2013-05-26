@@ -1,0 +1,11 @@
+{{#if posts}} |
+  {{#each posts}} |
+    {{> feed-post}} |
+  {{/each}} |
+{{else}}
+
+.row.empty-group-notice
+  .span6.offset1
+    %h4 There are no posts yet. Break the ice!
+
+{{/if}}

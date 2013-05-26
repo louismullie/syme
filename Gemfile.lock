@@ -1,0 +1,181 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (3.2.12)
+      activesupport (= 3.2.12)
+      builder (~> 3.0.0)
+    activesupport (3.2.12)
+      i18n (~> 0.6)
+      multi_json (~> 1.0)
+    browser (0.1.6)
+    bson (1.8.4)
+    bson_ext (1.8.4)
+      bson (~> 1.8.4)
+    builder (3.0.4)
+    capistrano (2.14.2)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
+    closure (1.4.3)
+      rack (>= 1.0.0)
+    coderay (1.0.9)
+    commonjs (0.2.6)
+    content-security-policy (0.1.3)
+      rack (~> 1.4)
+    daemons (1.1.9)
+    em-hiredis (0.1.1)
+      hiredis (~> 0.4.0)
+    em-websocket (0.5.0)
+      eventmachine (>= 0.12.9)
+      http_parser.rb (~> 0.5.3)
+    eventmachine (1.0.3)
+    fifty (0.1.1)
+      haml
+      handlebars
+      i18n
+      json
+    foreman (0.62.0)
+      thor (>= 0.13.6)
+    gmail (0.4.0)
+      gmail_xoauth (>= 0.3.0)
+      mail (>= 2.2.1)
+      mime (>= 0.1)
+    gmail_xoauth (0.4.1)
+      oauth (>= 0.3.6)
+    haml (4.0.2)
+      tilt
+    handlebars (0.4.0)
+      commonjs (~> 0.2.3)
+      therubyracer (~> 0.11.1)
+    highline (1.6.16)
+    hiredis (0.4.5)
+    http_parser.rb (0.5.3)
+    i18n (0.6.4)
+    jsmin (1.0.1)
+    json (1.7.7)
+    kramdown (1.0.1)
+    libv8 (3.11.8.17)
+    mail (2.5.3)
+      i18n (>= 0.4.0)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+    memcache-client (1.8.5)
+    mime (0.1)
+    mime-types (1.22)
+    mongo (1.8.4)
+      bson (~> 1.8.4)
+    mongoid (3.1.2)
+      activemodel (~> 3.2)
+      moped (~> 1.4.2)
+      origin (~> 1.0)
+      tzinfo (~> 0.3.22)
+    moped (1.4.5)
+    multi_json (1.7.2)
+    net-scp (1.1.0)
+      net-ssh (>= 2.6.5)
+    net-sftp (2.1.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.6.6)
+    net-ssh-gateway (1.2.0)
+      net-ssh (>= 2.6.5)
+    nokogiri (1.5.9)
+    oauth (0.4.7)
+    origin (1.0.11)
+    polyglot (0.3.3)
+    pony (1.4)
+      mail (> 2.0)
+    rack (1.5.2)
+    rack-caniuse (0.0.3)
+      browser
+      json
+    rack-google-analytics (0.11.0)
+    rack-nocache (0.1.0)
+    rack-protection (1.5.0)
+      rack
+    rack-rewrite-matches (1.3.3)
+    rack-ssl (1.3.3)
+      rack
+    rack-test (0.6.2)
+      rack (>= 1.0)
+    rack_csrf (2.4.0)
+      rack (>= 0.9)
+    rake (10.0.4)
+    redis (3.0.3)
+    ref (1.0.4)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
+    rinku (1.7.2)
+    ruby-oembed (0.8.8)
+    sanitize (2.0.3)
+      nokogiri (>= 1.4.4, < 1.6)
+    sass (3.2.7)
+    sinatra (1.4.2)
+      rack (~> 1.5, >= 1.5.2)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    sinatra-assetpack (0.1.7)
+      jsmin
+      rack-test
+      sinatra
+      tilt (>= 1.3.0)
+    slodown (0.1.3)
+      coderay (>= 1.0.0)
+      kramdown (>= 0.14.0)
+      rinku (>= 1.7.0)
+      ruby-oembed (~> 0.8.8)
+      sanitize (>= 2.0.0)
+    stripe (1.7.11)
+      multi_json (>= 1.0.4, < 2)
+      rest-client (~> 1.4)
+    therubyracer (0.11.4)
+      libv8 (~> 3.11.8.12)
+      ref
+    thin (1.5.1)
+      daemons (>= 1.0.9)
+      eventmachine (>= 0.12.6)
+      rack (>= 1.0.0)
+    thor (0.18.1)
+    tilt (1.3.7)
+    treetop (1.4.12)
+      polyglot
+      polyglot (>= 0.3.1)
+    tzinfo (0.3.37)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bson_ext
+  capistrano
+  closure
+  content-security-policy
+  em-hiredis (~> 0.1.1)
+  em-websocket
+  fifty
+  foreman
+  gmail
+  hiredis
+  i18n
+  json (>= 1.7.7)
+  memcache-client
+  mongo
+  mongoid
+  pony
+  rack (>= 1.5.2)
+  rack-caniuse
+  rack-google-analytics
+  rack-nocache
+  rack-rewrite-matches
+  rack-ssl
+  rack_csrf
+  rake
+  redis
+  sass
+  sinatra
+  sinatra-assetpack
+  slodown
+  stripe
+  therubyracer
+  thin

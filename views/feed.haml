@@ -1,0 +1,35 @@
+.row
+  .span7.offset1
+
+    = haml :'feed/form'
+
+    .row
+      .feed-separator.span6.offset1 &nbsp;
+
+    #feed{ 'data-year' => '{{ year }}',
+           'data-month' => '{{ month }}' }
+
+      #newcontent
+        %a.btn{href: '#'} {{t 'new_content'}} (<span/>)
+
+      {{> error-alert}}
+
+      {{> feed-posts}}
+
+    #load-more
+      %a.btn{href: '#'} {{t 'feed.load_more'}}
+
+  #group-info.span3
+
+    %h1
+      {{group.name}}
+    
+    %a{:'data-tip' => 'Change your group picture'}
+      {{#with group.avatar}}
+      {{> groups-avatar}}
+      {{/with}}
+
+    %form
+      %input#group_avatar.hidden{type: 'file', name: 'avatar'}
+
+    {{> feed-users}}

@@ -1,0 +1,13 @@
+{{#if user.unread_notifications}}
+
+{{#each user.unread_notifications}}
+
+{{render_notification notification}}
+
+{{/each}}
+
+{{else}}
+
+%p {{t 'notifications.no_new_notifications'}}
+
+{{/if}}

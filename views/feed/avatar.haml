@@ -1,0 +1,9 @@
+{{#if placeholder}}
+
+%img.avatar{src: '/img/placeholder.gif'}
+
+{{else}}
+
+%img.avatar.encrypted-avatar{src: empty_image, 'data-user-id' => '{{id}}'}
+
+{{/if}}

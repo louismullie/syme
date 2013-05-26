@@ -1,0 +1,39 @@
+#invites
+  %h1 My invites
+
+  {{#if invites}}
+
+  {{#each invites}}
+  .invite
+    {{inviter_name}} has invited you to join his group "{{group_name}}".
+    %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'} Accept invitation.
+  {{/each}}
+
+  {{else}}
+  No pending invites.
+  {{/if}}
+
+#groups
+  %h1 My groups
+
+  {{#if groups}}
+
+  #groups-container
+    {{#each groups}}
+    .group
+      {{> groups-group}}
+    .group-panel{'data-palette' => '{{palette}}'}
+      .container
+        {{> groups-group_panel}}
+    {{/each}}
+
+  {{else}}
+  No groups.
+  {{/if}}
+
+%h1 Create group
+
+%form#create_group{method: 'post'}
+
+  Group name:
+  %input{type: 'text', name: 'name'}
