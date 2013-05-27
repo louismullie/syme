@@ -438,6 +438,19 @@ guard('crypto', {
   generateRandomHexSalt: function (words) {
     var words = words || 4;
     return sjcl.codec.hex.fromBits(sjcl.random.randomWords(words,0));
+  },
+  
+  testPEM: function () {
+    
+    var decryptedHexKey = PKCS5PKEY.getDecryptedKeyHex("-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,9388FB300C43FA748A7B3F6D2C576765\n\nW0dc/M4XISrMIxarDBVyUv1AXh9qYYiuiCKJCihaShjDNF9PhVDdzYLlEG+/Ex0E\nfzgpdJd2jzLiV+DDAbOT76XrkbyL0ld5bWlab1D5F196sfmGW39FufadVT6WaC5b\na3NfLpU+io3PZPm4VM6GbIubZlYOMwNl4cN5z/pyaJjtVHiYVq4rD4XIKcEAAW1X\n0lYzfYz6o7/PiZhUjICmcQ1XkvuF8KEaHrkKbYrEC1y/u0+RdxaRdIR5glG7z4Ot\nL4GJIykT6wrfQagsp+El63TI+1/LYVfAeZDnt9bKnn/OiJ6Xvbih4nisTEaKnqiW\n64aalxxownu/aqkzjq7w11RXWVb0vKy0FJUF6wHKrbZTXHlm0O9oPmxEZcp3zXqw\nsnkozbuy7PcGFHgzuZBJTtJK4wpuzj/zTJ+2Ph61vkJ74vywCPq2wbhXNOF4tXf+\npSwj25rWOhbgGKMtZlYKFt9q78SogXgj/27AIL0Br2QFFx1oMhk8K6euIWMweLZE\ngVrfDWk95pf/oIRpfGPZguJqFRtJ+GviQ9NKEFwvg90UbdfqFa78He2uisQp7NcE\nEQHmn9tLymlhjrkVLrxlighrPeUIp8wITGT/yre/qv/0VYSxqovyUX5wgMcMgm8F\n7WkD3uebuMuCMleOQFqnKfBvyyrfU8YGYA8gj+4RxjqCHHPfrl5AJIq2g57jcUU4\nH2seDySpULO3Lt7xsKFrxOX7sCS+sH0Gk5YAJFFfseLgr68EzDQVogbv4+hm8Dw0\nynlfNYwTWZnX3SlgX6Hq8Ro3XHq1It5bKVPkO2BrI1e+MFcBy/p8wEPwmvfCYeuX\nlX1KApLBp+a2BhrSdDMqIcU30XVihg4NweGvZi6B55I6gOPt3ExVegXAL0YHe7ky\nN4k8uDNmy1Er3/HALATg3DJEHkZthsSmVqotSMP5wOVClDv/C8lOcOErkKEg7coZ\nthl0HiDr+QPlY3UyYIu4nqRgVgboY7MCMAukIO4DY5uv3DtIomhsX/EmipDFw7m7\n1uCdPiWQ6WriRyd763gYTe9vlREje0kc2Fj1C2J1RLg6n7cHcnCrClj7PeqhLK7L\n4IqvT/tdzf/L8KL1RizJljDBPWEe+EqDdFCpKbdkix6h8oiQy9hGyW+8aYKzin0n\nc6UAURGDWGptAHPX5/Bi3OT0KzdizRM9nNrG45zw4DwbmQ8KxaZIHmy5FWYVfS+x\nz0c+J4wAFl96anX1SnwWnEBhovjri3divFAAfT6/5KfH7R5WkeCZSTNvkoEmOPuj\nW8I8N8lJzOzinY7EcwE7yMoPKJ+iB4flPCqzQ5zjfIhDd2S6GmQXXQhfLS0x2x+q\ntE5DR3sDxc/ugYlRpLzJrJYwnxFcJ5SE8gLphu15P+R5iRkxDcygetpPfOJjYBop\nsZ3mJsrV2OGKRMqEGLUZ3/TM9tYfKhtq2crcRZC+5GoG1s8lplM742hEHm/NM3+N\nmS0/GAKQ+r3AjNPX4brbzkmoJtoI7dIbDfyBZAV/ssZxRyW4jm/OcnI2fjvBeCp6\njTX+XvbZgRFvh3iOrARkHtxfXzne1egD4eApuB4jRxikzk4ZYnGRx6q90T1i5H4+\n-----END RSA PRIVATE KEY-----\n", "password");
+    
+    var rsa = new RSAKey();
+    rsa.readPrivateKeyFromASN1HexString(decryptedHexKey);
+    
+    var pem = PKCS5PKEY.getEryptedPKCS5PEMFromRSAKey(rsa, "password", "AES-128-CBC");
+    
+    return rsa;
+    
   }
 
 });

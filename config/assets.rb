@@ -58,7 +58,8 @@ assets do
   js :vendor, '/js/vendor.js', [
     # Require jQuery before everything.
     '/js/vendor/jquery-1.9.1.min.js',
-    '/js/vendor/underscore.js',
+    '/js/vendor/rsa.js',
+    '/js/vendor/yahoo.min.js',
     # Require all other vendor scripts.
     '/js/vendor/*.js'
   ]
