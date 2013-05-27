@@ -32,7 +32,7 @@ post '/login/1' do
     session[:A] = params[:A].to_i
     session[:B] = bb
 
-    track @user, 'User started login'
+    track user, 'User started login'
     
     { status: 'ok', salt: salt, 'B' => bb.to_s }.to_json
 
@@ -80,7 +80,7 @@ post '/login/2' do
 
     data = { user_id: user.id, status: 'ok' }
 
-    track @user, 'User completed login'
+    track user, 'User completed login'
     
     data.to_json
 
