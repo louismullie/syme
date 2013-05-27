@@ -30,38 +30,17 @@ role :web, location
 role :app, location
 role :db, location, primary: true
 
-after 'deploy:update', 'bundle:install'
-after 'deploy:update', 'foreman:export'
-after 'deploy:update', 'foreman:restart'
-
-# Bundler tasks.
-namespace :bundle do
-  
-  desc "Installs the application dependencies"
-  task :install, :roles => :app do
-    run "cd #{current_path} && bundle --without development test"
-  end
-  
-end
+after 'deploy:update', 'deploy:restart'
 
 # Post-deploy tasks.
 namespace :deploy do
 
   desc "Start the application services"
-  task :start, roles: :app do
+  task :restart, roles: :app do
 
     run "cd #{release_path}"
     run "export ENVIRONMENT=PRODUCTION "
-    run "bundle install"
-    run "thin start --servers 3"
-
-  end
- 
-  desc "Stop the application services"
-  task :stop, roles: :app do
-    run "kill $(lsof -i :3000 -t)"
-    run "kill $(lsof -i :3001 -t)"
-    run "kill $(lsof -i :3002 -t)"
+    
   end
 
 end

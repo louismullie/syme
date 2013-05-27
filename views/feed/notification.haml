@@ -2,9 +2,11 @@
 
   .pull-left
   
-    {{#with avatar}}
-    {{> feed-avatar}}
-    {{/with}}
+    {{#if has_avatar}}
+      {{#with avatar}}
+      {{> feed-avatar}}
+      {{/with}}
+    {{/if}}
     
   .media-body
   

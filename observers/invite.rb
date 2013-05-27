@@ -13,9 +13,6 @@ class InviteObserver < Mongoid::Observer
     
     if invite.state == 2
       
-      # Send e-mail requesting confirmation.
-      # request_confirm(inviter, invitee, invite.token)
-      
       inviter.notify({
         action: :request_invite_confirm,
         create: {

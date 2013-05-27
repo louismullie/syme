@@ -17,6 +17,8 @@ post '/groups/create', auth: [] do
   @user.memberships << membership
   @user.save!
 
+  membership.save!
+  
   track @user, 'Created a new group'
   
   content_type :json

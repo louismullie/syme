@@ -3,8 +3,11 @@ require 'sinatra/base'
 
 $root = File.dirname(__FILE__)
 
-if ENV['PRODUCTION'] == 'YES'
-
+if ENV['RACK_ENV'] == 'PRODUCTION'
+  
+  $env = :production
+  
+=begin
   $env, $secure = :production, true
 
   # Enforce SSL for all connections.
@@ -45,6 +48,7 @@ if ENV['PRODUCTION'] == 'YES'
     'webworkers'
   ]
 
+=end
 
 else
 

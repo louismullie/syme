@@ -21,6 +21,7 @@ post '/:group/invite/send', auth: [] do |group|
   invite.save!
   
   track @user, 'Invited a new group member'
+  send_invite(invite.email, token)
 
   content_type :json
 
@@ -80,7 +81,10 @@ post '/invite/accept' do
 
   invite.state = 2
   invite.save!
-
+  
+  # Send e-mail requesting confirmation.
+  request_confirm(invite)
+  
   track @user, 'Accepted a group invitation'
 
   # Inviter
@@ -138,7 +142,7 @@ post '/invite/confirm', auth: [] do
   invitee = invite.invitee
   inviter = invite.inviter
   
-  # notify_confirmed(inviter, invitee)
+  notify_confirmed(invite)
    
   membership = Membership.create
 

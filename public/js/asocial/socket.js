@@ -110,6 +110,10 @@ guard('socket', {
 
     notification: function(data){
       
+      if ($('#notifications-content').children().length == 0) {
+        $('#notifications-content').html('');
+      }
+      
       var html = Fifty.render('feed-notification', {
         html: asocial.helpers.notificationText(data),
         avatar: data.avatar,
