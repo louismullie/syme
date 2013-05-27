@@ -1,1 +1,1 @@
-use Rack::GoogleAnalytics, tracker: 'UA-39143794-1'
+Analytics.init(secret: 'ov5t9tashcudr6xid5ts')

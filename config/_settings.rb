@@ -15,4 +15,3 @@ set root: $root
 if $env == :development
   set :reload_templates, true
 end
-

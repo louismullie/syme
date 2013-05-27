@@ -41,7 +41,9 @@ post '/:group/file/upload/create', auth: [] do |group|
     transfer.save!
   end
 =end
-
+  
+  track @user, 'Uploaded a new file'
+  
   content_type :json
 
   { status: 'ok',

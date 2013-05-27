@@ -14,6 +14,8 @@ post '/:group/:model/delete', auth: [] do |group, model|
 
   halt 403 unless resource.deletable_by? @user
 
+  track @user, 'User deleted post'
+  
   resource.destroy
 
 end
@@ -34,11 +36,15 @@ post '/:group/:model/like/:operation', auth: [] do |group, model, operation|
       like.save!
     end
 
+    track @user, 'User liked ' + model
+    
   elsif operation == 'delete'
 
     if like = likeable.likes.where(owner_id: @user._id)
       like.destroy
     end
+    
+    track @user, 'User unliked ' + model
 
   end
 

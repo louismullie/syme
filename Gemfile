@@ -87,6 +87,10 @@ gem 'pony'
 # * Payment * #
 gem 'stripe'
 
+# * Analytics * #
+gem 'analytics-ruby',
+  require: 'analytics-ruby'
+
 # * Deployment *#
 gem 'capistrano'
 gem 'rvm-capistrano'

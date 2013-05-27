@@ -19,6 +19,8 @@ post '/:group/invite/send', auth: [] do |group|
   )
 
   invite.save!
+  
+  track @user, 'Invited a new group member'
 
   content_type :json
 
@@ -60,7 +62,7 @@ end
 
 # Step 2. User accepts invite.
 post '/invite/accept' do
-
+  
   token, user_id = params[:token], params[:user_id]
 
   invite = Invite.where(token: token).first
@@ -78,6 +80,8 @@ post '/invite/accept' do
 
   invite.state = 2
   invite.save!
+
+  track @user, 'Accepted a group invitation'
 
   # Inviter
   inviter = @group.users.find(invite.inviter_id)
@@ -149,6 +153,9 @@ post '/invite/confirm', auth: [] do
   membership.save!
   
   invitee.save!
+  
+  track @user, 'Confirmed a new group member'
+  
   content_type :json
   
   { status: 'ok' }.to_json
@@ -165,6 +172,8 @@ post '/invite/integrate', auth: [] do
   membership.save!
 
   @user.save!
+  
+  track @user, 'Succesfully integrated new group'
 
   content_type :json
 
@@ -182,7 +191,7 @@ post '/invite/update', auth: [] do
   m.save!
 
   content_type :json
-
+  
   { status: 'ok' }.to_json
 
 end
