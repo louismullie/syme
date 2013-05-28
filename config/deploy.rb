@@ -35,12 +35,16 @@ after 'deploy:update', 'deploy:restart'
 # Post-deploy tasks.
 namespace :deploy do
 
+
   desc "Start the application services"
+  
   task :restart, roles: :app do
 
-    run "cd #{release_path}"
-    run "export ENVIRONMENT=PRODUCTION "
-    
+    run "cd #{release_path} && "+
+        "export ENVIRONMENT=PRODUCTION &&" +
+        "bundle install && "+
+        "thin restart -C #{release_path}/config/thin.conf"
+
   end
 
 end
