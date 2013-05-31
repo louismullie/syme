@@ -11,13 +11,13 @@ post '/groups/create', auth: [] do
 
   group.memberships << membership
   group.users << @user
-  group.save!
-
+  
   @user.groups << @group
   @user.memberships << membership
-  @user.save!
 
   membership.save!
+  @user.save!
+  group.save!
   
   track @user, 'Created a new group'
   
