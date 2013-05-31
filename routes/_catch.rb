@@ -10,7 +10,9 @@ end
 
 get '/*' do |route|
 
-  # Fifty.compile_template_files
+  if $env == :development
+    Fifty.compile_template_files
+  end
   
   pass if request.xhr? or route.index('.js')
 
