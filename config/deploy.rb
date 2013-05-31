@@ -41,7 +41,7 @@ namespace :deploy do
   task :restart, roles: :app do
 
     run "cd #{release_path} && "+
-        "export ENVIRONMENT=PRODUCTION &&" +
+        "export RACK_ENV=DEVELOPMENT &&" +
         "bundle install && "+
         "thin restart -C #{release_path}/config/thin.conf"
 
