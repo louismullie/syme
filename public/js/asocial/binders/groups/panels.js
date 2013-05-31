@@ -57,89 +57,89 @@ asocial.binders.add('groups', { panels: function() {
   });
 
   // Style color scheme according to dominant and median colors
-  $('.group-panel').each(function(){
+  //$('.group-panel').each(function(){
 
-    // Get the palette
-    var palette = $(this).data('palette');
+  //  // Get the palette
+  //  var palette = $(this).data('palette');
 
-    // Color shortcuts
-    var colors = { dominant: palette[0], median: { first:  palette[1], second: palette[2] } };
+  //  // Color shortcuts
+  //  var colors = { dominant: palette[0], median: { first:  palette[1], second: palette[2] } };
 
-    // Get indexes of current element
-    var row     = $(this).parent().data('row'),
-        column  = $(this).data('column');
+  //  // Get indexes of current element
+  //  var row     = $(this).parent().data('row'),
+  //      column  = $(this).data('column');
 
-    // Create CSS selectors
-    var panelSelector = '#groups-container .group-panel-container[data-row="' + row + '"] .group-panel[data-column="' + column + '"]',
-        groupSelector = '#groups-container .group-row[data-row="' + row + '"] .group[data-column="' + column + '"]';
+  //  // Create CSS selectors
+  //  var panelSelector = '#groups-container .group-panel-container[data-row="' + row + '"] .group-panel[data-column="' + column + '"]',
+  //      groupSelector = '#groups-container .group-row[data-row="' + row + '"] .group[data-column="' + column + '"]';
 
-    // Style elements
-    jss(panelSelector).add({
-      'background-color': colors.dominant,
-      //'border-color': transparencize(colors.median.first, 0.5),
-      'box-shadow': 'inset 0px 4px 6px -5px ' + colors.median.first
-    });
-    jss(panelSelector + ' h3').add({
-      'color': colors.median.first
-    });
-    jss(panelSelector + ' p').add({
-      'color': colors.median.second
-    });
-    jss(groupSelector + '::before').add({
-      'border-bottom-color': colors.dominant
-    });
-    jss(groupSelector + '::after').add({
-      'border-bottom-color': colors.median.first
-    });
+  //  // Style elements
+  //  jss(panelSelector).add({
+  //    'background-color': colors.dominant,
+  //    //'border-color': transparencize(colors.median.first, 0.5),
+  //    'box-shadow': 'inset 0px 4px 6px -5px ' + colors.median.first
+  //  });
+  //  jss(panelSelector + ' h3').add({
+  //    'color': colors.median.first
+  //  });
+  //  jss(panelSelector + ' p').add({
+  //    'color': colors.median.second
+  //  });
+  //  jss(groupSelector + '::before').add({
+  //    'border-bottom-color': colors.dominant
+  //  });
+  //  jss(groupSelector + '::after').add({
+  //    'border-bottom-color': colors.median.first
+  //  });
 
-  });
+  //});
 
   /* EVENTS */
 
   // Bind panel toggling to groups
-  $('#main').on('click', '.group > a', function(){ console.log()
+  //$('#main').on('click', '.group > a', function(){
 
-    // Get indexes
-    var column_i = $(this).closest('.group').data('column'),
-        row_i    = $(this).closest('.group-row').data('row');
+  //  // Get indexes
+  //  var column_i = $(this).closest('.group').data('column'),
+  //      row_i    = $(this).closest('.group-row').data('row');
 
-    // Get elements
-    var group                 = $(this).closest('.group');
-        group_panel_container = $('.group-panel-container[data-row="' + row_i + '"]'),
-        group_panel           = group_panel_container.find('.group-panel[data-column="' + column_i + '"]');
+  //  // Get elements
+  //  var group                 = $(this).closest('.group');
+  //      group_panel_container = $('.group-panel-container[data-row="' + row_i + '"]'),
+  //      group_panel           = group_panel_container.find('.group-panel[data-column="' + column_i + '"]');
 
-    // Close every other .group-panel-container
-    $('.group-panel-container').not('[data-row="' + row_i + '"]')
-      .css(styles.closedContainerStyle)
-      .data('opened', false);
+  //  // Close every other .group-panel-container
+  //  $('.group-panel-container').not('[data-row="' + row_i + '"]')
+  //    .css(styles.closedContainerStyle)
+  //    .data('opened', false);
 
-    // Close every .group-panel
-    $('.group-panel').css(styles.closedPanelStyle);
+  //  // Close every .group-panel
+  //  $('.group-panel').css(styles.closedPanelStyle);
 
-    // Remove active style (and arrow) from every .group
-    $('.group').removeClass('paneled');
+  //  // Remove active style (and arrow) from every .group
+  //  $('.group').removeClass('paneled');
 
-    // Calculate group's relative position
-    var group_offset = group.position().top;
+  //  // Calculate group's relative position
+  //  var group_offset = group.position().top;
 
-    // Scroll to group
-    $("html, body").animate({ scrollTop: group_offset - 5 }, 200);
+  //  // Scroll to group
+  //  $("html, body").animate({ scrollTop: group_offset - 5 }, 200);
 
-    // Open .group-panel-container and panel simultenaously
-    group_panel_container
-      .transition(styles.openedContainerStyle, 500, 'snap');
+  //  // Open .group-panel-container and panel simultenaously
+  //  group_panel_container
+  //    .transition(styles.openedContainerStyle, 500, 'snap');
 
-    // Animate or display panel whether or not its container was already opened
-    group_panel_container.data('opened') ?
-      group_panel.css(styles.openedPanelStyle) :
-      group_panel.transition(styles.openedPanelStyle, 500, 'snap') ;
+  //  // Animate or display panel whether or not its container was already opened
+  //  group_panel_container.data('opened') ?
+  //    group_panel.css(styles.openedPanelStyle) :
+  //    group_panel.transition(styles.openedPanelStyle, 500, 'snap') ;
 
-    // Add arrow
-    group.addClass('paneled');
+  //  // Add arrow
+  //  group.addClass('paneled');
 
-    // Mark .group-panel-container as opened
-    group_panel_container.data('opened', true);
+  //  // Mark .group-panel-container as opened
+  //  group_panel_container.data('opened', true);
 
-  });
+  //});
 
 } }); // asocial.binders.add();
