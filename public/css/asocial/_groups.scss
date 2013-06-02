@@ -64,7 +64,7 @@ $groupPadding: 10px;
   .group-panel-container {
     height: 0px;
 
-    @include opacity(0);
+    opacity: 0;
 
     .group-panel {
       height: 0px;
@@ -72,7 +72,7 @@ $groupPadding: 10px;
       position: absolute;
       left: 0; right: 0;
 
-      @include opacity(0);
+      opacity: 0;
 
       @include box-sizing;
 

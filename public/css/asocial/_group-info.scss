@@ -5,7 +5,6 @@
     @include box-sizing;
 
     border: 1px solid #FFF;
-    @include border-radius(3px);
-    @include asocial-shadow;
+    border-radius: 3px;
   }
 }

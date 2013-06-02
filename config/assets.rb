@@ -72,9 +72,6 @@ assets do
 
   # Vendor CSS
   css :vendor, '/css/vendor.css', [
-    # Bootstrap
-    '/css/vendor/bootstrap/bootstrap.css',
-    '/css/vendor/bootstrap/responsive.css',
     # Font Awesome
     '/css/vendor/font-awesome.css',
     # JQuery OhEmbed plugin styles.

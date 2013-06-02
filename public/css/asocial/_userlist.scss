@@ -114,7 +114,7 @@
         img {
           width: 100%;
 
-          @include border-radius(3px);
+          border-radius: 3px;
         }
 
         &.invite-toggle {

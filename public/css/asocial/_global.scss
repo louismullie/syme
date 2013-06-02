@@ -1,134 +1,67 @@
-/* BASIC ELEMENTS */
+body {
+  padding: $bodyPadding 0;
 
-  body {
-    padding: 20px 0 10px 0;
+  background: $bodyBackgroundColor;
 
-    background: $bodyBackground;
+  font: $baseFont;
 
-    &.noscroll {
-      overflow: hidden !important;
-    }
+  &.noscroll {
+    // Locks scroll on document only
+    overflow: hidden !important;
   }
+}
 
-  a {
-    color: $linkColor;
-    text-decoration: none;
+a {
+  color: $linkColor;
+  text-decoration: none;
 
-    &:hover {
-      color: $linkColor;
-      text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
   }
+}
 
-  p {
-    line-height: $lineHeight;
+code, .code {
+  font-family: $codeFontFamily;
+}
+
+canvas {
+  // Hide canvas without display:none;
+  // to prevent dom exceptions
+  max-height:1px;
+  position:absolute;
+  top:-1px;
+  visibility:hidden;
+}
+
+.hidden {
+  display: none;
+}
+
+.hide-text {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+// CSS Tips for icons
+[data-tip].tip-icon {
+  &:before {
+    left: 0;
   }
-
-  code, .code {
-    font-family: $fontCode;
+  &:after {
+    left: -6px;
   }
+}
 
-  canvas {
-    position:absolute;
-    max-height:50px;
-    top:-50px;
-    visibility:hidden;
-  }
+h1.enormous {
+  font-size: 80px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 0 30px rgba(0, 0, 0, .075);
+}
 
-/* HELPER CLASSES */
-
-  .hidden {
-    display: none
-  }
-
-  // Form validation
-
-  ul[role="alert"] {
-    margin-left: 0;
-    font-size: 0.9em;
-
-    li {
-      line-height: 1.3em;
-    }
-  }
-
-  // CSS Tips for icons
-
-  [data-tip].tip-icon {
-    &:before {
-      left: 0;
-    }
-    &:after {
-      left: -6px;
-    }
-
-  }
-
-  // Homemade jumbotron
-
-  h1.enormous {
-    font-size: 80px;
-    font-weight: bold;
-    letter-spacing: -1px;
-    line-height: 1;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 0 30px rgba(0, 0, 0, .075);
-  }
-
-  // Flat popovers
-
-  .flat-popover {
-    position: absolute;
-    display: none;
-
-    width: $popoverWidth;
-
-    @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075));
-
-    > h3 {
-      color: $popoverHeaderColor;
-      background-color: $popoverHeaderBackground;
-      line-height: $popoverHeaderHeight;
-
-      margin: 0;
-      padding: 8px 14px;
-      font-size: 14px;
-      font-weight: normal;
-
-      @include border-top-radius(2px);
-
-      @include arrow(top, 10px, 1px, 15px, $popoverHeaderBackground, transparent);
-    }
-
-    > div {
-      background-color: #FFFFFF;
-
-      @include border-bottom-radius(2px);
-      border: 1px solid $border1Color;
-      border-top: none;
-    }
-  }
-
-  .huge-icon {
-    font-size: 300px;
-    color: #FFF;
-    text-shadow: 0 0 20px #0088cc;
-  }
-
-  // Placeholder for loading images
-  img.avatar, img.group-photo {
-    @include inclined-stripes(transparent, 50px, rgba(0, 0, 0, .2));
-  }
-
-/* RESOLUTION AJUSTMENTS */
-
-  @media (max-width: 480px) {
-
-  }
-
-  @media (max-width: 767px) {
-
-  }
-
-  @media (max-width: 979px) {
-
-  }
+// Placeholder for loading images
+img.avatar, img.group-photo {
+  @include inclined-stripes(transparent, 50px, rgba(0, 0, 0, .2));
+}

@@ -1,18 +1,22 @@
-// Configuration
-@import "config",
-        "mixins",
-        "vendor/bootstrap/mixins";
+// Bourbon SCSS mixins
+@import "vendor/bourbon/bourbon";
 
-// Flat UI
-@import "vendor/flat-ui/flat-ui";
+// Normalizer and Foundation
+@import "vendor/foundation/normalize",
+        "vendor/foundation/foundation";
+
+// Configuration
+@import "config", "mixins";
+
+@import "asocial/modules/spaces",
+        "asocial/modules/popover";
 
 // Global styles
 @import "asocial/global",
         "asocial/navbar";
 
-// Route-specific
+// Specific styles
 @import "asocial/auth",
-        "asocial/admin",
         "asocial/groups",
         "asocial/feed",
         "asocial/userlist",
