@@ -17,6 +17,7 @@ guard('binders', {
   },
 
   bind: function(route) {
+    
     // Check function existence
     if(!$().binders[route]) return false;
 
@@ -83,54 +84,62 @@ guard('binders', {
 
     } else {
 
-      // Get the user's state (password key, user id, keypair) from server.
-      asocial.state.getState('user', function (authorized) {
+      if (asocial.state.system.logged_in) {
         
-        // Show login screen if the user's state cannot be supplied.
-        if (!authorized) { return _this.goToUrl('/', $('body')); }
-
-        // Authorize the user locally by checking for his keypair
-        // and authorizing from a locally stored password otherwise.
-        asocial.auth.authorizeForUser(function (authorized) {
-
-          // Show the login screen if the user can't be authorized.
+        // Get the user's state (password key, user id, keypair) from server.
+        asocial.state.getState('user', function (authorized) {
+        
+          // Show login screen if the user's state cannot be supplied.
           if (!authorized) { return _this.goToUrl('/', $('body')); }
 
-          // Get the user's socket after state and authorization are done.
-          asocial.socket.listen();
+          // Authorize the user locally by checking for his keypair
+          // and authorizing from a locally stored password otherwise.
+          asocial.auth.authorizeForUser(function (authorized) {
 
-          // If the route pertains to a group,
-          if (urlComponent.group)  {
+            // Show the login screen if the user can't be authorized.
+            if (!authorized) { return _this.goToUrl('/', $('body')); }
+            
+            // Get the user's socket after state and authorization are done.
+            asocial.socket.listen();
 
-            // Get the group's state (keylist, user list) from server.
-            asocial.state.getState('group', function (authorized) {
+            // If the route pertains to a group,
+            if (urlComponent.group)  {
 
-              // Authorize the user for the group by checking for
-              // ability to decrypt the group keylist.
-              asocial.auth.authorizeForGroup( function (authorized) {
+              // Get the group's state (keylist, user list) from server.
+              asocial.state.getState('group', function (authorized) {
 
-                // Render the group route and callback.
-                _this.renderRoute(urlComponent, container);
-                callback();
+                // Authorize the user for the group by checking for
+                // ability to decrypt the group keylist.
+                asocial.auth.authorizeForGroup( function (authorized) {
 
-              });
+                  // Render the group route and callback.
+                  _this.renderRoute(urlComponent, container);
+                  callback();
 
-            // Pass the name of the group to getState().
-            }, { group: urlComponent.group });
+                });
 
-          // If the route pertains to a user,
-          } else {
+              // Pass the name of the group to getState().
+              }, { group: urlComponent.group });
 
-            // Just render the route and callback.
-            _this.renderRoute(urlComponent, container);
-            callback();
+            // If the route pertains to a user,
+            } else {
 
-          }
+              // Just render the route and callback.
+              _this.renderRoute(urlComponent, container);
+              callback();
+
+            }
+
+          });
 
         });
-
-      });
-
+        
+      } else {
+        
+        //$('body').html( Fifty.render('error-notfound') );
+        window.location = '/';
+        
+      }
     }
 
   },
@@ -240,12 +249,15 @@ guard('binders', {
           $.each(asocial.state.notifications, function (index, notification) {
             
             $('#notifications-content').append(
+              
               Fifty.render('feed-notification', {
                 html: asocial.helpers.notificationText(notification),
-                avatar: notification.avatar,
-                id: notification.id
+                owner: notification.owner
               })
+              
             );
+            
+            asocial.crypto.decryptAvatars();
 
           });
           

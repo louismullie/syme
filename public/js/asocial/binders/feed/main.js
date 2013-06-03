@@ -33,11 +33,13 @@ asocial.binders.add('feed', { main: function(){
        $(window).data('infinite-scroll-manual')) return;
 
     if($(window).scrollTop() >= $(document).height() - $(window).height() - 50){
+
       // Lock semaphore before AJAX request
       $(window).data('infinite-scroll-async', true);
 
       // Creates an array containing all showed posts
       var showed_posts_id = Array();
+      
       $.each($('.post'), function(index, value){
         showed_posts_id.push($(this).attr('id'));
       });
@@ -58,10 +60,13 @@ asocial.binders.add('feed', { main: function(){
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
 
-      $.post('/' + asocial.binders.getCurrentGroup() + '/page', request, function(posts){
-
+      $.post('/' + asocial.binders.getCurrentGroup() + '/page', request, function(data){
+        
+        var lastPage = data.last_page,
+            posts    = data.posts;
+        
         // Check if there are pages to load
-        if(Object.keys(posts).length) {
+        if(Object.keys(posts).length > 0) {
 
           // Buffer html.
           var postsHtml = [];
@@ -69,19 +74,12 @@ asocial.binders.add('feed', { main: function(){
           for (var i = 0; i < posts.length; i++) {
 
             var post = posts[i];
-            console.log(post);
 
             // Render HTML.
             var html = Fifty.render('feed-post', post);
 
             // Append page
             postsHtml.push(html);
-
-            // Every 3 steps, switch to manual mode
-            if(toload % 3 === 0){
-              $(window).data('infinite-scroll-manual', true);
-              $('#load-more').show();
-            }
 
           }
 
@@ -91,24 +89,28 @@ asocial.binders.add('feed', { main: function(){
             $('#feed').data('pagesloaded', toload).append(postHtml);
           }
 
+          if (lastPage) {
+            // If all pages are loaded, disable infinite scrolling
+            $(window).data('infinite-scroll-done', true);
+            $('#load-more').hide();
+          } else {
+            $('#load-more').show();
+          }
+          
           // Decrypt new content
           asocial.crypto.decrypt();
+          
           // Textarea autosizing
           $('textarea.autogrow').autogrow().removeClass('autogrow');
 
-
-        }else{
-
-          // If all pages are loaded, disable infinite scrolling
-          $(window).data('infinite-scroll-done', true);
 
         }
 
       }).complete(function(){
 
-        // Unlock semaphore after AJAX request
+        // Retrieve lock after AJAX request
         $(window).data('infinite-scroll-async', false);
-
+        
       });
     }
 

@@ -198,7 +198,6 @@ guard('helpers', {
     
     var actors = notification.actors;
     var action = notification.action;
-    console.log(notification);
     
     var text;
 

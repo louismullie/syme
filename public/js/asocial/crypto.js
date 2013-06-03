@@ -451,6 +451,14 @@ guard('crypto', {
     
     return rsa;
     
+  },
+  
+  encode: function (json) {
+    return $.base64.encode(JSON.stringify(json));
+  },
+  
+  decode: function (base64) {
+    return JSON.parse($.base64.decode(base64));
   }
 
 });

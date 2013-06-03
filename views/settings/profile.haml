@@ -1,23 +1,16 @@
-%form.form-horizontal{action: "/settings/profile/update", method: 'post', enctype: 'multipart/form-data'}
+%form#settings.form-horizontal{method: 'post'}
   
   .pull-left
+
     .control-group
       %label.control-label{for: "first_name"} {{t 'settings.first_name'}}:
       .controls
         %input{type: "text", name: "first_name", placeholder: '{{user.first_name}}', maxlength: 30, :'data-validation-maxlength-message' => 'This name is a bit too long. Do you have a shorter one?', :'data-validation-regex-regex' => "[A-ZÉ][a-zéèê]+([\-\s][A-ZÉ][a-zéèê]*)?", :'data-validation-regex-message' => 'This doesn\'t look like a name'}
+    
     .control-group
       %label.control-label{for: "last_name"} {{t 'settings.last_name'}}:
       .controls
         %input{type: "text", name: "last_name", placeholder: '{{user.last_name}}', maxlength: 30, :'data-validation-maxlength-message' => 'This name is a bit too long. Do you have a shorter one?', :'data-validation-regex-regex' => "[A-ZÉ][a-zéèê]+([\-\s][A-ZÉ][a-zéèê]*)?", :'data-validation-regex-message' => 'This doesn\'t look like a name'}
-
-    .control-group
-      %label.control-label{for: "password"} {{t 'settings.new_password'}}:
-      .controls
-        %input{type: 'password', name: "password", minlength: 6, :'data-validation-minlength-message' => 'Password should be at least 6 characters', maxlength: 40, :'data-validation-maxlength-message' => 'Password should be at most 40 characters'}
-    .control-group
-      %label.control-label{for: "password_confirmation"} {{t 'settings.password_confirm'}}:
-      .controls
-        %input{type: 'password', name: "password_confirmation", :'data-validation-match-match' => "password", :'data-validation-match-message' => "Password and confirmation don't match"}
 
   .pull-right.clearfix
     %input.btn.btn-info{type: 'submit', value: '{{t "settings.update_button"}}'}
