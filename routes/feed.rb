@@ -54,6 +54,22 @@ post '/:group/page', auth: [] do |group|
 
 end
 
+# For single-page view, feed with one post.
+get '/:group/posts/:id', auth: [] do |group,id|
+
+  @group = Group.where(name: group).first
+
+  # Pass if 404
+  pass if @group.nil?
+
+  content_type :json
+
+  posts = [@group.posts.find(id)]
+
+  FeedGenerator.generate(posts, @user, @group).to_json
+
+end
+
 get '/:group/archive/:year/?:month?', auth: [] do |group, year, month|
 
   @group = Group.where(name: group).first
