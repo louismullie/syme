@@ -1,37 +1,29 @@
-#topbar.container
-  .navbar.navbar-inverse
-    .navbar-inner
-      .container
-        %ul.nav
-          %li
-            %a{href: '/', :'data-hbs' => ''} #{settings.app_title}
+#navbar
+  .row
+    .small-12
+      %ul
+        %li
+          %a#brand{href: '/', :'data-hbs' => ''}
+            = settings.app_title
 
-          %li
-            %a#notifications-button{href: '#'}
-              %i.icon-inbox
+        %li
+          %a#notifications.btn{href: '#', 'data-popover' => 'notifications-container' }
+            %i.icon-bell-alt
 
-              %span.navbar-unread
-                {{notifications.count}}
+            {{#if notifications.count}}
+            %span.notification-badge {{notifications.count}}
+            {{/if}}
 
-            #notifications-container.flat-popover
-              %h3 Notifications
+          #notifications-container.popover
+            %h3 Notifications
 
-              #notifications-content
-                {{notifications.view}}
+            #notifications-content
+              {{notifications.view}}
 
-        %ul.nav.pull-right
-          {{#if user.is_admin}}
-
-          %li
-            %a{href: '/admin', :'data-hbs' => ''}
-              %i.icon-group
-
-          {{/if}}
-
-          %li
-            %a#settings{href: '/settings', :'data-hbs' => ''}
-              %i.icon-cog
-
-          %li
-            %a{href: '/logout'}
-              %i.icon-off
+//           %li
+//             %a#settings{href: '/settings', :'data-hbs' => ''}
+//               %i.icon-cog
+//
+//           %li
+//             %a{href: '/logout'}
+//               %i.icon-off

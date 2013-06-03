@@ -1,45 +1,79 @@
-// .navbar {
-//   position: relative;
-//   z-index: 1;
-//
-//   height: $navbarHeight;
-//
-//   .nav > li > a {
-//     margin-top: 0 !important;
-//     color: $navbartext;
-//   }
-//
-//   .navbar-inner {
-//     background-color: $navbar;
-//   }
-// }
+#navbar {
+  background: $bodyBackgroundColor2;
+  border-bottom: $baseBorderStyle;
 
-#notifications-container {
-  top: $navbarHeight - 5;
-  z-index: 2;
+  ul {
+    @extend .mvl;
 
-  #notifications-content {
-    padding: 5px;
+    list-style-type: none;
 
-    font-size: 90%;
+    li {
+      position: relative;
 
-    & > p {
-      margin: 0;
-      text-align: center;
-    }
+      display: inline-block;
+      vertical-align: middle;
 
-    .notification {
-      margin-top: 5px;
-      padding-bottom: 5px;
-      border-bottom: $baseBorderStyle;
+      margin-right: 2em; &:last-child{ margin-right: 0; }
 
-      &:last-child{
-        padding-bottom: 0;
-        border-bottom: none;
+      a#brand {
+        font: 600 1.5em $opensans;
+        line-height: 40px;
+
+        color: $black;
+
+        &:hover {
+          text-decoration: none;
+        }
       }
 
-      .avatar {
-        width: $avatarNotificationSize;
+      .btn {
+        line-height: 40px;
+
+        @extend .btn-white;
+
+        span.notification-badge {
+          height: 15px; width: 15px;
+
+          position: absolute;
+          top: -3px; right: -3px;
+
+          background: $danger;
+
+          line-height: 15px;
+          border-radius: 3px;
+
+          color: white;
+          font-size: 0.6em;
+          text-align: center;
+        }
+      }
+
+      #notifications-container {
+        #notifications-content {
+          padding: 5px;
+
+          font-size: 90%;
+
+          & > p {
+            margin: 0;
+            text-align: center;
+          }
+
+          .notification {
+            margin-top: 5px;
+            padding-bottom: 5px;
+            border-bottom: $baseBorderStyle;
+
+            &:last-child{
+              padding-bottom: 0;
+              border-bottom: none;
+            }
+
+            .avatar {
+              width: $avatarNotificationSize;
+            }
+          }
+        }
       }
     }
   }

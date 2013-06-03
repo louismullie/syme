@@ -17,19 +17,19 @@ guard('binders', {
   },
 
   bind: function(route) {
-    
+
     // Check function existence
     if(!$().binders[route]) return false;
 
     // Unbind everything
     this.unbind();
-    
+
     // Bind global
     $().binders['global']['main']();
 
     // Bind HBS navigation
     this.hbsNavigation();
-    
+
     // Execute every binded function to route
     var obj = $().binders[route], key;
     for (key in obj) {
@@ -38,7 +38,10 @@ guard('binders', {
   },
 
   unbind: function() {
-    
+
+    // Unbind global events
+    $(document).off();
+
     // Unbind page events
     $('#main').off();
 
@@ -85,10 +88,10 @@ guard('binders', {
     } else {
 
       if (asocial.state.system.logged_in) {
-        
+
         // Get the user's state (password key, user id, keypair) from server.
         asocial.state.getState('user', function (authorized) {
-        
+
           // Show login screen if the user's state cannot be supplied.
           if (!authorized) { return _this.goToUrl('/', $('body')); }
 
@@ -98,7 +101,7 @@ guard('binders', {
 
             // Show the login screen if the user can't be authorized.
             if (!authorized) { return _this.goToUrl('/', $('body')); }
-            
+
             // Get the user's socket after state and authorization are done.
             asocial.socket.listen();
 
@@ -133,12 +136,12 @@ guard('binders', {
           });
 
         });
-        
+
       } else {
-        
+
         //$('body').html( Fifty.render('error-notfound') );
         window.location = '/';
-        
+
       }
     }
 
@@ -204,7 +207,7 @@ guard('binders', {
       .on('click', 'a[data-hbs]', function(e) {
 
       e.preventDefault();
-      
+
       var parser = document.createElement('a');
       parser.href = e.currentTarget.href;
 
@@ -213,7 +216,7 @@ guard('binders', {
       } else {
         History.pushState({}, window.document.title, e.currentTarget.href);
       }
-     
+
 
     });
 
@@ -222,10 +225,10 @@ guard('binders', {
   /* ----- SHORTCUTS ----- */
 
   loadCurrentUrl: function (callback) {
-    
+
     this.loadUrl(window.location.href, callback);
   },
-  
+
   loadUrl: function(url, callback) {
 
     var _this = this;
@@ -243,31 +246,31 @@ guard('binders', {
       if (asocial.state.system.logged_in) {
         // Render HBS Container
         $('body').html( Fifty.render('container') );
-        
+
         asocial.state.getState('notifications', function () {
-          
+
           $.each(asocial.state.notifications, function (index, notification) {
-            
+
             $('#notifications-content').append(
-              
+
               Fifty.render('feed-notification', {
                 html: asocial.helpers.notificationText(notification),
                 owner: notification.owner
               })
-              
+
             );
-            
+
             asocial.crypto.decryptAvatars();
 
           });
-          
+
           if ($('#notifications-content').children().length == 0) {
             $('#notifications-content').html(
               Fifty.render('feed-notifications-empty'));
           }
-      
+
         });
-        
+
       } else {
         // If logged off, render in entire page
         container = $('body');

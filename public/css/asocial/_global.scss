@@ -1,14 +1,32 @@
 body {
-  padding: $bodyPadding 0;
-
   background: $bodyBackgroundColor;
 
   font: $baseFont;
+
+  // Hides selection globally
+  // @include user-select(none);
 
   &.noscroll {
     // Locks scroll on document only
     overflow: hidden !important;
   }
+}
+
+// Scrollbar
+*::-webkit-scrollbar {
+  width:8px !important
+}
+::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {
+  height:10px;
+  display:block;
+  background-color:transparent;
+}
+::-webkit-scrollbar-corner {
+  background-color:transparent;
+}
+::-webkit-scrollbar-thumb:vertical {
+  border-radius:6px;
+  background-color:rgba(0,0,0,0.2)
 }
 
 a {

@@ -1,0 +1,125 @@
+@mixin button-states($color) {
+  background-color: $color;
+
+  &:hover, &:focus {
+    background-color: scale-color($color, $lightness: 20%);
+  }
+
+  &:active, &.active {
+    background-color: scale-color($color, $lightness: -15%);
+  }
+}
+
+.btn {
+  display: inline-block;
+  padding: 0 1em;
+
+  background: $base;
+  color: $inverse;
+
+  font: $buttonFont;
+
+  line-height: 2.5em;
+
+  text-decoration: none;
+  text-shadow: none;
+  white-space: nowrap;
+  box-shadow: none;
+
+  border: none;
+  border-radius: $baseBorderRadius;
+
+  @include transition(background-color .25s, color .25s);
+
+  // States
+
+  &:hover, &:focus {
+    background-color: scale-color($base, $lightness: 20%);
+    color: $inverse;
+    text-decoration: none;
+  }
+
+  &:active, &.active {
+    background-color: scale-color($base, $lightness: -15%);
+    color: rgba($inverse, .75);
+    box-shadow: none;
+  }
+
+  &.disabled, &[disabled] {
+    background-color: $gray;
+    color: $inverse;
+  }
+
+  // Sizes
+
+  &.btn-large {
+    padding: 11px 19px;
+    padding-top: 13px;
+  }
+
+  // Color styles
+
+  &.btn-info    { @include button-states($info);     }
+  &.btn-danger  { @include button-states($danger);   }
+  &.btn-success { @include button-states($success);  }
+  &.btn-warning { @include button-states($warning);  }
+
+  &.btn-white {
+    margin: -1px;
+
+    background: white;
+    color: $gray;
+
+    border: $baseBorderStyle;
+
+    &:hover, &:focus {
+      color: darken($gray, 10%);
+    }
+
+    &:active, &.active {
+      color: darken($gray, 10%);;
+    }
+  }
+
+}
+
+// Include in the selector of an <a> containing a
+// span.default and a span.hover
+@mixin btn-slide($height, $backgroundColor: $firm) {
+  height: $height;
+
+  display: block;
+  overflow: hidden;
+
+  font-size: 18px;
+  text-align: center;
+
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+
+  background: transparentize($backgroundColor, 0.4);
+
+  border-radius: $baseBorderRadius;
+
+  @include transition(background 0.2s);
+
+  &:hover {
+    background: transparentize($backgroundColor, 0.1);
+
+    span.default {
+      margin-top: -$height;
+    }
+  }
+
+  span {
+    width: inherit;
+    height: inherit;
+
+    display: block;
+
+    color: white;
+    line-height: $height;
+
+    @include transition(margin-top 0.2s cubic-bezier(0, 0.8, 0.7, 1.6));
+  }
+}

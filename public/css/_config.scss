@@ -3,7 +3,7 @@
 $base:                    #2C3E50;
 $firm:                    #5FC0CE;
 
-$black:                   #34343f;
+$black:                   #423e3e;
 $gray:                    #BDC3C7;
 $darkgray:                #6F6B6C;
 $lightgray:               #ECF0F1;
@@ -46,9 +46,7 @@ $l:                       20px; // large
 
 $bodyPadding:             15px;
 $panelPadding:            70px;
-$baseBorderRadius:        6px;
-
-$navbarHeight:            60px + $bodyPadding * 2;
+$baseBorderRadius:        3px;
 
 $avatarPostSize:          70px;
 $avatarNotificationSize:  40px;
@@ -80,7 +78,7 @@ $codeFontFamily:          Consolas, Menlo, Monaco, "Lucida Console", "Liberation
 $baseFont:                normal 1em/1.5em $baseFontFamily;
 $brandFont:               600 3em/60px $opensans;
 
-$buttonFont:              normal 1.5em/2em $opensans;
+$buttonFont:              normal 1em $opensans;
 
 $h1Font:                  normal 3em/1.5em $opensans;
 $h2Font:                  200 2.25em/1.4em $opensans;

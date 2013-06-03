@@ -8,7 +8,8 @@
 // Configuration
 @import "config", "mixins";
 
-@import "asocial/modules/spaces",
+@import "asocial/modules/buttons",
+        "asocial/modules/spaces",
         "asocial/modules/popover";
 
 // Global styles
