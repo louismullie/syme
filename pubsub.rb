@@ -18,7 +18,7 @@ module Asocial
       end
 
     end
-
+ 
     def self.broadcast(group, action, model, data = nil)
 
       Asocial::Subscriber.connected_users(group).each do |user_id|
@@ -29,6 +29,8 @@ module Asocial
 
     def self.send_to(user_id, action, model, data)
 
+      warn 'Sending message to client'
+      
       data = { action: action,
       model: model, data: data }
 
@@ -84,6 +86,7 @@ module Asocial
       subscriber.subscribe(user_id)
       subscribers[user_id] ||= []
       subscribers[user_id] << out
+      warn out.inspect
       subscribers[user_id].length
 
     end

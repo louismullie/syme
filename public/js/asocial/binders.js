@@ -300,7 +300,7 @@ guard('binders', {
 
   getBinderFromRoute: function(route) {
     return  asocial.url.revertToDefault.indexOf(route) === -1 ?
-            route : asocial.url.defaultRoute;
+            route : asocial.url.defaultLoggedInRoute;
   }
 
 });

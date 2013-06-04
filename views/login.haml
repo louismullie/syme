@@ -4,10 +4,13 @@
       %h1 Asocial
 
       #auth-methods
-        %h3 Register or login
+        %h3 Login
+        %p
+          Don't have an account?
+          %a{href: '/register'} Register
 
         .well
-          %form#auth-form{method: 'post'}
+          %form#login-form{method: 'post'}
             .control-group
               .controls
                 %input{type: 'text', name: 'email', placeholder: 'Email address'}
@@ -18,11 +21,7 @@
 
             .control-group
               .controls
-                %input{type: 'text', name: 'full_name', placeholder: 'Full name (Optional)'}
-
-            .control-group
-              .controls
                 %label.checkbox
                   %input{type: 'checkbox', name: 'remember_me', checked: 'yes'} Remember me
 
-            %button.button.expand{href: '#', role: 'submit'} Continue
+            %button.button.expand{href: '#', role: 'submit'} Login

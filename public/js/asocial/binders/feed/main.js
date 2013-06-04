@@ -66,7 +66,8 @@ asocial.binders.add('feed', { main: function(){
             posts    = data.posts;
         
         // Check if there are pages to load
-        if(Object.keys(posts).length > 0) {
+        if(typeof(posts) !== 'undefined' &&
+           Object.keys(posts).length > 0) {
 
           // Buffer html.
           var postsHtml = [];
