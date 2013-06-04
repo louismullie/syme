@@ -60,16 +60,20 @@
       }
 
       #notifications-container {
+        padding-right: 7px;
         z-index: 3;
 
         #notifications-content {
+          max-height: 350px;
+
           padding: 5px;
+          overflow-y: auto;
 
           font-size: 90%;
 
           .notification {
-            margin-bottom: $bodyPadding / 2;
-            padding: 0 $bodyPadding ($bodyPadding / 2) $bodyPadding;
+            margin-bottom: 7px;
+            padding: 0 0 7px 7px;
 
             border-bottom: $baseBorderStyle;
 
@@ -83,6 +87,8 @@
             a.notification-time {
               display: inline-block;
               float: right;
+
+              cursor: help;
             }
           }
         }
