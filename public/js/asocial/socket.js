@@ -112,7 +112,10 @@ guard('socket', {
       
       if ($('#notifications-content').children().length == 0) {
         $('#notifications-content').html('');
+        $('#notifications').prepend('<span class="notification-badge"></a>');
       }
+      
+      $('.notification-badge').html(parseInt($('.notification-badge').html()) + 1);
       
       var html = Fifty.render('feed-notification', {
         html: asocial.helpers.notificationText(data),

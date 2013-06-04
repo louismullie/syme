@@ -260,13 +260,18 @@ guard('binders', {
 
             );
 
-            asocial.crypto.decryptAvatars();
-
           });
 
           if ($('#notifications-content').children().length == 0) {
+            
             $('#notifications-content').html(
               Fifty.render('feed-notifications-empty'));
+              
+          } else {
+          
+            $('#notifications')
+              .prepend('<span class="notification-badge">' + 
+                asocial.state.notifications.length + '</a>');
           }
 
         });

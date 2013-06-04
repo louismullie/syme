@@ -10,15 +10,10 @@
           %a#notifications.btn{ href: '#', 'data-popover' => 'notifications-container' }
             %i.icon-bell-alt
 
-            -# {{#if notifications.count}}
-            %span.notification-badge 8
-            -# {{/if}}
-
           #notifications-container.popover
             %h3 Notifications
 
             #notifications-content
-              {{notifications.view}}
 
         .pull-right
           %li

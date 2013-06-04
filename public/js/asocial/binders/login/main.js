@@ -24,7 +24,7 @@ asocial.binders.add('login', { main: function(){
           $('body').html( Fifty.render('container') );
 
           // Redirect to root, which is now group UI
-          asocial.binders.loadUrl('/');
+          asocial.binders.goToUrl('/');
 
         }, password);
 
