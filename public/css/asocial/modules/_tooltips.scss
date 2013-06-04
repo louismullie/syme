@@ -66,8 +66,13 @@ $tooltipDanger:   $danger;
     border-radius: 3px;
   }
 
+  // Right gravity
+  &.tip-right::after {
+    left: auto; right: $tooltipOffset;
+  }
+
   // Colors
-  .tip-info {
+  &.tip-info {
     &::before {
       border-top-color: rgba($tooltipInfo, $tooltipTransparency);
       border-right-color: transparent;
@@ -79,7 +84,7 @@ $tooltipDanger:   $danger;
     }
   }
 
-  .tip-success {
+  &.tip-success {
     &::before {
       border-top-color: rgba($tooltipSuccess, $tooltipTransparency);
       border-right-color: transparent;
@@ -91,7 +96,7 @@ $tooltipDanger:   $danger;
     }
   }
 
-  .tip-warning {
+  &.tip-warning {
     &::before {
       border-top-color: rgba($tooltipWarning, $tooltipTransparency);
       border-right-color: transparent;
@@ -103,7 +108,7 @@ $tooltipDanger:   $danger;
     }
   }
 
-  .tip-danger {
+  &.tip-danger {
     &::before {
       border-top-color: rgba($tooltipDanger, $tooltipTransparency);
       border-right-color: transparent;
