@@ -148,6 +148,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.37)
+    yajl-ruby (1.1.0)
 
 PLATFORMS
   ruby
@@ -164,7 +165,6 @@ DEPENDENCIES
   foreman
   hiredis
   i18n
-  json (>= 1.7.7)
   memcache-client
   mongo
   mongoid
@@ -186,3 +186,4 @@ DEPENDENCIES
   stripe
   therubyracer
   thin
+  yajl-ruby

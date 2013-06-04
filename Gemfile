@@ -9,7 +9,8 @@ gem 'rake'
 # * Application layer #
 
 gem 'sinatra'
-gem 'json', '>= 1.7.7'
+gem 'yajl-ruby',
+  require: 'yajl/json_gem'
 
 # * Rack middleware * #
 
