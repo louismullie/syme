@@ -1,13 +1,15 @@
 guard('url', {
 
   // Logged in domain root
-  defaultRoute: 'feed',
+  defaultLoggedInRoute: 'feed',
 
+  defaultLoggedOffRoute: 'register',
+  
   // Array containing routes that revert to defaultRoute
   revertToDefault: ['', '#', 'archive'],
 
   // Logged-off routes
-  loggedOffRoutes: ['auth'],
+  loggedOffRoutes: ['login', 'register'],
 
   // Logged-in, but not group-specific routes
   loggedInRoutes: ['settings'],
@@ -53,7 +55,7 @@ guard('url', {
 
       // Root directory
       route = asocial.state.system.logged_in ?
-        'groups' : 'auth';
+        'groups' : this.defaultLoggedOffRoute;
 
     } else if ( this.isLoggedInRoute(controller) ) {
 
@@ -71,7 +73,7 @@ guard('url', {
 
         // Logged-in, group-specific
         group = controller;
-        route = split_pathname[1] ? split_pathname[1] : this.defaultRoute;
+        route = split_pathname[1] ? split_pathname[1] : this.defaultLoggedInRoute;
 
       }
 

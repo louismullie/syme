@@ -1,0 +1,27 @@
+#auth.container
+  .row
+    .small-12.large-4.large-offset-4
+      %h1 Asocial
+
+      #auth-methods
+        %h3 Register
+        %p
+          Already have an account?
+          %a{href: '/login'} Login
+          
+        .well
+          %form#register-form{method: 'post'}
+          
+            .control-group
+              .controls
+                %input{type: 'text', name: 'full_name', placeholder: 'Display name'}
+
+              .control-group
+                .controls
+                  %input{type: 'text', name: 'email', placeholder: 'Email address'}
+
+              .control-group
+                .controls
+                  %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
+
+              %button.button.expand{href: '#', role: 'submit'} Register
