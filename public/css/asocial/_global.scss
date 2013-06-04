@@ -2,6 +2,7 @@ body {
   background: $bodyBackgroundColor;
 
   font: $baseFont;
+  color: $black;
 
   // Hides selection globally
   // @include user-select(none);
@@ -12,12 +13,17 @@ body {
   }
 }
 
+// Vertical alignment for nested block elements
+* {
+  vertical-align: top
+}
+
 // Scrollbar
 *::-webkit-scrollbar {
   width:8px !important
 }
 ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {
-  height:10px;
+  height:1px;
   display:block;
   background-color:transparent;
 }
@@ -49,6 +55,10 @@ canvas {
   position:absolute;
   top:-1px;
   visibility:hidden;
+}
+
+#main {
+  padding: ($bodyPadding + 80px) 0 0 $bodyPadding;
 }
 
 .hidden {

@@ -1,40 +1,35 @@
-#groups
-  %h1 My groups
-  #groups-container
-    {{#if invites}}
+#groups.row
+  .small-10.small-centered.columns
+    %ul
+      -# {{#if invites}}
+      -# {{#each invites}}
+      -# .group
+      -#   .group-infos
+      -#     // Otherwise, show group name
+      -#     %h4.group-name
+      -#       %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'} Accept invitation
+      -#   %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'}
+      -#     %img.group-photo{src: '/img/groupphoto.jpg', alt: 'Group avatar'}
+      -#     //%p.user_count {{user_count}} user(s)
+      -#     //{{inviter_name}} has invited you to join his group "{{group_name}}".
+      -# {{/each}}
+      -# {{/if}}
 
-    {{#each invites}}
-    .group
-      .group-infos
-        // Otherwise, show group name
-        %h4.group-name
-          %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'} Accept invitation
-      %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'}
-        %img.group-photo{src: '/img/groupphoto.jpg', alt: 'Group avatar'}
-        //%p.user_count {{user_count}} user(s)
-        //{{inviter_name}} has invited you to join his group "{{group_name}}".
-    
-    {{/each}}
+      {{#if groups}}
+      {{#each groups}}
 
-    {{/if}}
-  
-    {{#if groups}}
+      %li.group
+        {{> groups-group}}
 
-    {{#each groups}}
-    .group
-      {{> groups-group}}
-    //.group-panel{'data-palette' => '{{palette}}'}
-    //  .container
-    //   {{> groups-group_panel}}
-    {{/each}}
+      {{/each}}
+      {{else}}
 
-    {{else}}
-    No groups.
-    {{/if}}
+      No groups.
 
-%h1 Create group
+      {{/if}}
 
-%form#create_group{method: 'post'}
+  %form#create_group{method: 'post'}
+    %h1 Create group
 
-  Group name:
-  %input{type: 'text', name: 'name'}
+    Group name:
+    %input{type: 'text', name: 'name'}
