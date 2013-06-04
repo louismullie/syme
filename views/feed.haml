@@ -23,13 +23,13 @@
 
     %h1
       {{group.name}}
-    
+
     %a{:'data-tip' => 'Change your group picture'}
       {{#with group.avatar}}
       {{> groups-avatar}}
       {{/with}}
 
     %form
-      %input#group_avatar.hidden{type: 'file', name: 'avatar'}
+      %input#group-avatar-file-input.hidden{type: 'file', name: 'avatar'}
 
     {{> feed-users}}

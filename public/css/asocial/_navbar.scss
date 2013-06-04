@@ -88,11 +88,39 @@
               border-bottom: none;
             }
 
-            a.notification-time {
-              display: inline-block;
-              float: right;
+            p {
+              margin: 0;
+            }
 
-              cursor: help;
+            p.empty-notification {
+              color: $gray;
+              text-align: center;
+            }
+
+            p.notification-content {
+              a.notification-unread {
+                display: inline-block;
+                float: right;
+
+                padding-top: 1px; // lol
+
+                font-size: 0.9em;
+                color: $linkColor;
+                text-shadow: 0 1px 6px rgba($linkColor, 0.5);
+
+                @include transition(color 0.2s ease);
+
+                &:hover {
+                  text-decoration: none;
+                  color: lighten($linkColor, 15%);
+                }
+              }
+            }
+
+            p.notification-infos {
+              text-align: left;
+              font-size: 0.8em;
+              color: $darkgray;
             }
           }
         }

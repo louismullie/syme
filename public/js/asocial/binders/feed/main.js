@@ -13,11 +13,11 @@ asocial.binders.add('feed', { main: function(){
   $('#feed').data('pagesloaded', 1);
 
   // Group photo
-  $('.group-photo').on('click', function () {
-    $('#group_avatar').trigger('click');
+  $('.group-avatar').on('click', function () {
+    $('#group-avatar-file-input').trigger('click');
   });
 
-  $('#group_avatar').on('change',function(){
+  $('#group-avatar-file-input').on('change',function(){
 
     var filename = asocial.helpers.getFilename($(this).val());
     if (filename == '') { return; }
@@ -39,7 +39,7 @@ asocial.binders.add('feed', { main: function(){
 
       // Creates an array containing all showed posts
       var showed_posts_id = Array();
-      
+
       $.each($('.post'), function(index, value){
         showed_posts_id.push($(this).attr('id'));
       });
@@ -61,10 +61,10 @@ asocial.binders.add('feed', { main: function(){
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
 
       $.post('/' + asocial.binders.getCurrentGroup() + '/page', request, function(data){
-        
+
         var lastPage = data.last_page,
             posts    = data.posts;
-        
+
         // Check if there are pages to load
         if(typeof(posts) !== 'undefined' &&
            Object.keys(posts).length > 0) {
@@ -97,10 +97,10 @@ asocial.binders.add('feed', { main: function(){
           } else {
             $('#load-more').show();
           }
-          
+
           // Decrypt new content
           asocial.crypto.decrypt();
-          
+
           // Textarea autosizing
           $('textarea.autogrow').autogrow().removeClass('autogrow');
 
@@ -111,7 +111,7 @@ asocial.binders.add('feed', { main: function(){
 
         // Retrieve lock after AJAX request
         $(window).data('infinite-scroll-async', false);
-        
+
       });
     }
 

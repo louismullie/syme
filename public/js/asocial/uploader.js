@@ -54,40 +54,40 @@ guard('uploader', {
   uploadImage: function (file, progress) {
 
     var img = new Image();
-    
+
     var _this = this;
 
     img.onload = function () {
 
       var _that = this;
-      
+
       var callback = function (compressed) {
-        
+
         var size = _that.width.toString() + 'x' +
                    _that.height.toString();
-                   
+
         compressed.name = file.name;
         compressed.type = file.type;
         compressed.size = file.size;
-        
+
         _this.upload(
 
           compressed, { image_size: size }, progress,
 
           function(upload_id) {
-            
+
             _this.uploadThumbnail(file, upload_id);
-            
+
             $('#upload_id').val(upload_id);
-            
+
           }
-          
+
         );
 
       };
-      
+
       asocial.thumbnail.make(this, file.type, this.width, this.height, callback);
-      
+
     };
 
     img.onerror = function () {
@@ -193,7 +193,7 @@ guard('uploader', {
 
       asocial.thumbnail.make(
 
-        this, file.type, 300, 300, function (image) {
+        this, file.type, 350, 350, function (image) {
 
           var colors = getColors(img),
               dominant = arrayToRgb(colors[1]),
@@ -201,7 +201,7 @@ guard('uploader', {
 
           var data = {
             mode: 'group_avatar',
-            image_size: '300x300',
+            image_size: '350x350',
 
             dominant: dominant,
             first_median: median[0],

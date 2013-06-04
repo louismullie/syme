@@ -7,9 +7,9 @@
                    :'data-invite-k_sA' => '{{k_sA}}',
                    :'data-group-name' => '{{name}}'}
     {{name}}
-  
+
   {{else}}
-  
+
   {{#if new_keys}}
   // If there is an invite link, show it
   %a.update-link{href: '/{{name}}', :'data-hbs' => '',
@@ -23,10 +23,10 @@
     %a{href: '/{{name}}', :'data-hbs' => ''} {{name}}
     %a.delete-group{href: '#', :'data-group-id' => '{{id}}'} X
   {{/if}}
-  
+
   {{/if}}
 
-  %p.user_count {{user_count}} user(s)
+  %p.group-infos {{user_count}} user(s)
 
 %a{href: '#'}
   {{#with avatar}}

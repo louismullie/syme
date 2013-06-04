@@ -98,8 +98,8 @@ h1.enormous {
 }
 
 // Placeholder for loading images
-img.avatar, img.group-photo {
-  @include inclined-stripes(transparent, 50px, rgba(0, 0, 0, .2));
+img.encrypted-image, img.encrypted-avatar {
+  @include inclined-stripes(transparent, 25px, rgba(0, 0, 0, .2));
 }
 
 // Avatar styles and sizes

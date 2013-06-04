@@ -52,7 +52,8 @@ asocial.binders.add('global', { main: function(){
 
   });
 
-  $('.clear-notification').click(function (e) {
+  $('.notification-unread').click(function(e) {
+
     var id = $(this).closest('.notification').attr('id');
 
     $.ajax('/notifications/' + id, {
@@ -60,7 +61,8 @@ asocial.binders.add('global', { main: function(){
       type: 'delete',
 
       success: function () {
-        $(id).remove();
+        // For now
+        $('#' + id).remove();
       },
 
       error: function () {

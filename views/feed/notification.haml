@@ -1,7 +1,9 @@
 .notification{ id: '{{id}}' }
-  %a.notification-time.tip-right{ href: '#', 'title' => '{{created_at}}' }
-    %i.icon-calendar
+  %p.notification-content
+    %a.notification-unread{ href: '#', 'title' => '' }
+      %i.icon-circle
 
-  {{{html}}}
+    {{{html}}}
 
-  // (<a href="#" class="clear-notifications">x</a>)
+  %p.notification-infos
+    {{created_at}}

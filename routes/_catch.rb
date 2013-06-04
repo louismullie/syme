@@ -6,7 +6,7 @@ end
 
 get '/logout', auth: [] do
   session.clear
-  redirect '/'
+  redirect '/login'
 end
 
 get '/*' do |route|

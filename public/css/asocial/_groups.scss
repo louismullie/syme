@@ -10,6 +10,8 @@
     text-align: center;
 
     li.group-card {
+      width: 100%;
+
       display: inline-block;
 
       margin-bottom: $bodyPadding;
@@ -20,6 +22,30 @@
       border-radius: $baseBorderRadius;
 
       text-align: left;
+
+      h4.group-name {
+        margin: 0 0 0.5em 0;
+
+        a {
+          font: 200 1em/1.5em $opensans;
+          color: $black;
+
+          @include transition(color 0.2s ease);
+
+          &:hover {
+            color: lighten($black, 15%);
+            text-decoration: none;
+          }
+        }
+      }
+
+      p.group-infos {
+        font-size: 0.9em;
+      }
+
+      a.group-avatar {
+        width: 100%;
+      }
     }
   }
 }
