@@ -5,6 +5,8 @@ module Asocial
   
   class Application < Base
 
+    disable :protection # Hahaha
+    
     Bundler.require :default,
     settings.environment
 
@@ -38,7 +40,8 @@ module Asocial
     end
 
     Mongoid.observers = PostObserver, CommentObserver,
-    LikeObserver, NotificationObserver, InviteObserver
+    LikeObserver, NotificationObserver, InviteObserver,
+    UserObserver
 
     Mongoid.instantiate_observers
 

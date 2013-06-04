@@ -110,10 +110,13 @@ guard('socket', {
 
     notification: function(data){
       
+      if ($('#notifications-content').children().length == 0) {
+        $('#notifications-content').html('');
+      }
+      
       var html = Fifty.render('feed-notification', {
         html: asocial.helpers.notificationText(data),
-        avatar: data.avatar,
-        id: data.id
+        owner: data.owner
       });
       
       $('#notifications-content').prepend(html);
@@ -323,46 +326,66 @@ guard('socket', {
       asocial.crypto.decrypt();
 
   },
-
+  
+  tries: 0,
+  
   listen: function() {
 
-    var _this = this;
+    if (typeof(window.tries) == 'undefined') {
+      window.tries = 0;
+    }
 
+    var _this = this;
+    
     try {
 
       if (typeof(document.eventSource) == 'undefined' ||
          document.eventSource.readyState != 1) {
-
+        
         document.eventSource = new EventSource('/stream');
-
+        
         document.eventSource.onmessage = function(e) {
+          
           var json = $.parseJSON(e.data);
           console.log('Socket action: ' + json.action + '.' + json.model);
           _this.receiveUpdate(json);
+          
         };
 
         document.eventSource.onclose = function(e) {
-          console.log('Socket closed. Attempting reconnect.');
-          _this.checkListen();
+          if (window.tries < 3) {
+            console.log('Socket closed. Attempting reconnect.');
+            _this.checkListen();
+          } else {
+            console.log('Socket FAIL after three reconnects.');
+            document.eventSource.close();
+          }
         };
 
         document.eventSource.onerror = function (e) {
-          console.log('Socket error.');
+          if (window.tries < 3) {
+            console.log('Socket error. Attempting reconnect.');
+            _this.checkListen();
+          } else {
+            console.log('Socket FAIL after three reconnects.');
+            document.eventSource.close();
+          }
         };
 
       }
     } catch(exception){
-      console.log('asocial.socket | error: ');
       console.log(exception);
     }
 
   },
 
   checkListen: function () {
+    
+    window.tries += 1;
+    
     if (typeof(document.eventSource) != 'undefined' &&
-       document.eventSource.readyState == 2) {
-      this.listen();
-    }
+       document.eventSource.readyState == 2) { this.listen(); }
+    
   }
 
 });

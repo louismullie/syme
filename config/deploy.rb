@@ -1,5 +1,4 @@
 require 'rvm/capistrano'
-require 'bundler/capistrano'
 
 # Application configuration.
 set :application, 'asocial'
@@ -15,11 +14,11 @@ default_run_options[:pty] = true
 default_run_options[:pty] = true
 set :scm, :git
 set :scm_verbose, true
-set :repository, 'git@github.com:louismullie/asocial-showcase.git'
-set :branch, 'release'
+set :repository, 'git@github.com:louismullie/asocial-clean.git'
+set :branch, 'develop'
 
 # Deployment configuration.
-set :deploy_to, '/var/www/joinasocial.com'
+set :deploy_to, '/var/www/asocial.cc'
 set :deploy_via, :remote_cache
 
 set :ssh_options, { forward_agent: true }
@@ -31,38 +30,21 @@ role :web, location
 role :app, location
 role :db, location, primary: true
 
-after 'deploy:update', 'bundle:install'
-after 'deploy:update', 'foreman:export'
-after 'deploy:update', 'foreman:restart'
-
-# Bundler tasks.
-namespace :bundle do
-  
-  desc "Installs the application dependencies"
-  task :install, :roles => :app do
-    run "cd #{current_path} && bundle --without development test"
-  end
-  
-end
+after 'deploy:update', 'deploy:restart'
 
 # Post-deploy tasks.
 namespace :deploy do
 
+
   desc "Start the application services"
-  task :start, roles: :app do
+  
+  task :restart, roles: :app do
 
-    run "cd #{release_path}"
-    run "export ENVIRONMENT=PRODUCTION "
-    run "bundle install"
-    run "thin start --servers 3"
+    run "cd #{release_path} && "+
+        "export RACK_ENV=DEVELOPMENT &&" +
+        "bundle install && "+
+        "thin restart -C #{release_path}/config/thin.conf"
 
-  end
- 
-  desc "Stop the application services"
-  task :stop, roles: :app do
-    run "kill $(lsof -i :3000 -t)"
-    run "kill $(lsof -i :3001 -t)"
-    run "kill $(lsof -i :3002 -t)"
   end
 
 end

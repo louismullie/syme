@@ -1,0 +1,27 @@
+#auth.container
+  .row
+    .small-12.large-4.large-offset-4
+      %h1 Asocial
+
+      #auth-methods
+        %h3 Login
+        %p
+          Don't have an account?
+          %a{href: '/register'} Register
+
+        .well
+          %form#login-form{method: 'post'}
+            .control-group
+              .controls
+                %input{type: 'text', name: 'email', placeholder: 'Email address'}
+
+            .control-group
+              .controls
+                %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
+
+            .control-group
+              .controls
+                %label.checkbox
+                  %input{type: 'checkbox', name: 'remember_me', checked: 'yes'} Remember me
+
+            %button.button.expand{href: '#', role: 'submit'} Login

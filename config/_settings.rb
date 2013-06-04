@@ -3,7 +3,7 @@ require 'base64'
 enable :logging
 
 # Application-wide config.
-set app_title: 'Ensemble'
+set app_title: 'Asocial'
 set :haml, layout: false
 
 set store: $store
@@ -15,4 +15,3 @@ set root: $root
 if $env == :development
   set :reload_templates, true
 end
-

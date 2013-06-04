@@ -1,94 +1,82 @@
-def send_email(to, subject, body)
-  
-  Pony.mail(:to => to, :via =>:sendmail,
-    :from => "contact@joinasocial.com", :subject => subject,
-    :headers => { 'Content-Type' => "text/html" }, :body => body)
-  
-end
+def send_email_to(email, subject, body)
 
-def send_email2(a_to_address, a_from_address , a_subject, a_type, a_message)
-  begin
-    case settings.environment
-    when :development                          # assumed to be on your local machine
-      Pony.mail :to => a_to_address, :via =>:sendmail,
-        :from => a_from_address, :subject => a_subject,
-        :headers => { 'Content-Type' => a_type }, :body => a_message
-    when :production                         # assumed to be Heroku
-      Pony.mail :to => a_to_address, :from => a_from_address, :subject => a_subject,
-        :headers => { 'Content-Type' => a_type }, :body => a_message, :via => :smtp,
-        :via_options => {
-          :address => 'smtp.sendgrid.net',
-          :port => 25,
-          :authentication => :plain,
-          :user_name => ENV['SENDGRID_USERNAME'],
-          :password => ENV['SENDGRID_PASSWORD'],
-          :domain => ENV['SENDGRID_DOMAIN'] }
-    when :test
-      # don't send any email but log a message instead.
-      logger.debug "TESTING: Email would now be sent to #{to} from #{from} with subject #{subject}."
-    end
-  rescue StandardError => error
-    logger.error "Error sending email: #{error.message}"
-  end
+  Pony.mail({
+    :to => email,
+    :from => "contact@joinasocial.com",
+    :subject => subject,
+    :headers => { 'Content-Type' => "text/html" },
+    :body => body,
+    :via => :smtp,
+    :via_options => {
+      :address        => 'smtp.mandrillapp.com',
+      :port           => '587',
+      :user_name      => 'louis.mullie@gmail.com',
+      :password       => 'tjCX49k-tDIYzmqnW0ZjYw',
+      :authentication => :plain,
+      :domain         => "localhost.localdomain"
+    }
+  })
+  
 end
 
 def send_invite(email, token)
   
-  subject = "Join #{@user.get_name} on Asocial"
+  subject = "Join #{@user.full_name} on Asocial"
 
   message = 
 
 "Hey,
 
-#{@user.get_name} invited you to join his network.
-Follow this link to accept the invitation and
-register: http://localhost:5000/invite/show/#{token}.
+#{@user.full_name} invited you to join his network.
+Follow this link to register and accept his invitation: http://asocial.io
 
 Best,
 Asocial"
 
   # email
-  send_email('louis.mullie@gmail.com', subject, message)
+  send_email_to(email, subject, message)
   
 end
 
-def request_confirm(inviter, invitee, token)
+def request_confirm(invite)
   
-  subject = "Integrate #{invitee.get_name} in your group"
+  invitee, inviter = invite.invitee, invite.inviter
+  
+  subject = "Accept #{invitee.full_name} in #{invite.group.name}"
 
   message =
 
-"Hey #{inviter.get_name},
+"Hey #{inviter.full_name},
      
-#{invitee.get_name} has joined your group on Asocial.
-Follow this link to accept to confirm registration:
-
-http://localhost:5000/invite/confirm/#{token}
+#{invitee.full_name} has joined your group on Asocial.
+Login to your group at http://asocial.io to approve him.
 
 Best,
 Asocial"
 
   # inviter.email
-  send_email('louis.mullie@gmail.com', subject, message)
+  send_email_to(inviter.email, subject, message)
 
 end
 
 
-def notify_confirmed(inviter, invitee)
+def notify_confirmed(invite)
   
-  subject = "Integrate #{invitee.get_name} in your group"
+  invitee, inviter = invite.invitee, invite.inviter
+  
+  subject = "Your request to join #{invite.group.name} was approved"
 
   message =
 
-"Hey #{invitee.get_name},
+"Hey #{invitee.full_name},
      
-#{inviter.get_name} has approved your registration.
-Login to your group at http://localhost:5000/
+#{inviter.full_name} has approved your registration.
+Login to your group at http://asocial.io to start sharing.
 
 Best,
 Asocial"
 
   # invitee.email
-  send_email('louis.mullie@gmail.com', subject, message)
+  send_email_to(invitee.email, subject, message)
 
 end

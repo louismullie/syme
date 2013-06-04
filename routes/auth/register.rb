@@ -25,6 +25,8 @@ post '/register/1' do
 
     user.save!
 
+    track user, 'User started registration'
+    
     { salt: salt.to_s,
       user_id: user.id.to_s
     }.to_json
@@ -45,7 +47,9 @@ post '/register/2' do
   user = User.find(params[:user_id])
 
   user.verifier = params[:v]
-
+  
+  track user, 'User completed registration'
+  
   user.save!
 
   { status: 'ok' }.to_json
@@ -60,7 +64,9 @@ post '/register/3', auth: [] do
 
   user.keypair = params[:keypair]
   user.keypair_salt = params[:keypair_salt]
-
+  
+  track user, 'User generated keys'
+  
   user.save!
 
   # broadcast :create, :user

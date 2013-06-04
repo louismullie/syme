@@ -1,16 +1,18 @@
 asocial.binders.add('feed', { feed: function(){
 
+  // Check if need to integrate user within a group (1st
+  // visit on group) or if need to update a user's keylist
+  // (meaning one or more new users have joined the group).
   asocial.state.getState('invite', function (authorized) {
     
+    // The user should always be authorized for the invite.
     if (!authorized) { alert('Not authorized for invite!'); }
     
-    if (asocial.state.invite.integrate) {
+    if (asocial.state.invite.integrate)
       asocial.invite.integrate();
-    }
 
-    if (asocial.state.invite.update) {
+    if (asocial.state.invite.update)
       asocial.invite.update();
-    }
 
   }, { group: asocial.state.group.name });
 
@@ -72,8 +74,8 @@ asocial.binders.add('feed', { feed: function(){
       var sB = asocial.crypto.calculateHash(password, sB_salt);
 
       // 1C: p -> {p}sB
-      var P = $.base64.encode(JSON.stringify(keys.public_key));
-      var p = $.base64.encode(JSON.stringify(keys.private_key));
+      var P = asocial.crypto.encode(keys.public_key);
+      var p = asocial.crypto.encode(keys.private_key);
       var p_sB = $.base64.encode(sjcl.encrypt(sB, p));
       
       // Build invitation.

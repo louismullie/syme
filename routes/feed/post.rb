@@ -20,6 +20,8 @@ post '/:group/post/create', auth: [] do |group|
   # post.upload = upload if upload
   
   post.save!
+  
+  track @user, 'Created a new post'
 
   content_type :json
 

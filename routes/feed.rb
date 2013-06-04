@@ -17,7 +17,7 @@ post '/:group/page', auth: [] do |group|
 
   @group = Group.where(name: group).first
 
-  page, last_timestamp, ignore = params[:page],
+  page_num, last_timestamp, ignore = params[:page].to_i,
   params[:last_timestamp], [*params[:ignore]]
 
   year, month = params[:year], params[:month]
@@ -32,22 +32,41 @@ post '/:group/page', auth: [] do |group|
   end
 
   # Paginate posts.
-  posts = posts.page(page.to_i)
+  selected_posts = posts.page(page_num)
 
   # Hide displayed posts.
-  posts.reject! do |post|
+  selected_posts.reject! do |post|
     ignore.include?(post.id)
   end
 
   content_type :json
 
-
-  if posts.count == 0
+  if selected_posts.count == 0
     {}.to_json
   else
-    FeedGenerator.generate_posts(
-      posts, @user, last_timestamp).to_json
+    last_page = posts.page(page_num + 1).count == 0
+    {
+      posts: FeedGenerator.generate_posts(
+        selected_posts, @user, last_timestamp),
+      last_page: last_page
+    }.to_json
   end
+
+end
+
+# For single-page view, feed with one post.
+get '/:group/posts/:id', auth: [] do |group,id|
+
+  @group = Group.where(name: group).first
+
+  # Pass if 404
+  pass if @group.nil?
+
+  content_type :json
+
+  posts = [@group.posts.find(id)]
+
+  FeedGenerator.generate(posts, @user, @group).to_json
 
 end
 

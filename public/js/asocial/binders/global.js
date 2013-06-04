@@ -1,22 +1,33 @@
 asocial.binders.add('global', { main: function(){
-  
-  // Hide popovers on outside click
-  $(document).off('click').on('click', function(e){
-    $('.flat-popover').hide();
-  });
-  
-  // Prevent anchor links from scrolling to top
-  $(document).off('click', 'a[href="#"]').on('click', 'a[href="#"]', function(e){
-    e.preventDefault();
+
+  // Popovers
+  $(document).on('click', 'a[data-popover]', function(e){
+    e.stopPropagation();
+
+    // Get container from attributes
+    var container = $( '#' + $(this).data('popover') );
+
+    // Toggle it
+    container.is(':visible') ?
+      container.hide() :
+      container.fadeIn(100);
   });
 
-  $(document).off('click', '.flat-popover').on('click', '.flat-popover', function(e){
+  // Hide popovers on outside click
+  $(document).on('click', function(e){
+    $('.popover').hide();
+  });
+
+  // Prevent closing of popover when clicking on them (opened)
+  $(document).on('click', '.popover', function(e){
     e.stopPropagation();
   });
 
-  // Close dropdown menu on route load
-  $(document).off('click', 'ul.dropdown-menu a').on('click', 'ul.dropdown-menu a', function(e){
-    $(this).closest('li.open').find('a.dropdown-toggle').dropdown('toggle');
+
+
+  // Prevent anchor links from scrolling to top
+  $(document).on('click', 'a[href="#"]', function(e){
+    e.preventDefault();
   });
 
   // Implement session timeouts
@@ -40,35 +51,24 @@ asocial.binders.add('global', { main: function(){
     $(this).keypress(function (e) { idleTime = 0; });
 
   });
-  
-  // Notifications popover
-  $(document).off('click', '#notifications-button').on('click', '#notifications-button', function(e){
-    e.stopPropagation();
 
-    var container = $('#notifications-container');
-
-    container.is(':visible') ?
-      container.hide() :
-      container.slideDown(100) ;
-  });
-  
   $('.clear-notification').click(function (e) {
     var id = $(this).closest('.notification').attr('id');
-    
+
     $.ajax('/notifications/' + id, {
-      
-      type: 'delete', 
-      
+
+      type: 'delete',
+
       success: function () {
         $(id).remove();
-      }, 
-      
+      },
+
       error: function () {
         alert('Clearing failed.');
       }
-      
+
     });
-    
+
   });
-  
+
 } }); // asocial.binders.add();

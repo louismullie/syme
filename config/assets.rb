@@ -14,7 +14,6 @@ assets do
   serve '/js',    from: 'public/js'
   serve '/css',   from: 'public/css'
   serve '/img',   from: 'public/img'
-  serve '/fonts', from: 'public/fonts'
   serve '/flash', from: 'public/flash'
 
   # Asocial JS
@@ -58,7 +57,8 @@ assets do
   js :vendor, '/js/vendor.js', [
     # Require jQuery before everything.
     '/js/vendor/jquery-1.9.1.min.js',
-    '/js/vendor/underscore.js',
+    '/js/vendor/rsa.js',
+    '/js/vendor/yahoo.min.js',
     # Require all other vendor scripts.
     '/js/vendor/*.js'
   ]
@@ -71,9 +71,6 @@ assets do
 
   # Vendor CSS
   css :vendor, '/css/vendor.css', [
-    # Bootstrap
-    '/css/vendor/bootstrap/bootstrap.css',
-    '/css/vendor/bootstrap/responsive.css',
     # Font Awesome
     '/css/vendor/font-awesome.css',
     # JQuery OhEmbed plugin styles.

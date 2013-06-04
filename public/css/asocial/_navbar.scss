@@ -1,45 +1,98 @@
-.navbar {
-  position: relative;
-  z-index: 1;
+#navbar {
+  padding: 0 $bodyPadding;
 
-  height: $navbarHeight;
+  background: $bodyBackgroundColor2;
+  border-bottom: $baseBorderStyle;
 
-  .nav > li > a {
-    margin-top: 0 !important;
-    color: $navbartext;
-  }
+  ul {
+    @extend .mvl;
 
-  .navbar-inner {
-    background-color: $navbar;
-  }
-}
+    list-style-type: none;
 
-#notifications-container {
-  top: $navbarHeight - 5;
-  z-index: 2;
+    li {
+      position: relative;
 
-  #notifications-content {
-    padding: 5px;
-    font-size: 13px;
+      display: inline-block;
+      vertical-align: middle;
 
-    & > p {
-      margin: 0;
-      line-height: $popoverRowHeight;
-      text-align: center;
-    }
+      margin-right: 1em; &:last-child{ margin-right: 0; }
 
-    .notification {
-      margin-top: 5px;
-      padding-bottom: 5px;
-      border-bottom: 1px solid #eee;
+      & > a {
+        line-height: 40px;
 
-      &:last-child{
-        padding-bottom: 0;
-        border-bottom: none;
+        color: $gray;
+
+        @include transition(color .25s);
+
+        &:hover {
+          text-decoration: none;
+          color: darken($gray, 10%);
+        }
       }
 
-      .avatar {
-        width: 40px;
+      a#brand {
+        font: 600 1.5em $opensans;
+        color: $black;
+      }
+
+      .btn {
+        @extend .btn-white;
+      }
+
+      #notifications {
+        span.notification-badge {
+          $notificationBadgeSize: 18px;
+
+          height: $notificationBadgeSize; width: $notificationBadgeSize;
+
+          position: absolute;
+          top: -3px; right: -3px;
+
+          background: $danger;
+
+          line-height: $notificationBadgeSize;
+          border-radius: 3px;
+
+          color: white;
+          font-size: 0.7em;
+          text-align: center;
+        }
+
+        #notifications-container {
+          #notifications-content {
+            padding: 5px;
+
+            font-size: 90%;
+
+            & > p {
+              margin: 0;
+              text-align: center;
+            }
+
+            .notification {
+              margin-top: 5px;
+              padding-bottom: 5px;
+              border-bottom: $baseBorderStyle;
+
+              &:last-child{
+                padding-bottom: 0;
+                border-bottom: none;
+              }
+
+              .avatar {
+                width: $avatarNotificationSize;
+              }
+            }
+          }
+        }
+      }
+
+      a#user {
+        font: normal 0.9em/40px $opensans;
+
+        img {
+          margin-right: 0.5em;
+        }
       }
     }
   }

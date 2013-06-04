@@ -1,53 +1,92 @@
-// Element colors
-$bodyBackground:          url('../img/bg.png'); // url or hexadecimal color
-
-$linkColor:               #3072b3;
-
-$navbar:                  rgba(83, 90, 100, 0.7);
-$navbartext:              #f5f5f5;
-
-$popoverHeaderBackground: #5796DB;
-$popoverHeaderColor:      #FFFFFF;
-
-$activeShadow:            rgba(48, 114, 179, 0.5);
-
-$userAvatarBorderActive:  #3072b3;
-
-$feedSeparator:           transparentize($navbar, 0.4);
-
-$likesColor:              #e74c3c;
-$commentsColor:           #6F6B6C;
-
-$box1Color:               #FFFFFF;
-$border1Color:            #C7C6C3;
-
 // Main colors
 
-$base:                    #6F6B6C;
-$firm:                    #6CCED9;
+$base:                    #2C3E50;
+$firm:                    #5FC0CE;
 
-$gray:                    #3C3F40;
-$lightgray:               #707678;
-$inverse:                 #fff;
+$black:                   #423e3e;
+$gray:                    #BDC3C7;
+$darkgray:                #6F6B6C;
+$lightgray:               #ECF0F1;
+$inverse:                 #FFFFFF;
 
-$success:                 #2ecc71;
-$danger:                  #e74c3c;
-$warning:                 #f1c40f;
-$info:                    #3498db;
+$success:                 #5FC0CE;
+$danger:                  #e7573c;
+$warning:                 #E67E22;
+$info:                    #26cfff;
+
+// Element colors
+
+$linkColor:               $firm;
+
+$bodyBackgroundColor:     #FFFFFF;
+$bodyBackgroundColor2:    #f7f7f7;
+
+$headersColor:            #333333;
+$subColor:                #666666;
+
+$box1Color:               #f7f7f7;
+
+$popoverHeaderBackground: transparent;
+$popoverHeaderColor:      $black;
+
+$likesColor:              $danger;
+$commentsColor:           $darkgray;
+
+// Styles
+
+$baseBorderStyle:         1px solid #ddd;
+$dashedBorderStyle:       1px dashed #ddd;
 
 // Sizes
-$navbarHeight:            51px; // Used to position notifications popover
-$popoverWidth:            240px;
-$popoverHeaderHeight:     30px;
-$popoverRowHeight:        $popoverHeaderHeight * 1.25;
 
-$avatarSize:              70px;
-$commentAvatarSize:       25px;
+$x:                       3px;  // extra-small
+$s:                       5px;  // small
+$m:                       10px; // medium
+$l:                       20px; // large
 
-$lineHeight:              20px;
+$bodyPadding:             15px;
+$panelPadding:            70px;
+$baseBorderRadius:        3px;
 
-//Fonts
-$base-font-family:        'ProximaNova', sans-serif;
-$base-font-size:          14px;
+$avatarPostSize:          70px;
+$avatarNotificationSize:  40px;
+$avatarCommentSize:       25px;
 
-$fontCode: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
+// Font-faces
+
+@include font-face(OpenSans, '/fonts/OpenSans/OpenSans-Light-webfont', 200);
+@include font-face(OpenSans, '/fonts/OpenSans/OpenSans-Regular-webfont', normal);
+@include font-face(OpenSans, '/fonts/OpenSans/OpenSans-Italic-webfont', normal, italic);
+@include font-face(OpenSans, '/fonts/OpenSans/OpenSans-Semibold-webfont', 600);
+@include font-face(OpenSans, '/fonts/OpenSans/OpenSans-Bold-webfont', bold);
+
+@include font-face(ProximaNova, '/fonts/ProximaNova/proximanova-regular-webfont', normal);
+@include font-face(ProximaNova, '/fonts/ProximaNova/proximanova-regularitalic-webfont', normal, italic);
+@include font-face(ProximaNova, '/fonts/ProximaNova/proximanova-semibold-webfont', bold, normal);
+@include font-face(ProximaNova, '/fonts/ProximaNova/proximanova-semibolditalic-webfont', bold, italic);
+
+// Font families
+
+$opensans:                OpenSans, Helvetica, Arial, Geneva, sans-serif;
+
+$baseFontFamily:          ProximaNova, sans-serif;
+$codeFontFamily:          Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
+
+// Font combinations
+// Example: font: bold italic 15px/20px arial,sans-serif;
+
+$baseFont:                normal 1em/1.5em $baseFontFamily;
+$brandFont:               600 3em/60px $opensans;
+
+$buttonFont:              normal 1em $opensans;
+
+$h1Font:                  normal 3em/1.5em $opensans;
+$h2Font:                  200 2.25em/1.4em $opensans;
+$h3Font:                  200 1.8em/1.2em $opensans;
+$h4Font:                  200 1.3em/1.4em $opensans;
+
+$popoverHeaderFont:       600 1em/2em $opensans;
+
+// Additional media queries
+
+$small-down: "only screen and (max-width:"#{$small-screen}")";

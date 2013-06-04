@@ -14,7 +14,7 @@ post '/login/1' do
     user = User.find_by(email: email)
 
   rescue Mongoid::Errors::DocumentNotFound
-
+    
     { status: 'error', reason: 'credentials' }.to_json
 
   else
@@ -32,6 +32,8 @@ post '/login/1' do
     session[:A] = params[:A].to_i
     session[:B] = bb
 
+    track user, 'User started login'
+    
     { status: 'ok', salt: salt, 'B' => bb.to_s }.to_json
 
   end
@@ -53,7 +55,6 @@ post '/login/2' do
       reason: 'server'
     }.to_json
   end
-
 
   aa, bb = session[:A], session[:B]
 
@@ -79,10 +80,12 @@ post '/login/2' do
 
     data = { user_id: user.id, status: 'ok' }
 
+    track user, 'User completed login'
+    
     data.to_json
 
   else
-
+    
     { status: 'error', reason: 'credentials' }.to_json
 
   end

@@ -17,6 +17,8 @@ post '/:group/comment/create', auth: [] do |group|
     mentions: mentions
   )
 
+  track @user, 'Commented on a post'
+
   comment.save!
 
   content_type :json

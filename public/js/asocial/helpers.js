@@ -198,7 +198,6 @@ guard('helpers', {
     
     var actors = notification.actors;
     var action = notification.action;
-    console.log(notification);
     
     var text;
 
@@ -246,7 +245,8 @@ guard('helpers', {
       if (action == 'request_invite_confirm') {
       
         return text = actors + ' has asked to join  ' +
-                      notification.group + '.' ;
+                      notification.group + '. Confirm <a href="/' +
+                      notification.group + '">here</a>.' ;
         
       } else if (action == 'confirm_invite') {
         

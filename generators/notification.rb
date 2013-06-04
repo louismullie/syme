@@ -27,8 +27,11 @@ class NotificationGenerator
       membership = group.memberships.where(user_id: avatar_user.id).first
 
       g_notification.merge!({
-        avatar: AvatarGenerator.generate(membership, current_user),
-      }) if membership # user may not have a membership if in invite
+        owner: {
+          id: avatar_user.id.to_s,
+          avatar: AvatarGenerator.generate(membership, current_user)
+        }
+      }) if membership # user may not have a membership if in invite - FIX
     
     end
   

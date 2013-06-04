@@ -1,0 +1,49 @@
+.popover {
+  position: absolute;
+  top: 100%;
+
+  display: none;
+
+  margin-top: 5px;
+
+  width: 300px;
+  min-height: 50px;
+  max-height: 400px;
+
+  @include box-sizing;
+
+  background-color: $bodyBackgroundColor;
+
+  border: $baseBorderStyle;
+  border-radius: $baseBorderRadius;
+
+  // As thin as a shadow can get
+  @include box-shadow(0 1px 6px rgba(0, 0, 0, 0.3));
+
+  & > h3 {
+    margin: 0;
+    padding: 0.5em 0;
+
+    font: $popoverHeaderFont;
+    text-align: center;
+    color: $popoverHeaderColor;
+
+    background: $popoverHeaderBackground;
+
+    @include arrow(top, 10px, 1px, 15px, $bodyBackgroundColor, rgba(black, 0.2));
+  }
+
+  &.right {
+    right: 100%;
+    margin-right: -100%;
+
+    & > h3 {
+      &::before {
+        right: 10px;
+      }
+      &::after {
+        right: 11px;
+      }
+    }
+  }
+}

@@ -17,18 +17,19 @@ guard('binders', {
   },
 
   bind: function(route) {
+
     // Check function existence
     if(!$().binders[route]) return false;
 
     // Unbind everything
     this.unbind();
-    
+
     // Bind global
     $().binders['global']['main']();
 
     // Bind HBS navigation
     this.hbsNavigation();
-    
+
     // Execute every binded function to route
     var obj = $().binders[route], key;
     for (key in obj) {
@@ -37,7 +38,10 @@ guard('binders', {
   },
 
   unbind: function() {
-    
+
+    // Unbind global events
+    $(document).off();
+
     // Unbind page events
     $('#main').off();
 
@@ -83,54 +87,62 @@ guard('binders', {
 
     } else {
 
-      // Get the user's state (password key, user id, keypair) from server.
-      asocial.state.getState('user', function (authorized) {
-        
-        // Show login screen if the user's state cannot be supplied.
-        if (!authorized) { return _this.goToUrl('/', $('body')); }
+      if (asocial.state.system.logged_in) {
 
-        // Authorize the user locally by checking for his keypair
-        // and authorizing from a locally stored password otherwise.
-        asocial.auth.authorizeForUser(function (authorized) {
+        // Get the user's state (password key, user id, keypair) from server.
+        asocial.state.getState('user', function (authorized) {
 
-          // Show the login screen if the user can't be authorized.
+          // Show login screen if the user's state cannot be supplied.
           if (!authorized) { return _this.goToUrl('/', $('body')); }
 
-          // Get the user's socket after state and authorization are done.
-          asocial.socket.listen();
+          // Authorize the user locally by checking for his keypair
+          // and authorizing from a locally stored password otherwise.
+          asocial.auth.authorizeForUser(function (authorized) {
 
-          // If the route pertains to a group,
-          if (urlComponent.group)  {
+            // Show the login screen if the user can't be authorized.
+            if (!authorized) { return _this.goToUrl('/', $('body')); }
 
-            // Get the group's state (keylist, user list) from server.
-            asocial.state.getState('group', function (authorized) {
+            // Get the user's socket after state and authorization are done.
+            asocial.socket.listen();
 
-              // Authorize the user for the group by checking for
-              // ability to decrypt the group keylist.
-              asocial.auth.authorizeForGroup( function (authorized) {
+            // If the route pertains to a group,
+            if (urlComponent.group)  {
 
-                // Render the group route and callback.
-                _this.renderRoute(urlComponent, container);
-                callback();
+              // Get the group's state (keylist, user list) from server.
+              asocial.state.getState('group', function (authorized) {
 
-              });
+                // Authorize the user for the group by checking for
+                // ability to decrypt the group keylist.
+                asocial.auth.authorizeForGroup( function (authorized) {
 
-            // Pass the name of the group to getState().
-            }, { group: urlComponent.group });
+                  // Render the group route and callback.
+                  _this.renderRoute(urlComponent, container);
+                  callback();
 
-          // If the route pertains to a user,
-          } else {
+                });
 
-            // Just render the route and callback.
-            _this.renderRoute(urlComponent, container);
-            callback();
+              // Pass the name of the group to getState().
+              }, { group: urlComponent.group });
 
-          }
+            // If the route pertains to a user,
+            } else {
+
+              // Just render the route and callback.
+              _this.renderRoute(urlComponent, container);
+              callback();
+
+            }
+
+          });
 
         });
 
-      });
+      } else {
 
+        //$('body').html( Fifty.render('error-notfound') );
+        window.location = '/';
+
+      }
     }
 
   },
@@ -195,7 +207,7 @@ guard('binders', {
       .on('click', 'a[data-hbs]', function(e) {
 
       e.preventDefault();
-      
+
       var parser = document.createElement('a');
       parser.href = e.currentTarget.href;
 
@@ -204,7 +216,7 @@ guard('binders', {
       } else {
         History.pushState({}, window.document.title, e.currentTarget.href);
       }
-     
+
 
     });
 
@@ -213,10 +225,10 @@ guard('binders', {
   /* ----- SHORTCUTS ----- */
 
   loadCurrentUrl: function (callback) {
-    
+
     this.loadUrl(window.location.href, callback);
   },
-  
+
   loadUrl: function(url, callback) {
 
     var _this = this;
@@ -234,28 +246,31 @@ guard('binders', {
       if (asocial.state.system.logged_in) {
         // Render HBS Container
         $('body').html( Fifty.render('container') );
-        
+
         asocial.state.getState('notifications', function () {
-          
+
           $.each(asocial.state.notifications, function (index, notification) {
-            
+
             $('#notifications-content').append(
+
               Fifty.render('feed-notification', {
                 html: asocial.helpers.notificationText(notification),
-                avatar: notification.avatar,
-                id: notification.id
+                owner: notification.owner
               })
+
             );
 
+            asocial.crypto.decryptAvatars();
+
           });
-          
+
           if ($('#notifications-content').children().length == 0) {
             $('#notifications-content').html(
               Fifty.render('feed-notifications-empty'));
           }
-      
+
         });
-        
+
       } else {
         // If logged off, render in entire page
         container = $('body');
@@ -285,7 +300,7 @@ guard('binders', {
 
   getBinderFromRoute: function(route) {
     return  asocial.url.revertToDefault.indexOf(route) === -1 ?
-            route : asocial.url.defaultRoute;
+            route : asocial.url.defaultLoggedInRoute;
   }
 
 });
