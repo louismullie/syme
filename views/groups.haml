@@ -1,5 +1,5 @@
 #groups.row
-  .small-10.small-centered.columns
+  .small-12.large-10.large-centered.columns
     %ul
       -# {{#if invites}}
       -# {{#each invites}}
@@ -18,7 +18,7 @@
       {{#if groups}}
       {{#each groups}}
 
-      %li.group
+      %li.group-card
         {{> groups-group}}
 
       {{/each}}

@@ -1,21 +1,25 @@
 // Masonry content disposition
-
-$groupsColumns: 2;
-
 #groups {
-  width: 100%;
-
   ul {
-    margin: -$bodyPadding;
+    @include column-gap($bodyPadding);
+
+    @include column-count(1);
+    @media #{$small}  { @include column-count(2); }
+
     list-style-type: none;
+    text-align: center;
 
-    @include column-gap(0);
-    @include column-count( $groupsColumns );
-
-    li.group {
-      width: 100% / $groupsColumns;
+    li.group-card {
       display: inline-block;
-      margin: $bodyPadding;
+
+      margin-bottom: $bodyPadding;
+      @extend .pal;
+
+      background: $bodyBackgroundColor2;
+      border: $baseBorderStyle;
+      border-radius: $baseBorderRadius;
+
+      text-align: left;
     }
   }
 }
