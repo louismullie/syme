@@ -1,12 +1,12 @@
 module Upload::Storable
 
-  def delete
+  def destroy
     if thumbnail_id
       thumbnail = group.uploads.find(thumbnail_id)
       thumbnail.destroy
     end
     dir = File.join('uploads', id.to_s)
-    FileUtils.rm_rf(dir)
+    `srm -r #{dir}`
     super
   end
 
