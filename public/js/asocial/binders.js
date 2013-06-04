@@ -255,6 +255,8 @@ guard('binders', {
 
               Fifty.render('feed-notification', {
                 html: asocial.helpers.notificationText(notification),
+                id: notification.id,
+                created_at: notification.created_at,
                 owner: notification.owner
               })
 
@@ -263,14 +265,14 @@ guard('binders', {
           });
 
           if ($('#notifications-content').children().length == 0) {
-            
+
             $('#notifications-content').html(
               Fifty.render('feed-notifications-empty'));
-              
+
           } else {
-          
+
             $('#notifications')
-              .prepend('<span class="notification-badge">' + 
+              .prepend('<span class="notification-badge">' +
                 asocial.state.notifications.length + '</a>');
           }
 

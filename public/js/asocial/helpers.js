@@ -193,74 +193,74 @@ guard('helpers', {
      $('.textarea-supplement-info').show();
 
   },
-  
+
   notificationText: function (notification) {
-    
-    var actors = notification.actors;
+
+    var actors = '<b class="actor">' + notification.actors + '</b>';
     var action = notification.action;
-    
+
     var text;
 
     if (action == 'new_post' || action == 'comment_on_own_post' ||
         action == 'comment_on_same_post' || action == 'like_on_post' ||
         action == 'mention_in_post') {
-      
-      resource = '<a href="/' + notification.group + 
+
+      resource = '<a href="/' + notification.group +
         '/posts/' + notification.post_id + '">post</a>';
-        
+
     } else if(action == 'like_on_comment' ||
               action == 'mention_in_comment') {
-      
-      resource = '<a href="/' + notification.group + 
+
+      resource = '<a href="/' + notification.group +
       '/posts/' + notification.post_id + '/comments/' +
       notification.comment_id + '">comment</a>';
-    
+
     }
-    
+
     if (action == 'new_post') {
-      
+
       text = actors + ' posted a new post';
-      
+
     } else if (action == 'comment_on_own_post') {
-      
+
       text = actors + ' commented on your ' + resource;
-      
+
     } else if (action == 'comment_on_same_post') {
-      
+
       text = actors + ' commented on the same ' +
              resource + ' as you';
-      
+
     } else if (action == 'like_on_post' ||
                action == 'like_on_comment') {
-      
+
       text = actors + ' liked your ' + resource;
-    
+
     } else if (action == 'mention_in_post' ||
                action == 'mention_in_comment') {
-      
+
       text = actors + ' mentioned you in a ' + resource
-    
+
     } else {
-      
+
       if (action == 'request_invite_confirm') {
-      
+
         return text = actors + ' has asked to join  ' +
                       notification.group + '. Confirm <a href="/' +
                       notification.group + '">here</a>.' ;
-        
+
       } else if (action == 'confirm_invite') {
-        
+
         return text = actors + ' has joined the group ' +
                       notification.group + '.';
-        
+
       } else {
-        
+
         alert('Invalid action!');
-        
+
       }
-      
+
     }
-    
+
     return text + ' in <a href="/' + notification.group +
                   '">' + notification.group + '</a>';
 

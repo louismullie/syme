@@ -9,8 +9,9 @@
 @import "config", "mixins";
 
 @import "asocial/modules/buttons",
+        "asocial/modules/popover",
         "asocial/modules/spaces",
-        "asocial/modules/popover";
+        "asocial/modules/tooltips";
 
 // Global styles
 @import "asocial/global",

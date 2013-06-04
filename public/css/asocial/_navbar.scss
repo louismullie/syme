@@ -57,31 +57,32 @@
           font-size: 0.7em;
           text-align: center;
         }
+      }
 
-        #notifications-container {
-          #notifications-content {
-            padding: 5px;
+      #notifications-container {
+        z-index: 3;
 
-            font-size: 90%;
+        #notifications-content {
+          padding: 5px;
 
-            & > p {
-              margin: 0;
-              text-align: center;
+          font-size: 90%;
+
+          .notification {
+            margin-bottom: $bodyPadding / 2;
+            padding: 0 $bodyPadding ($bodyPadding / 2) $bodyPadding;
+
+            border-bottom: $baseBorderStyle;
+
+            font-size: 0.9em;
+
+            &:last-child{
+              margin-bottom: 0;
+              border-bottom: none;
             }
 
-            .notification {
-              margin-top: 5px;
-              padding-bottom: 5px;
-              border-bottom: $baseBorderStyle;
-
-              &:last-child{
-                padding-bottom: 0;
-                border-bottom: none;
-              }
-
-              .avatar {
-                width: $avatarNotificationSize;
-              }
+            a.notification-time {
+              display: inline-block;
+              float: right;
             }
           }
         }
