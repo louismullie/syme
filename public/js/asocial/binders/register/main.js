@@ -18,7 +18,7 @@ asocial.binders.add('register', { main: function(){
       asocial.auth.login(email, password, false, function (data) {
 
         asocial.auth.keygen(data.user_id, password, function () {
-          asocial.binders.loadCurrentUrl();
+          asocial.binders.goToUrl('/');
         });
 
       }, function (reason) {
