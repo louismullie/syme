@@ -26,8 +26,8 @@ $subColor:                #666666;
 
 $box1Color:               #f7f7f7;
 
-$popoverHeaderBackground: #5796DB;
-$popoverHeaderColor:      #FFFFFF;
+$popoverHeaderBackground: transparent;
+$popoverHeaderColor:      $black;
 
 $likesColor:              $danger;
 $commentsColor:           $darkgray;
@@ -84,6 +84,8 @@ $h1Font:                  normal 3em/1.5em $opensans;
 $h2Font:                  200 2.25em/1.4em $opensans;
 $h3Font:                  200 1.8em/1.2em $opensans;
 $h4Font:                  200 1.3em/1.4em $opensans;
+
+$popoverHeaderFont:       600 1em/2em $opensans;
 
 // Additional media queries
 

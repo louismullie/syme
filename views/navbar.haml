@@ -3,16 +3,16 @@
     .small-12
       %ul
         %li
-          %a#brand{href: '/', :'data-hbs' => ''}
+          %a#brand{ href: '/', :'data-hbs' => '' }
             = settings.app_title
 
         %li
-          %a#notifications.btn{href: '#', 'data-popover' => 'notifications-container' }
+          %a#notifications.btn{ href: '#', 'data-popover' => 'notifications-container' }
             %i.icon-bell-alt
 
-            {{#if notifications.count}}
-            %span.notification-badge {{notifications.count}}
-            {{/if}}
+            -# {{#if notifications.count}}
+            %span.notification-badge 8
+            -# {{/if}}
 
           #notifications-container.popover
             %h3 Notifications
@@ -20,10 +20,11 @@
             #notifications-content
               {{notifications.view}}
 
-//           %li
-//             %a#settings{href: '/settings', :'data-hbs' => ''}
-//               %i.icon-cog
-//
-//           %li
-//             %a{href: '/logout'}
-//               %i.icon-off
+        .pull-right
+          %li
+            %a.btn{ href: '/settings', :'data-hbs' => '' }
+              %i.icon-cog
+
+          %li
+            %a.btn{ href: '/logout' }
+              %i.icon-signout

@@ -14,7 +14,6 @@ assets do
   serve '/js',    from: 'public/js'
   serve '/css',   from: 'public/css'
   serve '/img',   from: 'public/img'
-  serve '/fonts', from: 'public/fonts'
   serve '/flash', from: 'public/flash'
 
   # Asocial JS

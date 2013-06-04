@@ -61,6 +61,14 @@ canvas {
   overflow: hidden;
 }
 
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
 // CSS Tips for icons
 [data-tip].tip-icon {
   &:before {
@@ -82,4 +90,18 @@ h1.enormous {
 // Placeholder for loading images
 img.avatar, img.group-photo {
   @include inclined-stripes(transparent, 50px, rgba(0, 0, 0, .2));
+}
+
+// Avatar styles and sizes
+.avatar-post {
+  width: $avatarPostSize; height: $avatarPostSize;
+  border-radius: $baseBorderRadius;
+}
+.avatar-notification {
+  width: $avatarNotificationSize; height: $avatarNotificationSize;
+  border-radius: $baseBorderRadius;
+}
+.avatar-comment {
+  width: $avatarCommentSize; height: $avatarCommentSize;
+  border-radius: $baseBorderRadius;
 }

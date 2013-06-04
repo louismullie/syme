@@ -8,7 +8,9 @@ asocial.binders.add('global', { main: function(){
     var container = $( '#' + $(this).data('popover') );
 
     // Toggle it
-    container.toggle();
+    container.is(':visible') ?
+      container.hide() :
+      container.fadeIn(100);
   });
 
   // Hide popovers on outside click
