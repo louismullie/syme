@@ -1,16 +1,5 @@
 guard('auth', {
 
-  emailExists: function(email, success, fail){
-    $.post('/auth/email', {email: email}, function(response) {
-      if(response.status == 'ok') {
-        response.exists ? success() : fail();
-      } else {
-        alert('error');
-      }
-    });
-
-  },
-
   register: function(email, password, full_name, success, fail) {
 
     var srp = new SRP(email, password);
