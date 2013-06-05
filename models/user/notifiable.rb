@@ -26,7 +26,6 @@ module User::Notifiable
       
     else
 
-      warn "Creating notif #{create_selector}"
       notification = notifications.create(create_selector)
 
       Asocial::Publisher.send_to(id, :create, :notification, 

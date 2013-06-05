@@ -12,6 +12,9 @@ class User
 
   embeds_many :notifications
 
+  embeds_one :keypair
+  embeds_one :verifier
+  
   has_many :posts
   has_many :memberships
 
@@ -24,26 +27,11 @@ class User
 
   field :full_name, type: String, default: 'Anonymous'
 
-  # Modifiable protected attributes.
-  field :verifier, type: String
-  field :verifier_salt, type: String
-
-  field :keypair, type: String
-  field :keypair_salt, type: String
-
   field :new_keys, type: Hash, default: {}
 
   field :activated, type: Boolean
   field :session_id, type: String
 
-  # Attribute protection.
-  attr_accessible :privilege, :avatar_id,
-                  :full_name, :verifier_salt,
-                  :invite_id, :email
-
-  attr_protected  :public_key, :private_key, :verifier,
-                  :session_id, :keypair, :keypair_salt,
-                  :new_keys
 
   # Alternative name
   def get_name(with_last_name = true)
