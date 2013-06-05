@@ -9,31 +9,68 @@ asocial.binders.add('register', { main: function(){
 
     var email     = form.find('input[name="email"]').val(),
         password  = form.find('input[name="password"]').val(),
-        full_name = form.find('input[name="full_name"]').val(),
+        fullName = form.find('input[name="full_name"]').val(),
         remember  = form.find('input[name="remember_me"]').prop("checked");
 
-    // Register user
-    asocial.auth.register(email, password, full_name, function (data) {
+    var user = new User();
+    var srp = new SRP(email, password);
 
-      asocial.auth.login(email, password, false, function (data) {
+    user.save(
 
-        asocial.auth.keygen(data.user_id, password, function () {
-          asocial.binders.goToUrl('/');
+      { email: email, full_name: fullName },
+
+      { success: function (model, response) {
+        
+        var verifierSalt = response.verifier.salt;
+        var verifier = srp.calcV(verifierSalt).toString();
+        
+        model.save({
+          
+          verifier: new Verifier({
+            content: verifier,
+            salt: verifierSalt
+          })
+          
+          }, {
+
+          success: function () {
+            
+            user.createKeypair(password, function () {
+              
+              asocial.auth.login(email, password, remember, function() {
+
+                // Authorize User
+                asocial.auth.authorizeForUser(function () {
+
+                  // Load HBS template
+                  $('body').html( Fifty.render('container') );
+
+                  // Redirect to root, which is now group UI
+                  asocial.binders.goToUrl('/');
+
+                }, password);
+
+              });
+              
+            });
+          },
+
+          error: function (model, response) {  alert('Registration error!'); }
+
         });
 
-      }, function (reason) {
-        alert(reason);
-      });
+      },
 
-    }, function(reason) {
+      error: function (model, response) {
+        
+        // @Chris implement error handling here.
+        var msg = JSON.parse(response.responseText);
+        console.log(msg);
+        alert('Registration error!');
 
-      if (reason == 'email_taken') {
-        alert('This email is already taken.');
-      } else {
-        alert('Unknown error: ' + reason);
-      }
+      }}
 
-    });
+    );
 
   });
 

@@ -19,7 +19,7 @@ post '/login/1' do
 
   else
 
-    v, salt = user.verifier, user.verifier_salt
+    v, salt = user.verifier.content, user.verifier.salt
 
     b = random_bytes(32).hex
 

@@ -46,6 +46,8 @@ assets do
     '/js/asocial/invite.js',
     # Namespace aggregator.
     '/js/asocial/asocial.js',
+    # Testing environment
+    '/js/asocial/test.js',
     # Enable route binders.
     '/js/asocial/binders/**/*.js',
     # Require core classes.
@@ -59,6 +61,9 @@ assets do
     '/js/vendor/jquery-1.9.1.min.js',
     '/js/vendor/rsa.js',
     '/js/vendor/yahoo.min.js',
+    '/js/vendor/underscore.min.js',
+    '/js/vendor/backbone.min.js',
+    '/js/vendor/backbone-relational.js',
     # Require all other vendor scripts.
     '/js/vendor/*.js'
   ]

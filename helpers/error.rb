@@ -1,13 +1,3 @@
-def publish_create_error(user, message)
-
-  publish_to_user(
-    user.id.to_s,
-    :create, :error,
-    { message: message }
-  )
-
-end
-
 def error(code, type_or_message, exception = nil)
   
   message = type_or_message.is_a?(Symbol) ?
