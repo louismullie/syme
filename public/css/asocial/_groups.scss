@@ -24,6 +24,33 @@
 
       text-align: left;
 
+      &.group-create {
+        i.icon-chevron-down {
+          float: right;
+          line-height: inherit;
+
+          @include transition(all 0.2s ease);
+        }
+
+        .group-card-content {
+          display: none;
+        }
+
+        &.opened {
+          a.group-card-title {
+            color: lighten($darkgray, 15%);
+
+            i.icon-chevron-down {
+              @include transform(rotate(-180deg));
+            }
+          }
+
+          .group-card-content {
+            display: block;
+          }
+        }
+      }
+
       a.group-card-title {
         margin: 0;
         padding: 0 1em;
@@ -60,7 +87,7 @@
           position: absolute;
           top: .5em; right: .5em;
 
-          padding: 1px 0 0 3px;
+          padding: 1px 0 0 4px;
 
           text-align: left;
           background: rgba(255, 255, 255, 0.9);
@@ -79,24 +106,29 @@
           display: block;
 
           img {
-            width: 100%; height: 135px;
+            width: 100%; height: 10em;
 
             background-size: 100% auto;
             background-position-y: 50%;
 
             border-top-left-radius: $baseBorderRadius;
             border-top-right-radius: $baseBorderRadius;
+
+            &.placeholder {
+              background-image: url('/img/groupavatar.jpg');
+            }
           }
         }
       }
 
       .group-card-content {
-        padding: 1em;
+        padding: 1em 1.5em;
 
         font: normal .9em/2em $opensans;
 
-        p.group-infos {
-
+        a.group-link {
+          font: 200 1.5em/2em $opensans;
+          color: $black;
         }
       }
     }

@@ -3,6 +3,7 @@ asocial.binders.add('groups', { main: function() {
   // Decrypt group avatars.
   asocial.crypto.decryptMedia();
 
+  // Group delete button toggling
   $("div.group-banner").on({
     mouseenter: function(){
       $(this).find('a.delete-group')
@@ -13,6 +14,13 @@ asocial.binders.add('groups', { main: function() {
       $(this).find('a.delete-group')
         .transition({ opacity: 0}, 100)
         .css({ display: 'none' });
+    }
+  });
+
+  // Group creation panel toggling
+  $("li.group-create a.group-card-title").on({
+    click: function(e){
+      $(this).parent().toggleClass('opened');
     }
   });
 

@@ -19,13 +19,9 @@
       {{#foreach groups}}
 
       // Create group card on first position
-      {{#if $first}}
-      %li.group-card
-        {{> groups-create}}
-      {{/if}}
+      {{#if $first}} {{> groups-create}} {{/if}}
 
-      %li.group-card
-        {{> groups-group}}
+      {{> groups-group}}
 
       {{/foreach}}
       // End groups loop

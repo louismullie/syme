@@ -1,7 +1,10 @@
-%a.group-card-title
-  Create group
+%li.group-card.group-create
+  %a.group-card-title
+    Create group
 
-.group-card-content
-  %form#create_group{method: 'post'}
-    Group name:
-    %input{type: 'text', name: 'name'}
+    %i.icon-chevron-down
+
+  .group-card-content
+    %form#create_group{method: 'post'}
+      Group name:
+      %input{type: 'text', name: 'name'}
