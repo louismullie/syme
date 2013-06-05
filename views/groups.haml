@@ -1,34 +1,20 @@
 #groups.row
   .small-12.large-8.large-centered.columns
     %ul
-      {{#if invites}}{{#each invites}}
-      .group
-        .group-infos
-          // Otherwise, show group name
-          %h4.group-name
-            %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'} Accept invitation
+      {{#compare groups '||' invites}}
 
-        %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'}
-          %img.group-photo{src: '/img/groupphoto.jpg', alt: 'Group avatar'}
-          //{{inviter_name}} has invited you to join his group "{{group_name}}".
-      {{/each}}{{/if}}
+      // Invitations
+      {{> groups-invites}}
 
-      {{#if groups}}
+      // Create group
+      {{> groups-create}}
 
-      // Begin group loop
-      {{#foreach groups}}
-
-      // Create group card on first position
-      {{#if $first}} {{> groups-create}} {{/if}}
-
-      {{> groups-group}}
-
-      {{/foreach}}
-      // End groups loop
+      // Group Loop
+      {{#each groups}} {{> groups-group}} {{/each}}
 
       {{else}}
 
       // No groups
       No groups.
 
-      {{/if}}
+      {{/compare}}

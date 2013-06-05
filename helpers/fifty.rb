@@ -65,6 +65,8 @@ Fifty.helper :compare, %{
       '>': function (l, r) { return l > r; },
       '<=': function (l, r) { return l <= r; },
       '>=': function (l, r) { return l >= r; },
+      '||': function (l, r) { return l || r; },
+      '&&': function (l, r) { return l && r; },
       'typeof': function (l, r) { return typeof l == r; },
       'multipleof': function (l, r) { return l % r == 0; }
     };

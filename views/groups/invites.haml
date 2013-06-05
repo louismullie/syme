@@ -1,0 +1,15 @@
+{{#if invites}}
+{{#each invites}}
+
+%li.group-card.group-invite
+  .group-banner
+    %a.group-banner-link.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'}
+      %span Click to accept
+      %img.placeholder{ src: empty_image }
+
+  .group-card-content
+    %p
+      <b>{{inviter_name}}</b> has invited you to join the group <b>{{group_name}}</b>.
+
+{{/each}}
+{{/if}}

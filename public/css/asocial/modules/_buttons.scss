@@ -72,12 +72,16 @@
 
     border: $baseBorderStyle;
 
+    @include transition(color 0.1s ease);
+
     &:hover, &:focus {
       color: darken($gray, 10%);
+      text-decoration: none;
     }
 
     &:active, &.active {
-      color: darken($gray, 10%);;
+      color: darken($gray, 10%);
+      text-decoration: none;
     }
   }
 
