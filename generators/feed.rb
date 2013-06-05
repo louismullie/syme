@@ -21,12 +21,12 @@ class FeedGenerator
   def self.generate_user(current_user, current_group)
 
     membership = current_group.memberships
-                  .where(user_id: current_user.id).first
+                  .find_by(user_id: current_user.id)
 
     {
       id: current_user.id.to_s,
-      is_admin: current_user.is_at_least?(:admin),
-      is_mod: current_user.is_at_least?(:mod),
+      is_admin: membership.is_at_least?(:admin),
+      is_mod: membership.is_at_least?(:mod),
       avatar: AvatarGenerator.generate(membership, current_user)
     }
 

@@ -17,13 +17,7 @@ module Asocial
 
     # Authorizations
     set(:auth) do |*roles|
-      condition do
-        halt 303 unless session[:user_id]
-        authorized = roles.all? do |role|
-          @user.is_at_least? role
-        end
-        halt 403 unless authorized if roles.any?
-      end
+      condition { halt 403 unless session[:user_id] }
     end
 
   end
