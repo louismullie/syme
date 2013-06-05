@@ -1,6 +1,6 @@
 guard('crypto', {
 
-  /* 
+  /*
    * Decrypt the current user's keypair and store
    * the keys in the methods asocial_private_key()
    * as well as asocial_public_key().
@@ -8,28 +8,28 @@ guard('crypto', {
   decryptKeypair: function(password) {
 
     try {
-      
+
       // Retrieve the salt that derives the encryption key.
       var salt  = asocial.state.user.keypair_salt;
-      
+
       // Derive the encryption key from the password.
       var key = asocial.crypto.calculateHash(password, salt);
 
       // Retrieve the user's encrypted keypair.
       var keypair = asocial.state.user.keypair;
-      
+
       // Retrieve the JSON string representing the keypair.
       var keypairSjcl = $.base64.decode(keypair);
-      
+
       // Decrypt the keypair using the symmetric key.
       var decryptedKeypairJson = sjcl.decrypt(key, keypairSjcl);
-      
+
       // Parse the decrypted keypair as JSON text.
       var keypair = $.parseJSON(decryptedKeypairJson);
-      
+
       // Build an RSAKey() object from the serialized private key.
       var private_key = asocial.crypto.buildPrivateKey(keypair.private_key);
-      
+
       // Build an RSAKey() object from the serialized public key.
       var public_key = asocial.crypto.buildPublicKey(keypair.public_key);
 
@@ -43,35 +43,35 @@ guard('crypto', {
     } catch(e) {
       // Return false if decryption failed due to wrong password.
       return false;
-      
+
     }
 
   },
-  
+
   // TODO: refactor this with decryptKeypair.
   decryptKeylist: function (password) {
-    
+
     try {
-      
+
       var keylist = asocial.state.group.keylist;
       var keylistSjcl = $.base64.decode(keylist);
-      
+
       var salt  = asocial.state.group.keylist_salt;
-      
+
       var key = asocial.crypto.calculateHash(password, salt);
-      
+
       var decryptedKeylist = sjcl.decrypt(key, keylistSjcl);
 
       var keylistJson = $.parseJSON(decryptedKeylist);
-      
+
       var keylist = {};
-      
+
       $.each(keylistJson, function (userId, publicKeyInfo) {
         keylist[userId] = asocial.crypto.buildPublicKey(publicKeyInfo);
       });
 
       window.asocial_keylist = function() { return keylist; }
-      
+
       return true;
 
     }  catch(e) {
@@ -82,7 +82,7 @@ guard('crypto', {
     }
   },
 
-  /* 
+  /*
    * Build an RSAKey() object for a public
    * key based on the key numbers "n" and "e",
    * stored in string format in keyInfo.
@@ -99,35 +99,35 @@ guard('crypto', {
     return publicKey;
 
   },
-  
+
   encryptKeyList: function (hash, keylist) {
-    
+
     return $.base64.encode(sjcl.encrypt(hash, JSON.stringify(keylist)));
-    
+
   },
-  
+
   serializePublicKey: function (publicKey) {
-    
+
     return {
       n: publicKey.n.toString(16),
       e: publicKey.e.toString(16)
     };
-    
+
   },
-  
+
   serializeKeyList: function () {
-    
+
     var public_keys = {};
     var _this = this;
-    
+
     $.each(asocial_keylist(), function (id, key) {
       public_keys[id] = _this.serializePublicKey(key);
     });
-    
+
     return public_keys;
-    
+
   },
-  
+
   userPublicKey: function(id) {
     id = id || asocial.state.user.id;
     return asocial_keylist()[id];
@@ -136,25 +136,25 @@ guard('crypto', {
   decrypt: function () {
 
     var _this = this;
-    
+
     _this.decryptAvatars();
     _this.decryptPostsAndComments();
     _this.decryptMedia();
-    
+
     $('time.timeago').timeago();
 
   },
-  
+
   /*
    * Hash a password using PBKDF2 with a salt,
    * performing 2000 iterations of SHA256.
    */
   calculateHash: function (pass, salt) {
-    
+
     hash = sjcl.misc.pbkdf2(pass, salt, 2000, 256);
-    
+
     return hash;
-    
+
   },
 
   encryptMessage: function(message) {
@@ -278,9 +278,9 @@ guard('crypto', {
   },
 
   decryptPostsAndComments: function() {
-    
+
     try {
-     
+
       var _this = this;
       // Decrypt each encrypted post on the page.
       $.each($('.encrypted'), function (i, element) {
@@ -298,13 +298,13 @@ guard('crypto', {
       });
 
       asocial.helpers.formatPostsAndComments();
-       
+
     } catch (e) {
-      
+
       alert('Could not decrypt resource.');
-      
+
     }
-    
+
   },
 
   // Rename to decryptmedia.
@@ -317,10 +317,11 @@ guard('crypto', {
       var image = $(image);
 
       var id = image.data('attachment-id');
-      var key = image.data('attachment-key');
-      var type = image.data('attachment-type');
-      var group = image.data('attachment-group');
+          key = image.data('attachment-key'),
+          type = image.data('attachment-type'),
+          group = image.data('attachment-group');
 
+      // Safe global variable?
       key = asocial_private_key().decrypt(key);
 
       _this.getFile(id, key, function (url) {
@@ -339,6 +340,25 @@ guard('crypto', {
       }, group);
 
     });
+
+    $.each($('.encrypted-background-image'), function (index) {
+
+      var $this = $(this);
+
+      var id = $this.data('attachment-id'),
+          key = $this.data('attachment-key'),
+          group = $this.data('attachment-group');
+
+      // Safe global variable?
+      key = asocial_private_key().decrypt(key);
+
+      _this.getFile(id, key, function (url) {
+
+        $this.css("background-image", "url('" + url + "')");
+
+      }, group);
+
+    });
   },
 
   decryptAvatars: function() {
@@ -352,10 +372,10 @@ guard('crypto', {
 
       var id = element.data('id');
       if (id == '') { return; }
-      
+
       var key = element.data('key');
       key = asocial_private_key().decrypt(key);
-      
+
       _this.getFile(id, key, function (url) {
         var avatars = $('.encrypted-avatar[data-user-id="' + user_id + '"]');
         $.each(avatars, function (index, element) { element.src = url; });
@@ -366,9 +386,9 @@ guard('crypto', {
   },
 
   getFile: function (id, key, callback, group) {
-    
+
     var display = function(id, blob, save) {
-      
+
       if (save) {
 
         var reader = new FileReader();
@@ -388,24 +408,24 @@ guard('crypto', {
       callback(url);
 
     };
-    
+
     var download = function (id, key, group) {
-      
+
       var group = group || asocial.binders.getCurrentGroup();
-      
+
       var baseUrl = '/' + group + '/file/';
-      
+
       var downloader = new Downloader(id,
           key, { baseUrl: baseUrl } );
-      
+
       downloader.start(
         function() {},
         function(blob) {
           display(id, blob, true);
       });
-      
+
     };
-    
+
     var store = new Lawnchair(
 
       {
@@ -413,50 +433,50 @@ guard('crypto', {
         name: 'asocial' //,
         //storage: 'PERSISTENT'
       },
-      
+
       function(store) {
 
         store.get(id, function(me) {
-          
+
           if (typeof(me) == "undefined") {
-            
+
             download(id, key, group);
-            
+
           } else {
-            
+
             var blob = asocial.thumbnail
               .dataURItoBlob(me.value);
             display(id, blob, false);
-            
+
           }
         });
 
     });
 
   },
-  
+
   generateRandomHexSalt: function (words) {
     var words = words || 4;
     return sjcl.codec.hex.fromBits(sjcl.random.randomWords(words,0));
   },
-  
+
   testPEM: function () {
-    
+
     var decryptedHexKey = PKCS5PKEY.getDecryptedKeyHex("-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,9388FB300C43FA748A7B3F6D2C576765\n\nW0dc/M4XISrMIxarDBVyUv1AXh9qYYiuiCKJCihaShjDNF9PhVDdzYLlEG+/Ex0E\nfzgpdJd2jzLiV+DDAbOT76XrkbyL0ld5bWlab1D5F196sfmGW39FufadVT6WaC5b\na3NfLpU+io3PZPm4VM6GbIubZlYOMwNl4cN5z/pyaJjtVHiYVq4rD4XIKcEAAW1X\n0lYzfYz6o7/PiZhUjICmcQ1XkvuF8KEaHrkKbYrEC1y/u0+RdxaRdIR5glG7z4Ot\nL4GJIykT6wrfQagsp+El63TI+1/LYVfAeZDnt9bKnn/OiJ6Xvbih4nisTEaKnqiW\n64aalxxownu/aqkzjq7w11RXWVb0vKy0FJUF6wHKrbZTXHlm0O9oPmxEZcp3zXqw\nsnkozbuy7PcGFHgzuZBJTtJK4wpuzj/zTJ+2Ph61vkJ74vywCPq2wbhXNOF4tXf+\npSwj25rWOhbgGKMtZlYKFt9q78SogXgj/27AIL0Br2QFFx1oMhk8K6euIWMweLZE\ngVrfDWk95pf/oIRpfGPZguJqFRtJ+GviQ9NKEFwvg90UbdfqFa78He2uisQp7NcE\nEQHmn9tLymlhjrkVLrxlighrPeUIp8wITGT/yre/qv/0VYSxqovyUX5wgMcMgm8F\n7WkD3uebuMuCMleOQFqnKfBvyyrfU8YGYA8gj+4RxjqCHHPfrl5AJIq2g57jcUU4\nH2seDySpULO3Lt7xsKFrxOX7sCS+sH0Gk5YAJFFfseLgr68EzDQVogbv4+hm8Dw0\nynlfNYwTWZnX3SlgX6Hq8Ro3XHq1It5bKVPkO2BrI1e+MFcBy/p8wEPwmvfCYeuX\nlX1KApLBp+a2BhrSdDMqIcU30XVihg4NweGvZi6B55I6gOPt3ExVegXAL0YHe7ky\nN4k8uDNmy1Er3/HALATg3DJEHkZthsSmVqotSMP5wOVClDv/C8lOcOErkKEg7coZ\nthl0HiDr+QPlY3UyYIu4nqRgVgboY7MCMAukIO4DY5uv3DtIomhsX/EmipDFw7m7\n1uCdPiWQ6WriRyd763gYTe9vlREje0kc2Fj1C2J1RLg6n7cHcnCrClj7PeqhLK7L\n4IqvT/tdzf/L8KL1RizJljDBPWEe+EqDdFCpKbdkix6h8oiQy9hGyW+8aYKzin0n\nc6UAURGDWGptAHPX5/Bi3OT0KzdizRM9nNrG45zw4DwbmQ8KxaZIHmy5FWYVfS+x\nz0c+J4wAFl96anX1SnwWnEBhovjri3divFAAfT6/5KfH7R5WkeCZSTNvkoEmOPuj\nW8I8N8lJzOzinY7EcwE7yMoPKJ+iB4flPCqzQ5zjfIhDd2S6GmQXXQhfLS0x2x+q\ntE5DR3sDxc/ugYlRpLzJrJYwnxFcJ5SE8gLphu15P+R5iRkxDcygetpPfOJjYBop\nsZ3mJsrV2OGKRMqEGLUZ3/TM9tYfKhtq2crcRZC+5GoG1s8lplM742hEHm/NM3+N\nmS0/GAKQ+r3AjNPX4brbzkmoJtoI7dIbDfyBZAV/ssZxRyW4jm/OcnI2fjvBeCp6\njTX+XvbZgRFvh3iOrARkHtxfXzne1egD4eApuB4jRxikzk4ZYnGRx6q90T1i5H4+\n-----END RSA PRIVATE KEY-----\n", "password");
-    
+
     var rsa = new RSAKey();
     rsa.readPrivateKeyFromASN1HexString(decryptedHexKey);
-    
+
     var pem = PKCS5PKEY.getEryptedPKCS5PEMFromRSAKey(rsa, "password", "AES-128-CBC");
-    
+
     return rsa;
-    
+
   },
-  
+
   encode: function (json) {
     return $.base64.encode(JSON.stringify(json));
   },
-  
+
   decode: function (base64) {
     return JSON.parse($.base64.decode(base64));
   }

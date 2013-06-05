@@ -26,7 +26,19 @@
 
     %a{:'data-tip' => 'Change your group picture'}
       {{#with group.avatar}}
-      {{> groups-avatar}}
+
+      // Begin: Move that out of here
+      {{#if placeholder}}
+
+      %img.group-avatar
+
+      {{else}}
+
+      %img.group-avatar.encrypted-image{src: empty_image, alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-key' => '{{key}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
+
+      {{/if}}
+      // End: Move that out of here
+
       {{/with}}
 
     %form

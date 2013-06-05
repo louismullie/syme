@@ -1,38 +1,41 @@
-{{#if PPA_k}}
-// Invite link
-%a.group-card-title.integrate-link{  href: '/{{name}}', :'data-hbs' => '',
-                    :'data-invite-id' => '{{invite_id}}',
-                    :'data-invite-PPA_k' => '{{PPA_k}}',
-                    :'data-invite-k_sA' => '{{k_sA}}',
-                    :'data-group-name' => '{{name}}'}
-  {{name}}
+//{{#if deletable}}
+// Delete button
+//{{/if}}
 
-{{else}}
+.group-banner
+  %a.delete-group{ href: '#', :'data-group-id' => '{{id}}' }
+    %i.icon-remove
 
-{{#if new_keys}}
-
-// Confirmation link
-%a.group-card-title.update-link{ href: '/{{name}}', :'data-hbs' => '',
-                :'data-invite-new_keys' => '{{new_keys}}',
-                :'data-group-name' => '{{name}}'}
-  {{name}}
-
-{{else}}
-
-// Normal link
-%a.group-card-title{href: '/{{name}}', :'data-hbs' => ''}
-  {{name}}
-
-{{/if}}
-
-{{/if}}
-
-.group-card-content
-  %a.group-avatar-link{href: '#'}
-    // Delete button
-    {{#if deletable}}
-    %a.delete-group{href: '#', :'data-group-id' => '{{id}}'} X
-    {{/if}}
-
+  %a.group-banner-link{ href: '#' }
     // Group avatar
     {{#with avatar}} {{> groups-avatar}} {{/with}}
+
+.group-card-content
+  {{#if PPA_k}}
+  // Invite link
+  %a.integrate-link{  href: '/{{name}}', :'data-hbs' => '',
+                      :'data-invite-id' => '{{invite_id}}',
+                      :'data-invite-PPA_k' => '{{PPA_k}}',
+                      :'data-invite-k_sA' => '{{k_sA}}',
+                      :'data-group-name' => '{{name}}'}
+    {{name}}
+
+  {{else}}
+
+  {{#if new_keys}}
+
+  // Confirmation link
+  %a.update-link{ href: '/{{name}}', :'data-hbs' => '',
+                  :'data-invite-new_keys' => '{{new_keys}}',
+                  :'data-group-name' => '{{name}}'}
+    {{name}}
+
+  {{else}}
+
+  // Normal link
+  %a{href: '/{{name}}', :'data-hbs' => ''}
+    {{name}}
+
+  {{/if}}
+
+  {{/if}}

@@ -193,7 +193,7 @@ guard('uploader', {
 
       asocial.thumbnail.make(
 
-        this, file.type, 350, 350, function (image) {
+        this, file.type, 700, 700, function (image) {
 
           var colors = getColors(img),
               dominant = arrayToRgb(colors[1]),
@@ -201,7 +201,7 @@ guard('uploader', {
 
           var data = {
             mode: 'group_avatar',
-            image_size: '350x350',
+            image_size: '700x700',
 
             dominant: dominant,
             first_median: median[0],

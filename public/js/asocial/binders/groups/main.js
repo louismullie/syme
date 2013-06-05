@@ -3,14 +3,27 @@ asocial.binders.add('groups', { main: function() {
   // Decrypt group avatars.
   asocial.crypto.decryptMedia();
 
+  $("div.group-banner").on({
+    mouseenter: function(){
+      $(this).find('a.delete-group')
+        .css({ display: 'block' })
+        .transition({ opacity: 1}, 100);
+    },
+    mouseleave: function(){
+      $(this).find('a.delete-group')
+        .transition({ opacity: 0}, 100)
+        .css({ display: 'none' });
+    }
+  });
+
   $('.delete-group').click(function (e) {
-    
+
     e.preventDefault();
-    
+
     var groupId = $(this).data('group-id');
-    
+
     var message = 'Are you sure? Type "yes" to confirm.';
-    
+
     if (prompt(message) == 'yes') {
       $.ajax('/groups/' + groupId, {
         type: 'DELETE',
@@ -23,9 +36,9 @@ asocial.binders.add('groups', { main: function() {
         }
       });
     }
-    
+
   });
-  
+
   $('#create_group').submit(function (e) {
 
     // Prevent form submission.

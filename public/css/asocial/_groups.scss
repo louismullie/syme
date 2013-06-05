@@ -47,6 +47,49 @@
         }
       }
 
+      .group-banner {
+        position: relative;
+
+        a.delete-group {
+          width: 26px; height: 26px;
+
+          display: none;
+          opacity: 0;
+
+          z-index: 3;
+          position: absolute;
+          top: .5em; right: .5em;
+
+          padding: 1px 0 0 3px;
+
+          text-align: left;
+          background: rgba(255, 255, 255, 0.9);
+
+          border-radius: 25px;
+
+          @include transition(color 0.1s ease);
+
+          &:hover {
+            color: lighten($linkColor, 15%);
+            text-decoration: none;
+          }
+        }
+
+        a.group-banner-link {
+          display: block;
+
+          img {
+            width: 100%; height: 135px;
+
+            background-size: 100% auto;
+            background-position-y: 50%;
+
+            border-top-left-radius: $baseBorderRadius;
+            border-top-right-radius: $baseBorderRadius;
+          }
+        }
+      }
+
       .group-card-content {
         padding: 1em;
 
@@ -54,12 +97,6 @@
 
         p.group-infos {
 
-        }
-
-        a.group-avatar-link {
-          display: block;
-
-          img { width: 100%;}
         }
       }
     }
