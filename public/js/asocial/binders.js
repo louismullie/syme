@@ -276,7 +276,7 @@ guard('binders', {
                 asocial.state.notifications.length + '</a>');
           }
 
-        });
+        }, { force: true });
 
       } else {
         // If logged off, render in entire page

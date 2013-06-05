@@ -110,17 +110,17 @@ guard('socket', {
 
     notification: function(data){
       
-      if ($('#notifications-content').children().length == 0) {
+      if ($('#notifications-content').children().length == 0 ||
+          $('.empty-notification').first().attr('class') == 'empty-notification') {
         $('#notifications-content').html('');
-        $('#notifications').prepend('<span class="notification-badge"></a>');
+        $('#notifications').prepend('<span class="notification-badge">1</a>');
+      } else {
+        $('.notification-badge').html(parseInt($('.notification-badge').html()) + 1);
       }
       
-      $('.notification-badge').html(parseInt($('.notification-badge').html()) + 1);
+      data.html = asocial.helpers.notificationText(data);
       
-      var html = Fifty.render('feed-notification', {
-        html: asocial.helpers.notificationText(data),
-        owner: data.owner
-      });
+      var html = Fifty.render('feed-notification', data);
       
       $('#notifications-content').prepend(html);
       asocial.crypto.decryptAvatars();

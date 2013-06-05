@@ -52,7 +52,7 @@ asocial.binders.add('global', { main: function(){
 
   });
 
-  $('.notification-unread').click(function(e) {
+  $('#notifications-container').on('click', '.notification-unread', function(e) {
 
     var id = $(this).closest('.notification').attr('id');
 
@@ -61,8 +61,18 @@ asocial.binders.add('global', { main: function(){
       type: 'delete',
 
       success: function () {
+        
         // For now
         $('#' + id).remove();
+        
+        var count = parseInt($('.notification-badge').html()) - 1;
+        
+        if (count == 0) {
+          $('.notification-badge').remove();
+        } else {
+          $('.notification-badge').html(count);
+        }
+        
       },
 
       error: function () {

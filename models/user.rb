@@ -1,10 +1,8 @@
 class User
 
-  require_relative 'user/authorizable'
   require_relative 'user/notifiable'
   require_relative 'user/deletable'
 
-  include User::Authorizable
   include User::Notifiable
   include User::Deletable
 
@@ -22,7 +20,6 @@ class User
   field :invite_id, type: String
 
   # Modifiable accessible attributes.
-  field :privilege, type: String
   field :avatar_id, type: String
 
   field :full_name, type: String, default: 'Anonymous'

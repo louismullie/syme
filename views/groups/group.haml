@@ -21,7 +21,9 @@
   // Otherwise, show group name
   %h4.group-name
     %a{href: '/{{name}}', :'data-hbs' => ''} {{name}}
+    {{#if deletable}}
     %a.delete-group{href: '#', :'data-group-id' => '{{id}}'} X
+    {{/if}}
   {{/if}}
 
   {{/if}}
