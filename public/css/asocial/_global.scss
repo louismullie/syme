@@ -48,13 +48,18 @@ code, .code {
   font-family: $codeFontFamily;
 }
 
+// Hide canvas without display:none;
+// to prevent dom exceptions
 canvas {
-  // Hide canvas without display:none;
-  // to prevent dom exceptions
   max-height:1px;
   position:absolute;
   top:-1px;
   visibility:hidden;
+}
+
+// No margins for forms and inputs
+form, input {
+  margin: 0;
 }
 
 #main {

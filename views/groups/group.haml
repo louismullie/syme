@@ -1,36 +1,38 @@
-.group-infos
-  {{#if PPA_k}}
-  // If there is an invite link, show it
-  %a.integrate-link{href: '/{{name}}', :'data-hbs' => '',
-                   :'data-invite-id' => '{{invite_id}}',
-                   :'data-invite-PPA_k' => '{{PPA_k}}',
-                   :'data-invite-k_sA' => '{{k_sA}}',
-                   :'data-group-name' => '{{name}}'}
-    {{name}}
+{{#if PPA_k}}
+// Invite link
+%a.group-card-title.integrate-link{  href: '/{{name}}', :'data-hbs' => '',
+                    :'data-invite-id' => '{{invite_id}}',
+                    :'data-invite-PPA_k' => '{{PPA_k}}',
+                    :'data-invite-k_sA' => '{{k_sA}}',
+                    :'data-group-name' => '{{name}}'}
+  {{name}}
 
-  {{else}}
+{{else}}
 
-  {{#if new_keys}}
-  // If there is an invite link, show it
-  %a.update-link{href: '/{{name}}', :'data-hbs' => '',
-                   :'data-invite-new_keys' => '{{new_keys}}',
-                   :'data-group-name' => '{{name}}'}
-    {{name}}
+{{#if new_keys}}
 
-  {{else}}
-  // Otherwise, show group name
-  %h4.group-name
-    %a{href: '/{{name}}', :'data-hbs' => ''} {{name}}
+// Confirmation link
+%a.group-card-title.update-link{ href: '/{{name}}', :'data-hbs' => '',
+                :'data-invite-new_keys' => '{{new_keys}}',
+                :'data-group-name' => '{{name}}'}
+  {{name}}
+
+{{else}}
+
+// Normal link
+%a.group-card-title{href: '/{{name}}', :'data-hbs' => ''}
+  {{name}}
+
+{{/if}}
+
+{{/if}}
+
+.group-card-content
+  %a.group-avatar-link{href: '#'}
+    // Delete button
     {{#if deletable}}
     %a.delete-group{href: '#', :'data-group-id' => '{{id}}'} X
     {{/if}}
-  {{/if}}
 
-  {{/if}}
-
-  %p.group-infos {{user_count}} user(s)
-
-%a{href: '#'}
-  {{#with avatar}}
-  {{> groups-avatar}}
-  {{/with}}
+    // Group avatar
+    {{#with avatar}} {{> groups-avatar}} {{/with}}

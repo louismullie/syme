@@ -1,40 +1,38 @@
 #groups.row
   .small-12.large-8.large-centered.columns
     %ul
-      {{#if invites}}
-      {{#each invites}}
+      {{#if invites}}{{#each invites}}
       .group
         .group-infos
           // Otherwise, show group name
           %h4.group-name
             %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'} Accept invitation
+
         %a.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}'}
           %img.group-photo{src: '/img/groupphoto.jpg', alt: 'Group avatar'}
-          //%p.user_count {{user_count}} user(s)
           //{{inviter_name}} has invited you to join his group "{{group_name}}".
-      {{/each}}
-      {{/if}}
+      {{/each}}{{/if}}
 
       {{#if groups}}
+
+      // Begin group loop
       {{#foreach groups}}
 
+      // Create group card on first position
+      {{#if $first}}
+      %li.group-card
+        {{> groups-create}}
+      {{/if}}
 
       %li.group-card
         {{> groups-group}}
 
-      {{#if $first}}
-      %h1 FIRST
-      {{/if}}
-
       {{/foreach}}
+      // End groups loop
+
       {{else}}
 
+      // No groups
       No groups.
 
       {{/if}}
-
-  %form#create_group{method: 'post'}
-    %h1 Create group
-
-    Group name:
-    %input{type: 'text', name: 'name'}

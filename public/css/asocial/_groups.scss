@@ -15,36 +15,52 @@
       display: inline-block;
 
       margin-bottom: $bodyPadding;
-      @extend .pal;
 
-      background: $bodyBackgroundColor2;
+      background: $bodyBackgroundColor;
       border: $baseBorderStyle;
       border-radius: $baseBorderRadius;
 
+      box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
+
       text-align: left;
 
-      h4.group-name {
-        margin: 0 0 0.5em 0;
+      a.group-card-title {
+        margin: 0;
+        padding: 0 1em;
 
-        a {
-          font: 200 1em/1.5em $opensans;
-          color: $black;
+        display: block;
 
-          @include transition(color 0.2s ease);
+        background: $bodyBackgroundColor2;
 
-          &:hover {
-            color: lighten($black, 15%);
-            text-decoration: none;
-          }
+        border-bottom: $baseBorderStyle;
+        border-top-left-radius: $baseBorderRadius;
+        border-top-right-radius: $baseBorderRadius;
+
+        color: $gray;
+        font: 600 .9em/3em $opensans;
+
+        @include transition(color 0.1s ease);
+
+        &:hover {
+          color: lighten($darkgray, 15%);
+          text-decoration: none;
         }
       }
 
-      p.group-infos {
-        font-size: 0.9em;
-      }
+      .group-card-content {
+        padding: 1em;
 
-      a.group-avatar {
-        width: 100%;
+        font: normal .9em/2em $opensans;
+
+        p.group-infos {
+
+        }
+
+        a.group-avatar-link {
+          display: block;
+
+          img { width: 100%;}
+        }
       }
     }
   }
