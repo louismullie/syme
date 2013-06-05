@@ -118,11 +118,9 @@ guard('socket', {
         $('.notification-badge').html(parseInt($('.notification-badge').html()) + 1);
       }
       
-      var html = Fifty.render('feed-notification', {
-        html: asocial.helpers.notificationText(data),
-        owner: data.owner,
-        id: data.id
-      });
+      data.html = asocial.helpers.notificationText(data);
+      
+      var html = Fifty.render('feed-notification', data);
       
       $('#notifications-content').prepend(html);
       asocial.crypto.decryptAvatars();
