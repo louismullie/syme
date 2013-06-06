@@ -1,6 +1,6 @@
 asocial.binders.add('feed', { feed_form: function(){
 
-  // AJAX for feed form
+  /* AJAX for feed form */
   $('#main').on('submit', '#feed-form', function(e){
 
     e.preventDefault();
@@ -36,7 +36,7 @@ asocial.binders.add('feed', { feed_form: function(){
 
   });
 
-  // Upload dropzone
+  /* Upload dropzone */
 
   var dropzone = '#feed-form';
   var draghelper = '#drag-helper';
@@ -61,44 +61,27 @@ asocial.binders.add('feed', { feed_form: function(){
       asocial.uploader.selectFile(file);
     });
 
-  // Markdown cheatsheet toggle
-
-  $('#main').on('click', '.markdown-cheatsheet-toggle', function(e){
-    e.preventDefault();
-    var container = $('.markdown-cheatsheet');
-    if(container.is(':visible')){
-      container.slideUp();
-    }else{
-      container.slideDown();
-    }
-  });
-
-  $('#main').on('click', '.markdown-cheatsheet button.close', function(e){
-    e.preventDefault();
-    $('.markdown-cheatsheet').slideUp();
-  });
-
-  // Form focus color
-
-  $('#feed-form').focusin(function(){
-    $(this).addClass('focused');
-    $('#feed-form-avatar').addClass('focused');
-  }).focusout(function(){
-    $(this).removeClass('focused');
-    $('#feed-form-avatar').removeClass('focused');
-  });
-
-  // Focus on textarea
-
-  $('#feed-form textarea').focus();
+  /* Avatar changing */
 
   $('#feed-form-avatar').click(function() {
-    $('#upload_avatar').trigger('click');
+    $('#upload_avatar').click();
   });
 
   $('#upload_avatar').on('change', function() {
     var filename = asocial.helpers.getFilename($(this).val());
     asocial.uploader.selectAvatar($(this)[0].files[0]);
   });
+
+  /* File upload */
+
+  // Trigger the file upload input
+  $('#main').on('click', 'a[data-upload-trigger]', function(e){
+    // Unused for now.
+    var mode = $(this).data('upload-trigger');
+    $('#upload_file').trigger('click');
+  });
+
+  // Prepare file upload when the file is changed.
+  $('#upload_file').on('change', asocial.uploader.selectFile);
 
 } }); // asocial.binders.add();

@@ -15,7 +15,7 @@ asocial.binders.add('feed', { crypto: function(){
     link.html('Decrypting')
         .addClass('decrypting')
         .data('decrypting', true);
-    
+
     var id       = link.data('attachment-id');
     var filename = link.data('attachment-filename');
     var key      = link.data('attachment-key');
@@ -23,7 +23,7 @@ asocial.binders.add('feed', { crypto: function(){
     key = asocial_private_key().decrypt(key);
 
     asocial.crypto.getFile(id, key, function (url) {
-    
+
       link.attr('href', url)
           .attr('download', filename)
           // Change link status
@@ -35,13 +35,13 @@ asocial.binders.add('feed', { crypto: function(){
       link.closest('.attachment').find('a.image-download')
           .attr('href', url)
           .attr('download', filename);
-      
+
       progress.remove();
-    
+
       //if(confirm('Click OK to download.')) {
       //  saveAs(url, filename);
       //}
-    
+
     });
 
 
@@ -51,15 +51,5 @@ asocial.binders.add('feed', { crypto: function(){
   $(document).on('click', 'a.image-download', function(){
     $(this).parent().find('.encrypted-file').click();
   });
-
-  /* Upload methods */
-
-  // Trigger the file input box when text clicked.
-  $('#choose_file').click(function() {
-    $('#upload_file').trigger('click');
-  });
-
-  // Prepare file upload when the file is changed.
-  $('#upload_file').on('change', asocial.uploader.selectFile);
 
 } }); // asocial.binders.add();

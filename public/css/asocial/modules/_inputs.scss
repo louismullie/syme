@@ -20,8 +20,6 @@ input[type="url"], input[type="search"], input[type="tel"], input[type="color"],
     color: desaturate(lighten($base, 45%), 15%);
   }
 
-  @include transition(.25s linear);
-
   &:focus {
     @include box-shadow(none);
   }
@@ -53,8 +51,12 @@ input[disabled], input[readonly], textarea[disabled], textarea[readonly] {
 // Textarea
 textarea {
   height: auto;
-  font-size: 105%;
-  line-height: 24px;
-  padding: 5px 11px;
+  font-size: 0.9em;
+  line-height: 1.2em;
+  padding: 0.4em 0.5em;
   text-indent: 0;
+
+  &:focus {
+    background-color: white;
+  }
 }

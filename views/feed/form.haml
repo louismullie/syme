@@ -1,44 +1,40 @@
 %form#feed-form{method: 'post'}
-  .row.collapse
-    .columns.hide-for-small.large-2
-      %a#feed-form-avatar
-        {{#with user}} {{> feed-avatar}} {{/with}}
+  %a#feed-form-avatar
+    {{#with user}} {{> feed-avatar}} {{/with}}
 
-      %input#upload_avatar.hidden{type: 'file', name: 'account-picture'}
+  %input#upload_avatar.hidden{type: 'file', name: 'account-picture'}
 
-    .columns.small-12.large-10
-      // Drag-and-drop helper
-      #drag-helper
-        %p Drag & Drop files here
+  // Drag-and-drop helper
+  #drag-helper
+    %p Drag & Drop files here
 
-      // Progress bar (hidden for now)
-      .progress.progress-striped.active.hidden
-        #progress_bar.bar
+  // Progress bar (hidden for now)
+  .progress.progress-striped.active.hidden
+    #progress_bar.bar
 
-      // Textarea
-      %textarea.autogrow{name: 'content', maxlength: '5000', placeholder: '{{t "feed.placeholder"}}'}
+  // Textarea
+  %textarea.autogrow{name: 'content', maxlength: '5000', placeholder: "What's happening?"}
 
-      // Hidden encryption-related inputs
-      %input#encrypted_content{type: 'hidden', name: 'encrypted_content'}
-      %input#mentioned_users{type: 'hidden', name: 'mentioned_users'}
+  // Hidden encryption-related inputs
+  %input#encrypted_content{type: 'hidden', name: 'encrypted_content'}
+  %input#mentioned_users{type: 'hidden', name: 'mentioned_users'}
 
-  .row
-    .columns.small-12.large-10.large-offset-2
-      %input#upload_id{type: 'hidden', name: 'upload_id'}
-      %input#upload_file.hidden{type: 'file'}
+  // Hidden upload-related inputs
+  %input#upload_id{type: 'hidden', name: 'upload_id'}
+  %input#upload_file.hidden{type: 'file'}
 
-      .textarea-supplement
-        .post-button.pull-right
-          %button.btn{type: 'submit'} Post
-
-        .textarea-supplement-bar
-          %p.textarea-supplement-tools.pull-right
-            // Nothing here
-
-          %p.textarea-supplement-info
-            {{t 'upload.drag_and_drop_files_here'}}
-
-            %a#choose_file{href: '#'}
-              {{t 'upload.choose_a_file'}}
-
-          %p.textarea-supplement-file.hidden
+  // Attachment box
+  %ul#attachments
+    %li.title Attach:
+    %li
+      %a{ href: '#', :'data-upload-trigger' => 'photo' }
+        %i.icon-camera
+        Photo
+    %li
+      %a{ href: '#', :'data-upload-trigger' => 'video' }
+        %i.icon-film
+        Video
+    %li
+      %a{ href: '#', :'data-upload-trigger' => 'file' }
+        %i.icon-desktop
+        File
