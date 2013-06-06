@@ -4,14 +4,14 @@ get '/:group' do |group|
   pass
 end
 
-get '/logout', auth: [] do
+get '/logout' do
   session.clear
   redirect '/login'
 end
 
 get '/*' do |route|
 
-  # Fifty.compile_template_files if $env == :development
+  Fifty.compile_template_files if $env == :development
 
   pass if request.xhr? or route.index('.js')
 

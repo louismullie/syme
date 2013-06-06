@@ -1,8 +1,8 @@
 #groups.row
   .small-12.large-8.large-centered.columns
-    %ul
-      {{#compare groups '||' invites}}
+    {{#if invites}}
 
+    %ul
       // Invitations
       {{> groups-invites}}
 
@@ -12,9 +12,22 @@
       // Group Loop
       {{#each groups}} {{> groups-group}} {{/each}}
 
-      {{else}}
+    {{else}}
 
-      // No groups
-      No groups.
+    {{#if groups}}
 
-      {{/compare}}
+    %ul
+      // Create group
+      {{> groups-create}}
+
+      // Group Loop
+      {{#each groups}} {{> groups-group}} {{/each}}
+
+    {{else}}
+
+    // First group creation
+    {{> groups-create_first}}
+
+    {{/if}}
+
+    {{/if}}

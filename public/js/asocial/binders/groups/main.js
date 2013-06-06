@@ -47,7 +47,7 @@ asocial.binders.add('groups', { main: function() {
 
   });
 
-  $('#create_group').submit(function (e) {
+  $('#create_group, #create_first_group').submit(function (e) {
 
     // Prevent form submission.
     e.preventDefault();

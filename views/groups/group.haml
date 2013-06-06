@@ -10,10 +10,10 @@
       // Group avatar
       {{#with avatar}} {{> groups-avatar}} {{/with}}
 
-  .group-card-content
+  .group-card-content{ href: '/{{name}}', :'data-hbs' => '' }
     {{#if PPA_k}}
     // Invite link
-    %a.group-link.integrate-link{  href: '/{{name}}', :'data-hbs' => '',
+    %a.group-link.integrate-link{ href: '/{{name}}', :'data-hbs' => '',
                         :'data-invite-id' => '{{invite_id}}',
                         :'data-invite-PPA_k' => '{{PPA_k}}',
                         :'data-invite-k_sA' => '{{k_sA}}',
@@ -33,7 +33,7 @@
     {{else}}
 
     // Normal link
-    %a.group-link{href: '/{{name}}', :'data-hbs' => ''}
+    %a.group-link{ href: '/{{name}}', :'data-hbs' => '' }
       {{name}}
 
     {{/if}}
