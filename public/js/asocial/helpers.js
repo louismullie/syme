@@ -244,6 +244,8 @@ guard('helpers', {
 
       if (action == 'request_invite_confirm') {
 
+        alert('Please change to group ID here');
+        
         return text = actors + ' has asked to join  ' +
                       notification.group + '. Confirm <a href="/' +
                       notification.group + '">here</a>.' ;

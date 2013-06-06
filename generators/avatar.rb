@@ -16,7 +16,7 @@ class AvatarGenerator
         placeholder: false,
         id: avatar.id.to_s,
         key: avatar.key_for_user(current_user),
-        group_name: group.name
+        group_id: group.id
       }
       
     else
