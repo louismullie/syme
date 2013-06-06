@@ -7,7 +7,7 @@ asocial.binders.add('feed', { main: function(){
   $('textarea.autogrow').autogrow().removeClass('autogrow');
 
   // ScrollToFixed
-  $('#group-info').scrollToFixed({ marginTop: 20 });
+  // $('#group-info').scrollToFixed({ marginTop: 20 });
 
   // Infinite scroller
   $('#feed').data('pagesloaded', 1);

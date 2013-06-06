@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { form_feed: function(){
+asocial.binders.add('feed', { feed_form: function(){
 
   // AJAX for feed form
   $('#main').on('submit', '#feed-form', function(e){
@@ -23,11 +23,11 @@ asocial.binders.add('feed', { form_feed: function(){
 
     var group = asocial.binders.getCurrentGroup();
     var url = '/' + group + '/post/create';
-    
+
     $.post(url, request, function(data){
-      
+
       asocial.helpers.resetFeedForm();
-      
+
     }).fail(function(){
 
       // Implement error if posting failed
@@ -91,11 +91,11 @@ asocial.binders.add('feed', { form_feed: function(){
   // Focus on textarea
 
   $('#feed-form textarea').focus();
-  
+
   $('#feed-form-avatar').click(function() {
     $('#upload_avatar').trigger('click');
   });
-  
+
   $('#upload_avatar').on('change', function() {
     var filename = asocial.helpers.getFilename($(this).val());
     asocial.uploader.selectAvatar($(this)[0].files[0]);

@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { userlist: function(){
+asocial.binders.add('feed', { feed_panel: function(){
 
   var dropzone = '#feed-form';
   var draghelper = '#drag-helper';
@@ -125,7 +125,7 @@ asocial.binders.add('feed', { userlist: function(){
 
     $('.invited-user').addClass('hidden');
     $('.invite-user').removeClass('hidden');
-    
+
     // Hide return button
     $(this)
       .transition({ opacity: 0, duration: 100 })
