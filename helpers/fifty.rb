@@ -11,7 +11,7 @@ Fifty.helper :time_ago, "
   }
 "
 
-Fifty.helper :to_readable_size, "
+Fifty.helper :to_readable_size, %{
 function (bytes, precision) {
   precision = precision || 2;
   var kilobyte = 1024;
@@ -38,54 +38,7 @@ function (bytes, precision) {
     return bytes + ' B';
   }
 }
-"
-
-Fifty.helper :compare, %{
-
-  function (lvalue, operator, rvalue, options) {
-
-    var operators, result;
-
-    if (arguments.length < 3) {
-      console.log("Handlerbars Helper 'compare' needs 2 parameters");
-    }
-
-    if (options === undefined) {
-      options = rvalue;
-      rvalue = operator;
-      operator = "===";
-    }
-
-    operators = {
-      '==': function (l, r) { return l == r; },
-      '===': function (l, r) { return l === r; },
-      '!=': function (l, r) { return l != r; },
-      '!==': function (l, r) { return l !== r; },
-      '<': function (l, r) { return l < r; },
-      '>': function (l, r) { return l > r; },
-      '<=': function (l, r) { return l <= r; },
-      '>=': function (l, r) { return l >= r; },
-      '||': function (l, r) { return l || r; },
-      '&&': function (l, r) { return l && r; },
-      'typeof': function (l, r) { return typeof l == r; },
-      'multipleof': function (l, r) { return l % r == 0; }
-    };
-
-    if (!operators[operator]) {
-      console.log("Handlerbars Helper 'compare' doesn't know the operator " + operator);
-    }
-
-    result = operators[operator](lvalue, rvalue);
-
-    if (result) {
-      return options.fn(this);
-    } else {
-      return options.inverse(this);
-    }
-
-  }
-
-} # Fifty.helper :compare
+}
 
 Fifty.helper :foreach, %{
 

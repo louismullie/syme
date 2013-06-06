@@ -1,5 +1,50 @@
 // Masonry content disposition
 #groups {
+  .create-first-group {
+    h2 {
+      font: 200 2em/2em $opensans;
+      text-align: center;
+
+      margin-bottom: 1em;
+    }
+
+    form#create_first_group {
+      input[type="text"] {
+        height: 70px;
+        padding: 0 0.5em;
+
+        line-height: 1.8em;
+        font-size: 1.8em;
+        font-weight: 200;
+
+        text-align: center;
+      }
+
+      a[role="submit"] {
+        @include btn-slide(70px, $bodyBackgroundColor2);
+
+        font-size: 2em;
+
+        span {
+          font-weight: 200;
+
+          &.default {
+            color: lighten($black, 30%);
+          }
+          &.hover {
+            color: $success;
+          }
+        }
+
+        border: 2px solid $gray;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
   ul {
     @include column-gap($bodyPadding);
 
@@ -34,6 +79,20 @@
 
         .group-card-content {
           display: none;
+
+          form#create_group {
+            input[type="text"] {
+              margin: 0;
+            }
+
+            a[role="submit"] {
+              margin-left: 1em;
+              display: block;
+
+              line-height: 40px;
+              text-align: center;
+            }
+          }
         }
 
         &.opened {
@@ -82,7 +141,7 @@
           opacity: 0;
 
           position: absolute;
-          top: .5em; right: .5em;
+          top: 10px; right: 10px;
 
           padding: 0 0.5em;
           font-size: 0.8em;
@@ -130,7 +189,7 @@
       }
 
       .group-card-content {
-        padding: 1em 1.5em;
+        padding: 1em;
 
         font: normal .9em/2em $opensans;
 

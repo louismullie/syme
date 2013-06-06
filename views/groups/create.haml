@@ -5,6 +5,9 @@
     %i.icon-chevron-down
 
   .group-card-content
-    %form#create_group{method: 'post'}
-      Group name:
-      %input{type: 'text', name: 'name'}
+    %form#create_group.row{ method: 'post' }
+      .tight.columns.small-12.large-7
+        %input{ type: 'text', name: 'name', placeholder: 'Enter a group name' }
+
+      .tight.columns.small-12.large-5
+        %a.btn.btn-white{ href: '#', role: 'submit' } Create

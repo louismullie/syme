@@ -30,6 +30,11 @@ asocial.binders.add('global', { main: function(){
     e.preventDefault();
   });
 
+  // Make a[role="submit"] behave like <input type="submit">
+  $(document).on('click', 'a[role="submit"]', function(e){
+    $(this).closest('form').submit();
+  });
+
   // Implement session timeouts
   $(document).ready(function () {
 
@@ -61,18 +66,18 @@ asocial.binders.add('global', { main: function(){
       type: 'delete',
 
       success: function () {
-        
+
         // For now
         $('#' + id).remove();
-        
+
         var count = parseInt($('.notification-badge').html()) - 1;
-        
+
         if (count == 0) {
           $('.notification-badge').remove();
         } else {
           $('.notification-badge').html(count);
         }
-        
+
       },
 
       error: function () {

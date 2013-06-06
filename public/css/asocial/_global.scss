@@ -63,7 +63,10 @@ form, input {
 }
 
 #main {
-  padding: ($bodyPadding + 80px) 0 0 $bodyPadding;
+  padding-top: $bodyPadding + 80px;
+
+  padding-left: $bodyPadding/3;
+  padding-right: $bodyPadding/3;
 }
 
 .hidden {
@@ -119,4 +122,12 @@ img.encrypted-image, img.encrypted-avatar {
 .avatar-comment {
   width: $avatarCommentSize; height: $avatarCommentSize;
   border-radius: $baseBorderRadius;
+}
+
+// Tight columns for Foundation
+.row > .tight {
+  padding-left: 0; padding-right: 0;
+
+  &:first-child { padding-left: $column-gutter / 2; }
+  &:last-child { padding-right: $column-gutter / 2; }
 }
