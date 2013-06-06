@@ -1,29 +1,43 @@
 .row
-  .columns.small-12.large-8
+  // Left column
+  .columns.small-12.large-7.large-offset-1
 
-    = haml :'feed/form'
-
+    // Feed form
     .row
-      .feed-separator.span6.offset1 &nbsp;
+      .small-12.collapse
+        = haml :'feed/form'
 
+    // Feed separator
+    .row
+      .small-12.feed-separator &nbsp;
+
+    // Feed
     #feed{ 'data-year' => '{{ year }}',
            'data-month' => '{{ month }}' }
 
+      // New content button
       #newcontent
         %a.btn{href: '#'} {{t 'new_content'}} (<span/>)
 
+      // Feed errors
       {{> error-alert}}
 
+      // Posts loop
       {{> feed-posts}}
 
+    // Load more button, triggered by infinite scroller
+    // every few pages
     #load-more
       %a.btn{href: '#'} {{t 'feed.load_more'}}
 
-  #group-info.columns.small-12.large-4
+  // Group panel
+  #feed-panel.columns.small-12.large-3.end
 
+    // Group name
     %h1
       {{group.name}}
 
+    // Group avatar
     %a{:'data-tip' => 'Change your group picture'}
       {{#with group.avatar}}
 
@@ -41,7 +55,9 @@
 
       {{/with}}
 
+    // Group avatar hidden file upload
     %form
       %input#group-avatar-file-input.hidden{type: 'file', name: 'avatar'}
 
+    // Userlist
     {{> feed-users}}

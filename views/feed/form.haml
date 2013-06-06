@@ -1,35 +1,44 @@
-.row
-  #feed-form-avatar.span1
-    %a{:'data-tip' => 'Change your profile picture'}
-      {{#with user}} {{> feed-avatar}} {{/with}}
-  %input#upload_avatar.hidden{type: 'file', name: 'account-picture'}
+%form#feed-form{method: 'post'}
+  .row.collapse
+    .columns.hide-for-small.large-2
+      %a#feed-form-avatar
+        {{#with user}} {{> feed-avatar}} {{/with}}
 
-  %form#feed-form.span6{method: 'post'}
+      %input#upload_avatar.hidden{type: 'file', name: 'account-picture'}
 
-    #drag-helper
-      %p Drag & Drop files here
+    .columns.small-12.large-10
+      // Drag-and-drop helper
+      #drag-helper
+        %p Drag & Drop files here
 
-    %textarea.autogrow{name: 'content', maxlength: '5000', placeholder: '{{t "feed.placeholder"}}'}
-    %input#encrypted_content{type: 'hidden', name: 'encrypted_content'}
-    %input#upload_id{type: 'hidden', name: 'upload_id'}
-    %input#mentioned_users{type: 'hidden', name: 'mentioned_users'}
-    %input.hidden#upload_file{type: 'file'}
+      // Progress bar (hidden for now)
+      .progress.progress-striped.active.hidden
+        #progress_bar.bar
 
-    .progress.progress-striped.active
-      #progress_bar.bar
+      // Textarea
+      %textarea.autogrow{name: 'content', maxlength: '5000', placeholder: '{{t "feed.placeholder"}}'}
 
-    .textarea-supplement
-      .post-button.pull-right
-        %button.btn{type: 'submit'} Post
+      // Hidden encryption-related inputs
+      %input#encrypted_content{type: 'hidden', name: 'encrypted_content'}
+      %input#mentioned_users{type: 'hidden', name: 'mentioned_users'}
 
-      .textarea-supplement-bar
-        %p.textarea-supplement-tools.pull-right
-          // Nothing here
+  .row
+    .columns.small-12.large-10.large-offset-2
+      %input#upload_id{type: 'hidden', name: 'upload_id'}
+      %input#upload_file.hidden{type: 'file'}
 
-        %p.textarea-supplement-info
-          {{t 'upload.drag_and_drop_files_here'}}
+      .textarea-supplement
+        .post-button.pull-right
+          %button.btn{type: 'submit'} Post
 
-          %a#choose_file{href: '#'}
-            {{t 'upload.choose_a_file'}}
+        .textarea-supplement-bar
+          %p.textarea-supplement-tools.pull-right
+            // Nothing here
 
-        %p.textarea-supplement-file.hidden
+          %p.textarea-supplement-info
+            {{t 'upload.drag_and_drop_files_here'}}
+
+            %a#choose_file{href: '#'}
+              {{t 'upload.choose_a_file'}}
+
+          %p.textarea-supplement-file.hidden

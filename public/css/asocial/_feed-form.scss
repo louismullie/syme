@@ -1,43 +1,23 @@
-#feed-form-avatar {
-  //@include arrow(right, 9px, 1px, 30px, $box1Color, $border1Color);
+form#feed-form {
+  margin-bottom: $bodyPadding;
+  padding: 1em;
 
-  &:before {
-    right: -15px;
+  background: $bodyBackgroundColor2;
+  border: $baseBorderStyle;
+  border-radius: $baseBorderRadius;
 
-    @include transition(all 0.2s linear);
-  }
-  &:after {
-    top: 30px;
-    right: -16px;
-    border-width: 9px;
+  box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
 
-    @include transition(all 0.2s linear);
-  }
+  a#feed-form-avatar {
+    display: block;
+    margin-right: 1em;
 
-  img.avatar {
-    width: $avatarPostSize; height: $avatarPostSize;
-    border-radius: $avatarPostSize;
-    border: 4px solid #FFF;
+    img.avatar {
+      border-radius: 50%;
 
-    @include transition(border-color 0.2s ease);
-  }
-
-  &.focused {
-    &:after {
-      border-left-color: $firm;
+      @include transition(border-color 0.2s ease);
     }
   }
-}
-
-#feed-form {
-  position: relative;
-
-  padding: 0;
-  margin-bottom: 15px;
-
-  border-radius: 6px;
-
-  @include transition(all 0.2s linear);
 
   textarea {
     min-height: 60px;
@@ -93,34 +73,6 @@
     border-radius: 0;
   }
 
-  .markdown-cheatsheet {
-    width: 100%;
-    padding: 5px 10px;
-    @include box-sizing;
-
-    display: none;
-
-    background-color: rgba(250, 250, 250, 0.2);
-    border: 1px solid #ccc;
-    border-bottom: none;
-
-    font-size: 13px;
-    color: #aaa;
-
-    h4 {
-      font-size: 1.1em;
-      margin-top: 0;
-      color: rgb(114, 114, 114);
-      border-bottom: 1px solid rgb(221, 221, 221);
-      padding-bottom: 5px;
-      margin-bottom: 5px;
-    }
-
-    button {
-      margin-top: -2px;
-    }
-  }
-
   .textarea-supplement {
     line-height: 26px;
 
@@ -164,6 +116,9 @@
 
       button {
         height: 34px;
+
+        margin-bottom: 0;
+
         border-radius: 0;
         border-bottom-right-radius: 4px;
 
@@ -193,15 +148,5 @@
     }
   }
 
-  & > div {
 
-    .right {
-      float: right;
-      text-align: right;
-
-      button {
-        margin-left: 5px;
-      }
-    }
-  }
 }
