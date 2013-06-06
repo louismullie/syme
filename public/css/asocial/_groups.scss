@@ -79,6 +79,20 @@
 
         .group-card-content {
           display: none;
+
+          form#create_group {
+            input[type="text"] {
+              margin: 0;
+            }
+
+            a[role="submit"] {
+              margin-left: 1em;
+              display: block;
+
+              line-height: 40px;
+              text-align: center;
+            }
+          }
         }
 
         &.opened {
@@ -175,7 +189,7 @@
       }
 
       .group-card-content {
-        padding: 1em 1.5em;
+        padding: 1em;
 
         font: normal .9em/2em $opensans;
 
