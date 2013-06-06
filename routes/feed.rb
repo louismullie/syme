@@ -1,6 +1,6 @@
-get '/:group', auth: [] do |group|
+get '/:group_id', auth: [] do |group_id|
 
-  @group = Group.where(name: group).first
+  @group = @user.groups.find(group_id)
 
   # Pass if 404
   pass if @group.nil?
@@ -13,9 +13,9 @@ get '/:group', auth: [] do |group|
 
 end
 
-post '/:group/page', auth: [] do |group|
+post '/:group_id/page', auth: [] do |group_id|
 
-  @group = Group.where(name: group).first
+  @group = @user.groups.find(group_id)
 
   page_num, last_timestamp, ignore = params[:page].to_i,
   params[:last_timestamp], [*params[:ignore]]
@@ -55,9 +55,9 @@ post '/:group/page', auth: [] do |group|
 end
 
 # For single-page view, feed with one post.
-get '/:group/posts/:id', auth: [] do |group,id|
+get '/:group_id/posts/:id', auth: [] do |group_id,id|
 
-  @group = Group.where(name: group).first
+  @group = Group.find(group_id)
 
   # Pass if 404
   pass if @group.nil?
@@ -70,9 +70,9 @@ get '/:group/posts/:id', auth: [] do |group,id|
 
 end
 
-get '/:group/archive/:year/?:month?', auth: [] do |group, year, month|
+get '/:group_id/archive/:year/?:month?', auth: [] do |group_id, year, month|
 
-  @group = Group.where(name: group).first
+  @group = Group.find(group_id)
 
   content_type :json
 

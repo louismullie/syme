@@ -30,7 +30,7 @@ guard('invite', {
         keylist: keylist,
         keylist_salt: keylist_salt,
         invite_id: asocial.state.invite.id,
-        group: asocial.state.group.name
+        group_id: asocial.binders.getCurrentGroup()
       });
       
       $.post('/invite/integrate', integration, function (data) {
@@ -39,7 +39,7 @@ guard('invite', {
           
           var ack = $.param({
             type: 'integrate',
-            group: asocial.state.group.name,
+            group_id: asocial.binders.getCurrentGroup(),
             invite_id: asocial.state.invite.id
           });
         
@@ -89,19 +89,21 @@ guard('invite', {
 
       var keylist = asocial.crypto.encryptKeyList(sB, public_keys);
 
+      var group_id = asocial.binders.getCurrentGroup();
+      
       var update = $.param({
         keylist: keylist,
         keylist_salt: sB_salt,
-        group: asocial.state.group.name
+        group_id: group_id
       });
-
+      
       $.post('/invite/update', update, function (data) {
 
         if (data.status == 'ok') {
           
           var ack = $.param({
             type: 'update',
-            group: asocial.state.group.name,
+            group_id: group_id,
             new_keys: Object.keys(new_keys)
           });
         
@@ -123,7 +125,7 @@ guard('invite', {
   refreshKeys: function () {
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
-    }, { group: asocial.state.group.name, force: true })
+    }, { group_id: asocial.binders.getCurrentGroup(), force: true })
   }
   
 });

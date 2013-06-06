@@ -1,6 +1,6 @@
-post '/:group/file/upload/create', auth: [] do |group|
+post '/:group_id/file/upload/create', auth: [] do |group_id|
 
-  @group = Group.where(name: group).first
+  @group = @user.groups.find(group_id)
 
   upload = @group.uploads.create(
     filename: params[:filename].slug,
@@ -58,9 +58,9 @@ post '/:group/file/upload/create', auth: [] do |group|
 
 end
 
-post '/:group/file/upload/append', auth: [] do |group|
+post '/:group_id/file/upload/append', auth: [] do |group_id|
 
-  @group = Group.where(name: group).first
+  @group = @user.groups.find(group_id)
 
   logger.info params
 
@@ -87,9 +87,9 @@ post '/:group/file/upload/append', auth: [] do |group|
 
 end
 
-get '/:group/file/download/:id', auth: [] do |group, id|
+get '/:group_id/file/download/:id', auth: [] do |group_id, id|
 
-  @group = Group.where(name: group).first
+  @group = Group.find(group_id)
 
   id = params[:id]
   upload = @group.uploads.find(id)
@@ -109,9 +109,9 @@ get '/:group/file/download/:id', auth: [] do |group, id|
 
 end
 
-get '/:group/file/download/:id/:chunk', auth: [] do |group, id, chunk|
+get '/:group_id/file/download/:id/:chunk', auth: [] do |group_id, id, chunk|
 
-  @group = Group.where(name: group).first
+  @group = Group.find(group_id)
 
   file = File.join('uploads', id, chunk)
 

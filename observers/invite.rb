@@ -43,7 +43,8 @@ class InviteObserver < Mongoid::Observer
       
       Asocial::Publisher.broadcast(
         group, :confirm, :invite, {
-          group: group.name
+          group: group.name,
+          group_id: group.id
       })
 
     end

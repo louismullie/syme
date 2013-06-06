@@ -95,15 +95,15 @@ asocial.binders.add('feed', { invite: function(){
        // Store keylist for A encrypted using k.
        var PPA_k = sjcl.encrypt(k, JSON.stringify(public_keys));
        
-       var group = asocial.binders.getCurrentGroup();
+       var group_id = asocial.binders.getCurrentGroup();
        
-      $.get('/' + group + '/invite/keys',
+      $.get('/' + group_id + '/invite/keys',
         $.param({invite_id: invite_id }), function (keyData) {
 
          // Generate integration data for server.
          var confirmation = $.param({
 
-           group: group,
+           group_id: group_id,
 
            invite_id: invite_id,
            PPA_k: $.base64.encode(PPA_k),
@@ -126,7 +126,7 @@ asocial.binders.add('feed', { invite: function(){
           
            var broadcast = $.param({
              public_key: PA_msg, invitee_id: id_A,
-             group: asocial.binders.getCurrentGroup()
+             group_id: asocial.binders.getCurrentGroup()
            });
 
            $.post('/invite/broadcast', broadcast, function (data) {

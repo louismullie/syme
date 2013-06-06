@@ -1,7 +1,7 @@
 # Create comment
-post '/:group/comment/create', auth: [] do |group|
+post '/:group_id/comment/create', auth: [] do |group_id|
 
-  @group = Group.where(name: group).first
+  @group = @user.groups.find(group_id)
   post = @group.posts.find(params[:post_id])
 
   post.touch

@@ -29,7 +29,7 @@ guard('uploader', {
       function (upload) {
         var params = $.param({
           transfer_id: transfer_id,
-          group: asocial.binders.getCurrentGroup()
+          group_id: asocial.binders.getCurrentGroup()
         });
 
         $.post('/send/file/start', params);

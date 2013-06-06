@@ -122,7 +122,7 @@ guard('binders', {
                 });
 
               // Pass the name of the group to getState().
-              }, { group: urlComponent.group });
+              }, { group_id: urlComponent.group });
 
             // If the route pertains to a user,
             } else {

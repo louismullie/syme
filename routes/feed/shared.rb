@@ -1,7 +1,7 @@
 # Delete post or comment.
-post '/:group/:model/delete', auth: [] do |group, model|
+post '/:group_id/:model/delete', auth: [] do |group_id, model|
 
-  @group = Group.where(name: group).first
+  @group = Group.find(group_id)
   post = @group.posts.find(params[:post_id])
 
   resource = if model == 'comment'
@@ -21,9 +21,9 @@ post '/:group/:model/delete', auth: [] do |group, model|
 end
 
 # Like post or comment.
-post '/:group/:model/like/:operation', auth: [] do |group, model, operation|
+post '/:group_id/:model/like/:operation', auth: [] do |group_id, model, operation|
 
-  @group = Group.where(name: group).first
+  @group = Group.find(group_id)
   post = @group.posts.find(params[:post_id])
 
   likeable = model == 'comment' ?

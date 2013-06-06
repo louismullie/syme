@@ -1,8 +1,8 @@
 require "base64"
 
-post '/:group/invite/send', auth: [] do |group|
+post '/:group_id/invite/send', auth: [] do |group_id|
 
-  @group = Group.where(name: group).first
+  @group = @user.groups.find(group_id)
 
   # Generate invitation token.
   token = SecureRandom.uuid
@@ -29,7 +29,7 @@ post '/:group/invite/send', auth: [] do |group|
 
 end
 
-get '/:group/invite/keys', auth: [] do
+get '/:group_id/invite/keys', auth: [] do |group_id|
 
   @group = Invite.find(params[:invite_id]).group
   
@@ -98,7 +98,7 @@ end
 
 post '/invite/confirm', auth: [] do
 
-  @group = Group.where(name: params[:group]).first
+  @group = Group.find(params[:group_id])
 
   invite = @group.invites.find(params[:invite_id])
   invitee_id = invite.invitee.id.to_s
@@ -168,7 +168,8 @@ end
 
 post '/invite/integrate', auth: [] do
 
-  @group = Group.where(name: params[:group]).first
+  @group = Group.find(params[:group_id])
+  
   membership = @user.memberships.where(group_id: @group.id).first
 
   membership.keylist = params[:keylist]
@@ -187,7 +188,7 @@ end
 
 post '/invite/update', auth: [] do
 
-  @group = Group.where(name: params[:group]).first
+  @group = Group.find(params[:group_id])
 
   m = @group.memberships.where(user_id: @user.id).first
   m.keylist = params[:keylist]
@@ -202,7 +203,7 @@ end
 
 post '/invite/broadcast', auth: [] do
 
-  @group = Group.where(name: params[:group]).first
+  @group = Group.find(params[:group_id])
   
   invitee_id = params[:invitee_id]
   invitee_key = params[:public_key]
@@ -223,7 +224,7 @@ end
 
 post '/invite/acknowledge', auth: [] do
   
-  @group = Group.where(name: params[:group]).first
+  @group = Group.find(params[:group_id])
   
   if params[:type] == 'update'
     

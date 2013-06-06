@@ -1,6 +1,6 @@
-post '/:group/post/create', auth: [] do |group|
+post '/:group_id/post/create', auth: [] do |group_id|
 
-  @group = Group.where(name: group).first
+  @group = @user.groups.find(group_id)
 
   message = JSON.parse(params[:encrypted_content])
   mentions = JSON.parse(params[:mentioned_users])
@@ -29,9 +29,9 @@ post '/:group/post/create', auth: [] do |group|
 
 end
 
-get '/:group/post/:id', auth: [] do |group,id|
+get '/:group_id/post/:id', auth: [] do |group_id,id|
 
-  @group = Group.where(name: group).first
+  @group = Group.find(group_id)
   post = @group.posts.find(id)
 
   content_type :json
@@ -40,11 +40,11 @@ get '/:group/post/:id', auth: [] do |group,id|
 
 end
 
-get '/:group/post/lastof/:page', auth: [] do |group, page|
+get '/:group_id/post/lastof/:page', auth: [] do |group_id, page|
 
   content_type :json
 
-  @group = Group.where(name: group).first
+  @group = Group.find(group_id)
 
   return '' if @group.posts.count == 0
 

@@ -1,9 +1,3 @@
-# Does this even work?
-get '/:group' do |group|
-  @group = Group.where(name: group).first
-  pass
-end
-
 get '/logout', auth: [] do
   session.clear
   redirect '/login'

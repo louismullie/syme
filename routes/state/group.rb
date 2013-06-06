@@ -2,7 +2,9 @@ get '/state/group', auth: [] do
 
   content_type :json
 
-  group = Group.where(name: params[:group]).first
+  group_id = params[:group_id]
+  
+  group = @user.groups.find(group_id)
 
   membership = @user.memberships.where(group_id: group.id).first
 

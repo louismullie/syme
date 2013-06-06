@@ -14,7 +14,7 @@ asocial.binders.add('feed', { feed: function(){
     if (asocial.state.invite.update)
       asocial.invite.update();
 
-  }, { group: asocial.state.group.name });
+  }, { group_id: asocial.binders.getCurrentGroup() });
 
   // Unread button
   $('#main').on('click', '#newcontent a.btn', function(e){

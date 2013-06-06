@@ -25,7 +25,7 @@ guard('socket', {
         if (!authorized) { alert('Not authorized for invite!'); }
         asocial.invite.update();
 
-      }, { group: data.group });
+      }, { group_id: data.group_id });
 
     }
 
@@ -270,7 +270,7 @@ guard('socket', {
         alert(data.sender_name + sentence + filename);
 
         $.post('/send/file/accept', $.param({
-          transfer_id: data.transfer_id, group: group
+          transfer_id: data.transfer_id, group_id: group
         }));
 
       } else if (data.action == 'accept') {

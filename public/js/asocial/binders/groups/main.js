@@ -92,7 +92,7 @@ asocial.binders.add('groups', { main: function() {
 
       // Create the group, passing the encrypted key list.
       $.post('/groups/create', params, function (group) {
-        asocial.binders.goToUrl(group.name);
+        asocial.binders.goToUrl(group.id);
       });
 
     });

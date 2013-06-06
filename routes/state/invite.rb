@@ -2,7 +2,7 @@ get '/state/invite', auth: [] do
 
   content_type :json
   
-  group = Group.where(name: params[:group]).first
+  group = Group.find(params[:group_id])
   
   invite = group.invites.where({
     invitee_id: @user.id.to_s, state: 3

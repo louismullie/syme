@@ -24,15 +24,15 @@ post '/groups/create', auth: [] do
 
   content_type :json
 
-  { name: name, screen_name: screen_name }.to_json
+  { id: group.id.to_s, name: name, screen_name: screen_name }.to_json
 
 end
 
 # Set group avatar.
-post '/:group/avatar', auth: [] do
+post '/:group_id/avatar', auth: [] do
 
-  group, avatar_id = params[:group], params[:avatar_id]
-  @group = Group.where(name: group).first
+  group_id, avatar_id = params[:group_id], params[:avatar_id]
+  @group = Group.find(group_id)
 
   @group.avatar_id = avatar_id
 
