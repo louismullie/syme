@@ -3,7 +3,7 @@ guard('socket', {
   // BEGIN CUD OPERATIONS
   updatedPosts: 0,
   updatedComments: 0,
-  
+
   request: {
 
     invite: function(data) {
@@ -13,7 +13,7 @@ guard('socket', {
     }
 
   },
-  
+
   confirm: {
 
     invite: function(data) {
@@ -109,7 +109,7 @@ guard('socket', {
     },
 
     notification: function(data){
-      
+
       if ($('#notifications-content').children().length == 0 ||
           $('.empty-notification').first().attr('class') == 'empty-notification') {
         $('#notifications-content').html('');
@@ -117,14 +117,14 @@ guard('socket', {
       } else {
         $('.notification-badge').html(parseInt($('.notification-badge').html()) + 1);
       }
-      
+
       data.html = asocial.helpers.notificationText(data);
-      
+
       var html = Fifty.render('feed-notification', data);
-      
+
       $('#notifications-content').prepend(html);
       asocial.crypto.decryptAvatars();
-      
+
       // Update the notifications counter.
       //$('#notifications-button span').html(new_notifications.count);
 
@@ -150,20 +150,30 @@ guard('socket', {
 
       console.log('New like:', data);
 
-      var link    = $('#' + data.target).find('a.post-likes, a.comment-likes').first(),
-          counter = link.find('span');
+      var target      = $('#' + data.target),
+          action_link = target.find('a.like-action').first(),
+          count_link  = target.find('a.like-count').first();
 
+      // Toggle action link
+      data.view.liked_by_user ?
+        action_link.addClass('active') :
+        action_link.removeClass('active');
+
+      // Change counter
       if(data.view.like_count > 0) {
-        counter.html(data.view.like_count);
-        link.attr('data-tip', data.view.liker_names);
+
+        // If there are some likes, update list of names
+        // and counter
+        count_link.attr('data-tip', data.view.liker_names);
+        count_link.find('span').html(data.view.like_count);
+
       } else {
-        counter.html('');
-        link.removeAttr('data-tip');
+
+        // Otherwise, clear both
+        count_link.removeAttr('data-tip');
+        count_link.find('span').html('');
+
       }
-
-      // Toggle the like link
-      data.view.liked_by_user ? link.addClass('active') : link.removeClass('active');
-
     },
 
     notification: function(data){
@@ -243,16 +253,16 @@ guard('socket', {
       global_count.html( comments.length );
 
     },
-    
+
     notification: function (data) {
       $('#' + data.target).remove();
-      
+
       if ($('#notifications-content').children().length == 0) {
         $('#notifications-content').html(
           Fifty.render('feed-notifications-empty'));
       }
     }
-    
+
   },
 
   send: {
@@ -329,9 +339,9 @@ guard('socket', {
       asocial.crypto.decrypt();
 
   },
-  
+
   tries: 0,
-  
+
   listen: function() {
 
     if (typeof(window.tries) == 'undefined') {
@@ -339,20 +349,20 @@ guard('socket', {
     }
 
     var _this = this;
-    
+
     try {
 
       if (typeof(document.eventSource) == 'undefined' ||
          document.eventSource.readyState != 1) {
-        
+
         document.eventSource = new EventSource('/stream');
-        
+
         document.eventSource.onmessage = function(e) {
-          
+
           var json = $.parseJSON(e.data);
           console.log('Socket action: ' + json.action + '.' + json.model);
           _this.receiveUpdate(json);
-          
+
         };
 
         document.eventSource.onclose = function(e) {
@@ -383,12 +393,12 @@ guard('socket', {
   },
 
   checkListen: function () {
-    
+
     window.tries += 1;
-    
+
     if (typeof(document.eventSource) != 'undefined' &&
        document.eventSource.readyState == 2) { this.listen(); }
-    
+
   }
 
 });

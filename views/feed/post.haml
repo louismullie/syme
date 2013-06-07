@@ -1,51 +1,24 @@
-.post.row{id: '{{id}}', 'data-encrypted' => '{{encrypted}}'}
-  // Post gutter
-  .post-gutter.span1
-    // Avatar.
+.post{id: '{{id}}', :'data-encrypted' => '{{encrypted}}'}
+  // Post header
+  .post-header
+    // Avatar
     {{#with owner}} {{> feed-avatar}} {{/with}}
 
-    // Updated at timestamp.
-    //{{#if show_updated_at}}
+    // Owner name
+    {{owner.name}}
 
-    //{{#with date}} {{> feed-date}} {{/with}}
+    // Post time
+    %time.timeago{datetime: '{{created_at}}'}
 
-    //{{/if}}
+    // Delete button
+    {{#if deletable}}
+    %a.post-delete.tip-icon{href: '#', 'data-tip' => "Delete post"}
+      %i.icon-remove
+    {{/if}}
 
-  // Central feed space.
-  .post-content.span6
-    .post-infos
-      .post-tools
-        %a{href: '#', 'data-tip' => '{{full_time}}'}
-          {{> feed-time}}
-
-        &sdot;
-
-        {{#with likeable}}
-
-        %a{ href: '#', 'data-tip' => '{{liker_names}}',
-            class: 'post-likes tip-icon {{#if liked_by_user}}active{{/if}}' }
-          %span {{like_count}}
-          %i.icon-heart
-
-        {{/with}}
-
-        &sdot;
-
-        %a.post-comments.tip-icon{href: '#', 'data-tip' => 'Comment'}
-          %span {{comment_count}}
-          %i.icon-comments
-
-        {{#if deletable}}
-
-        &sdot;
-
-        %a.post-delete.tip-icon{href: '#', 'data-tip' => "Delete post"}
-          %i.icon-remove
-
-        {{/if}}
-
-      %strong {{owner.name}}
-
+  // Post content
+  .post-content
+    // Collapsable content
     .collapsable
       .encrypted_notice
         %i This post is encrypted.
@@ -53,10 +26,41 @@
       .encrypted
         {"content": {{content}}, "key": "{{key}}"}
 
-    {{#if attachment}}
+    // Attachment
+    .attachment
+      {{#if attachment}}
+      {{#with attachment}} {{> feed-attachment}} {{/with}}
+      {{/if}}
 
-    {{#with attachment}} {{> feed-attachment}} {{/with}}
+  // Post footer
+  .post-footer
+    .row
+      // Actions
+      .post-footer-actions.columns.small-6
+        // Like action
+        {{#with likeable}}
+        %a{ href: '#', class: 'like-action {{#if liked_by_user}} active{{/if}}' }
+          %span.default-text Like
+          %span.active-text Unlike
+        {{/with}}
 
-    {{/if}}
+        &sdot;
 
-    {{> feed-comments}}
+        // Comment action
+        %a.comment-action{ href: '#' }
+          Comment
+
+      // Informations
+      .post-footer-informations.columns.small-6
+        // Like count
+        %a.like-count{ href: '#', 'data-tip' => '{{liker_names}}' }
+          <span>{{like_count}}</span> Likes
+
+        &sdot;
+
+        // Comment count
+        <span>{{comment_count}}</span> Comments
+
+  .post-comments
+    [Comments]
+    //{{> feed-comments}}

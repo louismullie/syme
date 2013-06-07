@@ -1,6 +1,6 @@
 asocial.binders.add('feed', { likes: function(){
 
-  $('#main').on('click', '.post-likes', function(e){
+  $('#main').on('click', '.like-action', function(e){
 
     var post_id = $(this).closest('.post').attr('id'),
         op      = $(this).hasClass('active') ? 'delete' : 'create',
