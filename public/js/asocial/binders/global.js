@@ -35,9 +35,16 @@ asocial.binders.add('global', { main: function(){
     $(this).closest('form').submit();
   });
 
-  // Make forms sumbit on enter key, wether there's a <submit> or not
-  $(document).on('keyup', 'form', function(e){
-    if(event.keyCode == 13) $(this).submit();
+  // Make forms sumbit on enter key (whether there's a <submit> or not)
+  // But omit enter key event on autocomplete dropdowns
+  $(document).on('keydown', 'form', function(e) {
+    var keyCode = e.keyCode ? e.keyCode : e.which;
+    if (keyCode == 13) {
+      e.preventDefault();
+      e.stopPropagation();
+      $(this).submit();
+      return false;
+    }
   });
 
   // Implement session timeouts
