@@ -1,27 +1,24 @@
-#auth.container
-  .row
-    .small-12.large-4.large-offset-4
-      %h1 Asocial
+#auth.row
+  .columns.small-12.large-8.large-centered
+    %h1 Asocial
+    %h2 The encrypted social network.
 
-      #auth-methods
-        %h3 Login
-        %p
-          Need an account?
-          %a{href: '/register', :'data-hbs' => '#'} Register
+    #auth-methods.row
+      .columns.small-12.large-6.large-centered
+        %form#login-form{method: 'post'}
+          .input-text-icon
+            %i.icon-envelope
+            %input{type: 'text', name: 'email', placeholder: 'Email address'}
 
-        .well
-          %form#login-form{method: 'post'}
-            .control-group
-              .controls
-                %input{type: 'text', name: 'email', placeholder: 'Email address'}
+          .input-text-icon
+            %i.icon-lock
+            %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
 
-            .control-group
-              .controls
-                %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
+          %label{ for: 'remember_me' }
+            %input#remember_me{type: 'checkbox', name: 'remember_me'}
+            %span Keep me logged in
 
-            .control-group
-              .controls
-                %label.checkbox
-                  %input{type: 'checkbox', name: 'remember_me', checked: 'yes'} Remember me
+          %a.btn.btn-success{ href: '#', role: 'submit' } Log in
 
-            %button.button.expand{href: '#', role: 'submit'} Login
+          %p.switchmode
+            Need an account? <a href="/register" data-hbs>Create one</a>.

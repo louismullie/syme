@@ -28,15 +28,23 @@ input[type="url"], input[type="search"], input[type="tel"], input[type="color"],
 
 //Input append
 
-.input-vertical-append {
-  input {
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+.input-text-icon {
+  position: relative;
+
+  input[type="text"], input[type="password"] {
+    padding-left: 2.2em;
   }
 
-  .input-append {
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
+  i {
+    color: $gray;
+
+    position: absolute;
+    top: 50%; left: 1em;
+    line-height: 1em;
+    margin-top: -0.5em;
+
+    width: 1em;
+    text-align: center;
   }
 }
 
@@ -59,4 +67,36 @@ textarea {
   &:focus {
     background-color: white;
   }
+}
+
+// Fontawesome checkboxes
+input[type="radio"],
+input[type="checkbox"] {
+  display:none;
+}
+
+input[type="radio"] + span:before,
+input[type="checkbox"] + span:before {
+  font-family: 'FontAwesome';
+  font-size: 1em;
+  width: 1em;
+  text-align: center;
+  display: inline-block;
+  margin-right: .5em;
+}
+
+input[type="radio"] + span:before {
+  content: "\f10c"; /* circle-blank */
+}
+
+input[type="radio"]:checked + span:before {
+  content: "\f111"; /* circle */
+}
+
+input[type="checkbox"] + span:before {
+  content: "\f096"; /* check-empty */
+}
+
+input[type="checkbox"]:checked + span:before {
+  content: "\f046"; /* check */
 }

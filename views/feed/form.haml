@@ -23,18 +23,23 @@
   %input#upload_id{type: 'hidden', name: 'upload_id'}
   %input#upload_file.hidden{type: 'file'}
 
-  // Attachment box
-  %ul#attachments
-    %li.title Attach:
-    %li
-      %a{ href: '#', :'data-upload-trigger' => 'photo' }
-        %i.icon-camera
-        Photo
-    %li
-      %a{ href: '#', :'data-upload-trigger' => 'video' }
-        %i.icon-film
-        Video
-    %li
-      %a{ href: '#', :'data-upload-trigger' => 'file' }
-        %i.icon-desktop
-        File
+  .row.collapse
+    .columns.small-12.large-10
+      // Attachment box
+      %ul#attachments
+        %li.title Attach:
+        %li
+          %a{ href: '#', :'data-upload-trigger' => 'photo' }
+            %i.icon-camera
+            Photo
+        %li
+          %a{ href: '#', :'data-upload-trigger' => 'video' }
+            %i.icon-film
+            Video
+        %li
+          %a{ href: '#', :'data-upload-trigger' => 'file' }
+            %i.icon-desktop
+            File
+
+    .columns.small-12.large-2
+      %a.btn.btn-success{ href: '#', role: 'submit' } Say it

@@ -1,27 +1,24 @@
-#auth.container
-  .row
-    .small-12.large-4.large-offset-4
-      %h1 Asocial
+#auth.row
+  .columns.small-12.large-8.large-centered
+    %h1 Asocial
+    %h2 The encrypted social network.
 
-      #auth-methods
-        %h3 Register
-        %p
-          Have an account?
-          %a{href: '/login', :'data-hbs' => '#'} Login
-          
-        .well
-          %form#register-form{method: 'post'}
-          
-            .control-group
-              .controls
-                %input{type: 'text', name: 'full_name', placeholder: 'Display name'}
+    #auth-methods.row
+      .columns.small-12.large-6.large-centered
+        %form#register-form{method: 'post'}
+          .input-text-icon
+            %i.icon-user
+            %input{type: 'text', name: 'full_name', placeholder: 'Full name'}
 
-              .control-group
-                .controls
-                  %input{type: 'text', name: 'email', placeholder: 'Email address'}
+          .input-text-icon
+            %i.icon-envelope
+            %input{type: 'text', name: 'email', placeholder: 'Email address'}
 
-              .control-group
-                .controls
-                  %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
+          .input-text-icon
+            %i.icon-lock
+            %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
 
-              %button.button.expand{href: '#', role: 'submit'} Register
+          %a.btn.btn-success{ href: '#', role: 'submit' } Register
+
+          %p.switchmode
+            Already registered? <a href="/login" data-hbs>Log in</a>.

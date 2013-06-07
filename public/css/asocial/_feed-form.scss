@@ -35,12 +35,12 @@ form#feed-form {
     @include box-sizing;
     resize: none;
 
-    margin-bottom: 0;
+    margin-bottom: 1em;
     padding: 10px;
 
     border: $baseBorderStyle;
 
-    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1); &:focus{ box-shadow: none }
+    // box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1); &:focus{ box-shadow: none }
   }
 
   #drag-helper {
@@ -82,7 +82,7 @@ form#feed-form {
   }
 
   ul#attachments {
-    margin: 1em 0 0 0;
+    margin: 0;
     list-style-type: none;
 
     li {
@@ -122,5 +122,12 @@ form#feed-form {
         }
       }
     }
+  }
+
+  a[role="submit"] {
+    float: right;
+
+    line-height: 28px;
+    font-size: .9em;
   }
 }
