@@ -66,8 +66,7 @@ asocial.binders.add('feed', { main: function(){
             posts    = data.posts;
 
         // Check if there are pages to load
-        if(typeof(posts) !== 'undefined' &&
-           Object.keys(posts).length > 0) {
+        if(Object.keys(data).length > 0) {
 
           // Buffer html.
           var postsHtml = [];
@@ -104,6 +103,12 @@ asocial.binders.add('feed', { main: function(){
           // Textarea autosizing
           $('textarea.autogrow').autogrow().removeClass('autogrow');
 
+
+        } else {
+
+          // No more pages to load
+          $(window).data('infinite-scroll-done', true);
+          $('#load-more').hide();
 
         }
 
