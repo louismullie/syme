@@ -5,6 +5,13 @@ asocial.binders.add('register', { main: function(){
 
     e.preventDefault();
 
+    // Lock event
+    if($(this).data('active')) return false;
+    $(this).data('active', true);
+
+    // Spinner
+    $('a[role="submit"]').addClass('loading');
+
     var form      = $(this);
 
     var email     = form.find('input[name="email"]').val(),
@@ -20,23 +27,23 @@ asocial.binders.add('register', { main: function(){
       { email: email, full_name: fullName },
 
       { success: function (model, response) {
-        
+
         var verifierSalt = response.verifier.salt;
         var verifier = srp.calcV(verifierSalt).toString();
-        
+
         model.save({
-          
+
           verifier: new Verifier({
             content: verifier,
             salt: verifierSalt
           })
-          
+
           }, {
 
           success: function () {
-            
+
             user.createKeypair(password, function () {
-              
+
               asocial.auth.login(email, password, remember, function() {
 
                 // Authorize User
@@ -51,7 +58,7 @@ asocial.binders.add('register', { main: function(){
                 }, password);
 
               });
-              
+
             });
           },
 
@@ -62,11 +69,17 @@ asocial.binders.add('register', { main: function(){
       },
 
       error: function (model, response) {
-        
+
         // @Chris implement error handling here.
         var msg = JSON.parse(response.responseText);
         console.log(msg);
         alert('Registration error!');
+
+        // Unlock event
+        $(this).data('active', false);
+
+        // Spinner
+        $('a[role="submit"]').removeClass('loading');
 
       }}
 

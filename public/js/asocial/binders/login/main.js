@@ -5,6 +5,13 @@ asocial.binders.add('login', { main: function(){
 
     e.preventDefault();
 
+    // Lock event
+    if($(this).data('active')) return false;
+    $(this).data('active', true);
+
+    // Spinner
+    $('a[role="submit"]').addClass('loading');
+
     // Exit if form is in registering mode
     if( $(this).data('registering') ) return true;
 
@@ -39,7 +46,13 @@ asocial.binders.add('login', { main: function(){
           'Please wait at least 10 seconds and refresh the page.');
         }
 
-      }); 
+        // Unlock event
+        $(this).data('active', false);
+
+        // Spinner
+        $('a[role="submit"]').removeClass('loading');
+
+      });
 
   });
 

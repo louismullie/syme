@@ -4,7 +4,7 @@
   .row
     .columns.small-12.large-8.large-centered
       %form#create_first_group{method: 'post'}
-        %input{type: 'text', name: 'name', autofocus: ''}
+        %input{type: 'text', name: 'name', autofocus: '', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false'}
 
         %a{ href: '#', role: 'submit' }
           %span.default Get started

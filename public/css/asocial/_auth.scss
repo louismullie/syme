@@ -56,6 +56,23 @@
       font-weight: 200;
       font-size: 1em;
       line-height: 2.5em;
+
+      i.icon-spinner {
+        display: none;
+
+        margin-left: .5em;
+        color: white;
+      }
+
+      &.loading {
+        &:hover {
+          background-color: $success;
+        }
+
+        i.icon-spinner {
+          display: inline-block;
+        }
+      }
     }
 
     p.switchmode {
