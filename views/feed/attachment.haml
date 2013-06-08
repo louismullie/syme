@@ -1,11 +1,9 @@
-.attachment.well.well-small
+{{#if is_media}}
 
-  {{#if is_media}}
-  
-  {{> feed-attachment-media}}
-  
-  {{else}}
-  
-  {{> feed-attachment-other}}
-  
-  {{/if}}
+{{> feed-attachment-media}}
+
+{{else}}
+
+{{> feed-attachment-other}}
+
+{{/if}}

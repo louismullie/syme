@@ -12,7 +12,7 @@ guard('helpers', {
     });
 
     // Collapse long text
-    asocial.helpers.collapseHTML(5, '[...]');
+    asocial.helpers.collapseHTML(5, 'See more');
 
     // Parse oEmbed links. Use fill mode to strip links.
     $('.post-content').oembed().fitVids();
@@ -65,8 +65,8 @@ guard('helpers', {
   collapseHTML: function(shownLines, expanderLink){
 
     // Configuration
-    var shownLines   = typeof(shownLines) === "undefined" ? 4 : shownLines,
-        expanderLink = typeof(expanderLink) === "undefined" ? "[...]" : expanderLink;
+    var shownLines   = shownLines || 4,
+        expanderLink = expanderLink || 'See more';
 
     $('.collapsable').each(function(){
 
@@ -75,7 +75,7 @@ guard('helpers', {
 
       // Compute max-height from line-height and shownLines
       var lineHeight = $(this).find('p').first().css('line-height'),
-          maxHeight  = parseInt(lineHeight, 10) * shownLines;
+          maxHeight  = parseInt(lineHeight, 10) * (shownLines + 1);
 
       // If the current div needs collapsing
       if( $(this).height() > maxHeight) {
@@ -83,7 +83,7 @@ guard('helpers', {
         $(this)
           // Collapse it
           .addClass('collapsed')
-          .css('max-height', maxHeight)
+          .css('height', maxHeight)
 
           // Append expander link
           .find('p:first-child').append(
@@ -94,9 +94,14 @@ guard('helpers', {
           // Bind click to expander link
           .find('.expand-link-container a').click(function(e){
             e.preventDefault();
-            $(this).closest('.collapsable')
+
+            var container       = $(this).closest('.collapsable'),
+                realHeight      = container.prop('scrollHeight') + 'px';
+
+            container
               .removeClass('collapsed')
-              .css('max-height', '');
+              .transition({ height: realHeight }, 400, 'snap')
+              .transition({ height: '' }, 0);
           });
 
       }
@@ -245,7 +250,7 @@ guard('helpers', {
       if (action == 'request_invite_confirm') {
 
         alert('Please change to group ID here');
-        
+
         return text = actors + ' has asked to join  ' +
                       notification.group + '. Confirm <a href="/' +
                       notification.group + '">here</a>.' ;

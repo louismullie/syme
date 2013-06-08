@@ -4,10 +4,10 @@ asocial.binders.add('feed', { feed: function(){
   // visit on group) or if need to update a user's keylist
   // (meaning one or more new users have joined the group).
   asocial.state.getState('invite', function (authorized) {
-    
+
     // The user should always be authorized for the invite.
     if (!authorized) { alert('Not authorized for invite!'); }
-    
+
     if (asocial.state.invite.integrate)
       asocial.invite.integrate();
 
@@ -18,7 +18,7 @@ asocial.binders.add('feed', { feed: function(){
 
   // Unread button
   $('#main').on('click', '#newcontent a.btn', function(e){
-    
+
     if(asocial.socket.updatedComments > 0){
       // If there are new comments, reset feed
       // to reorder the bump sorting
@@ -27,17 +27,31 @@ asocial.binders.add('feed', { feed: function(){
       // If there are only new post, append them
       asocial.helpers.showUnreadPosts();
     }
-    
+
+  });
+
+  // Delete post toggling
+  $("div.post-header").on({
+    mouseenter: function(){
+      $(this).find('a.post-delete')
+        .css({ display: 'block' })
+        .transition({ opacity: 1}, 100);
+    },
+    mouseleave: function(){
+      $(this).find('a.post-delete')
+        .transition({ opacity: 0}, 100)
+        .css({ display: 'none' });
+    }
   });
 
   // Delete post
-  $('#main').on('click', '.post-content a.post-delete', function() {
+  $('#main').on('click', '.post-header a.post-delete', function() {
 
       var post_id    = $(this).closest('.post').attr('id'),
           group      = asocial.binders.getCurrentGroup(),
           route      = '/' + group + '/post/delete';
 
-      if(confirm(locales.en.feed.delete_comment_confirm)) {
+      if(confirm(locales.en.feed.delete_post_confirm)) {
         $.post(route, $.param({ post_id: post_id }));
       }
 
@@ -60,10 +74,10 @@ asocial.binders.add('feed', { feed: function(){
   $('#invite').submit(function (e) {
 
     e.preventDefault();
-    
+
     // Get data from form.
     var email = $(this).find('input[name="email"]').val();
-    
+
     asocial.auth.getPasswordLocal(function (password) {
 
       // 1A: !(P, p).
@@ -77,7 +91,7 @@ asocial.binders.add('feed', { feed: function(){
       var P = asocial.crypto.encode(keys.public_key);
       var p = asocial.crypto.encode(keys.private_key);
       var p_sB = $.base64.encode(sjcl.encrypt(sB, p));
-      
+
       // Build invitation.
       var invitation = $.param({
         email: email,
@@ -87,15 +101,15 @@ asocial.binders.add('feed', { feed: function(){
 
       // 1D: B -> R: (P, {p}sB)
       var group = asocial.binders.getCurrentGroup();
-      
+
       $.post('/' + group + '/invite/send', invitation, function (data) {
         $('.invited-user').removeClass('hidden');
         $('.invite-user').addClass('hidden');
       });
-      
+
     });
 
   });
-  
+
 
 } }); // asocial.binders.add();
