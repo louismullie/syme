@@ -6,6 +6,12 @@
     #auth-methods.row
       .columns.small-12.large-6.large-centered
         %form#login-form{method: 'post'}
+          
+          // Error message
+          #error.hidden
+            %i.icon-warning-sign
+            %span
+          
           .input-text-icon
             %i.icon-envelope
             %input{type: 'text', name: 'email', placeholder: 'Email'}

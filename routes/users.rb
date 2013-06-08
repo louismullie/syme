@@ -36,6 +36,11 @@ post '/users' do
   # Get the full name from params.
   full_name = user.full_name
   
+  # Make sure email and full name are present.
+  if email.blank? && full_name.blank?
+    error 400, 'missing_params'
+  end
+  
   # Check if the e-mail is already taken.
   if User.where(email: email).any?
     error 400, 'email_taken'

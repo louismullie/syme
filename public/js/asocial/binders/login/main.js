@@ -5,17 +5,19 @@ asocial.binders.add('login', { main: function(){
 
     e.preventDefault();
 
+    var form = $(this);
+    
     // Lock event
-    if($(this).data('active')) return false;
-    $(this).data('active', true);
-
+    if(form.data('active')) return false;
+    form.data('active', true);
+    form.find('#error').removeClass('hidden').
+      find('span').html('');
+    
     // Spinner
     $('a[role="submit"]').addClass('loading');
 
     // Exit if form is in registering mode
     if( $(this).data('registering') ) return true;
-
-    var form = $(this);
 
     var email    = form.find('input[name="email"]').val(),
         password = form.find('input[name="password"]').val(),
@@ -37,17 +39,24 @@ asocial.binders.add('login', { main: function(){
 
       }, function(reason) {
 
+        var msg;
+        
         if (reason == 'server') {
-          alert('A server error has occured.');
+          msg = 'A server error has occured.';
         } else if (reason == 'credentials') {
-          alert('Incorrect username or password.');
+          msg = 'Incorrect username or password.';
         } else if (reason == 'max_tries') {
-          alert('Maximum login tries has been reached. ' +
-          'Please wait at least 10 seconds and refresh the page.');
+          msg = 'Maximum login tries has been reached. ' +
+          'Please wait at least 10 seconds and refresh the page.';
+        } else {
+          msg = 'An unknown error has occured.';
         }
-
+        
+        form.find('#error').removeClass('hidden').
+          find('span').html(msg);
+        
         // Unlock event
-        $(this).data('active', false);
+        form.data('active', false);
 
         // Spinner
         $('a[role="submit"]').removeClass('loading');

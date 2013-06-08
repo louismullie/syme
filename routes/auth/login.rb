@@ -8,7 +8,7 @@ post '/login/1' do
 
   email = params[:email]
   session[:email] = email
-
+  
   begin
 
     user = User.find_by(email: email)
