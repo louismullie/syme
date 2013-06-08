@@ -7,7 +7,7 @@ guard('helpers', {
 
   formatPostsAndComments: function() {
     // Put commenter name and comment tools in first paragraph of comment
-    $('.comment-box > a.commenter-name, .comment-box > span.comment-tools').each(function(){
+    $('.comment-box > a.commenter-name').each(function(){
       $(this).prependTo( $(this).parent().find('.collapsable p:first-child') );
     });
 

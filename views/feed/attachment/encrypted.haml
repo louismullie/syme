@@ -1,12 +1,8 @@
 %a.encrypted-file{href: '#', 'data-attachment-id' => '{{id}}',
                   'data-attachment-filename' => '{{filename}}',
                   'data-attachment-size' => '{{size}}',
-                  'data-attachment-key' => '{{key}}'}
+                  'data-attachment-key' => '{{key}}'}<>
 
   {{attachment.filename}}
 
-  (
-  {{#if is_image}}{{image_size}} - {{/if}}
-  {{to_readable_size size}}
-  %span.hidden.progress_container
-  )
+  ({{#if is_image}}{{image_size}} - {{/if}}{{to_readable_size size}}<span class="hidden progress_container"></span>)

@@ -122,7 +122,16 @@
 
       p {
         font-size: .9em;
-        margin-bottom: 1em;
+        font-weight: normal;
+        margin-bottom: .5em;
+      }
+
+      a {
+        font-weight: 200;
+
+        &.image-download {
+          display: block;
+        }
       }
     }
   }
@@ -151,6 +160,31 @@
       text-align: right;
 
 
+    }
+  }
+
+  .post-comments {
+    padding-left: 1em;
+    border-left: 4px solid #ddd;
+
+    .comments {
+
+    }
+
+    .comment-form {
+      textarea {
+        width: 100%;
+        min-height: .8em; max-height: 100px;
+        padding: 7px 10px;
+        margin: 0;
+
+        @include box-sizing;
+        resize: none;
+
+        line-height: 1.5em;
+        font-size: .8em;
+        font-weight: 200;
+      }
     }
   }
 }
