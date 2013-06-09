@@ -1,3 +1,5 @@
+window.bound = {};
+
 guard('binders', {
 
   /* ----- CORE FUNCTIONS ----- */
@@ -20,7 +22,7 @@ guard('binders', {
 
     // Check function existence
     if(!$().binders[route]) return false;
-
+    
     // Unbind everything
     this.unbind();
 
@@ -35,6 +37,10 @@ guard('binders', {
     for (key in obj) {
       if (obj.hasOwnProperty(key)) obj[key]();
     }
+    
+    // Keep track of bound functions.
+    window.bound[route] = true;
+    
   },
 
   unbind: function() {
@@ -62,7 +68,7 @@ guard('binders', {
 
   // Load a urlComponent object into a container
   loadUrlComponent: function(urlComponent, container, callback) {
-
+    
     console.log('Loading url Components', urlComponent);
 
     var _this = this;
@@ -81,8 +87,11 @@ guard('binders', {
 
     if ( asocial.url.isLoggedOffRoute(urlComponent.route) ) {
 
-      container.html( Fifty.render(urlComponent.route) );
-      this.bind(urlComponent.binder);
+      container.html( asocial.helpers.render(urlComponent.route) );
+      
+      if (!window.bound[urlComponent.binder])
+        this.bind(urlComponent.binder);
+      
       callback();
 
     } else {
@@ -139,7 +148,7 @@ guard('binders', {
 
       } else {
 
-        //$('body').html( Fifty.render('error-notfound') );
+        //$('body').html( asocial.helpers.render('error-notfound') );
         window.location = '/';
 
       }
@@ -155,7 +164,7 @@ guard('binders', {
     var url = '/' + urlComponent.url;
 
     // Get JSON and fill HBS template
-    Fifty.getAndRender(template, url, function(html) {
+    asocial.helpers.getAndRender(template, url, function(html) {
 
       if (html) {
         // Success
@@ -164,7 +173,7 @@ guard('binders', {
       } else {
 
         // Failure
-        $('body').html( Fifty.render('error-notfound') );
+        $('body').html( asocial.helpers.render('error-notfound') );
         _this.unbind();
 
       }
@@ -245,7 +254,7 @@ guard('binders', {
       // Render container if user is logged in
       if (asocial.state.system.logged_in) {
         // Render HBS Container
-        $('body').html( Fifty.render('container') );
+        $('body').html( asocial.helpers.render('container') );
 
         asocial.state.getState('notifications', function () {
 
@@ -253,7 +262,7 @@ guard('binders', {
 
             $('#notifications-content').append(
 
-              Fifty.render('feed-notification', {
+              asocial.helpers.render('feed-notification', {
                 html: asocial.helpers.notificationText(notification),
                 id: notification.id,
                 created_at: notification.created_at,
@@ -267,7 +276,7 @@ guard('binders', {
           if ($('#notifications-content').children().length == 0) {
 
             $('#notifications-content').html(
-              Fifty.render('feed-notifications-empty'));
+              asocial.helpers.render('feed-notifications-empty'));
 
           } else {
 

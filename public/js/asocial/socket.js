@@ -45,7 +45,7 @@ guard('socket', {
       $('.empty-group-notice').remove();
 
       // Render post with the data
-      var postHtml = $(Fifty.render('feed-post', post.view));
+      var postHtml = $(asocial.helpers.render('feed-post', post.view));
 
       var owner = post.view.owner.id;
       console.log(owner);
@@ -96,7 +96,7 @@ guard('socket', {
         }
 
         // Append new comment
-        container.append(Fifty.render('feed-comment', data.view));
+        container.append(asocial.helpers.render('feed-comment', data.view));
 
         // Reset comment count counter
         global_count.html( post.find('.comment-box').length );
@@ -120,7 +120,7 @@ guard('socket', {
 
       data.html = asocial.helpers.notificationText(data);
 
-      var html = Fifty.render('feed-notification', data);
+      var html = asocial.helpers.render('feed-notification', data);
 
       $('#notifications-content').prepend(html);
       asocial.crypto.decryptAvatars();
@@ -178,7 +178,7 @@ guard('socket', {
 
     notification: function(data){
 
-      var html = Fifty.render('feed-notification', data);
+      var html = asocial.helpers.render('feed-notification', data);
 
       $('#notifications-content')
         .find('#' + data.id)
@@ -259,7 +259,7 @@ guard('socket', {
 
       if ($('#notifications-content').children().length == 0) {
         $('#notifications-content').html(
-          Fifty.render('feed-notifications-empty'));
+          asocial.helpers.render('feed-notifications-empty'));
       }
     }
 

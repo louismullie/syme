@@ -76,7 +76,7 @@ asocial.binders.add('feed', { main: function(){
             var post = posts[i];
 
             // Render HTML.
-            var html = Fifty.render('feed-post', post);
+            var html = asocial.helpers.render('feed-post', post);
 
             // Append page
             postsHtml.push(html);

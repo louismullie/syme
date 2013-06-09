@@ -1,2 +1,2 @@
-//= require ./vendor/asocial.js
-//= require ./asocial/asocial.js
+//= require ./vendor/includer.js
+//= require ./asocial/includer.js

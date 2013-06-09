@@ -269,6 +269,22 @@ guard('helpers', {
     return text + ' in <a href="/' + notification.group_id +
                   '" data-hbs="#">' + notification.group + '</a>';
 
+  },
+  
+  render: function(template, data) { 
+    return Handlebars.templates['_' + template](data);
+  },
+
+  getAndRender: function(template, url, callback, failure) {
+
+    failure = failure || function(){};
+
+    $.getJSON(url, function (data) {
+      callback( asocial.helpers.render(template, data) );
+    }).fail(function(){
+      callback( false );
+    });
+
   }
 
 });

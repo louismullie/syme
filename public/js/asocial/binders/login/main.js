@@ -30,7 +30,7 @@ asocial.binders.add('login', { main: function(){
         asocial.auth.authorizeForUser(function () {
 
           // Load HBS template
-          $('body').html( Fifty.render('container') );
+          $('body').html( asocial.helpers.render('container') );
 
           // Redirect to root, which is now group UI
           asocial.binders.goToUrl('/');

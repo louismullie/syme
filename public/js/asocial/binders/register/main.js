@@ -5,18 +5,14 @@ asocial.binders.add('register', { main: function(){
 
     e.preventDefault();
 
-    var form      = $(this);
-    
     // Lock event
-    if(form.data('active')) return false;
-    form.data('active', true);
-    
-    form.find('#error').addClass('hidden').
-      find('span').html('');
+    if($(this).data('active')) return false;
+    $(this).data('active', true);
 
     // Spinner
     $('a[role="submit"]').addClass('loading');
 
+    var form      = $(this);
 
     var email     = form.find('input[name="email"]').val(),
         password  = form.find('input[name="password"]').val(),
@@ -54,7 +50,7 @@ asocial.binders.add('register', { main: function(){
                 asocial.auth.authorizeForUser(function () {
 
                   // Load HBS template
-                  $('body').html( Fifty.render('container') );
+                  $('body').html( asocial.helpers.render('container') );
 
                   // Redirect to root, which is now group UI
                   asocial.binders.goToUrl('/');
@@ -75,24 +71,12 @@ asocial.binders.add('register', { main: function(){
       error: function (model, response) {
 
         // @Chris implement error handling here.
-        var error = JSON.parse(response.responseText).error;
+        var msg = JSON.parse(response.responseText);
+        console.log(msg);
+        alert('Registration error!');
 
-        var msg;
-        
-        if (error == 'email_taken') {
-          msg = 'This e-mail is already taken.';
-        } else if (error = 'missing_params') {
-          msg = 'Please fill in all fields.';
-        } else {
-          msg = 'An unknown error has occured: ' + msg;
-        }
-        
-        // Show error.
-        form.find('#error').removeClass('hidden').
-          find('span').html(msg);
-        
         // Unlock event
-        form.data('active', false);
+        $(this).data('active', false);
 
         // Spinner
         $('a[role="submit"]').removeClass('loading');
