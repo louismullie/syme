@@ -52,16 +52,16 @@ require 'content-security-policy'
 
 default = 'localhost:5000 asocial.io'
 
-ContentSecurityPolicy.configure do |csp|
-  csp['script-src'] = "'self' 'unsafe-eval'"
-  csp['style-src'] = default
-  csp['object-src'] = default
-  csp['font-src'] = default
-  csp['connect-src'] = default
-  csp['img-src'] = default
-  # default-src, report-uri
+use ContentSecurityPolicy, directives: {
+  # 'default-src' => settings.secure ? 'https: ' : '*',
+  'script-src' => default,
+  'style-src' => default,
+  'object-src' => default,
+  'font-src' => default,
+  'connect-src' => default,
+  # 'report-uri' => '/route/for/report'
   # Leave media-src, img-src and frame-src.
-end
+}
 
 # * Setup Memcache sessions * #
 require 'securerandom'

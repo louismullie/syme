@@ -27,6 +27,7 @@ assets do
     '/js/vendor/backbone-relational.js',
     # Require all other vendor scripts.
     '/js/vendor/*.js',
+    '/js/asocial/locales.js',
     # Require templates.
     '/js/asocial/templates.js',
     # Guard must go first to
