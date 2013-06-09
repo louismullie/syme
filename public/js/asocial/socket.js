@@ -366,7 +366,7 @@ guard('socket', {
         };
 
         document.eventSource.onclose = function(e) {
-          if (window.tries < 3) {
+          if (window.tries < 100) {
             console.log('Socket closed. Attempting reconnect.');
             _this.checkListen();
           } else {
@@ -376,7 +376,7 @@ guard('socket', {
         };
 
         document.eventSource.onerror = function (e) {
-          if (window.tries < 3) {
+          if (window.tries < 100) {
             console.log('Socket error. Attempting reconnect.');
             _this.checkListen();
           } else {
