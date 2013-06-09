@@ -7,7 +7,9 @@ get '/*' do |route|
 
   pass if request.xhr? or route.index('.js')
 
-  Fifty.compile_template_files if $env == :development
+  Fifty.recompile_templates do 
+    `./node_modules/handlebars/bin/handlebars .hbs/*.handlebars -f ./public/js/asocial/templates.js`
+  end
 
   fifty :index, {}, layout: true
 

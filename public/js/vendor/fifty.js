@@ -1,10 +1,7 @@
 var Fifty = {
 
   render: function(template, data) { 
-    var data = data || {};
-    var hbs  = '{{> ' + template + '}}';
-    var tmpl = Handlebars.compile(hbs);
-    return tmpl(data);
+    return Handlebars.templates['_' + template](data);
   },
 
   getAndRender: function(template, url, callback, failure) {

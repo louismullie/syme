@@ -38,6 +38,8 @@ assets do
     '/js/asocial/uploader.js',
     # Thumbnail generator.
     '/js/asocial/thumbnail.js',
+    # Handlebars templates.
+    '/js/asocial/templates.js',
     # Authenticator helpers.
     '/js/asocial/auth.js',
     # Application state.
