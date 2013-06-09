@@ -4,8 +4,18 @@ class Group
   include Mongoid::Timestamps
 
   field :name, type: String
-  field :avatar_id, type: String
+  field :question, type: String
+  field :answer, type: String
 
+  # Keylist for this group. 
+  # Louis - move to dedicated model.
+  field :keylist, type: String
+  field :keylist_salt, type: String
+  
+  # Louis - move this to a dedicated field.
+  # (Subclass Upload with an Avatar class).
+  field :avatar_id, type: String
+  
   # Palette default must be the palette
   # color of the default group image
   field :palette, type: Array, default: []

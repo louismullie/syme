@@ -37,6 +37,7 @@ asocial.binders.add('login', { main: function(){
 
       }, function(reason) {
 
+        // Chris - move this to Handlebars template.
         if (reason == 'server') {
           alert('A server error has occured.');
         } else if (reason == 'credentials') {

@@ -47,7 +47,9 @@ asocial.binders.add('groups', { main: function() {
 
   });
 
-  $('#create_group, #create_first_group').submit(function (e) {
+  $('#create_group, #create_first_group').on({
+
+    submit: function (e) {
 
     // Prevent form submission.
     e.preventDefault();
@@ -83,21 +85,50 @@ asocial.binders.add('groups', { main: function() {
       // Base64 encode the encrypted keylist.
       var encryptedKeylist64 = $.base64.encode(encryptedKeylist);
 
-      // Build parameters to pass to the group creation method.
-      var params = $.param({
+      // Get a security questions and answer for the user
+      var question = prompt('Please enter a security question:');
+      var securityAnswer = prompt('Please enter the answer to the question:');
+      // CHRIS - modify this code to take input from the form.
+
+      // Verify question and answer are present.
+      if (!question || !securityAnswer) {
+        alert('You must enter a question and an answer.');
+        return;
+      }
+
+      // Generate a random key salt.
+      var securityKeySalt = asocial.crypto.generateRandomHexSalt();
+      
+      // Derive a key from the answer and salt.
+      var securityKey = asocial.crypto.calculateHash(securityAnswer, securityKeySalt);
+
+      // Encrypt the security key with the current user's secret key.
+      var encryptedSecurityKey = sjcl.encrypt(key, JSON.stringify(securityKey));
+
+      // Encode the security key with base 64.
+      var encodedSecurityKey = $.base64.encode(encryptedSecurityKey);
+
+      // Build the params to send to the server.
+      var groupParams = $.param({
+
         name: name,
         keylist: encryptedKeylist64,
-        keylist_salt: salt
+        keylist_salt: salt,
+
+        salt: securityKeySalt,
+        question: question,
+        answer: encodedSecurityKey,
+
       });
 
       // Create the group, passing the encrypted key list.
-      $.post('/groups/create', params, function (group) {
-        asocial.binders.goToUrl(group.id);
+      $.post('/groups', groupParams, function (group) {
+        asocial.binders.goToUrl('/' + group.id);
       });
 
     });
 
-  });
+  }});
 
 
 } }); // asocial.binders.add();
