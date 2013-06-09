@@ -249,8 +249,7 @@ post '/invite/acknowledge', auth: [] do
     
     invite = @group.invites
       .find(params[:invite_id])
-    invite.state = 4
-    invite.save!
+    invite.destroy
   else
     
     raise
