@@ -14,8 +14,6 @@ if ENV['RACK_ENV'] == 'PRODUCTION'
   require 'rack/ssl'
   use Rack::SSL
 
-  # Enable protection against remote referrers.
-  use Rack::Protection::RemoteReferrer
 
   # use Rack::Protection::EscapedParams
 
