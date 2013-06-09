@@ -64,7 +64,7 @@ gem 'therubyracer',
 
 # * Asset pipeline * #
 
-gem 'sinatra-assetpack',
+gem 'sinatra-assetpack', '0.2.2',
   require: 'sinatra/assetpack'
 
 # Templating

@@ -18,11 +18,22 @@ assets do
 
   # Asocial JS
   js :asocial, '/js/asocial.js', [
+    # Require vendors before everything.
+    '/js/vendor/jquery-1.9.1.min.js',
+    '/js/vendor/rsa.js',
+    '/js/vendor/yahoo.min.js',
+    '/js/vendor/underscore.min.js',
+    '/js/vendor/backbone.min.js',
+    '/js/vendor/backbone-relational.js',
+    # Require all other vendor scripts.
+    '/js/vendor/*.js',
+    # Require templates.
+    '/js/asocial/templates.js',
     # Guard must go first to
     # lock defined functions.
     '/js/asocial/guard.js',
     # Require vendor config
-    # and jQuery extensions,
+    # and jQuery extensions
     '/js/asocial/config/*.js',
     # Cryptographic utilities.
     '/js/asocial/crypto.js',
@@ -38,8 +49,6 @@ assets do
     '/js/asocial/uploader.js',
     # Thumbnail generator.
     '/js/asocial/thumbnail.js',
-    # Handlebars templates.
-    '/js/asocial/templates.js',
     # Authenticator helpers.
     '/js/asocial/auth.js',
     # Application state.
@@ -57,27 +66,10 @@ assets do
     '/js/asocial/binders/global.js'
   ]
 
-  # Vendor JS
-  js :vendor, '/js/vendor.js', [
-    # Require jQuery before everything.
-    '/js/vendor/jquery-1.9.1.min.js',
-    '/js/vendor/rsa.js',
-    '/js/vendor/yahoo.min.js',
-    '/js/vendor/underscore.min.js',
-    '/js/vendor/backbone.min.js',
-    '/js/vendor/backbone-relational.js',
-    # Require all other vendor scripts.
-    '/js/vendor/*.js'
-  ]
-
   # Asocial CSS
   css :asocial, '/css/asocial.css', [
     # Application styles.
-    '/css/includer.css'
-  ]
-
-  # Vendor CSS
-  css :vendor, '/css/vendor.css', [
+    '/css/includer.css',
     # Font Awesome
     '/css/vendor/font-awesome.css',
     # JQuery OhEmbed plugin styles.

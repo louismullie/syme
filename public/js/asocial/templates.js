@@ -8,7 +8,7 @@ helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.parti
 
   stack1 = self.invokePartial(partials.navbar, 'navbar', depth0, helpers, partials, data);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\ndsfsdfdfsfd\n<div id='main'></div>\n<div id='footer'>\n  <div id='footer'>\n    <div id='modals'></div>\n    <div id='canvases'>\n      <canvas id='canvas'></canvas>\n    </div>\n  </div>\n</div>\n";
+  buffer += "\n<div id='main'></div>\n<div id='footer'>\n  <div id='footer'>\n    <div id='modals'></div>\n    <div id='canvases'>\n      <canvas id='canvas'></canvas>\n    </div>\n  </div>\n</div>\n";
   return buffer;
   });
 templates['_error-alert'] = template(function (Handlebars,depth0,helpers,partials,data) {
@@ -512,15 +512,10 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 templates['_feed-notifications-empty'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+  
 
 
-  buffer += "<div class='notification' id='";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "'>\n  <p class='empty-notification'>\n    No new notifications.\n  </p>\n</div>\n";
-  return buffer;
+  return "<div class='notification' id='empty'>\n  <p class='empty-notification'>\n    No new notifications.\n  </p>\n</div>\n";
   });
 templates['_feed-post'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];

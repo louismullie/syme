@@ -13,6 +13,11 @@ guard('asocial', {
 
 });
 
+// Register all Handlebars templates.
+$.each(Handlebars.templates, function (name, template) {
+  Handlebars.registerPartial(name.slice(1), template);
+});
+
 // Execute global and route binders.
 $(document).ready(function(){
 
