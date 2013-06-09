@@ -374,17 +374,7 @@ guard('socket', {
             document.eventSource.close();
           }
         };
-
-        document.eventSource.onerror = function (e) {
-          if (window.tries < 100) {
-            console.log('Socket error. Attempting reconnect.');
-            _this.checkListen();
-          } else {
-            console.log('Socket FAIL after three reconnects.');
-            document.eventSource.close();
-          }
-        };
-
+        
       }
     } catch(exception){
       console.log(exception);
