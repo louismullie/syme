@@ -64,8 +64,7 @@ gem 'therubyracer',
 
 # * Asset pipeline * #
 
-gem 'sinatra-assetpack', '0.2.2',
-  require: 'sinatra/assetpack'
+gem 'sprockets'
 
 # Templating
 gem 'fifty'
@@ -74,7 +73,7 @@ gem 'fifty'
 gem 'sass'
 
 # Javascript compilation.
-gem 'closure'
+gem 'closure-compiler'
 
 # Text rendering.
 gem 'slodown'

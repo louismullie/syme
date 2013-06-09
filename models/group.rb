@@ -4,6 +4,7 @@ class Group
   include Mongoid::Timestamps
 
   field :name, type: String
+  field :screen_name, type: String
   field :question, type: String
   
   # Keylist for this group. 

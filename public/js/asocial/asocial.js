@@ -1,3 +1,23 @@
+//= require ./locales
+//= require ./templates
+//= require ./guard
+//= require_directory ./config
+//= require ./crypto
+//= require ./helpers
+//= require ./url
+//= require ./binders
+//= require ./socket
+//= require ./uploader
+//= require ./auth
+//= require ./state
+//= require ./invite
+//= require ./thumbnail
+//= require ./test
+//= require_self
+//= require_tree ./binders
+//= require_tree ./classes
+//= require ./binders/global
+
 guard('asocial', {
 
   helpers: asocial_helpers,

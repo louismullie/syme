@@ -68,6 +68,32 @@ use Rack::Session::Memcache,
   sidbits: 256,
   secure_random: SecureRandom
 
+
+# Enable token protection against CSRF.
+require 'rack/csrf'
+use Rack::Csrf
+
+# Enable protection against remote referrers.
+use Rack::Protection::RemoteReferrer
+
 require './app'
 
-run Asocial::Application
+map '/assets' do
+  
+  environment = Sprockets::Environment.new
+  
+  environment.append_path 'public/js'
+  environment.append_path 'public/css'
+  
+  if $env == :production
+    environment.js_compressor = Closure::Compiler.new
+    environment.css_compressor = :sass
+  end
+  
+  run environment
+  
+end
+
+map '/' do
+  run Asocial::Application
+end
