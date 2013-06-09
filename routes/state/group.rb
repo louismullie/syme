@@ -15,8 +15,8 @@ get '/state/group', auth: [] do
     full_names: full_names,
     keylist: membership.keylist,
     keylist_salt: membership.keylist_salt,
-    answer: group.answer,
-    salt: group.salt
+    answer: membership.answer,
+    answer_salt: membership.answer_salt
   }
   
   group_token.to_json

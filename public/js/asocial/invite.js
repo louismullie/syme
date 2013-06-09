@@ -18,9 +18,14 @@ guard('invite', {
       var k = sjcl.decrypt(sA, k_sA);
       var PPA = JSON.parse(sjcl.decrypt(k, PPA_k));
 
+      alert(PA.decrypt($.base64.decode(asocial.state.invite.a_P)));
+      
       var PA = asocial.crypto.serializePublicKey(asocial_public_key());
 
       PPA[asocial.state.user.id] = PA;
+
+      alert(PA.decrypt());
+      return;
 
       var keylist_salt = asocial.crypto.generateRandomHexSalt();
       var new_sA = asocial.crypto.calculateHash(password, keylist_salt);

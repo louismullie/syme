@@ -1,22 +1,21 @@
 post '/groups', auth: [] do
 
   name, screen_name = params[:name], params[:name].slug
-  salt = params[:salt]
+  answer_salt = params[:answer_salt]
   question, answer = params[:question], params[:answer]
   
   membership = Membership.create(
     privilege: :admin,
     keylist: params[:keylist],
     keylist_salt: params[:keylist_salt],
+    answer: answer,
+    answer_salt: answer_salt
   )
 
   group = Group.create(
     name: name,
-    salt: salt,
-    
     screen_name: screen_name,
-    question: question,
-    answer: answer
+    question: question
   )
 
   group.memberships << membership

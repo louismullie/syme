@@ -18,7 +18,10 @@ class Membership
   field :keylist, type: String
   field :keylist_salt, type: String
   field :new_keys, type: Hash, default: {}
-
+  
+  field :answer, type: String
+  field :answer_salt, type: String
+  
   def avatar
     avatar_id ? group.uploads.find(avatar_id) : nil
   end

@@ -96,7 +96,8 @@ class FeedGenerator
         k_P: invite.k_P,
         PA_k: invite.PA_k,
         p_sB: invite.p_sB,
-        sB_salt: invite.sB_salt
+        sB_salt: invite.sB_salt,
+        a_P: invite.a_P
       }
     end
 

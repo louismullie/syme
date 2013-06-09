@@ -18,6 +18,7 @@ get '/state/invite', auth: [] do
       PPA_k: invite.PPA_k,
       k_sA: invite.k_sA,
       id: invite.id.to_s,
+      a_PA: invite.a_PA,
       keys: invite.keys
     })
     

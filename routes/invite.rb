@@ -76,6 +76,7 @@ post '/invite/accept' do
   invite.k_P = params['k_P']
   invite.k_sA = params['k_sA']
   invite.PA_k = params['PA_k']
+  invite.a_P = params['a_P']
 
   invite.save!
 
@@ -136,6 +137,7 @@ post '/invite/confirm', auth: [] do
   end
   
   invite.PPA_k = params[:PPA_k]
+  invite.a_PA = params[:a_PA]
   invite.state = 3
   invite.save!
 
@@ -174,6 +176,10 @@ post '/invite/integrate', auth: [] do
 
   membership.keylist = params[:keylist]
   membership.keylist_salt = params[:keylist_salt]
+  
+  membership.answer = params[:answer]
+  membership.answer_salt = params[:answer_salt]
+  
   membership.save!
 
   @user.save!

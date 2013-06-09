@@ -36,7 +36,6 @@ asocial.binders.add('groups', { main: function() {
       $.ajax('/groups/' + groupId, {
         type: 'DELETE',
         success: function (resp) {
-          alert('Group was deleted.');
           asocial.binders.loadCurrentUrl();
         },
         error: function (resp) {
@@ -97,16 +96,14 @@ asocial.binders.add('groups', { main: function() {
       }
 
       // Generate a random key salt.
-      var securityKeySalt = asocial.crypto.generateRandomHexSalt();
+      var answerSalt = asocial.crypto.generateRandomHexSalt();
+      var answerKey = asocial.crypto.calculateHash(password, answerSalt);
       
-      // Derive a key from the answer and salt.
-      var securityKey = asocial.crypto.calculateHash(securityAnswer, securityKeySalt);
-
       // Encrypt the security key with the current user's secret key.
-      var encryptedSecurityKey = sjcl.encrypt(key, JSON.stringify(securityKey));
+      var encryptedAnswer = sjcl.encrypt(answerKey, securityAnswer);
 
       // Encode the security key with base 64.
-      var encodedSecurityKey = $.base64.encode(encryptedSecurityKey);
+      var encodedAnswer = $.base64.encode(encryptedAnswer);
 
       // Build the params to send to the server.
       var groupParams = $.param({
@@ -114,11 +111,11 @@ asocial.binders.add('groups', { main: function() {
         name: name,
         keylist: encryptedKeylist64,
         keylist_salt: salt,
-
-        salt: securityKeySalt,
+        
         question: question,
-        answer: encodedSecurityKey,
-
+        answer: encodedAnswer,
+        answer_salt: answerSalt
+        
       });
 
       // Create the group, passing the encrypted key list.

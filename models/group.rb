@@ -5,8 +5,7 @@ class Group
 
   field :name, type: String
   field :question, type: String
-  field :answer, type: String
-
+  
   # Keylist for this group. 
   # Louis - move to dedicated model.
   field :keylist, type: String
