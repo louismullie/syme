@@ -257,10 +257,12 @@ function Uploader(file, key, keys, options) {
     for (key in data) {
       fd.append(key, data[key].toString());
     }
+
+    var csrf = document.querySelector('meta[name="_csrf"]');
+    var token = csrf ? csrf.content : '';
     
-    // var token = $('meta[name="_csrf"]').attr('content');
-    // xhr.setRequestHeader('X_CSRF_TOKEN', token);
     xhr.open('POST', this.options.baseUrl + 'upload/create');
+    xhr.setRequestHeader('X_CSRF_TOKEN', token);
     
     xhr.send(fd);
 
@@ -298,10 +300,13 @@ function Uploader(file, key, keys, options) {
     
     var appendUrl = this.options.baseUrl + 'upload/append';
     
+    var csrf = document.querySelector('meta[name="_csrf"]');
+    var token = csrf ? csrf.content : '';
+    
     this.workerPool.queueJob({
       pass: pass, worker: worker,
       data: data, id: this.uploadId,
-      url: appendUrl
+      url: appendUrl, csrf: token
     }, this);
     
     delete chunk;

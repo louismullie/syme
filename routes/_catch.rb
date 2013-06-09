@@ -4,7 +4,7 @@ get '/logout' do
 end
 
 get '/*' do |route|
-
+  
   pass if request.xhr? or route.index('.js')
 
   Fifty.recompile_templates do 
@@ -12,6 +12,8 @@ get '/*' do |route|
     `#{hbs} .hbs/*.handlebars -f ./public/js/asocial/templates.js`
   end
 
-  fifty :index, {}, layout: true
+  csrf = Rack::Csrf.csrf_token(env)
+  
+  haml(:layout) { '&nbsp' }
 
 end

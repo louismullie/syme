@@ -14,10 +14,6 @@ if ENV['RACK_ENV'] == 'PRODUCTION'
   require 'rack/ssl'
   use Rack::SSL
 
-  # Enable token protection against CSRF.
-  require 'rack/csrf'
-  use Rack::Csrf, raise: true
-
   # Enable protection against remote referrers.
   use Rack::Protection::RemoteReferrer
 
@@ -73,7 +69,6 @@ use Rack::Session::Memcache,
   secure: $secure,
   sidbits: 256,
   secure_random: SecureRandom
-
 
 require './app'
 

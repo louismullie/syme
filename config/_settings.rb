@@ -15,3 +15,7 @@ set root: $root
 if $env == :development
   set :reload_templates, true
 end
+
+# Enable token protection against CSRF.
+require 'rack/csrf'
+use Rack::Csrf

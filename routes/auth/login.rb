@@ -78,7 +78,7 @@ post '/login/2' do
     user.session_id = bb
     user.save!
 
-    data = { user_id: user.id, status: 'ok' }
+    data = { user_id: user.id, status: 'ok', csrf: csrf_token }
 
     track user, 'User completed login'
     

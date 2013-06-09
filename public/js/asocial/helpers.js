@@ -15,7 +15,7 @@ guard('helpers', {
     asocial.helpers.collapseHTML(5, 'See more');
 
     // Parse oEmbed links. Use fill mode to strip links.
-    $('.post-content').oembed().fitVids();
+    $('.post-content').oembed(); //.fitVids(); // - violates CSP
   },
 
   // Increment unread counter when there is a new comment/post

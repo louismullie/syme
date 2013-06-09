@@ -11,7 +11,7 @@ self.onmessage = function(event) {
   var pass = event.data['pass'];
   var worker = event.data['worker'];
   var id = event.data['id'];
-
+  var csrf = event.data['csrf'];
   var url = event.data['url'];
   
   var key = data.key;
@@ -52,8 +52,8 @@ self.onmessage = function(event) {
     });
     
     xhr.open('POST', url);
-    // var token = $('meta[name="_csrf"]').attr('content');
-    //xhr.setRequestHeader('X_CSRF_TOKEN', token);
+    
+    xhr.setRequestHeader('X_CSRF_TOKEN', csrf);
     xhr.send(fd);
     
   };

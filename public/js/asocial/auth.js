@@ -63,6 +63,7 @@ guard('auth', {
 
         $.post('/login/2', params, function (data) {
           if (data.status == 'ok') {
+            $('meta[name="_csrf"]').attr('content', data.csrf);
             asocial.state.getState('system', function () {
               success(data);
             }, { force: true });

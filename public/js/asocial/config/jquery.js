@@ -1,7 +1,6 @@
 // CSRF token
 $.ajaxSetup({
   beforeSend: function(xhr) {
-    // Moves this to headers instead. FIX.
     var token = $('meta[name="_csrf"]').attr('content');
     xhr.setRequestHeader('X_CSRF_TOKEN', token);
   }
