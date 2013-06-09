@@ -1,8 +1,8 @@
 asocial.binders.add('groups', { invite: function() {
-
+  
   // Accept an invitation to join a group.
   $('.invite-link').on('click', function (e) {
-
+    
     // Prevent form submission.
     e.preventDefault();
 
@@ -14,11 +14,13 @@ asocial.binders.add('groups', { invite: function() {
       // Get invite token from accept link.
       var token = $that.data('invite-token');
       var P = $that.data('invite-p');
-
+      
+      var a = prompt($that.data('invite-question'));
+      
       // 2A: generate k.
       console.log("2A");
       var k = asocial.crypto.generateRandomKey();
-
+      
       // 2B.1 retrieve P.
       console.log("2B.1");
       var P_txt = JSON.parse($.base64.decode(P));
@@ -38,16 +40,19 @@ asocial.binders.add('groups', { invite: function() {
 
       // 2C: A -> R: {k}P, {k}sA, {PA}k
       var k_P = P.encrypt(k);
+      var a_P = P.encrypt(a);
+
       var k_sA = sjcl.encrypt(sA, k);
       var PA_k = sjcl.encrypt(k, PA_txt);
-
+      
       // Build registration.
       var keys = $.param({
         token: token,
         user_id: asocial.state.user.id,
         k_P: $.base64.encode(k_P),
         k_sA: $.base64.encode(k_sA),
-        PA_k: $.base64.encode(PA_k)
+        PA_k: $.base64.encode(PA_k),
+        a_P: $.base64.encode(a_P)
       });
 
       $.post('/invite/accept', keys, function (data) {

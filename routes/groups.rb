@@ -1,14 +1,22 @@
-post '/groups/create', auth: [] do
+post '/groups', auth: [] do
 
   name, screen_name = params[:name], params[:name].slug
-
+  answer_salt = params[:answer_salt]
+  question, answer = params[:question], params[:answer]
+  
   membership = Membership.create(
+    privilege: :admin,
     keylist: params[:keylist],
     keylist_salt: params[:keylist_salt],
-    privilege: :admin
+    answer: answer,
+    answer_salt: answer_salt
   )
 
-  group = Group.create(name: name, screen_name: screen_name)
+  group = Group.create(
+    name: name,
+    screen_name: screen_name,
+    question: question
+  )
 
   group.memberships << membership
   group.users << @user
@@ -24,7 +32,10 @@ post '/groups/create', auth: [] do
 
   content_type :json
 
-  { id: group.id.to_s, name: name, screen_name: screen_name }.to_json
+  { id: group.id.to_s,
+    name: name,
+    screen_name: screen_name
+  }.to_json
 
 end
 

@@ -17,6 +17,7 @@ class NotificationGenerator
       comment_id: notification.comment_id,
       action:     notification.action.to_s,
       group:      group.name,
+      group_id:   group.id.to_s,
       actors:     actors,
       created_at: notification.created_at.strftime("%d/%m/%Y at %H:%M")
     }

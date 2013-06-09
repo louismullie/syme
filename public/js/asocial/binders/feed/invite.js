@@ -1,7 +1,47 @@
 asocial.binders.add('feed', { invite: function(){
+  
+  $('#invite').submit(function (e) {
+
+    e.preventDefault();
+    
+    // Get data from form.
+    var email = $(this).find('input[name="email"]').val();
+    
+    asocial.auth.getPasswordLocal(function (password) {
+
+      // 1A: !(P, p).
+      var keys = asocial.crypto.generateRSA(true);
+
+      // 1B: !sB
+      var sB_salt = asocial.crypto.generateRandomHexSalt();
+      var sB = asocial.crypto.calculateHash(password, sB_salt);
+
+      // 1C: p -> {p}sB
+      var P = asocial.crypto.encode(keys.public_key);
+      var p = asocial.crypto.encode(keys.private_key);
+      var p_sB = $.base64.encode(sjcl.encrypt(sB, p));
+      
+      // Build invitation.
+      var invitation = $.param({
+        email: email,
+        P: P, p_sB: p_sB,
+        sB_salt: sB_salt
+      });
+
+      // 1D: B -> R: (P, {p}sB)
+      var group = asocial.binders.getCurrentGroup();
+      
+      $.post('/' + group + '/invite/send', invitation, function (data) {
+        $('.invited-user').removeClass('hidden');
+        $('.invite-user').addClass('hidden');
+      });
+      
+    });
+
+  });
 
   $('.invite-confirm').click(function(e) {
-
+    
     e.preventDefault();
 
     var $that = $(this);
@@ -57,6 +97,7 @@ asocial.binders.add('feed', { invite: function(){
        var k_P = $.base64.decode($that.data('invite-k_p'));
        var PA_k = $.base64.decode($that.data('invite-pa_k'));
        var sB_salt = $that.data('invite-sb_salt');
+       var a_P = $.base64.decode($that.data('invite-a_p'));
 
        var sB = asocial.crypto.calculateHash(
          password, sB_salt);
@@ -65,11 +106,11 @@ asocial.binders.add('feed', { invite: function(){
        console.log("3B");
        var p = asocial.crypto.buildPrivateKey(JSON.parse(
          $.base64.decode(sjcl.decrypt(sB, p_sB))));
-
+       
        // 3C.
        console.log("3C");
        var k = p.decrypt(k_P);
-
+       
        // 3D.
        console.log("3D");
        var PA = JSON.parse(sjcl.decrypt(k, PA_k));
@@ -88,13 +129,39 @@ asocial.binders.add('feed', { invite: function(){
 
        // Generate a hash from the keylist salt.
        var key = asocial.crypto.calculateHash(password, keylist_salt);
+       
+       var checkAnswer = function (a) {
+         
+        var proceed = prompt('User provided the wrong answer. ' +
+            'The answer that was provided was: "' + a + '". ' +
+            'Type "yes" to confirm invite anyway.');
 
+         return proceed == 'yes';
+
+       };
+       
+       // Verification
+       console.log('Verification')
+       try {
+         var a = p.decrypt(a_P);
+       } catch (e) {
+         if (!checkAnswer(a))
+          return;
+       }
+       // Generate answer key.
+       var decryptAnswerKey = asocial.crypto.calculateHash(password, asocial.state.group.answer_salt);
+       var answer = sjcl.decrypt(decryptAnswerKey, $.base64.decode(asocial.state.group.answer));
+       
+       if (a != answer && !checkAnswer(a))
+         return;
+       
        // Encrypt the public key list.
        var keylist = asocial.crypto.encryptKeyList(key, public_keys);
 
        // Store keylist for A encrypted using k.
+       var PA_obj = asocial.crypto.buildPublicKey(PA);
        var PPA_k = sjcl.encrypt(k, JSON.stringify(public_keys));
-
+       var a_PA = PA_obj.encrypt(answer);
        var group_id = asocial.binders.getCurrentGroup();
 
       $.get('/' + group_id + '/invite/keys',
@@ -107,9 +174,9 @@ asocial.binders.add('feed', { invite: function(){
 
            invite_id: invite_id,
            PPA_k: $.base64.encode(PPA_k),
-
+           a_PA: $.base64.encode(a_PA),
            invitee_id: id_A, // not strictly necessary?
-           keys: recryptKeys(asocial.crypto.buildPublicKey(PA), keyData.keys),
+           keys: recryptKeys(PA_obj, keyData.keys),
            keylist: keylist,
            keylist_salt: keylist_salt,
 

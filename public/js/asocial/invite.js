@@ -18,10 +18,27 @@ guard('invite', {
       var k = sjcl.decrypt(sA, k_sA);
       var PPA = JSON.parse(sjcl.decrypt(k, PPA_k));
 
+      // Retrieve security answer from inviter.
+      var securityAnswer = asocial_private_key()
+        .decrypt($.base64.decode(asocial.state.invite.a_PA));
+      
+      // Generate a random key salt.
+      var answerSalt = asocial.crypto.generateRandomHexSalt();
+      var answerKey = asocial.crypto.calculateHash(password, answerSalt);
+
+      // Encrypt the security key with the current user's secret key.
+      var encryptedAnswer = sjcl.encrypt(answerKey, securityAnswer);
+      // Encode the security key with base 64.
+      var encodedAnswer = $.base64.encode(encryptedAnswer);
+      
+      // Set the state now in case the user invites someone.
+      asocial.state.group.answer = securityAnswer;
+      asocial.state.group.answer_salt = answerSalt;
+      
       var PA = asocial.crypto.serializePublicKey(asocial_public_key());
 
       PPA[asocial.state.user.id] = PA;
-
+      
       var keylist_salt = asocial.crypto.generateRandomHexSalt();
       var new_sA = asocial.crypto.calculateHash(password, keylist_salt);
       var keylist = asocial.crypto.encryptKeyList(new_sA, PPA);
@@ -29,9 +46,12 @@ guard('invite', {
       var integration = $.param({
         keylist: keylist,
         keylist_salt: keylist_salt,
+        answer: encodedAnswer,
+        answer_salt: answerSalt,
         invite_id: asocial.state.invite.id,
         group_id: asocial.binders.getCurrentGroup()
       });
+      
       
       $.post('/invite/integrate', integration, function (data) {
 
