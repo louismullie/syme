@@ -33,11 +33,7 @@
       %span.default-text> Like
       %span.active-text Unlike
 
-    &sdot;
-
     %a.like-count{ href: '#', 'data-tip' => '{{liker_names}}' }<
-      %span {{like_count}}
-
-      Likes
+      (<span>{{like_count}}</span>)
 
     {{/with}}
