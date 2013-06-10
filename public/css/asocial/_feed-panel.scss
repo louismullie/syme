@@ -1,10 +1,32 @@
 #feed-panel {
+  width: inherit;
+
+  position: fixed;
+  top: 110px; bottom: 0;
+
+  padding: 0 $column-gutter / 2;
+
   img.group-photo {
-    width: 270px;
+    border-radius: $baseBorderRadius;
+  }
 
-    @include box-sizing;
+  .feed-panel-header {
+    font: 200 1.5em/2em $opensans;
 
-    border: 1px solid #FFF;
-    border-radius: 3px;
+    a.group-name {
+      color: $black;
+    }
+
+    a.group-settings-button {
+      float: right;
+
+      color: $gray;
+      @include transition(color, 0.1s ease);
+
+      &:hover {
+        color: $black;
+        text-decoration: none;
+      }
+    }
   }
 }

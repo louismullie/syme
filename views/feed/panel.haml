@@ -1,0 +1,28 @@
+#feed-panel
+  {{#with group.avatar}}
+
+  // Begin: Move that out of here
+  {{#if placeholder}}
+
+  %img.group-photo{ src: '/img/groupavatar.jpg' }
+
+  {{else}}
+
+  %img.group-photo.encrypted-image{src: empty_image, alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-key' => '{{key}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
+
+  {{/if}}
+  // End: Move that out of here
+
+  {{/with}}
+
+  .feed-panel-header
+    %a.group-name{ href: '#' } {{group.name}}
+    %a.group-settings-button{ href: '#' }
+      %i.icon-cog
+
+  // Group avatar hidden file upload
+  %form
+    %input#group-avatar-file-input{ type: 'file', name: 'avatar' }
+
+  // Userlist
+  {{> feed-users}}

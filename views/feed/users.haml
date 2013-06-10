@@ -1,14 +1,7 @@
 #userlist
-  #userlist-header
+  .userlist-header
     // False-title / omnibar
     %input{id: 'userlist-omnibar', type: 'text', value: 'Members (13)', placeholder: 'Search', readonly: ''}
-
-    // Sorting options
-    .btn-group.btn-icon-group.pull-right
-      %a.btn{href: '#', 'data-tip' => 'Sort by user photo'}>
-        %i.icon-th
-      %a.btn{href: '#', 'data-tip' => 'Sort by name'}
-        %i.icon-list
 
     #locked-return.btn-group.btn-icon-group.pull-right
       %a.btn{href: '#', 'data-tip' => 'Go back'}>
@@ -30,7 +23,7 @@
       %input.btn.btn-info{type: 'submit', value: '{{t "admin.invite"}}'}
     .invited-user.hidden
       Your invite has been sent.
-    
+
   {{#if invite}}
   {{#each invite}}
   %a.invite-confirm{href: '#', 'data-invite-id'         => '{{id}}',
@@ -47,11 +40,11 @@
 
   #list.sorted-by-picture
     #list-container
-    
+
       {{#each users}}
       {{> feed-user}}
       {{/each}}
-      
+
       // Invite link is like a normal avatar
       %a.avatar.invite-toggle{href: '#'}
         // 1x1 transparent

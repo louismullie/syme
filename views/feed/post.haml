@@ -29,10 +29,10 @@
         {"content": {{content}}, "key": "{{key}}"}
 
     // Attachment
+    {{#if attachment}}
     .attachment
-      {{#if attachment}}
       {{#with attachment}} {{> feed-attachment}} {{/with}}
-      {{/if}}
+    {{/if}}
 
   // Post footer
   .post-footer

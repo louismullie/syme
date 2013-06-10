@@ -195,17 +195,9 @@ guard('uploader', {
 
         this, file.type, 700, 700, function (image) {
 
-          var colors = getColors(img),
-              dominant = arrayToRgb(colors[1]),
-              median = getInverseRgbColor(colors[1], colors[0]);
-
           var data = {
             mode: 'group_avatar',
-            image_size: '700x700',
-
-            dominant: dominant,
-            first_median: median[0],
-            second_median: median[1]
+            image_size: '700x700'
           };
 
           _this.upload(image, data, function () {}, function () {

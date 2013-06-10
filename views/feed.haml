@@ -27,33 +27,5 @@
       %a.btn{href: '#'} {{t 'feed.load_more'}}
 
   // Group panel
-  #feed-panel.columns.small-12.large-3.end
-
-    // Group name
-    %h1
-      {{group.name}}
-
-    // Group avatar
-    %a{:'data-tip' => 'Change your group picture'}
-      {{#with group.avatar}}
-
-      // Begin: Move that out of here
-      {{#if placeholder}}
-
-      %img.group-avatar
-
-      {{else}}
-
-      %img.group-avatar.encrypted-image{src: empty_image, alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-key' => '{{key}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
-
-      {{/if}}
-      // End: Move that out of here
-
-      {{/with}}
-
-    // Group avatar hidden file upload
-    %form
-      %input#group-avatar-file-input.hidden{type: 'file', name: 'avatar'}
-
-    // Userlist
-    {{> feed-users}}
+  .columns.small-12.large-3.end
+    = haml :'feed/panel'

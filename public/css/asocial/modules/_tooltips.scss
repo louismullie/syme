@@ -8,6 +8,8 @@ $tooltipOffset:       -10px;
 $tooltipArrowOffset:  13px;
 
 $tooltipTransparency: 0.8;
+$tooltipFontSize:     12px;
+$tooltipLineHeight:   30px;
 $tooltipTextColor:    white;
 
 $tooltipDefault:  #1A1A1A;
@@ -53,12 +55,14 @@ $tooltipDanger:   $danger;
     content:attr(data-tip);
     display:none;
 
-    padding:5px 8px;
+    padding: 0 8px;
 
     background: rgba($tooltipDefault, $tooltipTransparency);
     color: $tooltipTextColor;
 
-    font-size: 1em;
+    line-height: $tooltipLineHeight;
+
+    font-size: $tooltipFontSize;
     font-weight: normal;
     white-space:nowrap;
     word-wrap:normal;
