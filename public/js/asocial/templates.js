@@ -429,11 +429,11 @@ function program1(depth0,data) {
   if (stack1 = helpers.comments_collapsed) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.comments_collapsed; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "'>\n    <a class='btn' href='#'>\n      Show <span>";
+    + "'>\n    <a href='#'>\n      <i class='icon-comment-alt'></i>\n      View <span>";
   if (stack1 = helpers.comments_collapsed_count) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.comments_collapsed_count; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</span> hidden comments\n    </a>\n  </div>\n  <!-- / Comments -->\n  ";
+    + "</span> more comments\n    </a>\n  </div>\n  <!-- / Comments -->\n  ";
   stack1 = helpers.each.call(depth0, depth0.comments, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</div>\n<!-- / Comment box -->\n<div class='comment-form'>\n  <textarea class='autogrow' maxlength='1500' name='content' placeholder='";

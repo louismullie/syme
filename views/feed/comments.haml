@@ -1,8 +1,9 @@
 .comments
   // Show collapsed comments
   .show-more{ class: '{{comments_collapsed}}' }
-    %a.btn{href: '#'}
-      Show <span>{{comments_collapsed_count}}</span> hidden comments
+    %a{href: '#'}
+      %i.icon-comment-alt
+      View <span>{{comments_collapsed_count}}</span> more comments
 
   // Comments
   {{#each comments}} {{> feed-comment}} {{/each}}
