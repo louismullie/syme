@@ -69,15 +69,10 @@ guard('socket', {
     comment: function(data){
 
       // If related post doesn't exist on page
-      if($('#' + data.target).length == 0){
-
-        asocial.helpers.newContent('comment');
-
-      // If it exists
-      } else {
+      if($('#' + data.target).length) {
 
         var post               = $('#' + data.target),
-            global_count       = post.find('.post-comments span'),
+            global_count       = post.find('span.comment-count'),
             container          = post.find('.comments'),
             showmore           = container.find('.show-more'),
             showmore_count     = showmore.find('span'),
@@ -103,6 +98,11 @@ guard('socket', {
 
         // Decrypt new comment
         asocial.crypto.decryptPostsAndComments();
+
+      } else {
+
+        // If related post doesn't exist, increment new content
+        asocial.helpers.newContent('comment');
 
       }
 

@@ -615,11 +615,11 @@ function program10(depth0,data) {
   buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n        &sdot;\n        <!-- / Comment action -->\n        <a class='comment-action' href='#'>\n          Comment\n        </a>\n      </div>\n      <!-- / Informations -->\n      <div class='post-footer-informations columns small-6'>\n        <!-- / Like count -->\n        ";
   stack2 = helpers['with'].call(depth0, depth0.likeable, {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n        &sdot;\n        <!-- / Comment count -->\n        <span>";
+  buffer += "\n        &sdot;\n        <!-- / Comment count -->\n        <span class='comment-count'>";
   if (stack2 = helpers.comment_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.comment_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "</span> Comments\n      </div>\n    </div>\n  </div>\n  <div class='post-comments'>\n    ";
+    + "</span>\n        Comments\n      </div>\n    </div>\n  </div>\n  <div class='post-comments'>\n    ";
   stack2 = self.invokePartial(partials['feed-comments'], 'feed-comments', depth0, helpers, partials, data);
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  </div>\n</div>\n";

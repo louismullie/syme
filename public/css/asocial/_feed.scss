@@ -181,6 +181,10 @@
           margin-bottom: 0;
         }
 
+        &.comment-hidden {
+          display: none;
+        }
+
         // For now
         a.comment-delete { display: none; }
 
