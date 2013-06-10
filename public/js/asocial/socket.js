@@ -159,21 +159,9 @@ guard('socket', {
         action_link.addClass('active') :
         action_link.removeClass('active');
 
-      // Change counter
-      if(data.view.like_count > 0) {
-
-        // If there are some likes, update list of names
-        // and counter
-        count_link.attr('data-tip', data.view.liker_names);
-        count_link.find('span').html(data.view.like_count);
-
-      } else {
-
-        // Otherwise, clear both
-        count_link.removeAttr('data-tip');
-        count_link.find('span').html('');
-
-      }
+      // Update list of names and counter
+      count_link.attr('data-tip', data.view.liker_names);
+      count_link.find('span').html(data.view.like_count);
     },
 
     notification: function(data){
@@ -374,7 +362,7 @@ guard('socket', {
             document.eventSource.close();
           }
         };
-        
+
       }
     } catch(exception){
       console.log(exception);
