@@ -31,6 +31,50 @@
     border-bottom: none;
   }
 
+  .collapsable {
+    position: relative;
+    overflow: hidden;
+
+    // Css-only text expander
+    margin-bottom: .5em; /* child <p> margin-bottom */
+    line-height: 1.3em; /* child <p> line-height */
+
+    p {
+      margin-bottom: inherit;
+      line-height: inherit;
+
+      font-size: .9em;
+      font-weight: 200;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .expand-link-container {
+      display: none;
+    }
+
+    &.collapsed {
+      p {
+        margin: 0;
+      }
+
+      .expand-link-container {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        display: block;
+
+        line-height: inherit;
+        font-size: .8em;
+
+        background-color: #FFF;
+
+        box-shadow: -5px 0 5px 0 white;
+      }
+    }
+  }
+
   .post-header {
     position: relative;
 
@@ -73,50 +117,6 @@
   }
 
   .post-content {
-    .collapsable {
-      position: relative;
-      overflow: hidden;
-
-      // Css-only text expander
-      margin-bottom: .5em; /* child <p> margin-bottom */
-      line-height: 1.3em; /* child <p> line-height */
-
-      p {
-        margin-bottom: inherit;
-        line-height: inherit;
-
-        font-size: .9em;
-        font-weight: 200;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-
-      &.collapsed {
-        p {
-          margin: 0;
-        }
-
-        .expand-link-container {
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          display: block;
-
-          line-height: inherit;
-          font-size: .8em;
-
-          background-color: #FFF;
-
-          box-shadow: -5px 0 5px 0 white;
-        }
-      }
-
-      .expand-link-container {
-        display: none;
-      }
-    }
-
     .attachment {
       margin-bottom: 1em;
 
@@ -169,6 +169,69 @@
 
     .comments {
 
+      .comment-box {
+        overflow: hidden;
+
+        border-bottom: 1px solid #ddd;
+        padding-bottom: .5em;
+        margin-bottom: 1em;
+
+        &:last-child {
+          border: none;
+          margin-bottom: 0;
+        }
+
+        // For now
+        a.comment-delete { display: none; }
+
+        img.avatar {
+          width: $avatarCommentSize;
+          height: auto;
+
+          float: left;
+          margin-right: 1em;
+
+          border-radius: $baseBorderRadius;
+        }
+
+        .collapsable {
+          margin-bottom: .5em;
+
+          p {
+            font-size: .8em;
+            font-weight: 200;
+            line-height: 1.4em;
+
+            a.commenter-name {
+              padding-right: .4em;
+              font-weight: normal;
+            }
+
+            .expand-link-container {
+              font-size: .9em;
+            }
+          }
+        }
+
+        .comment-footer {
+          font-size: .8em;
+          font-weight: 200;
+          line-height: 1.5em;
+
+          margin-left: $avatarCommentSize;
+          padding-left: 1em;
+
+          a.like-action {
+            span.default-text { display: inline; }
+            span.active-text { display: none; }
+
+            &.active {
+              span.default-text { display: none; }
+              span.active-text { display: inline; }
+            }
+          }
+        }
+      }
     }
 
     .comment-form {
