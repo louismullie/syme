@@ -6,12 +6,11 @@
     #auth-methods.row
       .columns.small-12.large-6.large-centered
         %form#login-form{method: 'post'}
-          
           // Error message
           #error.hidden
             %i.icon-warning-sign
             %span
-          
+
           .input-text-icon
             %i.icon-envelope
             %input{type: 'text', name: 'email', placeholder: 'Email'}
@@ -24,6 +23,7 @@
             %input#remember_me{type: 'checkbox', name: 'remember_me'}
             %span Keep me logged in
 
+          %input{ type: 'submit' }
           %a.btn.btn-success{ href: '#', role: 'submit' }
             Log in <i class="icon-spinner icon-spin"></i>
 

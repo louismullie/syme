@@ -38,26 +38,24 @@ asocial.binders.add('global', { main: function(){
   // Make forms sumbit on enter key (whether there's a submit button or not)
   // but omit enter key event on autocomplete dropdowns, when it's coupled
   // with shift, or when a textarea is in focus. To make a focused textarea
-  // submit with enter key, add  a "data-single-line" to it.
-  $(document).on('keydown', 'form', function(e) {
-    var keyCode = e.keyCode ? e.keyCode : e.which;
+  // submit with enter key, add  a "data-single-line" attribute to its tag.
+  // $(document).on('keydown', 'form', function(e) {
+  //   // If key pressed is enter without shift
+  //   if (e.which == 13 && !e.shiftKey) {
+  //     e.preventDefault();
+  //     e.stopPropagation();
 
-    if (keyCode == 13 && !e.shiftKey) {
-      if( !$('textarea').is(':focus') ||
-          typeof($('textarea:focus').data('single-line')) != "undefined" ) {
+  //     // If there's a multiline textarea in focus, do nothing.
+  //     if ($('textarea').is(':focus') && !$('textarea:focus').hasData('single-line')) return false;
 
-        // Prevent everything else
-        e.preventDefault();
-        e.stopPropagation();
+  //     // Submit form
+  //     alert('Forcing form submitting');
+  //     $(this).submit();
+  //     alert('Form submitted');
 
-        // Submit form
-        $(this).submit();
-
-        // Kill function
-        return false;
-      }
-    }
-  });
+  //     return false;
+  //   }
+  // });
 
   // Implement session timeouts
   $(document).ready(function () {

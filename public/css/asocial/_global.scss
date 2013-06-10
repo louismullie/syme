@@ -85,6 +85,11 @@ form, input {
   margin: 0;
 }
 
+input[type="submit"] {
+  position: absolute;
+  visibility: hidden;
+}
+
 #main {
   padding-top: $bodyPadding + 80px;
 

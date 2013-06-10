@@ -6,11 +6,11 @@
     #auth-methods.row
       .columns.small-12.large-6.large-centered
         %form#register-form{method: 'post'}
-        
+
           #error.hidden
             %i.icon-warning-sign
             %span
-          
+
           .input-text-icon
             %i.icon-user
             %input{type: 'text', name: 'full_name', placeholder: 'Full name', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false'}
@@ -23,6 +23,7 @@
             %i.icon-lock
             %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
 
+          %input{ type: 'submit' }
           %a.btn.btn-success{ href: '#', role: 'submit' }
             Register <i class="icon-spinner icon-spin"></i>
 

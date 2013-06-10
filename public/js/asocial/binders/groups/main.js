@@ -46,9 +46,7 @@ asocial.binders.add('groups', { main: function() {
 
   });
 
-  $('#create_group, #create_first_group').on({
-
-    submit: function (e) {
+  $('#main').on('submit', '#create_group, #create_first_group', function(e) {
 
     // Prevent form submission.
     e.preventDefault();
@@ -98,7 +96,7 @@ asocial.binders.add('groups', { main: function() {
       // Generate a random key salt.
       var answerSalt = asocial.crypto.generateRandomHexSalt();
       var answerKey = asocial.crypto.calculateHash(password, answerSalt);
-      
+
       // Encrypt the security key with the current user's secret key.
       var encryptedAnswer = sjcl.encrypt(answerKey, securityAnswer);
 
@@ -111,11 +109,11 @@ asocial.binders.add('groups', { main: function() {
         name: name,
         keylist: encryptedKeylist64,
         keylist_salt: salt,
-        
+
         question: question,
         answer: encodedAnswer,
         answer_salt: answerSalt
-        
+
       });
 
       // Create the group, passing the encrypted key list.
@@ -125,7 +123,6 @@ asocial.binders.add('groups', { main: function() {
 
     });
 
-  }});
-
+  });
 
 } }); // asocial.binders.add();

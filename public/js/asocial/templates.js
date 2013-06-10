@@ -404,7 +404,7 @@ function program6(depth0,data) {
   if (stack2 = helpers.full_time) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.full_time; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "'></time>\n    </a>\n    &sdot;\n    ";
+    + "'></time>\n    </a>\n    ";
   stack2 = helpers['with'].call(depth0, depth0.likeable, {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  </div>\n</div>\n";
@@ -936,7 +936,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<div class='create-first-group'>\n  <h2>Welcome to <b>Asocial</b>. <br/>Name your first group:</h2>\n  <div class='row'>\n    <div class='columns small-12 large-8 large-centered'>\n      <form id='create_first_group' method='post'>\n        <input autocapitalize='off' autocomplete='off' autocorrect='off' autofocus='' name='name' spellcheck='false' type='text'>\n        <a href='#' role='submit'>\n          <span class='default'>Get started</span>\n          <span class='hover'><i class=\"icon-ok\"></i></span>\n        </a>\n      </form>\n    </div>\n  </div>\n</div>\n";
+  return "<div class='create-first-group'>\n  <h2>Welcome to <b>Asocial</b>. <br/>Name your first group:</h2>\n  <div class='row'>\n    <div class='columns small-12 large-8 large-centered'>\n      <form id='create_first_group' method='post'>\n        <input autocapitalize='off' autocomplete='off' autocorrect='off' autofocus='' name='name' spellcheck='false' type='text'>\n        <input type='submit'>\n        <a href='#' role='submit'>\n          <span class='default'>Get started</span>\n          <span class='hover'><i class=\"icon-ok\"></i></span>\n        </a>\n      </form>\n    </div>\n  </div>\n</div>\n";
   });
 templates['_groups-group'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
@@ -1197,7 +1197,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   buffer += "<div class='row' id='auth'>\n  <div class='columns small-12 large-8 large-centered'>\n    <h1>Asocial</h1>\n    <h2>The encrypted social network.</h2>\n    <div class='row' id='auth-methods'>\n      <div class='columns small-12 large-6 large-centered'>\n        <form id='login-form' method='post'>\n          <!-- / Error message -->\n          <div class='hidden' id='error'>\n            <i class='icon-warning-sign'></i>\n            <span></span>\n          </div>\n          <div class='input-text-icon'>\n            <i class='icon-envelope'></i>\n            <input name='email' placeholder='Email' type='text'>\n          </div>\n          <div class='input-text-icon'>\n            <i class='icon-lock'></i>\n            <input name='password' placeholder='";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "login.password", options) : helperMissing.call(depth0, "t", "login.password", options)))
-    + "' type='password'>\n          </div>\n          <label for='remember_me'>\n            <input id='remember_me' name='remember_me' type='checkbox'>\n            <span>Keep me logged in</span>\n          </label>\n          <a class='btn btn-success' href='#' role='submit'>\n            Log in <i class=\"icon-spinner icon-spin\"></i>\n          </a>\n          <p class='switchmode'>\n            Need an account? <a href=\"/register\" data-hbs>Create one</a>.\n          </p>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n";
+    + "' type='password'>\n          </div>\n          <label for='remember_me'>\n            <input id='remember_me' name='remember_me' type='checkbox'>\n            <span>Keep me logged in</span>\n          </label>\n          <input type='submit'>\n          <a class='btn btn-success' href='#' role='submit'>\n            Log in <i class=\"icon-spinner icon-spin\"></i>\n          </a>\n          <p class='switchmode'>\n            Need an account? <a href=\"/register\" data-hbs>Create one</a>.\n          </p>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n";
   return buffer;
   });
 templates['_navbar'] = template(function (Handlebars,depth0,helpers,partials,data) {
@@ -1217,7 +1217,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   buffer += "<div class='row' id='auth'>\n  <div class='columns small-12 large-8 large-centered'>\n    <h1>Asocial</h1>\n    <h2>The encrypted social network.</h2>\n    <div class='row' id='auth-methods'>\n      <div class='columns small-12 large-6 large-centered'>\n        <form id='register-form' method='post'>\n          <div class='hidden' id='error'>\n            <i class='icon-warning-sign'></i>\n            <span></span>\n          </div>\n          <div class='input-text-icon'>\n            <i class='icon-user'></i>\n            <input autocapitalize='off' autocomplete='off' autocorrect='off' name='full_name' placeholder='Full name' spellcheck='false' type='text'>\n          </div>\n          <div class='input-text-icon'>\n            <i class='icon-envelope'></i>\n            <input autocapitalize='off' autocomplete='off' autocorrect='off' name='email' placeholder='Email address' spellcheck='false' type='text'>\n          </div>\n          <div class='input-text-icon'>\n            <i class='icon-lock'></i>\n            <input name='password' placeholder='";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "login.password", options) : helperMissing.call(depth0, "t", "login.password", options)))
-    + "' type='password'>\n          </div>\n          <a class='btn btn-success' href='#' role='submit'>\n            Register <i class=\"icon-spinner icon-spin\"></i>\n          </a>\n          <p class='switchmode'>\n            Already registered? <a href=\"/login\" data-hbs>Log in</a>.\n          </p>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n";
+    + "' type='password'>\n          </div>\n          <input type='submit'>\n          <a class='btn btn-success' href='#' role='submit'>\n            Register <i class=\"icon-spinner icon-spin\"></i>\n          </a>\n          <p class='switchmode'>\n            Already registered? <a href=\"/login\" data-hbs>Log in</a>.\n          </p>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n";
   return buffer;
   });
 templates['_settings-profile'] = template(function (Handlebars,depth0,helpers,partials,data) {
