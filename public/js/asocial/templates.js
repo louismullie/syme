@@ -355,19 +355,19 @@ function program3(depth0,data) {
 
 function program5(depth0,data) {
   
-  var buffer = "", stack1, stack2;
+  var buffer = "", stack1;
   buffer += "\n    <!-- / Like action -->\n    <a class='like-action ";
-  stack2 = helpers['if'].call(depth0, ((stack1 = depth0.likeable),stack1 == null || stack1 === false ? stack1 : stack1.liked_by_user), {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n    <a class='like-count hint--top' data-hint='";
-  if (stack2 = helpers.liker_names) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.liker_names; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "' href='#'>(<span>";
-  if (stack2 = helpers.like_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
-  else { stack2 = depth0.like_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
-  buffer += escapeExpression(stack2)
-    + "</span>)</a>\n    ";
+  stack1 = helpers['if'].call(depth0, depth0.liked_by_user, {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n    &sdot;\n    <a class='like-count hint--top' data-hint='";
+  if (stack1 = helpers.liker_names) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.liker_names; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "' href='#'><span>";
+  if (stack1 = helpers.like_count) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.like_count; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n    <i class='icon-thumbs-up'></i></a>\n    ";
   return buffer;
   }
 function program6(depth0,data) {

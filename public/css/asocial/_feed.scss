@@ -235,6 +235,18 @@
                 span.active-text { display: inline; }
               }
             }
+
+            a.like-count {
+              color: $darkgray;
+              font-weight: normal;
+
+              &:hover { text-decoration: none; }
+
+              i {
+                font-size: 1em;
+                line-height: inherit;
+              }
+            }
           }
         }
       }
