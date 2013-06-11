@@ -12,13 +12,8 @@
       %i.icon-search
 
   %form#invite{method: 'post'}
-
     .invite-user
-      %input#email{type: "text", name: "email",
-                   required: '',
-                   maxlength: 30,
-                   'data-validation-regex-regex' => '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$',
-                   'data-validation-regex-message' => 'This doesn\'t look like an e-mail.'}
+      %input#email{type: "text", name: "email"}
 
       %input.btn.btn-info{type: 'submit', value: '{{t "admin.invite"}}'}
     .invited-user.hidden

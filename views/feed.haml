@@ -1,11 +1,11 @@
 .row
   // Left column
-  .columns.small-12.large-5.large-offset-2
+  .columns.small-12.large-6.large-offset-2
 
     // Feed form
     .row
       .small-12.collapse
-        = haml :'feed/form'
+        {{> feed-form}}
 
     // Feed
     #feed{ 'data-year' => '{{ year }}',
@@ -27,5 +27,5 @@
       %a.btn{href: '#'} {{t 'feed.load_more'}}
 
   // Group panel
-  .columns.small-12.large-3.end
-    = haml :'feed/panel'
+  .columns.small-12.large-2.end
+    {{> feed-panel}}

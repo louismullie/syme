@@ -350,7 +350,7 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   
-  return "\n  <a class='comment-delete tip-icon' data-tip='Delete comment' href='#'>\n    <i class='icon-remove'></i>\n  </a>\n  ";
+  return "\n  <a class='comment-delete tip-icon' data-hint='Delete' href='#'>\n    <i class='icon-remove'></i>\n  </a>\n  ";
   }
 
 function program5(depth0,data) {
@@ -359,7 +359,7 @@ function program5(depth0,data) {
   buffer += "\n    <!-- / Like action -->\n    <a class='like-action ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.likeable),stack1 == null || stack1 === false ? stack1 : stack1.liked_by_user), {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n    <a class='like-count' data-tip='";
+  buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n    <a class='like-count hint--top' data-hint='";
   if (stack2 = helpers.liker_names) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.liker_names; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -485,7 +485,7 @@ function program1(depth0,data) {
   buffer += "<form id='feed-form' method='post'>\n  <a id='feed-form-avatar'>\n    ";
   stack1 = helpers['with'].call(depth0, depth0.user, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  </a>\n  <input class='hidden' id='upload_avatar' name='account-picture' type='file'>\n  <!-- / Drag-and-drop helper -->\n  <div id='drag-helper'>\n    <p>Drag & Drop files here</p>\n  </div>\n  <!-- / Progress bar (hidden for now) -->\n  <div class='progress progress-striped active hidden'>\n    <div class='bar' id='progress_bar'></div>\n  </div>\n  <!-- / Textarea -->\n  <textarea class='autogrow' maxlength='5000' name='content' placeholder=\"What's happening?\"></textarea>\n  <!-- / Hidden encryption-related inputs -->\n  <input id='encrypted_content' name='encrypted_content' type='hidden'>\n  <input id='mentioned_users' name='mentioned_users' type='hidden'>\n  <!-- / Hidden upload-related inputs -->\n  <input id='upload_id' name='upload_id' type='hidden'>\n  <input class='hidden' id='upload_file' type='file'>\n  <div class='row collapse'>\n    <div class='columns small-12 large-10'>\n      <!-- / Attachment box -->\n      <ul id='attachments'>\n        <li class='title'>Attach:</li>\n        <li>\n          <a data-upload-trigger='photo' href='#'>\n            <i class='icon-camera'></i>\n            Photo\n          </a>\n        </li>\n        <li>\n          <a data-upload-trigger='video' href='#'>\n            <i class='icon-film'></i>\n            Video\n          </a>\n        </li>\n        <li>\n          <a data-upload-trigger='file' href='#'>\n            <i class='icon-desktop'></i>\n            File\n          </a>\n        </li>\n      </ul>\n    </div>\n    <div class='columns small-12 large-2'>\n      <a class='btn btn-success' href='#' role='submit'>Say it</a>\n    </div>\n  </div>\n</form>\n";
+  buffer += "\n  </a>\n  <input class='hidden' id='upload_avatar' name='account-picture' type='file'>\n  <!-- / Drag-and-drop helper -->\n  <div id='drag-helper'>\n    <p>Drag & Drop files here</p>\n  </div>\n  <!-- / Progress bar (hidden for now) -->\n  <div class='progress progress-striped active hidden'>\n    <div class='bar' id='progress_bar'></div>\n  </div>\n  <!-- / Textarea -->\n  <textarea class='autogrow' maxlength='5000' name='content' placeholder=\"What's happening?\"></textarea>\n  <!-- / Hidden encryption-related inputs -->\n  <input id='encrypted_content' name='encrypted_content' type='hidden'>\n  <input id='mentioned_users' name='mentioned_users' type='hidden'>\n  <!-- / Hidden upload-related inputs -->\n  <input id='upload_id' name='upload_id' type='hidden'>\n  <input class='hidden' id='upload_file' type='file'>\n  <div class='row collapse'>\n    <div class='columns small-12 large-10'>\n      <!-- / Attachment box -->\n      <ul id='attachments'>\n        <li class='title'>Attach:</li>\n        <li>\n          <a data-upload-trigger='photo' href='#'>\n            <i class='icon-camera'></i>\n            Photo\n          </a>\n        </li>\n        <li>\n          <a data-upload-trigger='video' href='#'>\n            <i class='icon-film'></i>\n            Video\n          </a>\n        </li>\n        <li>\n          <a data-upload-trigger='file' href='#'>\n            <i class='icon-file'></i>\n            File\n          </a>\n        </li>\n      </ul>\n    </div>\n    <div class='columns small-12 large-2'>\n      <a class='btn btn-success' href='#' role='submit'>Post</a>\n    </div>\n  </div>\n</form>\n";
   return buffer;
   });
 templates['_feed-notification'] = template(function (Handlebars,depth0,helpers,partials,data) {
@@ -585,16 +585,16 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   
-  return "\n    <a class='btn btn-white post-delete' href='#'>\n      <i class='icon-remove'></i>\n    </a>\n    ";
+  return "\n      <a class='btn btn-white post-delete hint--left' data-hint='Delete' href='#'>\n        <i class='icon-remove'></i>\n      </a>\n      ";
   }
 
 function program5(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n    <div class='attachment'>\n      ";
+  buffer += "\n      <div class='attachment'>\n        ";
   stack1 = helpers['with'].call(depth0, depth0.attachment, {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n    </div>\n    ";
+  buffer += "\n      </div>\n      ";
   return buffer;
   }
 function program6(depth0,data) {
@@ -616,7 +616,7 @@ function program8(depth0,data) {
 function program10(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n        <a class='like-count' data-tip='";
+  buffer += "\n          <a class='like-count hint--top' data-hint='";
   if (stack1 = helpers.liker_names) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.liker_names; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -624,7 +624,7 @@ function program10(depth0,data) {
   if (stack1 = helpers.like_count) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.like_count; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</span>\n        Likes</a>\n        ";
+    + "</span>\n          Likes</a>\n          ";
   return buffer;
   }
 
@@ -636,19 +636,19 @@ function program10(depth0,data) {
   if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "'>\n  <!-- / Post header -->\n  <div class='post-header'>\n    <!-- / Avatar -->\n    ";
+    + "'>\n  <!-- / Avatar -->\n  ";
   stack1 = helpers['with'].call(depth0, depth0.owner, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n    <!-- / Owner name -->\n    <p class='post-header-infos'>\n      "
+  buffer += "\n  <div class='post-indent'>\n    <!-- / Post header -->\n    <div class='post-header'>\n      <!-- / Owner name -->\n      <p class='post-header-infos'>\n        "
     + escapeExpression(((stack1 = ((stack1 = depth0.owner),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\n      <!-- / Post time -->\n      <a class='time' href='#'>\n        <time class='timeago' datetime='";
+    + "\n        <!-- / Post time -->\n        <a class='time' href='#'>\n          <time class='timeago' datetime='";
   if (stack2 = helpers.created_at) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.created_at; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "'></time>\n      </a>\n    </p>\n    <!-- / Delete button -->\n    ";
+    + "'></time>\n        </a>\n      </p>\n      <!-- / Delete button -->\n      ";
   stack2 = helpers['if'].call(depth0, depth0.deletable, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  </div>\n  <!-- / Post content -->\n  <div class='post-content'>\n    <!-- / Collapsable content -->\n    <div class='collapsable'>\n      <div class='encrypted_notice'>\n        <i>This post is encrypted.</i>\n      </div>\n      <div class='encrypted'>\n        {\"content\": ";
+  buffer += "\n    </div>\n    <!-- / Post content -->\n    <div class='post-content'>\n      <!-- / Collapsable content -->\n      <div class='collapsable'>\n        <div class='encrypted_notice'>\n          <i>This post is encrypted.</i>\n        </div>\n        <div class='encrypted'>\n          {\"content\": ";
   if (stack2 = helpers.content) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.content; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
@@ -656,23 +656,23 @@ function program10(depth0,data) {
   if (stack2 = helpers.key) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.key; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "\"}\n      </div>\n    </div>\n    <!-- / Attachment -->\n    ";
+    + "\"}\n        </div>\n      </div>\n      <!-- / Attachment -->\n      ";
   stack2 = helpers['if'].call(depth0, depth0.attachment, {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  </div>\n  <!-- / Post footer -->\n  <div class='post-footer'>\n    <div class='row'>\n      <!-- / Actions -->\n      <div class='post-footer-actions columns small-6'>\n        <!-- / Like action -->\n        <a class='like-action ";
+  buffer += "\n    </div>\n    <!-- / Post footer -->\n    <div class='post-footer'>\n      <div class='row'>\n        <!-- / Actions -->\n        <div class='post-footer-actions columns small-6'>\n          <!-- / Like action -->\n          <a class='like-action ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.likeable),stack1 == null || stack1 === false ? stack1 : stack1.liked_by_user), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n        &sdot;\n        <!-- / Comment action -->\n        <a class='comment-action' href='#'>\n          Comment\n        </a>\n      </div>\n      <!-- / Informations -->\n      <div class='post-footer-informations columns small-6'>\n        <!-- / Like count -->\n        ";
+  buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n          &sdot;\n          <!-- / Comment action -->\n          <a class='comment-action' href='#'>\n            Comment\n          </a>\n        </div>\n        <!-- / Informations -->\n        <div class='post-footer-informations columns small-6'>\n          <!-- / Like count -->\n          ";
   stack2 = helpers['with'].call(depth0, depth0.likeable, {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n        &sdot;\n        <!-- / Comment count -->\n        <span class='comment-count'>";
+  buffer += "\n          &sdot;\n          <!-- / Comment count -->\n          <span class='comment-count'>";
   if (stack2 = helpers.comment_count) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.comment_count; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "</span>\n        Comments\n      </div>\n    </div>\n  </div>\n  <div class='post-comments'>\n    ";
+    + "</span>\n          Comments\n        </div>\n      </div>\n    </div>\n    <div class='post-comments'>\n      ";
   stack2 = self.invokePartial(partials['feed-comments'], 'feed-comments', depth0, helpers, partials, data);
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  </div>\n</div>\n";
+  buffer += "\n    </div>\n  </div>\n</div>\n";
   return buffer;
   });
 templates['_feed-posts'] = template(function (Handlebars,depth0,helpers,partials,data) {
@@ -842,7 +842,7 @@ function program4(depth0,data) {
   return buffer;
   }
 
-  buffer += "<div id='userlist'>\n  <div class='userlist-header'>\n    <!-- / False-title / omnibar -->\n    <input id='userlist-omnibar' placeholder='Search' readonly='' type='text' value='Members (13)'>\n    <div class='btn-group btn-icon-group pull-right' id='locked-return'><a class='btn' data-tip='Go back' href='#'>\n        <i class='icon-reply'></i>\n      </a></div>\n    <!-- / Search button -->\n    <a class='search tip-icon' data-tip='Search for users' href='#'>\n      <i class='icon-search'></i>\n    </a>\n  </div>\n  <form id='invite' method='post'>\n    <div class='invite-user'>\n      <input data-validation-regex-message=\"This doesn't look like an e-mail.\" data-validation-regex-regex='^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$' id='email' maxlength='30' name='email' required='' type='text'>\n      <input class='btn btn-info' type='submit' value='";
+  buffer += "<div id='userlist'>\n  <div class='userlist-header'>\n    <!-- / False-title / omnibar -->\n    <input id='userlist-omnibar' placeholder='Search' readonly='' type='text' value='Members (13)'>\n    <div class='btn-group btn-icon-group pull-right' id='locked-return'><a class='btn' data-tip='Go back' href='#'>\n        <i class='icon-reply'></i>\n      </a></div>\n    <!-- / Search button -->\n    <a class='search tip-icon' data-tip='Search for users' href='#'>\n      <i class='icon-search'></i>\n    </a>\n  </div>\n  <form id='invite' method='post'>\n    <div class='invite-user'>\n      <input id='email' name='email' type='text'>\n      <input class='btn btn-info' type='submit' value='";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "admin.invite", options) : helperMissing.call(depth0, "t", "admin.invite", options)))
     + "'>\n    </div>\n    <div class='invited-user hidden'>\n      Your invite has been sent.\n    </div>\n  </form>\n  ";
@@ -859,54 +859,11 @@ templates['_feed'] = template(function (Handlebars,depth0,helpers,partials,data)
 helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.partials; data = data || {};
   var buffer = "", stack1, stack2, options, self=this, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
-function program1(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += " ";
-  stack1 = self.invokePartial(partials['feed-avatar'], 'feed-avatar', depth0, helpers, partials, data);
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " ";
-  return buffer;
-  }
 
-function program3(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n      <!-- / Begin: Move that out of here -->\n      ";
-  stack1 = helpers['if'].call(depth0, depth0.placeholder, {hash:{},inverse:self.program(6, program6, data),fn:self.program(4, program4, data),data:data});
+  buffer += "<div class='row'>\n  <!-- / Left column -->\n  <div class='columns small-12 large-6 large-offset-2'>\n    <!-- / Feed form -->\n    <div class='row'>\n      <div class='small-12 collapse'>\n        ";
+  stack1 = self.invokePartial(partials['feed-form'], 'feed-form', depth0, helpers, partials, data);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n      <!-- / End: Move that out of here -->\n      ";
-  return buffer;
-  }
-function program4(depth0,data) {
-  
-  
-  return "\n      <img class='group-photo' src='/img/groupavatar.jpg'>\n      ";
-  }
-
-function program6(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n      <img alt='Encrypted image' class='group-photo encrypted-image' data-attachment-group='";
-  if (stack1 = helpers.group_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.group_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "' data-attachment-id='";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "' data-attachment-key='";
-  if (stack1 = helpers.key) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.key; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "' data-attachment-type='image' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n      ";
-  return buffer;
-  }
-
-  buffer += "<div class='row'>\n  <!-- / Left column -->\n  <div class='columns small-12 large-5 large-offset-2'>\n    <!-- / Feed form -->\n    <div class='row'>\n      <div class='small-12 collapse'>\n        <form id='feed-form' method='post'>\n          <a id='feed-form-avatar'>\n            ";
-  stack1 = helpers['with'].call(depth0, depth0.user, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n          </a>\n          <input class='hidden' id='upload_avatar' name='account-picture' type='file'>\n          <!-- / Drag-and-drop helper -->\n          <div id='drag-helper'>\n            <p>Drag & Drop files here</p>\n          </div>\n          <!-- / Progress bar (hidden for now) -->\n          <div class='progress progress-striped active hidden'>\n            <div class='bar' id='progress_bar'></div>\n          </div>\n          <!-- / Textarea -->\n          <textarea class='autogrow' maxlength='5000' name='content' placeholder=\"What's happening?\"></textarea>\n          <!-- / Hidden encryption-related inputs -->\n          <input id='encrypted_content' name='encrypted_content' type='hidden'>\n          <input id='mentioned_users' name='mentioned_users' type='hidden'>\n          <!-- / Hidden upload-related inputs -->\n          <input id='upload_id' name='upload_id' type='hidden'>\n          <input class='hidden' id='upload_file' type='file'>\n          <div class='row collapse'>\n            <div class='columns small-12 large-10'>\n              <!-- / Attachment box -->\n              <ul id='attachments'>\n                <li class='title'>Attach:</li>\n                <li>\n                  <a data-upload-trigger='photo' href='#'>\n                    <i class='icon-camera'></i>\n                    Photo\n                  </a>\n                </li>\n                <li>\n                  <a data-upload-trigger='video' href='#'>\n                    <i class='icon-film'></i>\n                    Video\n                  </a>\n                </li>\n                <li>\n                  <a data-upload-trigger='file' href='#'>\n                    <i class='icon-desktop'></i>\n                    File\n                  </a>\n                </li>\n              </ul>\n            </div>\n            <div class='columns small-12 large-2'>\n              <a class='btn btn-success' href='#' role='submit'>Say it</a>\n            </div>\n          </div>\n        </form>\n      </div>\n    </div>\n    <!-- / Feed -->\n    <div data-month='";
+  buffer += "\n      </div>\n    </div>\n    <!-- / Feed -->\n    <div data-month='";
   if (stack1 = helpers.month) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.month; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -926,15 +883,10 @@ function program6(depth0,data) {
   buffer += "\n    </div>\n    <!-- / Load more button, triggered by infinite scroller -->\n    <!-- / every few pages -->\n    <div id='load-more'>\n      <a class='btn' href='#'>";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "feed.load_more", options) : helperMissing.call(depth0, "t", "feed.load_more", options)))
-    + "</a>\n    </div>\n  </div>\n  <!-- / Group panel -->\n  <div class='columns small-12 large-3 end'>\n    <div id='feed-panel'>\n      ";
-  stack2 = helpers['with'].call(depth0, ((stack1 = depth0.group),stack1 == null || stack1 === false ? stack1 : stack1.avatar), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+    + "</a>\n    </div>\n  </div>\n  <!-- / Group panel -->\n  <div class='columns small-12 large-2 end'>\n    ";
+  stack2 = self.invokePartial(partials['feed-panel'], 'feed-panel', depth0, helpers, partials, data);
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n      <div class='feed-panel-header'>\n        <a class='group-name' href='#'>"
-    + escapeExpression(((stack1 = ((stack1 = depth0.group),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a>\n        <a class='group-settings-button' href='#'>\n          <i class='icon-cog'></i>\n        </a>\n      </div>\n      <!-- / Group avatar hidden file upload -->\n      <form>\n        <input id='group-avatar-file-input' name='avatar' type='file'>\n      </form>\n      <!-- / Userlist -->\n      ";
-  stack2 = self.invokePartial(partials['feed-users'], 'feed-users', depth0, helpers, partials, data);
-  if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n    </div>\n  </div>\n</div>\n";
+  buffer += "\n  </div>\n</div>\n";
   return buffer;
   });
 templates['_groups-avatar'] = template(function (Handlebars,depth0,helpers,partials,data) {

@@ -5,14 +5,16 @@
 @import "../vendor/foundation/normalize",
         "../vendor/foundation/foundation";
 
+// Tooltips
+@import "../vendor/hint/hint";
+
 // Configuration
 @import "../config", "mixins";
 
 @import "modules/buttons",
         "modules/inputs",
         "modules/popover",
-        "modules/spaces",
-        "modules/tooltips";
+        "modules/spaces";
 
 // Global styles
 @import "global",

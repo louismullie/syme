@@ -7,7 +7,7 @@
 
   -# Delete button
   {{#if deletable}}
-  %a{href: '#', 'data-tip' => 'Delete comment', class: 'comment-delete tip-icon'}
+  %a{href: '#', 'data-hint' => 'Delete', class: 'comment-delete tip-icon'}
     %i.icon-remove
   {{/if}}
 
@@ -33,7 +33,7 @@
       %span.default-text> Like
       %span.active-text Unlike
 
-    %a.like-count{ href: '#', 'data-tip' => '{{liker_names}}' }<
+    %a.like-count.hint--top{ href: '#', 'data-hint' => '{{liker_names}}' }<
       (<span>{{like_count}}</span>)
 
     {{/with}}

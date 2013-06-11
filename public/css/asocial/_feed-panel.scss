@@ -1,17 +1,20 @@
 #feed-panel {
-  width: inherit;
 
-  position: fixed;
-  top: 110px; bottom: 0;
+  @media #{$small} {
+    width: inherit;
 
-  padding: 0 $column-gutter / 2;
+    position: fixed;
+    top: 110px; bottom: 0;
+
+    padding: 0 $column-gutter / 2;
+  }
 
   img.group-photo {
     border-radius: $baseBorderRadius;
   }
 
   .feed-panel-header {
-    font: 200 1.5em/2em $opensans;
+    font: 200 1em/2em $opensans;
 
     a.group-name {
       color: $black;

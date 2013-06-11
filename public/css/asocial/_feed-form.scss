@@ -1,15 +1,13 @@
 form#feed-form {
   position: relative;
 
-  margin-bottom: $bodyPadding;
-  padding: 1em;
+  margin-bottom: $bodyPadding / 2;
+  padding: $bodyPadding / 2;
   padding-left: 1em + emCalc($avatarFormSize) + 1em;
 
-  background: $bodyBackgroundColor;
-  border: $baseBorderStyle;
-  border-radius: $baseBorderRadius;
+  border-bottom: 1px dashed #DDD;
 
-  box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
+  background: $bodyBackgroundColor;
 
   a#feed-form-avatar {
     width: $avatarFormSize;
@@ -130,4 +128,13 @@ form#feed-form {
     line-height: 28px;
     font-size: .9em;
   }
+}
+
+#feed-form-separator {
+  height: 7px;
+  margin-bottom: 1em;
+
+  @extend .hide-text;
+
+  @include inclined-stripes(transparent, 15px, $gray);
 }

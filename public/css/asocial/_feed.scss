@@ -1,10 +1,3 @@
-.feed-separator {
-  height: 7px;
-  @extend .mbm;
-
-  @include inclined-stripes(transparent, 15px, $gray);
-}
-
 .empty-group-notice {
   text-align: center;
 }
@@ -31,231 +24,237 @@
     border-bottom: none;
   }
 
-  .collapsable {
-    position: relative;
-    overflow: hidden;
+  img.avatar {
+    width: $avatarPostSize; height: auto;
+    display: inline-block;
+    float: left;
 
-    // Css-only text expander
-    margin-bottom: .5em; /* child <p> margin-bottom */
-    line-height: 1.3em; /* child <p> line-height */
+    border-radius: $baseBorderRadius;
+  }
 
-    p {
-      margin-bottom: inherit;
-      line-height: inherit;
+  .post-indent {
+    margin-left: emCalc($avatarPostSize) + 1em;
 
-      font-size: .9em;
-      font-weight: 200;
+    .collapsable {
+      position: relative;
+      overflow: hidden;
 
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
+      // Css-only text expander
+      margin-bottom: .5em; /* child <p> margin-bottom */
+      line-height: 1.3em; /* child <p> line-height */
 
-    .expand-link-container {
-      display: none;
-    }
-
-    &.collapsed {
       p {
-        margin: 0;
+        margin-bottom: inherit;
+        line-height: inherit;
+
+        font-size: .9em;
+        font-weight: 200;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
 
       .expand-link-container {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        display: block;
-
-        line-height: inherit;
-        font-size: .8em;
-
-        background-color: #FFF;
-
-        box-shadow: -5px 0 5px 0 white;
-      }
-    }
-  }
-
-  .post-header {
-    position: relative;
-
-    margin-bottom: .5em;
-
-    img.avatar {
-      width: $avatarPostSize; height: auto;
-      display: inline-block;
-
-      border-radius: $baseBorderRadius;
-    }
-
-    p.post-header-infos {
-      display: inline-block;
-      margin-left: .5em;
-
-      font-weight: 600;
-      font-size: .9em;
-
-      a.time {
-        display: block;
-
-        color: gray;
-        font-weight: 200;
-        font-size: .8em;
-      }
-    }
-
-    a.post-delete {
-      display: none;
-      opacity: 0;
-
-      position: absolute;
-      top: 0; right: 0;
-
-      padding: 0 0.5em;
-      font-size: 0.8em;
-      line-height: 1.8em;
-    }
-  }
-
-  .post-content {
-    .attachment {
-      margin-bottom: 1em;
-
-      p {
-        font-size: .9em;
-        font-weight: normal;
-        margin-bottom: .5em;
+        display: none;
       }
 
-      a {
-        font-weight: 200;
+      &.collapsed {
+        p {
+          margin: 0;
+        }
 
-        &.image-download {
+        .expand-link-container {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
           display: block;
-        }
-      }
-    }
-  }
 
-  .post-footer {
-    margin-bottom: 1em;
-    font-size: .8em;
-
-    .post-footer-actions {
-      a.like-action {
-        span.default-text { display: inline; }
-        span.active-text { display: none; }
-
-        &.active {
-          span.default-text { display: none; }
-          span.active-text { display: inline; }
-        }
-      }
-
-      a.comment-action {
-
-      }
-    }
-
-    .post-footer-informations {
-      text-align: right;
-
-
-    }
-  }
-
-  .post-comments {
-    padding-left: 1em;
-    border-left: 4px solid #ddd;
-
-    .comments {
-
-      .show-more {
-        text-align: left;
-        font-size: .8em;
-        margin-bottom: 1em;
-      }
-
-      .comment-box {
-        border-bottom: 1px solid #ddd;
-        padding-bottom: .5em;
-        margin-bottom: 1em;
-
-        &:last-child {
-          border: none;
-          margin-bottom: 0;
-        }
-
-        &.comment-hidden {
-          display: none;
-        }
-
-        // For now
-        a.comment-delete { display: none; }
-
-        img.avatar {
-          width: $avatarCommentSize;
-          height: auto;
-
-          float: left;
-          margin-right: 1em;
-
-          border-radius: $baseBorderRadius;
-        }
-
-        .collapsable {
-          margin-bottom: .5em;
-
-          p {
-            font-size: .8em;
-            font-weight: 200;
-            line-height: 1.4em;
-
-            a.commenter-name {
-              padding-right: .4em;
-              font-weight: normal;
-            }
-
-            .expand-link-container {
-              font-size: .9em;
-            }
-          }
-        }
-
-        .comment-footer {
+          line-height: inherit;
           font-size: .8em;
-          font-weight: 200;
-          line-height: 1.5em;
 
-          margin-left: $avatarCommentSize;
-          padding-left: 1em;
+          background-color: #FFF;
 
-          a.like-action {
-            span.default-text { display: inline; }
-            span.active-text { display: none; }
-
-            &.active {
-              span.default-text { display: none; }
-              span.active-text { display: inline; }
-            }
-          }
+          box-shadow: -5px 0 5px 0 white;
         }
       }
     }
 
-    .comment-form {
-      textarea {
-        width: 100%;
-        min-height: .8em; max-height: 100px;
-        padding: 7px 10px;
+    .post-header {
+      position: relative;
+
+      margin-bottom: .5em;
+
+      p.post-header-infos {
+        display: inline-block;
         margin: 0;
 
-        @include box-sizing;
-        resize: none;
+        font-weight: 600;
+        font-size: .9em;
 
-        line-height: 1.5em;
-        font-size: .8em;
-        font-weight: 200;
+        a.time {
+          display: block;
+
+          color: gray;
+          font-weight: 200;
+          font-size: .8em;
+        }
+      }
+
+      a.post-delete {
+        display: none;
+        opacity: 0;
+
+        position: absolute;
+        top: 0; right: 0;
+
+        padding: 0 0.5em;
+        font-size: 0.8em;
+        line-height: 1.8em;
       }
     }
+
+    .post-content {
+      .attachment {
+        margin-bottom: 1em;
+
+        p {
+          font-size: .9em;
+          font-weight: normal;
+          margin-bottom: .5em;
+        }
+
+        a {
+          font-weight: 200;
+
+          &.image-download {
+            display: block;
+          }
+        }
+      }
+    }
+
+    .post-footer {
+      margin-bottom: 1em;
+      font-size: .8em;
+
+      .post-footer-actions {
+        a.like-action {
+          span.default-text { display: inline; }
+          span.active-text { display: none; }
+
+          &.active {
+            span.default-text { display: none; }
+            span.active-text { display: inline; }
+          }
+        }
+
+        a.comment-action {
+
+        }
+      }
+
+      .post-footer-informations {
+        text-align: right;
+
+
+      }
+    }
+
+    .post-comments {
+      padding-left: 1em;
+      border-left: 4px solid #ddd;
+
+      .comments {
+
+        .show-more {
+          text-align: left;
+          font-size: .8em;
+          margin-bottom: 1em;
+        }
+
+        .comment-box {
+          border-bottom: 1px solid #ddd;
+          padding-bottom: .5em;
+          margin-bottom: 1em;
+
+          &:last-child {
+            border: none;
+            margin-bottom: 0;
+          }
+
+          &.comment-hidden {
+            display: none;
+          }
+
+          // For now
+          a.comment-delete { display: none; }
+
+          img.avatar {
+            width: $avatarCommentSize;
+            height: auto;
+
+            float: left;
+            margin-right: 1em;
+
+            border-radius: $baseBorderRadius;
+          }
+
+          .collapsable {
+            margin-bottom: .5em;
+
+            p {
+              font-size: .8em;
+              font-weight: 200;
+              line-height: 1.4em;
+
+              a.commenter-name {
+                padding-right: .4em;
+                font-weight: normal;
+              }
+
+              .expand-link-container {
+                font-size: .9em;
+              }
+            }
+          }
+
+          .comment-footer {
+            font-size: .8em;
+            font-weight: 200;
+            line-height: 1.5em;
+
+            margin-left: $avatarCommentSize;
+            padding-left: 1em;
+
+            a.like-action {
+              span.default-text { display: inline; }
+              span.active-text { display: none; }
+
+              &.active {
+                span.default-text { display: none; }
+                span.active-text { display: inline; }
+              }
+            }
+          }
+        }
+      }
+
+      .comment-form {
+        textarea {
+          width: 100%;
+          min-height: .8em; max-height: 100px;
+          padding: 7px 10px;
+          margin: 0;
+
+          @include box-sizing;
+          resize: none;
+
+          line-height: 1.5em;
+          font-size: .8em;
+          font-weight: 200;
+        }
+      }
+    }
+
   }
 }

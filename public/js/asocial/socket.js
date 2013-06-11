@@ -160,7 +160,7 @@ guard('socket', {
         action_link.removeClass('active');
 
       // Update list of names and counter
-      count_link.attr('data-tip', data.view.liker_names);
+      count_link.attr('data-hint', data.view.liker_names);
       count_link.find('span').html(data.view.like_count);
     },
 

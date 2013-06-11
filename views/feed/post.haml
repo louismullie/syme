@@ -1,69 +1,70 @@
 .post{ id: '{{id}}', :'data-encrypted' => '{{encrypted}}' }
-  // Post header
-  .post-header
-    // Avatar
-    {{#with owner}} {{> feed-avatar}} {{/with}}
+  // Avatar
+  {{#with owner}} {{> feed-avatar}} {{/with}}
 
-    // Owner name
-    %p.post-header-infos
-      {{owner.name}}
+  .post-indent
+    // Post header
+    .post-header
+      // Owner name
+      %p.post-header-infos
+        {{owner.name}}
 
-      // Post time
-      %a.time{ href: '#' }
-        %time.timeago{ datetime: '{{created_at}}' }
+        // Post time
+        %a.time{ href: '#' }
+          %time.timeago{ datetime: '{{created_at}}' }
 
-    // Delete button
-    {{#if deletable}}
-    %a.btn.btn-white.post-delete{ href: '#' }
-      %i.icon-remove
-    {{/if}}
+      // Delete button
+      {{#if deletable}}
+      %a.btn.btn-white.post-delete.hint--left{ href: '#', :'data-hint' => 'Delete' }
+        %i.icon-remove
+      {{/if}}
 
-  // Post content
-  .post-content
-    // Collapsable content
-    .collapsable
-      .encrypted_notice
-        %i This post is encrypted.
+    // Post content
+    .post-content
+      // Collapsable content
+      .collapsable
+        .encrypted_notice
+          %i This post is encrypted.
 
-      .encrypted
-        {"content": {{content}}, "key": "{{key}}"}
+        .encrypted
+          {"content": {{content}}, "key": "{{key}}"}
 
-    // Attachment
-    {{#if attachment}}
-    .attachment
-      {{#with attachment}} {{> feed-attachment}} {{/with}}
-    {{/if}}
+      // Attachment
+      {{#if attachment}}
+      .attachment
+        {{#with attachment}} {{> feed-attachment}} {{/with}}
+      {{/if}}
 
-  // Post footer
-  .post-footer
-    .row
-      // Actions
-      .post-footer-actions.columns.small-6
-        // Like action
-        %a{ href: '#', class: 'like-action {{#if likeable.liked_by_user}}active{{/if}}' }<
-          %span.default-text> Like
-          %span.active-text Unlike
+    // Post footer
+    .post-footer
+      .row
+        // Actions
+        .post-footer-actions.columns.small-6
+          // Like action
+          %a{ href: '#', class: 'like-action {{#if likeable.liked_by_user}}active{{/if}}' }<
+            %span.default-text> Like
+            %span.active-text Unlike
 
-        &sdot;
+          &sdot;
 
-        // Comment action
-        %a.comment-action{ href: '#' }
-          Comment
+          // Comment action
+          %a.comment-action{ href: '#' }
+            Comment
 
-      // Informations
-      .post-footer-informations.columns.small-6
-        // Like count
-        {{#with likeable}}
-        %a.like-count{ href: '#', 'data-tip' => '{{liker_names}}' }<
-          %span {{like_count}}
-          Likes
-        {{/with}}
+        // Informations
+        .post-footer-informations.columns.small-6
+          // Like count
+          {{#with likeable}}
+          %a.like-count.hint--top{ href: '#', 'data-hint' => '{{liker_names}}' }<
+            %span {{like_count}}
+            Likes
+          {{/with}}
 
-        &sdot;
+          &sdot;
 
-        // Comment count
-        %span.comment-count {{comment_count}}
-        Comments
+          // Comment count
+          %span.comment-count {{comment_count}}
+          Comments
 
-  .post-comments
-    {{> feed-comments}}
+    .post-comments
+      {{> feed-comments}}
