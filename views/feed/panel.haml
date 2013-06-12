@@ -3,7 +3,7 @@
 
   .group-photo
     %a#group-photo-edit.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Change photo' }
-      %i.icon-edit
+      %i.icon-picture
 
     // Hidden file upload
     %form
@@ -18,11 +18,8 @@
   {{/with}}
 
   .feed-panel-header
-    %a.group-name{ href: '#' } {{group.name}}
     %a.group-settings-button{ href: '#' }
       %i.icon-cog
-
-
 
   // Userlist
   {{> feed-users}}

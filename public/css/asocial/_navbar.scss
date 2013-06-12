@@ -43,6 +43,46 @@
         @extend .btn-white;
       }
 
+      &#omnibar {
+        display: none; // will be dynamically shown
+        font: 200 1.2em $opensans;
+
+        ul {
+          list-style-type: none;
+          margin: 0;
+
+          li {
+            margin: 0;
+
+            a {
+              line-height: inherit;
+
+              &:hover { color: inherit; }
+            }
+
+            // Grayed out title
+            &.title {
+              color: $gray;
+            }
+
+            // Separators
+            &::after {
+              content: "\f101";
+              font-family: 'FontAwesome';
+              width: 1.2em;
+              text-align: center;
+              display: inline-block;
+              margin: 0 .5em;
+
+              color: $gray;
+            }
+            &:last-child::after {
+              display: none;
+            }
+          }
+        }
+      }
+
       #notifications {
         span.notification-badge {
           $notificationBadgeSize: 18px;

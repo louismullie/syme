@@ -1,5 +1,11 @@
 asocial.binders.add('feed', { main: function(){
 
+  // Omnibar
+  $('#omnibar')
+    .css('display', 'inline-block')
+    .find('li.group')
+      .html( $('#feed').data('group-name') );
+
   // Decryption
   asocial.crypto.decrypt();
 

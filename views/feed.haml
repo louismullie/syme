@@ -8,8 +8,9 @@
         {{> feed-form}}
 
     // Feed
-    #feed{ 'data-year' => '{{ year }}',
-           'data-month' => '{{ month }}' }
+    #feed{  'data-group-name' => '{{group.name}}',
+            'data-year' => '{{ year }}',
+            'data-month' => '{{ month }}' }
 
       // New content button
       #newcontent

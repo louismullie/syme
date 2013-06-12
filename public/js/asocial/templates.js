@@ -525,7 +525,7 @@ helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.parti
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n  <div class='group-photo'>\n    <a class='btn btn-white hint--left' data-hint='Change photo' href='#' id='group-photo-edit'>\n      <i class='icon-edit'></i>\n    </a>\n    <!-- / Hidden file upload -->\n    <form>\n      <input id='group-photo-file' name='avatar' type='file'>\n    </form>\n    ";
+  buffer += "\n  <div class='group-photo'>\n    <a class='btn btn-white hint--left' data-hint='Change photo' href='#' id='group-photo-edit'>\n      <i class='icon-picture'></i>\n    </a>\n    <!-- / Hidden file upload -->\n    <form>\n      <input id='group-photo-file' name='avatar' type='file'>\n    </form>\n    ";
   stack1 = helpers['if'].call(depth0, depth0.placeholder, {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n  </div>\n  ";
@@ -559,9 +559,7 @@ function program4(depth0,data) {
   buffer += "<div id='feed-panel'>\n  ";
   stack2 = helpers['with'].call(depth0, ((stack1 = depth0.group),stack1 == null || stack1 === false ? stack1 : stack1.avatar), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  <div class='feed-panel-header'>\n    <a class='group-name' href='#'>"
-    + escapeExpression(((stack1 = ((stack1 = depth0.group),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a>\n    <a class='group-settings-button' href='#'>\n      <i class='icon-cog'></i>\n    </a>\n  </div>\n  <!-- / Userlist -->\n  ";
+  buffer += "\n  <div class='feed-panel-header'>\n    <a class='group-settings-button' href='#'>\n      <i class='icon-cog'></i>\n    </a>\n  </div>\n  <!-- / Userlist -->\n  ";
   stack2 = self.invokePartial(partials['feed-users'], 'feed-users', depth0, helpers, partials, data);
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n</div>\n";
@@ -863,14 +861,16 @@ helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.parti
   buffer += "<div class='row'>\n  <!-- / Left column -->\n  <div class='columns small-12 large-6 large-offset-2'>\n    <!-- / Feed form -->\n    <div class='row'>\n      <div class='small-12 collapse'>\n        ";
   stack1 = self.invokePartial(partials['feed-form'], 'feed-form', depth0, helpers, partials, data);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n      </div>\n    </div>\n    <!-- / Feed -->\n    <div data-month='";
-  if (stack1 = helpers.month) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.month; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
+  buffer += "\n      </div>\n    </div>\n    <!-- / Feed -->\n    <div data-group-name='"
+    + escapeExpression(((stack1 = ((stack1 = depth0.group),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "' data-month='";
+  if (stack2 = helpers.month) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.month; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
     + "' data-year='";
-  if (stack1 = helpers.year) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.year; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
+  if (stack2 = helpers.year) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
+  else { stack2 = depth0.year; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
+  buffer += escapeExpression(stack2)
     + "' id='feed'>\n      <!-- / New content button -->\n      <div id='newcontent'>\n        <a class='btn' href='#'>";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "new_content", options) : helperMissing.call(depth0, "t", "new_content", options)))
@@ -1208,7 +1208,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<div id='navbar'>\n  <div class='row'>\n    <div class='small-12'>\n      <ul>\n        <li>\n          <a data-hbs='' href='/' id='brand'>\n            Asocial\n          </a>\n        </li>\n        <li>\n          <a class='btn' data-popover='notifications-container' href='#' id='notifications'>\n            <i class='icon-bell-alt'></i>\n          </a>\n          <div class='popover' id='notifications-container'>\n            <h3>Notifications</h3>\n            <div id='notifications-content'></div>\n          </div>\n        </li>\n        <div class='pull-right'>\n          <li>\n            <a class='btn' data-hbs='' href='/settings'>\n              <i class='icon-cog'></i>\n            </a>\n          </li>\n          <li>\n            <a class='btn' href='/logout'>\n              <i class='icon-signout'></i>\n            </a>\n          </li>\n        </div>\n      </ul>\n    </div>\n  </div>\n</div>\n";
+  return "<div id='navbar'>\n  <div class='row'>\n    <div class='small-12'>\n      <ul>\n        <li>\n          <a data-hbs='' href='/' id='brand'>\n            Asocial\n          </a>\n        </li>\n        <li>\n          <a class='btn' data-popover='notifications-container' href='#' id='notifications'>\n            <i class='icon-bell-alt'></i>\n          </a>\n          <div class='popover' id='notifications-container'>\n            <h3>Notifications</h3>\n            <div id='notifications-content'></div>\n          </div>\n        </li>\n        <li id='omnibar'>\n          <ul><li class='title'>\n            <a data-hbs='' href='/'>Groups</a>\n          </li><li class='group'></li></ul>\n        </li>\n        <div class='pull-right'>\n          <li>\n            <a class='btn' data-hbs='' href='/settings'>\n              <i class='icon-cog'></i>\n            </a>\n          </li>\n          <li>\n            <a class='btn' href='/logout'>\n              <i class='icon-signout'></i>\n            </a>\n          </li>\n        </div>\n      </ul>\n    </div>\n  </div>\n</div>\n";
   });
 templates['_register'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
