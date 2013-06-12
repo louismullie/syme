@@ -525,22 +525,22 @@ helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.parti
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n  <!-- / Begin: Move that out of here -->\n  ";
+  buffer += "\n  <div class='group-photo'>\n    <a class='btn btn-white hint--left' data-hint='Change photo' href='#' id='group-photo-edit'>\n      <i class='icon-edit'></i>\n    </a>\n    <!-- / Hidden file upload -->\n    <form>\n      <input id='group-photo-file' name='avatar' type='file'>\n    </form>\n    ";
   stack1 = helpers['if'].call(depth0, depth0.placeholder, {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  <!-- / End: Move that out of here -->\n  ";
+  buffer += "\n  </div>\n  ";
   return buffer;
   }
 function program2(depth0,data) {
   
   
-  return "\n  <img class='group-photo' src='/img/groupavatar.jpg'>\n  ";
+  return "\n    <img src='/img/groupavatar.jpg'>\n    ";
   }
 
 function program4(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n  <img alt='Encrypted image' class='group-photo encrypted-image' data-attachment-group='";
+  buffer += "\n    <img alt='Encrypted image' class='encrypted-image' data-attachment-group='";
   if (stack1 = helpers.group_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.group_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -552,7 +552,7 @@ function program4(depth0,data) {
   if (stack1 = helpers.key) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.key; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "' data-attachment-type='image' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n  ";
+    + "' data-attachment-type='image' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    ";
   return buffer;
   }
 
@@ -561,7 +561,7 @@ function program4(depth0,data) {
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  <div class='feed-panel-header'>\n    <a class='group-name' href='#'>"
     + escapeExpression(((stack1 = ((stack1 = depth0.group),stack1 == null || stack1 === false ? stack1 : stack1.name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a>\n    <a class='group-settings-button' href='#'>\n      <i class='icon-cog'></i>\n    </a>\n  </div>\n  <!-- / Group avatar hidden file upload -->\n  <form>\n    <input id='group-avatar-file-input' name='avatar' type='file'>\n  </form>\n  <!-- / Userlist -->\n  ";
+    + "</a>\n    <a class='group-settings-button' href='#'>\n      <i class='icon-cog'></i>\n    </a>\n  </div>\n  <!-- / Userlist -->\n  ";
   stack2 = self.invokePartial(partials['feed-users'], 'feed-users', depth0, helpers, partials, data);
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n</div>\n";

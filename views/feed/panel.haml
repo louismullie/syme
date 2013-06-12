@@ -1,17 +1,19 @@
 #feed-panel
   {{#with group.avatar}}
 
-  // Begin: Move that out of here
-  {{#if placeholder}}
+  .group-photo
+    %a#group-photo-edit.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Change photo' }
+      %i.icon-edit
 
-  %img.group-photo{ src: '/img/groupavatar.jpg' }
+    // Hidden file upload
+    %form
+      %input#group-photo-file{ type: 'file', name: 'avatar' }
 
-  {{else}}
-
-  %img.group-photo.encrypted-image{src: empty_image, alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-key' => '{{key}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
-
-  {{/if}}
-  // End: Move that out of here
+    {{#if placeholder}}
+    %img{ src: '/img/groupavatar.jpg' }
+    {{else}}
+    %img.encrypted-image{src: empty_image, alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-key' => '{{key}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
+    {{/if}}
 
   {{/with}}
 
@@ -20,9 +22,7 @@
     %a.group-settings-button{ href: '#' }
       %i.icon-cog
 
-  // Group avatar hidden file upload
-  %form
-    %input#group-avatar-file-input{ type: 'file', name: 'avatar' }
+
 
   // Userlist
   {{> feed-users}}

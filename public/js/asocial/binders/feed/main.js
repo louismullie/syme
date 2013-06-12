@@ -12,20 +12,6 @@ asocial.binders.add('feed', { main: function(){
   // Infinite scroller
   $('#feed').data('pagesloaded', 1);
 
-  // Group photo
-  $('.group-avatar').on('click', function () {
-    $('#group-avatar-file-input').trigger('click');
-  });
-
-  $('#group-avatar-file-input').on('change',function(){
-
-    var filename = asocial.helpers.getFilename($(this).val());
-    if (filename == '') { return; }
-
-    asocial.uploader.selectGroupAvatar($(this)[0].files[0]);
-
-  });
-
   $(window).on('scroll', function(){
 
     if($(window).data('infinite-scroll-done'  )  ||
