@@ -46,7 +46,20 @@ asocial.binders.add('global', { main: function(){
     function timerIncrement() {
       idleTime = idleTime + 1;
       if (idleTime > 20) { // 20 minutes
-        window.location = '/logout';
+
+        // Log out
+        $.ajax('/logout', { type: 'get'} );
+
+        // Force disconnection
+        asocial.helpers.showAlert('You have been disconnected', {
+          title: 'Disconnected',
+          submit: 'Log in',
+          closable: false,
+          onhide: function(){
+            window.location = '/login';
+          }
+        });
+
       }
     }
 
