@@ -287,7 +287,7 @@ guard('helpers', {
 
   },
 
-  showModal: function(html, closable) {
+  showModal: function(html, closable, small) {
 
     closable = typeof(closable) === "undefined" ? true : closable;
 
@@ -298,7 +298,9 @@ guard('helpers', {
     $('body').prepend('<div id="responsive-modal"><div class="container" /></div>');
 
     // Fill modal with content
-    $('#responsive-modal > div.container').html(html);
+    $('#responsive-modal > div.container')
+      .addClass( small ? 'small' : '' )
+      .html(html);
 
     // Lock document scroll
     $('body').addClass('noscroll');

@@ -5,12 +5,19 @@
 
   opacity: 0;
 
-  background: rgba($bodyBackgroundColor, 0.5);
+  background: rgba(0, 0, 0, 0.2);
 
   .container {
+
     @media #{$breakpointLarge}  { width: 50%;}
     @media #{$breakpointMedium} { width: 60%;}
     @media #{$breakpointSmall}  { width: 80%;}
+
+    &.small {
+      @media #{$breakpointLarge}  { width: 40%;}
+      @media #{$breakpointMedium} { width: 50%;}
+      @media #{$breakpointSmall}  { width: 80%;}
+    }
 
     max-height: 350px;
     min-width: 100px;
