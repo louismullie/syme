@@ -883,10 +883,10 @@ helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.parti
   buffer += "\n      <!-- / Posts loop -->\n      ";
   stack2 = self.invokePartial(partials['feed-posts'], 'feed-posts', depth0, helpers, partials, data);
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n    </div>\n    <!-- / Load more button, triggered by infinite scroller -->\n    <!-- / every few pages -->\n    <div id='load-more'>\n      <a class='btn' href='#'>";
+  buffer += "\n    </div>\n    <!-- / Load more button, triggered by infinite scroller -->\n    <!-- / every few pages -->\n    <div id='load-more'>\n      <a href='#'>\n        ";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "feed.load_more", options) : helperMissing.call(depth0, "t", "feed.load_more", options)))
-    + "</a>\n    </div>\n  </div>\n  <div id='feed-panel-column'>\n    <!-- / Group panel -->\n    ";
+    + "\n        <i class='icon-long-arrow-down'></i>\n      </a>\n    </div>\n  </div>\n  <div id='feed-panel-column'>\n    <!-- / Group panel -->\n    ";
   stack2 = self.invokePartial(partials['feed-panel'], 'feed-panel', depth0, helpers, partials, data);
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  </div>\n</div>\n";

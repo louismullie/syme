@@ -36,6 +36,18 @@
   text-align: center;
 }
 
+// Manual pagination
+#load-more {
+  margin-top: 1em;
+  display: none;
+
+  font-size: .9em;
+  text-align: center;
+
+  a:hover { text-decoration: none; }
+  i { padding-left: .5em; }
+}
+
 // Hide encrypted content (to be replaced by [data-encrypted])
 .encrypted {
   display: none;
