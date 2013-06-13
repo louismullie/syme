@@ -6,5 +6,7 @@
   {{/if}}
 
   %a{ href: '#', 'data-tip' => '{{full_name}}', 'class' => '{{#if is_current_user}}current{{/if}}'}
+
     %img.encrypted-avatar.userlist-avatar{ src: empty_image, 'data-user-id' => '{{id}}'}
+
     %span {{full_name}}
