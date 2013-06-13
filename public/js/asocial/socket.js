@@ -8,7 +8,7 @@ guard('socket', {
 
     invite: function(data) {
 
-      alert('Somebody has requested an invite!');
+      asocial.helpers.showAlert('Somebody has requested an invite!');
 
     }
 
@@ -20,9 +20,9 @@ guard('socket', {
 
       asocial.state.getState('invite', function (authorized) {
 
-        //alert('UPDATING KEYS');
+        //asocial.helpers.showAlert('UPDATING KEYS');
 
-        if (!authorized) { alert('Not authorized for invite!'); }
+        if (!authorized) { asocial.helpers.showAlert('Not authorized for invite!'); }
         asocial.invite.update();
 
       }, { group_id: data.group_id });
@@ -265,7 +265,7 @@ guard('socket', {
         var sentence = ' would like to send you the following file: ';
         var filename = asocial.helpers.getFilename(data.filename);
 
-        alert(data.sender_name + sentence + filename);
+        asocial.helpers.showAlert(data.sender_name + sentence + filename);
 
         $.post('/send/file/accept', $.param({
           transfer_id: data.transfer_id, group_id: group
@@ -293,13 +293,13 @@ guard('socket', {
         );
 
       } else if (data.action == 'refuse') {
-        alert(data.reason);
+        asocial.helpers.showAlert(data.reason);
       }
 
     },
 
     message: function (data) {
-      alert(data.sender.name + ' sent message: ' + data.message);
+      asocial.helpers.showAlert(data.sender.name + ' sent message: ' + data.message);
     }
 
   },

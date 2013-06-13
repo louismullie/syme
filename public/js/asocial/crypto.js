@@ -301,7 +301,7 @@ guard('crypto', {
 
     } catch (e) {
 
-      alert('Could not decrypt resource.');
+      asocial.helpers.showAlert('Could not decrypt resource.');
 
     }
 
@@ -334,7 +334,7 @@ guard('crypto', {
           image.removeClass('encrypted-video');
           //image.mediaelementplayer();
         } else {
-          alert("No handler for audio!");
+          asocial.helpers.showAlert("No handler for audio!");
         }
 
       }, group);

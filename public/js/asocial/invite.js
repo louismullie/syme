@@ -1,9 +1,9 @@
 guard('invite', {
 
   integrate: function () {
-    
+
     var _this = this;
-    
+
     asocial.auth.getPasswordLocal(function (password) {
 
       var PPA_k = asocial.state.invite.PPA_k;
@@ -21,7 +21,7 @@ guard('invite', {
       // Retrieve security answer from inviter.
       var securityAnswer = asocial_private_key()
         .decrypt($.base64.decode(asocial.state.invite.a_PA));
-      
+
       // Generate a random key salt.
       var answerSalt = asocial.crypto.generateRandomHexSalt();
       var answerKey = asocial.crypto.calculateHash(password, answerSalt);
@@ -30,15 +30,15 @@ guard('invite', {
       var encryptedAnswer = sjcl.encrypt(answerKey, securityAnswer);
       // Encode the security key with base 64.
       var encodedAnswer = $.base64.encode(encryptedAnswer);
-      
+
       // Set the state now in case the user invites someone.
       asocial.state.group.answer = securityAnswer;
       asocial.state.group.answer_salt = answerSalt;
-      
+
       var PA = asocial.crypto.serializePublicKey(asocial_public_key());
 
       PPA[asocial.state.user.id] = PA;
-      
+
       var keylist_salt = asocial.crypto.generateRandomHexSalt();
       var new_sA = asocial.crypto.calculateHash(password, keylist_salt);
       var keylist = asocial.crypto.encryptKeyList(new_sA, PPA);
@@ -51,37 +51,37 @@ guard('invite', {
         invite_id: asocial.state.invite.id,
         group_id: asocial.binders.getCurrentGroup()
       });
-      
-      
+
+
       $.post('/invite/integrate', integration, function (data) {
 
         if (data.status == 'ok') {
-          
+
           var ack = $.param({
             type: 'integrate',
             group_id: asocial.binders.getCurrentGroup(),
             invite_id: asocial.state.invite.id
           });
-        
+
           $.post('/invite/acknowledge', ack, function () {
-            // alert('Integrated the group successfully!');
+            // asocial.helpers.showAlert('Integrated the group successfully!');
             _this.refreshKeys();
           });
-          
+
         } else {
-          alert('An error has occured with integration.');
+          asocial.helpers.showAlert('An error has occured with integration.');
         }
-          
+
      });
-     
+
     });
-    
-  }, 
-  
+
+  },
+
   update: function () {
-    
+
     var _this = this;
-    
+
     var new_keys = JSON.parse($.base64.decode(asocial.state.invite.new_keys));
 
     asocial.auth.getPasswordLocal(function (password) {
@@ -110,42 +110,42 @@ guard('invite', {
       var keylist = asocial.crypto.encryptKeyList(sB, public_keys);
 
       var group_id = asocial.binders.getCurrentGroup();
-      
+
       var update = $.param({
         keylist: keylist,
         keylist_salt: sB_salt,
         group_id: group_id
       });
-      
+
       $.post('/invite/update', update, function (data) {
 
         if (data.status == 'ok') {
-          
+
           var ack = $.param({
             type: 'update',
             group_id: group_id,
             new_keys: Object.keys(new_keys)
           });
-        
+
           $.post('/invite/acknowledge', ack, function () {
-            // alert('Added a new group member to your keys!');
+            // asocial.helpers.showAlert('Added a new group member to your keys!');
             _this.refreshKeys();
           });
-          
+
         } else {
-          alert('An error has occured with key update.');
+          asocial.helpers.showAlert('An error has occured with key update.');
         }
 
       });
-      
+
     });
-    
+
   },
-  
+
   refreshKeys: function () {
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
     }, { group_id: asocial.binders.getCurrentGroup(), force: true })
   }
-  
+
 });

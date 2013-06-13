@@ -39,7 +39,7 @@ asocial.binders.add('groups', { main: function() {
           asocial.binders.loadCurrentUrl();
         },
         error: function (resp) {
-          alert('Error: could not delete group.');
+          asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
         }
       });
     }

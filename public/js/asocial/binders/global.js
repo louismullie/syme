@@ -97,7 +97,9 @@ asocial.binders.add('global', { main: function(){
       },
 
       error: function () {
-        alert('Clearing failed.');
+        asocial.helpers.showAlert('Notification clearing failed', {
+          onhide: function(){ location.reload(); }
+        });
       }
 
     });

@@ -167,7 +167,7 @@ guard('uploader', {
   selectAvatar: function (file, type) {
 
     if (!asocial.uploader.hasImageMime(file)) {
-      alert('This is not an image!');
+      asocial.helpers.showAlert('This is not an image!');
     } else {
       this.uploadAvatar(file);
     }
@@ -177,7 +177,7 @@ guard('uploader', {
   selectGroupAvatar: function (file) {
 
     if (!asocial.uploader.hasImageMime(file)) {
-      alert('This is not an image!');
+      asocial.helpers.showAlert('This is not an image!');
     } else {
       this.uploadGroupAvatar(file);
     }

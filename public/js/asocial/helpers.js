@@ -260,7 +260,7 @@ guard('helpers', {
 
       } else {
 
-        alert('Invalid action!');
+        asocial.helpers.showAlert('Invalid action.', { onhide: location.reload });
 
       }
 

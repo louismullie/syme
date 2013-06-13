@@ -1,12 +1,12 @@
 asocial.binders.add('feed', { invite: function(){
-  
+
   $('#invite').submit(function (e) {
 
     e.preventDefault();
-    
+
     // Get data from form.
     var email = $(this).find('input[name="email"]').val();
-    
+
     asocial.auth.getPasswordLocal(function (password) {
 
       // 1A: !(P, p).
@@ -20,7 +20,7 @@ asocial.binders.add('feed', { invite: function(){
       var P = asocial.crypto.encode(keys.public_key);
       var p = asocial.crypto.encode(keys.private_key);
       var p_sB = $.base64.encode(sjcl.encrypt(sB, p));
-      
+
       // Build invitation.
       var invitation = $.param({
         email: email,
@@ -30,18 +30,18 @@ asocial.binders.add('feed', { invite: function(){
 
       // 1D: B -> R: (P, {p}sB)
       var group = asocial.binders.getCurrentGroup();
-      
+
       $.post('/' + group + '/invite/send', invitation, function (data) {
         $('.invited-user').removeClass('hidden');
         $('.invite-user').addClass('hidden');
       });
-      
+
     });
 
   });
 
   $('.invite-confirm').click(function(e) {
-    
+
     e.preventDefault();
 
     var $that = $(this);
@@ -106,11 +106,11 @@ asocial.binders.add('feed', { invite: function(){
        console.log("3B");
        var p = asocial.crypto.buildPrivateKey(JSON.parse(
          $.base64.decode(sjcl.decrypt(sB, p_sB))));
-       
+
        // 3C.
        console.log("3C");
        var k = p.decrypt(k_P);
-       
+
        // 3D.
        console.log("3D");
        var PA = JSON.parse(sjcl.decrypt(k, PA_k));
@@ -129,9 +129,9 @@ asocial.binders.add('feed', { invite: function(){
 
        // Generate a hash from the keylist salt.
        var key = asocial.crypto.calculateHash(password, keylist_salt);
-       
+
        var checkAnswer = function (a) {
-         
+
         var proceed = prompt('User provided the wrong answer. ' +
             'The answer that was provided was: "' + a + '". ' +
             'Type "yes" to confirm invite anyway.');
@@ -139,7 +139,7 @@ asocial.binders.add('feed', { invite: function(){
          return proceed == 'yes';
 
        };
-       
+
        // Verification
        console.log('Verification')
        try {
@@ -151,10 +151,10 @@ asocial.binders.add('feed', { invite: function(){
        // Generate answer key.
        var decryptAnswerKey = asocial.crypto.calculateHash(password, asocial.state.group.answer_salt);
        var answer = sjcl.decrypt(decryptAnswerKey, $.base64.decode(asocial.state.group.answer));
-       
+
        if (a != answer && !checkAnswer(a))
          return;
-       
+
        // Encrypt the public key list.
        var keylist = asocial.crypto.encryptKeyList(key, public_keys);
 
@@ -199,18 +199,18 @@ asocial.binders.add('feed', { invite: function(){
            $.post('/invite/broadcast', broadcast, function (data) {
 
              if (data.status == 'ok') {
-               //alert('Go back to groups panel and click on the group.');
+               //asocial.helpers.showAlert('Go back to groups panel and click on the group.');
                $that.append('Invite confirmed!');
 
              } else {
-               alert('An error has occured with broadcasting.');
+               asocial.helpers.showAlert('An error has occured with broadcasting.');
              }
 
            });
 
          } else {
 
-           alert('An error has occured with confirmation.');
+           asocial.helpers.showAlert('An error has occured with confirmation.');
 
          }
 

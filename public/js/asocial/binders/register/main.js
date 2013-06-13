@@ -62,7 +62,9 @@ asocial.binders.add('register', { main: function(){
             });
           },
 
-          error: function (model, response) {  alert('Registration error!'); }
+          error: function (model, response) {
+            asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
+          }
 
         });
 
@@ -73,7 +75,8 @@ asocial.binders.add('register', { main: function(){
         // @Chris implement error handling here.
         var msg = JSON.parse(response.responseText);
         console.log(msg);
-        alert('Registration error!');
+
+        asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
 
         // Unlock event
         $(this).data('active', false);

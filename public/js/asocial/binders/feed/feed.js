@@ -6,7 +6,7 @@ asocial.binders.add('feed', { feed: function(){
   asocial.state.getState('invite', function (authorized) {
 
     // The user should always be authorized for the invite.
-    if (!authorized) { alert('Not authorized for invite!'); }
+    if (!authorized) { asocial.helpers.showAlert('Not authorized for invite!'); }
 
     if (asocial.state.invite.integrate)
       asocial.invite.integrate();
