@@ -39,7 +39,7 @@
     .post-footer
       .row
         // Actions
-        .post-footer-actions.columns.small-6
+        .post-footer-actions.columns.small-12
           // Like action
           %a{ href: '#', class: 'like-action {{#if likeable.liked_by_user}}active{{/if}}' }<
             %span.default-text> Like
@@ -52,7 +52,7 @@
             Comment
 
         // Informations
-        .post-footer-informations.columns.small-6
+        .post-footer-informations.columns.small-12
           // Like count
           {{#with likeable}}
           %a.like-count.hint--top{ href: '#', 'data-hint' => '{{liker_names}}' }<

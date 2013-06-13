@@ -1,24 +1,26 @@
 #feed-column {
-  @media only screen and (min-width: #{$medium-screen}) {
+  @media #{$breakpointLarge} {
     @include grid-column(12, false, false, 3);
   }
-  @media only screen and (min-width: #{$small-screen}) and (max-width: #{$medium-screen - 1}) {
+  @media #{$breakpointMedium} {
     @include grid-column(13, false, false, 2);
   }
-  @media only screen and (max-width: #{$small-screen - 1}) {
+  @media #{$breakpointSmall} {
     @include grid-column(24);
   }
 }
 
 #feed-panel-column {
-  @media only screen and (min-width: #{$medium-screen}) {
+  @media #{$breakpointLarge} {
     @include grid-column(5, true, false, 1);
   }
-  @media only screen and (min-width: #{$small-screen}) and (max-width: #{$medium-screen - 1}) {
+  @media #{$breakpointMedium} {
     @include grid-column(6, true, false, 1);
+    width: 250px !important;
   }
-  @media only screen and (max-width: #{$small-screen - 1}) {
+  @media #{$breakpointSmall} {
     @include grid-column(24, true, false, 1);
+    width: 225px !important;
   }
 }
 

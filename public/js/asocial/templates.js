@@ -657,10 +657,10 @@ function program10(depth0,data) {
     + "\"}\n        </div>\n      </div>\n      <!-- / Attachment -->\n      ";
   stack2 = helpers['if'].call(depth0, depth0.attachment, {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n    </div>\n    <!-- / Post footer -->\n    <div class='post-footer'>\n      <div class='row'>\n        <!-- / Actions -->\n        <div class='post-footer-actions columns small-6'>\n          <!-- / Like action -->\n          <a class='like-action ";
+  buffer += "\n    </div>\n    <!-- / Post footer -->\n    <div class='post-footer'>\n      <div class='row'>\n        <!-- / Actions -->\n        <div class='post-footer-actions columns small-12'>\n          <!-- / Like action -->\n          <a class='like-action ";
   stack2 = helpers['if'].call(depth0, ((stack1 = depth0.likeable),stack1 == null || stack1 === false ? stack1 : stack1.liked_by_user), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n          &sdot;\n          <!-- / Comment action -->\n          <a class='comment-action' href='#'>\n            Comment\n          </a>\n        </div>\n        <!-- / Informations -->\n        <div class='post-footer-informations columns small-6'>\n          <!-- / Like count -->\n          ";
+  buffer += "' href='#'><span class='default-text'>Like</span><span class='active-text'>Unlike</span></a>\n          &sdot;\n          <!-- / Comment action -->\n          <a class='comment-action' href='#'>\n            Comment\n          </a>\n        </div>\n        <!-- / Informations -->\n        <div class='post-footer-informations columns small-12'>\n          <!-- / Like count -->\n          ";
   stack2 = helpers['with'].call(depth0, depth0.likeable, {hash:{},inverse:self.noop,fn:self.program(10, program10, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n          &sdot;\n          <!-- / Comment count -->\n          <span class='comment-count'>";

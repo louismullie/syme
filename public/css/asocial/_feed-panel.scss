@@ -51,6 +51,10 @@
         font-weight: 200;
         line-height: $avatarSmall;
 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
         &:hover {
           text-decoration: none;
           color: $black;
