@@ -1,0 +1,35 @@
+#responsive-modal {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 4;
+
+  opacity: 0;
+
+  background: rgba($bodyBackgroundColor, 0.5);
+
+  .container {
+    @media #{$breakpointLarge}  { width: 50%;}
+    @media #{$breakpointMedium} { width: 60%;}
+    @media #{$breakpointSmall}  { width: 80%;}
+
+    max-height: 350px;
+    min-width: 100px;
+
+    position: fixed;
+    top: 50%; left: 50%;
+
+    display: block;
+
+    @include box-sizing;
+    @include transform( translate(-50%, -50%) );
+
+    overflow: auto;
+
+    padding: .8em 1em;
+
+    background: $bodyBackgroundColor;
+    border: $baseBorderStyle;
+    border-radius: $baseBorderRadius;
+    box-shadow: 0 3px 14px -4px rgba($black, 0.8);
+  }
+}

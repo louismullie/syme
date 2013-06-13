@@ -248,7 +248,7 @@ guard('helpers', {
     } else {
 
       if (action == 'request_invite_confirm') {
-        
+
         return text = actors + ' has asked to join  ' +
                       notification.group + '. Confirm <a href="/' +
                       notification.group_id + '" data-hbs="#">here</a>.' ;
@@ -270,8 +270,8 @@ guard('helpers', {
                   '" data-hbs="#">' + notification.group + '</a>';
 
   },
-  
-  render: function(template, data) { 
+
+  render: function(template, data) {
     return Handlebars.templates['_' + template](data);
   },
 
@@ -285,6 +285,64 @@ guard('helpers', {
       callback( false );
     });
 
+  },
+
+  showModal: function(html, closable) {
+
+    closable = typeof(closable) === "undefined" ? true : closable;
+
+    // Kill previous modal if there is one
+    $('#responsive-modal').remove();
+
+    // Create modal
+    $('body').prepend('<div id="responsive-modal"><div class="container" /></div>');
+
+    // Fill modal with content
+    $('#responsive-modal > div.container').html(html);
+
+    // Lock document scroll
+    $('body').addClass('noscroll');
+
+    // Bind closable event
+    if(closable) {
+      $(document).on({
+        // Close on escape key
+        keydown : function(e){
+          if (e.which == 27) asocial.helpers.hideModal();
+
+          // Unbind events
+          $(this).off().find('div.container').off('click');
+        },
+
+        // Close on click
+        click : function(e){
+          asocial.helpers.hideModal();
+
+          // Unbind events
+          $(this).off().find('div.container').off('click');
+        }
+      });
+
+      // Don't close when the container is clicked
+      $('#responsive-modal > div.container')
+        .on('click', function(e){ e.stopPropagation(); });
+    }
+
+    // Show modal
+    $('#responsive-modal')
+      .transition({ opacity: 1 }, 200);
+  },
+
+  hideModal: function(speed) {
+
+    speed = typeof(speed) === "undefined" ? 200 : speed;
+
+    // Remove modal
+    $('#responsive-modal').transition({ opacity: 0 }, speed);
+    window.setTimeout(function(){ $('#responsive-modal').remove() }, speed);
+
+    // Unlock document scroll
+    $('body').removeClass('noscroll');
   }
 
 });
