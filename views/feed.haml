@@ -1,11 +1,7 @@
 .row
-  // Left column
-  .columns.small-12.large-6.large-offset-2
-
+  #feed-column
     // Feed form
-    .row
-      .small-12.collapse
-        {{> feed-form}}
+    {{> feed-form}}
 
     // Feed
     #feed{  'data-group-name' => '{{group.name}}',
@@ -27,6 +23,6 @@
     #load-more
       %a.btn{href: '#'} {{t 'feed.load_more'}}
 
-  // Group panel
-  .columns.small-12.large-2.end
+  #feed-panel-column
+    // Group panel
     {{> feed-panel}}

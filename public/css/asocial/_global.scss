@@ -7,6 +7,8 @@ body {
   // Hides selection globally
   // @include user-select(none);
 
+  overflow-y: scroll;
+
   &.noscroll {
     // Locks scroll on document only
     overflow: hidden !important;

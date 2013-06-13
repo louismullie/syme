@@ -1,3 +1,27 @@
+#feed-column {
+  @media only screen and (min-width: #{$medium-screen}) {
+    @include grid-column(12, false, false, 3);
+  }
+  @media only screen and (min-width: #{$small-screen}) and (max-width: #{$medium-screen - 1}) {
+    @include grid-column(13, false, false, 2);
+  }
+  @media only screen and (max-width: #{$small-screen - 1}) {
+    @include grid-column(24);
+  }
+}
+
+#feed-panel-column {
+  @media only screen and (min-width: #{$medium-screen}) {
+    @include grid-column(5, true, false, 1);
+  }
+  @media only screen and (min-width: #{$small-screen}) and (max-width: #{$medium-screen - 1}) {
+    @include grid-column(6, true, false, 1);
+  }
+  @media only screen and (max-width: #{$small-screen - 1}) {
+    @include grid-column(24, true, false, 1);
+  }
+}
+
 .empty-group-notice {
   text-align: center;
 }

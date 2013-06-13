@@ -1,16 +1,8 @@
 #feed-panel {
-  // When layout is not collapsed, fix panel
-  @media #{$small} {
-    width: inherit;
-
-    position: fixed;
-    top: 110px; bottom: 0;
-
-    padding: 0 $column-gutter / 2;
-  }
-
   .group-photo {
     position: relative;
+
+    margin-bottom: 1em;
 
     a#group-photo-edit {
       display: none;
@@ -31,22 +23,47 @@
     }
   }
 
-  .feed-panel-header {
-    font: 200 1em/2em $opensans;
+  ul#userlist {
+    margin: 0;
 
-    a.group-name {
-      color: $black;
-    }
+    list-style-type: none;
+    padding-left: .2em;
+    border-left: 4px solid #ddd;
 
-    a.group-settings-button {
-      float: right;
+    li {
+      display: block;
 
-      color: $gray;
-      @include transition(color, 0.1s ease);
+      border-bottom: $baseBorderStyle;
 
-      &:hover {
-        color: $black;
-        text-decoration: none;
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:first-child a { padding-top: 0; } &:last-child a { padding-bottom: 0; }
+
+      a {
+        display: block;
+        padding: .5em;
+
+        color: $darkgray;
+
+        font-size: .9em;
+        font-weight: 200;
+        line-height: $avatarSmall;
+
+        &:hover {
+          text-decoration: none;
+          color: $black;
+        }
+
+        img {
+          width: $avatarSmall;
+          height: auto;
+
+          margin-right: .5em;
+
+          border-radius: $baseBorderRadius;
+        }
       }
     }
   }
