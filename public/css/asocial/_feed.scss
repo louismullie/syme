@@ -1,33 +1,34 @@
-#feed-column {
-  @media #{$breakpointLarge} {
+/* Breakpoints for responsive feed columns */
+
+// Large
+@media #{$breakpointLarge} {
+  #feed-column {
     @include grid-column(12, false, false, 3);
   }
-  @media #{$breakpointMedium} {
+}
+
+// Medium
+@media #{$breakpointMedium} {
+  #feed-column {
     @include grid-column(13, false, false, 2);
   }
-  @media #{$breakpointSmall} {
+}
+
+// Small
+@media #{$breakpointSmall} {
+  #feed-column {
     @include grid-column(24);
   }
 }
 
-#feed-panel-column {
-  @media #{$breakpointLarge} {
-    @include grid-column(5, true, false, 1);
-  }
-  @media #{$breakpointMedium} {
-    @include grid-column(6, true, false, 1);
-    width: 250px !important;
-  }
-  @media #{$breakpointSmall} {
-    @include grid-column(24, true, false, 1);
-    width: 225px !important;
-  }
-}
+/* ----------------------------------------- */
 
+// Notice when no posts on feed
 .empty-group-notice {
   text-align: center;
 }
 
+// Indicator for socket-added posts
 #newcontent {
   @extend .mbl;
 
@@ -35,6 +36,7 @@
   text-align: center;
 }
 
+// Hide encrypted content (to be replaced by [data-encrypted])
 .encrypted {
   display: none;
 }

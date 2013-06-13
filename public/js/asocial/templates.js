@@ -966,7 +966,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<li class='group-card group-create opened'>\n  <a class='group-card-title'>\n    Create group\n    <i class='icon-chevron-down'></i>\n  </a>\n  <div class='group-card-content'>\n    <form class='row' id='create_group' method='post'>\n      <div class='tight columns small-12 large-7'>\n        <input autocapitalize='off' autocomplete='off' autocorrect='off' name='name' placeholder='Enter a group name' spellcheck='false' type='text'>\n      </div>\n      <div class='tight columns small-12 large-5'>\n        <a class='btn btn-white' href='#' role='submit'>Create</a>\n      </div>\n    </form>\n  </div>\n</li>\n";
+  return "<li class='group-card group-create opened'>\n  <a class='group-card-title'>\n    Create group\n    <i class='icon-chevron-down'></i>\n  </a>\n  <div class='group-card-content'>\n    <form class='row' id='create_group' method='post'>\n      <div class='tight columns small-24 large-14'>\n        <input autocapitalize='off' autocomplete='off' autocorrect='off' name='name' placeholder='Enter a group name' spellcheck='false' type='text'>\n      </div>\n      <div class='tight columns small-24 large-10'>\n        <a class='btn btn-white' href='#' role='submit'>Create</a>\n      </div>\n    </form>\n  </div>\n</li>\n";
   });
 templates['_groups-create_first'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
@@ -974,7 +974,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<div class='create-first-group'>\n  <h2>Welcome to <b>Asocial</b>. <br/>Name your first group:</h2>\n  <div class='row'>\n    <div class='columns small-12 large-8 large-centered'>\n      <form id='create_first_group' method='post'>\n        <input autocapitalize='off' autocomplete='off' autocorrect='off' autofocus='' name='name' spellcheck='false' type='text'>\n        <input type='submit'>\n        <a href='#' role='submit'>\n          <span class='default'>Get started</span>\n          <span class='hover'><i class=\"icon-ok\"></i></span>\n        </a>\n      </form>\n    </div>\n  </div>\n</div>\n";
+  return "<div class='create-first-group'>\n  <h2>Welcome to <b>Asocial</b>. <br/>Name your first group:</h2>\n  <div class='row'>\n    <div class='columns small-24 large-16 large-centered'>\n      <form id='create_first_group' method='post'>\n        <input autocapitalize='off' autocomplete='off' autocorrect='off' autofocus='' name='name' spellcheck='false' type='text'>\n        <input type='submit'>\n        <a href='#' role='submit'>\n          <span class='default'>Get started</span>\n          <span class='hover'><i class=\"icon-ok\"></i></span>\n        </a>\n      </form>\n    </div>\n  </div>\n</div>\n";
   });
 templates['_groups-group'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
