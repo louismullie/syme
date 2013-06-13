@@ -301,9 +301,7 @@ guard('helpers', {
     $('body').prepend('<div id="responsive-modal"><div class="container" /></div>');
 
     // Fill modal with content
-    $('#responsive-modal > div.container')
-      .addClass( small ? 'small' : '' )
-      .html(html);
+    $('#responsive-modal > div.container').addClass(small).html(html);
 
     // Lock document scroll
     $('body').addClass('noscroll');
@@ -312,19 +310,23 @@ guard('helpers', {
     if(closable) {
       // Close on escape key
       $(document).on('keydown', function(e){
+        // Hide modal
         if (e.which == 27) asocial.helpers.hideModal(onhide);
 
-        // Unbind events
+        // Unbind keydown
         $(this).off('keydown')
+          // Unbind container click
           .find('#responsive-modal > div.container').off('click');
       });
 
       // Close on click
       $('#responsive-modal').on('click', function(e){
+        // Hide modal
         asocial.helpers.hideModal(onhide);
 
-          // Unbind events
+        // Unbind click
         $(this).off('click')
+          // Unbind container click
           .find('div.container').off('click');
       });
 
@@ -343,7 +345,7 @@ guard('helpers', {
 
   hideModal: function(speed, onhide) {
 
-    speed  = typeof(speed)          === "undefined" ? 200 : speed;
+    speed  = typeof(speed)  === "undefined" ? 200 : speed;
     onhide = typeof(onhide) === "undefined" ? function(){} : onhide;
 
     // Remove modal
