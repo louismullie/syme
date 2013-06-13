@@ -287,9 +287,10 @@ guard('helpers', {
 
   },
 
-  showModal: function(html, closable, small) {
+  showModal: function(html, options) {
 
-    closable = typeof(closable) === "undefined" ? true : closable;
+    closable = typeof(options.closable) === "undefined" ? true : options.closable;
+    small    = typeof(options.small) === "undefined" ? '' : options.small;
 
     // Kill previous modal if there is one
     $('#responsive-modal').remove();
