@@ -290,7 +290,9 @@ guard('helpers', {
   showModal: function(html, options) {
 
     closable = typeof(options.closable) === "undefined" ? true : options.closable;
-    small    = typeof(options.small) === "undefined" ? '' : options.small;
+    small    = typeof(options.small)    === "undefined" ? '' : options.small;
+    onshow   = typeof(options.onshow)   === "undefined" ? function(){} : options.onshow;
+    onhide   = typeof(options.onhide)   === "undefined" ? function(){} : options.onhide;
 
     // Kill previous modal if there is one
     $('#responsive-modal').remove();
@@ -308,22 +310,22 @@ guard('helpers', {
 
     // Bind closable event
     if(closable) {
-      $(document).on({
-        // Close on escape key
-        keydown : function(e){
-          if (e.which == 27) asocial.helpers.hideModal();
+      // Close on escape key
+      $(document).on('keydown', function(e){
+        if (e.which == 27) asocial.helpers.hideModal(onhide);
+
+        // Unbind events
+        $(this).off('keydown')
+          .find('#responsive-modal > div.container').off('click');
+      });
+
+      // Close on click
+      $('#responsive-modal').on('click', function(e){
+        asocial.helpers.hideModal(onhide);
 
           // Unbind events
-          $(this).off().find('div.container').off('click');
-        },
-
-        // Close on click
-        click : function(e){
-          asocial.helpers.hideModal();
-
-          // Unbind events
-          $(this).off().find('div.container').off('click');
-        }
+        $(this).off('click')
+          .find('div.container').off('click');
       });
 
       // Don't close when the container is clicked
@@ -331,14 +333,18 @@ guard('helpers', {
         .on('click', function(e){ e.stopPropagation(); });
     }
 
+    // Onshow callback
+    onshow();
+
     // Show modal
     $('#responsive-modal')
       .transition({ opacity: 1 }, 200);
   },
 
-  hideModal: function(speed) {
+  hideModal: function(speed, onhide) {
 
-    speed = typeof(speed) === "undefined" ? 200 : speed;
+    speed  = typeof(speed)          === "undefined" ? 200 : speed;
+    onhide = typeof(onhide) === "undefined" ? function(){} : onhide;
 
     // Remove modal
     $('#responsive-modal').transition({ opacity: 0 }, speed);

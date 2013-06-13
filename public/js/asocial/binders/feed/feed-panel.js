@@ -27,6 +27,13 @@ asocial.binders.add('feed', { feed_panel: function(){
     asocial.uploader.selectGroupAvatar($(this)[0].files[0]);
   });
 
+  // Add new user
+  $('#main').on('click', 'a#add-user', function(){
+    var content = asocial.helpers.render('feed-modals-add_user');
+
+    asocial.helpers.showModal(content, { small: true });
+  });
+
   //$('#main').on('click', '.user-icon', function(e){
   //  var input = $(this).parent().find('.user-form input[type="file"]');
   //  var recipient_id = $(this).parent().attr('id');

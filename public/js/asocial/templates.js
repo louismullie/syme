@@ -367,7 +367,7 @@ function program5(depth0,data) {
   if (stack1 = helpers.like_count) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.like_count; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</span>\n    <i class='icon-thumbs-up'></i></a>\n    ";
+    + "</span>\n    <i class='icon-thumbs-up-alt'></i></a>\n    ";
   return buffer;
   }
 function program6(depth0,data) {
@@ -487,6 +487,14 @@ function program1(depth0,data) {
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n  </a>\n  <input class='hidden' id='upload_avatar' name='account-picture' type='file'>\n  <!-- / Drag-and-drop helper -->\n  <div id='drag-helper'>\n    <p>Drag & Drop files here</p>\n  </div>\n  <!-- / Progress bar (hidden for now) -->\n  <div class='progress progress-striped active hidden'>\n    <div class='bar' id='progress_bar'></div>\n  </div>\n  <!-- / Textarea -->\n  <textarea class='autogrow' maxlength='5000' name='content' placeholder=\"What's happening?\"></textarea>\n  <!-- / Hidden encryption-related inputs -->\n  <input id='encrypted_content' name='encrypted_content' type='hidden'>\n  <input id='mentioned_users' name='mentioned_users' type='hidden'>\n  <!-- / Hidden upload-related inputs -->\n  <input id='upload_id' name='upload_id' type='hidden'>\n  <input class='hidden' id='upload_file' type='file'>\n  <div class='row collapse'>\n    <div class='columns small-24 large-20'>\n      <!-- / Attachment box -->\n      <ul id='attachments'>\n        <li class='title'>Attach:</li>\n        <li>\n          <a data-upload-trigger='photo' href='#'>\n            <i class='icon-camera'></i>\n            Photo\n          </a>\n        </li>\n        <li>\n          <a data-upload-trigger='video' href='#'>\n            <i class='icon-film'></i>\n            Video\n          </a>\n        </li>\n        <li>\n          <a data-upload-trigger='file' href='#'>\n            <i class='icon-file'></i>\n            File\n          </a>\n        </li>\n      </ul>\n    </div>\n    <div class='columns small-24 large-4'>\n      <a class='btn btn-success' href='#' role='submit'>Post</a>\n    </div>\n  </div>\n</form>\n";
   return buffer;
+  });
+templates['_feed-modals-add_user'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<h1>Sup!</h1>\n";
   });
 templates['_feed-notification'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
@@ -767,7 +775,11 @@ function program3(depth0,data) {
   if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    <span>";
+    + "' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    <span title='";
+  if (stack1 = helpers.full_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.full_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "'>";
   if (stack1 = helpers.full_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.full_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -843,7 +855,7 @@ function program4(depth0,data) {
 
   buffer += "<h4>\n  Members ("
     + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + ")\n  <span class='actions'>\n    <a href='#'>Add</a>\n  </span>\n</h4>\n<ul id='userlist'>\n  ";
+    + ")\n  <span class='actions'>\n    <a href='#' id='add-user'>Add</a>\n  </span>\n</h4>\n<ul id='userlist'>\n  ";
   stack2 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  <!-- / Invite link is like a normal avatar -->\n  <!-- /%a.avatar.invite-toggle{href: '#'} -->\n  <!-- /  // 1x1 transparent -->\n  <!-- /  %img{ src: 'data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' } -->\n  <!-- /  %i.icon-plus-sign -->\n  <!-- / Invites -->\n  <!-- /%form#invite{method: 'post'} -->\n  <!-- /  .invite-user -->\n  <!-- /    %input#email{type: \"text\", name: \"email\"} -->\n  <!-- /    %input.btn.btn-info{type: 'submit', value: '";
