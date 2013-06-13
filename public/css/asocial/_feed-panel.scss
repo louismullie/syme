@@ -10,14 +10,16 @@
 
     #feed-panel {
       position: fixed;
-      top: 110px; bottom: 1em;
+      top: 110px; bottom: $bodyPadding;
       width: $panelSize !important;
 
       #userlist {
         position: absolute;
-        top: emCalc($panelSize) + 1em;
+        top: emCalc($panelSize) + 1em + 1.5em + 1em;
         bottom: 0; left: 0; right: 0;
         overflow: auto;
+
+        @include scroll-shadow();
       }
     }
   }
@@ -33,20 +35,22 @@
 
     #feed-panel {
       position: fixed;
-      top: 110px; bottom: 1em;
+      top: 110px; bottom: $bodyPadding;
       width: $panelSize !important;
 
       #userlist {
         position: absolute;
-        top: emCalc($panelSize) + 1em;
+        top: emCalc($panelSize) + 1em + 1.5em + 1em;
         bottom: 0; left: 0; right: 0;
         overflow: auto;
+
+        @include scroll-shadow();
       }
     }
   }
 }
 
-// Small
+// Small (collapse)
 @media #{$breakpointSmall} {
   #feed-panel-column {
     @include grid-column(24, true, false, 1);
@@ -71,8 +75,11 @@
       top: 10px; right: 10px;
 
       padding: 0 0.5em;
+      font-weight: 200;
       font-size: 0.8em;
       line-height: 1.8em;
+
+      i { padding-left: .5em; }
     }
 
     input { display: none; }
@@ -82,8 +89,23 @@
     }
   }
 
+  h4 {
+    font: 200 1em/1.5em $opensans;
+    margin: 0 0 1em; // Just for saying
+
+    span.actions {
+      float: right;
+      font-size: .8em;
+      padding-top: 1px; // Sup Louis
+    }
+  }
+
   ul#userlist {
     margin: 0;
+
+    border: $baseBorderStyle;
+    border-top-width: 3px;
+    border-top-color: #ccc;
 
     list-style-type: none;
 
@@ -96,11 +118,9 @@
         border-bottom: none;
       }
 
-      &:first-child a { padding-top: 0; } &:last-child a { padding-bottom: 0; }
-
       a {
         display: block;
-        padding: .5em 0;
+        padding: .5em;
 
         color: $darkgray;
 
@@ -113,6 +133,8 @@
         text-overflow: ellipsis;
 
         &:hover {
+          background-color: $bodyBackgroundColor3;
+
           text-decoration: none;
           color: $black;
         }

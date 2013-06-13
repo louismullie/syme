@@ -20,6 +20,7 @@ $linkColor:               $firm;
 
 $bodyBackgroundColor:     #FFFFFF;
 $bodyBackgroundColor2:    #f7f7f7;
+$bodyBackgroundColor3:    #f5f5f5;
 
 $headersColor:            #333333;
 $subColor:                #666666;
@@ -88,7 +89,7 @@ $h4Font:                  200 1.3em/1.4em $opensans;
 
 $popoverHeaderFont:       600 1em/2em $opensans;
 
-// Additional media queries
+// Breakpoints
 
 $breakpointSmall:         "only screen and (max-width: "#{$small-screen - 1}")";
 $breakpointMedium:        "only screen and (min-width: "#{$small-screen}") and (max-width: "#{$medium-screen - 1}")";

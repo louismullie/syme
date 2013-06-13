@@ -1,8 +1,9 @@
 #feed-panel
   {{#with group.avatar}}
 
-  .group-photo
-    %a#group-photo-edit.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Change photo' }
+  .group-photo{ :'data-placeholder' => '{{placeholder}}' }
+    %a#group-photo-edit.btn.btn-white{ href: '#' }
+      Change picture
       %i.icon-picture
 
     // Hidden file upload

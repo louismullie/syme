@@ -1,3 +1,9 @@
+%h4
+  Members ({{users.length}})
+
+  %span.actions
+    %a{ href: '#' } Add
+
 %ul#userlist
   {{#each users}}
   {{> feed-user}}

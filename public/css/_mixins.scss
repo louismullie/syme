@@ -132,14 +132,17 @@
   background-image: linear-gradient($arguments);
 }
 
-@mixin scroll-shadow($backgroundColor: white, $width: 7px) {
-  background:
-    /* Shadow cover (replace white by background color) */
-    linear-gradient($backgroundColor 100%, transparent),
-    /* Shadow */
-    linear-gradient(rgba(0, 0, 0, 0.1) 30%, transparent);
+@mixin scroll-shadow($background: white, $width: 5px) {
+  $gradient1: $background 100%, transparent;
+  $gradient2: rgba(0, 0, 0, 0.08) 30%, transparent;
+
+  background-image: -webkit-linear-gradient($gradient1), -webkit-linear-gradient($gradient2);
+  background-image: -moz-linear-gradient($gradient1), -moz-linear-gradient($gradient2);
+  background-image: -ms-linear-gradient($gradient1), -ms-linear-gradient($gradient2);
+  background-image: -o-linear-gradient($gradient1), -o-linear-gradient($gradient2);
+  background-image: linear-gradient($gradient1), linear-gradient($gradient2);
 
   background-repeat: no-repeat;
-  background-size: 100% $width, 100% $width;
+  background-size: 100% $width*2, 100% $width;
   background-attachment: local, scroll;
 }
