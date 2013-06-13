@@ -8,17 +8,6 @@
   background: rgba(0, 0, 0, 0.2);
 
   .container {
-
-    @media #{$breakpointLarge}  { width: 50%;}
-    @media #{$breakpointMedium} { width: 60%;}
-    @media #{$breakpointSmall}  { width: 80%;}
-
-    &.small {
-      @media #{$breakpointLarge}  { width: 40%;}
-      @media #{$breakpointMedium} { width: 50%;}
-      @media #{$breakpointSmall}  { width: 80%;}
-    }
-
     max-height: 350px;
     min-width: 100px;
 
@@ -32,11 +21,81 @@
 
     overflow: auto;
 
-    padding: .8em 1em;
-
     background: $bodyBackgroundColor;
     border: $baseBorderStyle;
     border-radius: $baseBorderRadius;
     box-shadow: 0 3px 14px -4px rgba($black, 0.8);
+
+    /* Styles */
+
+    @media #{$breakpointLarge}  { width: 50%; }
+    @media #{$breakpointMedium} { width: 60%; }
+    @media #{$breakpointSmall}  { width: 90%; }
+
+    // Small
+    &.modal-small {
+      @media #{$breakpointLarge}  { width: 40%; }
+      @media #{$breakpointMedium} { width: 50%; }
+    }
+
+    // Alert
+    &.modal-alert {
+      @media #{$breakpointLarge}  { width: 30%; }
+      @media #{$breakpointMedium} { width: 35%; }
+
+      a.submit {
+        @extend .btn;
+
+        display: block;
+
+        margin-top: .8em;
+
+        background: $bodyBackgroundColor2;
+        border: $baseBorderStyle;
+
+        text-align: center;
+        color: $black;
+
+        &:hover, &:active {
+          color: inherit;
+          background: $bodyBackgroundColor3;
+        }
+      }
+    }
+
+    .modal-title {
+      padding: .5em 1em;
+
+      font: 200 1.2em/1.5em $opensans;
+
+      background: $bodyBackgroundColor2;
+      border-bottom: $baseBorderStyle;
+
+      a.close {
+        //display: none;
+
+        float: right;
+        color: $gray;
+
+        @include transition(color 0.2s ease);
+
+        &:hover {
+          color: darken($gray, 10%);
+          text-decoration: none;
+        }
+      }
+    }
+
+    // &[data-closable] .modal-title a.close {
+    //   display: inline;
+    // }
+
+    .modal-content {
+      padding: .8em 1em;
+
+      text-align: center;
+      font-size: .9em;
+    }
+
   }
 }

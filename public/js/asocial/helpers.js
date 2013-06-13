@@ -289,19 +289,28 @@ guard('helpers', {
 
   showModal: function(html, options) {
 
-    closable = typeof(options.closable) === "undefined" ? true : options.closable;
-    small    = typeof(options.small)    === "undefined" ? '' : options.small;
-    onshow   = typeof(options.onshow)   === "undefined" ? function(){} : options.onshow;
-    onhide   = typeof(options.onhide)   === "undefined" ? function(){} : options.onhide;
+    var options  = typeof(options)          === "undefined" ? {} : options;
+
+    var closable = typeof(options.closable) === "undefined" ? true : options.closable;
+    var classes  = typeof(options.classes)  === "undefined" ? '' : options.classes;
+    var onshow   = typeof(options.onshow)   === "undefined" ? function(){} : options.onshow;
+    var onhide   = typeof(options.onhide)   === "undefined" ? function(){} : options.onhide;
 
     // Kill previous modal if there is one
     $('#responsive-modal').remove();
 
     // Create modal
-    $('body').prepend('<div id="responsive-modal"><div class="container" /></div>');
+    $('body').prepend(
+      '<div id="responsive-modal">' +
+      '<div class="container ' + classes + '" />' +
+      '</div>'
+    );
+
+    // Bind onhide callback to modal
+    $('#responsive-modal').data('onhide', onhide);
 
     // Fill modal with content
-    $('#responsive-modal > div.container').addClass(small).html(html);
+    $('#responsive-modal > div.container').html(html);
 
     // Lock document scroll
     $('body').addClass('noscroll');
@@ -311,7 +320,7 @@ guard('helpers', {
       // Close on escape key
       $(document).on('keydown', function(e){
         // Hide modal
-        if (e.which == 27) asocial.helpers.hideModal(onhide);
+        if (e.which == 27) asocial.helpers.hideModal();
 
         // Unbind keydown
         $(this).off('keydown')
@@ -322,7 +331,7 @@ guard('helpers', {
       // Close on click
       $('#responsive-modal').on('click', function(e){
         // Hide modal
-        asocial.helpers.hideModal(onhide);
+        asocial.helpers.hideModal();
 
         // Unbind click
         $(this).off('click')
@@ -343,10 +352,15 @@ guard('helpers', {
       .transition({ opacity: 1 }, 200);
   },
 
-  hideModal: function(speed, onhide) {
+  hideModal: function(speed) {
 
-    speed  = typeof(speed)  === "undefined" ? 200 : speed;
-    onhide = typeof(onhide) === "undefined" ? function(){} : onhide;
+    var callback = $('#responsive-modal').data('onhide') ?
+      $('#responsive-modal').data('onhide') : function(){};
+
+    var speed  = typeof(speed)  === "undefined" ? 200 : speed;
+
+    // Onhide callback
+    callback();
 
     // Remove modal
     $('#responsive-modal').transition({ opacity: 0 }, speed);
@@ -354,6 +368,24 @@ guard('helpers', {
 
     // Unlock document scroll
     $('body').removeClass('noscroll');
+  },
+
+  showAlert: function(content, options) {
+
+    var options  = typeof(options) === "undefined" ? {} : options;
+    var closable = typeof(options.closable) === "undefined" ? true : options.closable;
+
+    // Defaults options.classes to 'modal-alert'
+    options['classes'] = typeof(options.classes) === "undefined" ?
+      'modal-alert' : options.classes;
+
+    // Default title and submit
+    var title  = typeof(options.title) === "undefined" ? 'Error' : options.title;
+    var submit = typeof(options.submit) === "undefined" ? 'OK' : options.submit;
+
+    var content = this.render('alert', { title: title, content: content, submit: submit, closable: closable });
+
+    this.showModal(content, options);
   }
 
 });

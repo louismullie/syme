@@ -1,0 +1,13 @@
+.modal-title
+  {{title}}
+
+  {{#if closable}}
+  %a{ href: '#', 'data-role' => 'close-modal' }
+    %i.icon-remove-sign
+  {{/if}}
+
+.modal-content
+  {{content}}
+
+  %a.submit{ href: '#', 'data-role' => 'close-modal' }
+    {{submit}}

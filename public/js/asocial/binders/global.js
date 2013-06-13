@@ -23,39 +23,20 @@ asocial.binders.add('global', { main: function(){
     e.stopPropagation();
   });
 
-
-
   // Prevent anchor links from scrolling to top
   $(document).on('click', 'a[href="#"]', function(e){
     e.preventDefault();
+  });
+
+  // Close modals
+  $(document).on('click', 'a[data-role="close-modal"]', function(){
+    asocial.helpers.hideModal();
   });
 
   // Make a[role="submit"] behave like <input type="submit">
   $(document).on('click', 'a[role="submit"]', function(e){
     $(this).closest('form').submit();
   });
-
-  // Make forms sumbit on enter key (whether there's a submit button or not)
-  // but omit enter key event on autocomplete dropdowns, when it's coupled
-  // with shift, or when a textarea is in focus. To make a focused textarea
-  // submit with enter key, add  a "data-single-line" attribute to its tag.
-  // $(document).on('keydown', 'form', function(e) {
-  //   // If key pressed is enter without shift
-  //   if (e.which == 13 && !e.shiftKey) {
-  //     e.preventDefault();
-  //     e.stopPropagation();
-
-  //     // If there's a multiline textarea in focus, do nothing.
-  //     if ($('textarea').is(':focus') && !$('textarea:focus').hasData('single-line')) return false;
-
-  //     // Submit form
-  //     alert('Forcing form submitting');
-  //     $(this).submit();
-  //     alert('Form submitted');
-
-  //     return false;
-  //   }
-  // });
 
   // Implement session timeouts
   $(document).ready(function () {
