@@ -55,7 +55,13 @@
         @include transform(translateX(-50%));
         margin: 0;
 
+        overflow-x: hidden;
+
+        max-width: 55%;
+        @media #{$breakpointSmall} { max-width: 60%; }
+
         font: 200 1.2em $opensans;
+        white-space: nowrap;
 
         ul {
           list-style-type: none;
@@ -77,6 +83,12 @@
               color: $gray;
 
               @media #{$breakpointSmall} { display: none; }
+            }
+
+            &.group {
+              overflow-x: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
             }
 
             // Separators
