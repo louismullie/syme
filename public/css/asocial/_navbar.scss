@@ -3,7 +3,7 @@
   left: 0; right: 0;
   z-index: 3;
 
-  padding: 0 $bodyPadding;
+  padding: 0 $bodyPadding / 2;
 
   background: $bodyBackgroundColor2;
   border-bottom: $baseBorderStyle;
@@ -34,22 +34,34 @@
         }
       }
 
-      a#brand {
-        font: 600 1.5em $opensans;
-        color: $black;
+      &#brand {
+        a {
+          font: 600 1.5em $opensans;
+          color: $black;
+        }
+
+        @media #{$breakpointSmall} { display: none; }
       }
 
       .btn {
         @extend .btn-white;
       }
 
-      &#omnibar {
+      &#group-selector {
         display: none; // will be dynamically shown
+
+        position: absolute;
+        left: 50%;
+        @include transform(translateX(-50%));
+        margin: 0;
+
         font: 200 1.2em $opensans;
 
         ul {
           list-style-type: none;
           margin: 0;
+
+          line-height: 40px;
 
           li {
             margin: 0;
@@ -63,6 +75,8 @@
             // Grayed out title
             &.title {
               color: $gray;
+
+              @media #{$breakpointSmall} { display: none; }
             }
 
             // Separators
@@ -167,13 +181,7 @@
         }
       }
 
-      a#user {
-        font: normal 0.9em/40px $opensans;
 
-        img {
-          margin-right: 0.5em;
-        }
-      }
     }
   }
 }

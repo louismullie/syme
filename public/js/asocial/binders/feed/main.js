@@ -1,7 +1,7 @@
 asocial.binders.add('feed', { main: function(){
 
-  // Omnibar
-  $('#omnibar')
+  // Navbar group selector
+  $('#group-selector')
     .css('display', 'inline-block')
     .find('li.group')
       .html( $('#feed').data('group-name') );
