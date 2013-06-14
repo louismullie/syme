@@ -96,6 +96,14 @@
       float: right;
       font-size: .8em;
       padding-top: 1px; // Sup Louis
+
+      a {
+        line-height: inherit;
+
+        i {
+          padding-left: .3em;
+        }
+      }
     }
   }
 

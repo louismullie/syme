@@ -12,6 +12,15 @@ asocial.binders.add('feed', { main: function(){
   // Initial textarea autosizing
   $('textarea.autogrow').autogrow().removeClass('autogrow');
 
+  $('#textarea-holder textarea').on({
+    focusin: function(){
+      $(this).parent().addClass('focused');
+    },
+    focusout: function(){
+      $(this).parent().removeClass('focused');
+    }
+  });
+
   // ScrollToFixed
   // $('#group-info').scrollToFixed({ marginTop: 20 });
 

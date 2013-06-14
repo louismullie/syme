@@ -80,7 +80,7 @@
         @include transition(color 0.2s ease);
 
         &:hover {
-          color: darken($gray, 10%);
+          color: darken($gray, 20%);
           text-decoration: none;
         }
       }

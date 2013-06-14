@@ -2,7 +2,9 @@
   Members ({{users.length}})
 
   %span.actions
-    %a#add-user{ href: '#' } Add
+    %a#add-user.btn.btn-white{ href: '#' }
+      Add
+      %i.icon-plus
 
 %ul#userlist
   {{#each users}}

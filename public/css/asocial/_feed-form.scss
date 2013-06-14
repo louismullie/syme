@@ -2,7 +2,7 @@ form#feed-form {
   position: relative;
 
   margin-bottom: $bodyPadding / 2;
-  padding-left: 1em + emCalc($avatarFormSize) + 1em;
+  padding-left: emCalc($avatarPostSize) + 1em;
   padding-bottom: $bodyPadding / 2;
 
   border-bottom: 1px dashed #DDD;
@@ -10,33 +10,77 @@ form#feed-form {
   background: $bodyBackgroundColor;
 
   a#feed-form-avatar {
-    width: $avatarFormSize;
+    width: $avatarPostSize;
     position: absolute;
-    left: 1em;
+    left: 0;
 
     display: block;
     margin-right: 1em;
 
     img.avatar {
       width: 100%; height: auto; // Preserve aspect ratio
-      border-radius: 50%;
+      border-radius: $baseBorderRadius;
 
       box-shadow: 0 0 16px 1px white;
-      @include transition(border-color 0.2s ease);
     }
   }
 
-  textarea {
-    width: 100%;
-    min-height: $avatarFormSize; max-height: 200px;
+  #textarea-holder {
+    $marginTop: $avatarPostSize / 2;
+    $arrowSize: 8px;
+    $borderSize: 2px;
+    $borderColor: $lightgray;
 
-    @include box-sizing;
-    resize: none;
-
+    position: relative;
     margin-bottom: 1em;
-    padding: 10px;
 
-    // box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1); &:focus{ box-shadow: none }
+    border: $borderSize solid $borderColor;
+    border-radius: $baseBorderRadius;
+
+    &.focused {
+      border-color: $success;
+    }
+
+    &:after, &:before {
+      right: 100%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    &:after {
+      border-color: rgba(255, 255, 255, 0);
+      border-right-color: #fff;
+      border-width: $arrowSize;
+      top: 0%;
+      margin-top: $marginTop - $arrowSize;
+    }
+
+    &:before {
+      border-color: rgba(0, 0, 0, 0);
+      border-right-color: inherit;
+      border-width: $arrowSize + $borderSize;
+      top: 0%;
+      margin-top: $marginTop - $arrowSize - $borderSize;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: $avatarPostSize; max-height: 200px;
+
+      @include box-sizing;
+      resize: none;
+
+      margin: 0;
+      padding: 10px;
+      border: none;
+
+      font-size: .9em;
+      font-weight: 200;
+    }
   }
 
   #drag-helper {
@@ -81,6 +125,8 @@ form#feed-form {
     margin: 0;
     list-style-type: none;
 
+    line-height: 34px;
+
     li {
       display: inline-block;
       vertical-align: middle;
@@ -101,10 +147,10 @@ form#feed-form {
       }
 
       a {
-        display: block;
-        line-height: inherit;
+       display: block;
+       line-height: inherit;
 
-        color: darken($gray, 15%);
+       color: darken($gray, 15%);
 
         &:hover {
           color: $darkgray;
@@ -123,8 +169,10 @@ form#feed-form {
   a[role="submit"] {
     float: right;
 
-    line-height: 28px;
-    font-size: .9em;
+    font-size: .8em;
+    line-height: 34px;
+
+    border: 1px solid transparent;
   }
 }
 
