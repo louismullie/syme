@@ -28,11 +28,6 @@ asocial.binders.add('global', { main: function(){
     e.preventDefault();
   });
 
-  // Close modals
-  $(document).on('click', 'a[data-role="close-modal"]', function(){
-    asocial.helpers.hideModal();
-  });
-
   // Make a[role="submit"] behave like <input type="submit">
   $(document).on('click', 'a[role="submit"]', function(e){
     $(this).closest('form').submit();

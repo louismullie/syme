@@ -71,7 +71,7 @@
       background: $bodyBackgroundColor2;
       border-bottom: $baseBorderStyle;
 
-      a.close {
+      a[role="close-modal"] {
         //display: none;
 
         float: right;

@@ -3,12 +3,12 @@ get '/users' do
 
   # Get ID and e-mail as GET parameters.
   id, email = params[:id], params[:email]
-  
+
   # Make sure either ID or e-mail was provided.
   unless id || email
     error 400, 'missing_params'
   end
-  
+
   if User.where(id: id).any? ||
      User.where(email: email).any?
     status 302
@@ -22,25 +22,25 @@ end
 # available, we generate a salt, store it,
 # and return the salt to the client for SRP.
 post '/users' do
-  
+
   user = get_model(request)
-  
+
   logger.info user
-  
+
   logger.info user
   logger.info User.where(email: user.email).any?
-  
+
   # Get the e-mail from params.
   email = user.email
-  
+
   # Get the full name from params.
   full_name = user.full_name
-  
+
   # Make sure email and full name are present.
   if email.blank? && full_name.blank?
     error 400, 'missing_params'
   end
-  
+
   # Check if the e-mail is already taken.
   if User.where(email: email).any?
     error 400, 'email_taken'
@@ -59,9 +59,9 @@ post '/users' do
   rescue Mongoid::Errors::Validations
     error 400, 'validation_failed'
   end
-  
+
   user.verifier = Verifier.new(salt: salt)
-  
+
   user.save!
 
   # Return the user ID and salt on success.
@@ -73,11 +73,9 @@ end
 # and sends it to the server. The server
 # saves the verifier in the database.
 put '/users' do
-  
+
   model = get_model(request)
-  
-  logger.info model
-  
+
   # Find the user with the supplied ID.
   user = begin
     User.find(model._id)
@@ -100,9 +98,14 @@ put '/users' do
     )
   end
 
+  # Update user name.
+  if model.full_name
+    user.full_name = model.full_name
+  end
+
   # Save user.
   user.save!
-  
+
   # Return empty JSON.
   empty_response
 
@@ -113,7 +116,7 @@ delete '/users/:user_id', auth: [] do |user_id|
 
   # Destroy user in DB.
   @user.destroy!
-  
+
   # Return empty JSON.
   empty_response
 

@@ -1,6 +1,5 @@
 get '/settings', auth: [] do
 
-  content_type :json
-  {}.to_json
+  empty_response
 
 end

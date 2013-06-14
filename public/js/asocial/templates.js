@@ -8,7 +8,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 function program1(depth0,data) {
   
   
-  return "\n  <a data-role='close-modal' href='#'>\n    <i class='icon-remove-sign'></i>\n  </a>\n  ";
+  return "\n  <a href='#' role='close-modal'>\n    <i class='icon-remove-sign'></i>\n  </a>\n  ";
   }
 
   buffer += "<div class='modal-title'>\n  ";
@@ -22,7 +22,7 @@ function program1(depth0,data) {
   if (stack1 = helpers.content) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.content; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\n  <a class='submit' data-role='close-modal' href='#'>\n    ";
+    + "\n  <a class='submit' href='#' role='close-modal'>\n    ";
   if (stack1 = helpers.submit) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.submit; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)

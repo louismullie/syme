@@ -317,10 +317,11 @@ guard('helpers', {
 
     // Bind closable event
     if(closable) {
-      // Close on escape key
+      // Close on escape and return key
       $(document).on('keydown', function(e){
         // Hide modal
-        if (e.which == 27) asocial.helpers.hideModal();
+        if (e.which == 27 || e.which == 13)
+          asocial.helpers.hideModal();
 
         // Unbind keydown
         $(this).off('keydown')
@@ -343,6 +344,11 @@ guard('helpers', {
       $('#responsive-modal > div.container')
         .on('click', function(e){ e.stopPropagation(); });
     }
+
+    // Close modals
+    $('a[role="close-modal"]').one('click', function(){
+      asocial.helpers.hideModal();
+    });
 
     // Onshow callback
     onshow();
