@@ -15,7 +15,7 @@
 
       #userlist {
         position: absolute;
-        top: emCalc($panelSize) + 1em + 1.5em + 1em;
+        top: emCalc($panelSize) + 1em + 1.8em + 1em;
         bottom: 0; left: 0; right: 0;
         overflow: auto;
 
@@ -40,7 +40,7 @@
 
       #userlist {
         position: absolute;
-        top: emCalc($panelSize) + 1em + 1.5em + 1em;
+        top: emCalc($panelSize) + 1em + 1.8em + 1em;
         bottom: 0; left: 0; right: 0;
         overflow: auto;
 
@@ -89,7 +89,7 @@
   }
 
   h4 {
-    font: 200 1em/1.5em $opensans;
+    font: 200 1.2em/1.8em $opensans;
     margin: 0 0 1em; // Just for saying
 
     span.actions {
@@ -98,11 +98,17 @@
       padding-top: 1px; // Sup Louis
 
       a {
-        line-height: inherit;
+        padding: 0;
 
-        i {
-          padding-left: .3em;
-        }
+        line-height: inherit;
+        text-align: center;
+
+        border-radius: 50%;
+        display: block;
+        width: 28px;
+        height: 28px;
+        line-height: 27px;
+        margin-top: 3px;
       }
     }
   }

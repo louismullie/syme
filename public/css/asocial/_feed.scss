@@ -69,7 +69,7 @@
     display: inline-block;
     float: left;
 
-    border-radius: $baseBorderRadius;
+    border-radius: 50%;
   }
 
   .post-indent {
@@ -215,7 +215,7 @@
         .comment-box {
           border-bottom: 1px solid #ddd;
           padding-bottom: .5em;
-          margin-bottom: 1em;
+          margin-bottom: .5em;
 
           &:last-child {
             border: none;

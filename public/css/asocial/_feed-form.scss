@@ -19,7 +19,7 @@ form#feed-form {
 
     img.avatar {
       width: 100%; height: auto; // Preserve aspect ratio
-      border-radius: $baseBorderRadius;
+      border-radius: 50%;
 
       box-shadow: 0 0 16px 1px white;
     }
