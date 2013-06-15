@@ -15,7 +15,7 @@ default_run_options[:pty] = true
 set :scm, :git
 set :scm_verbose, true
 set :repository, 'git@github.com:louismullie/asocial-clean.git'
-set :branch, 'develop'
+set :branch, 'foundation'
 
 # Deployment configuration.
 set :deploy_to, '/var/www/asocial.cc'
