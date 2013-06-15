@@ -5,8 +5,6 @@ module Asocial
   
   class Application < Base
 
-    disable :protection # Hahaha
-    
     Bundler.require :default, settings.environment
 
     configure { require_all 'config' }

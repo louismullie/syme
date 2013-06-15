@@ -42,7 +42,6 @@ else
 end
 
 # Setup a strict CSP to discourage XSS.
-=begin
 require 'content-security-policy'
 
 default = 'localhost:5000 127.0.0.1:81 asocial.io'
@@ -57,7 +56,6 @@ use ContentSecurityPolicy, directives: {
   # 'report-uri' => '/route/for/report'
   # Leave media-src, img-src and frame-src.
 }
-=end
 
 # * Setup Memcache sessions * #
 require 'securerandom'
@@ -70,14 +68,13 @@ use Rack::Session::Memcache,
   sidbits: 256,
   secure_random: SecureRandom
 
-=begin
+
 # Enable token protection against CSRF.
 require 'rack/csrf'
 use Rack::Csrf
 
 # Enable protection against remote referrers.
 use Rack::Protection::RemoteReferrer
-=end
 
 require './app'
 
