@@ -1353,4 +1353,12 @@ helpers = helpers || Handlebars.helpers; data = data || {};
 
   return "<div class='custom-modal container-fluid' id='passphrase-modal'>\n  <div class='row-fluid'>\n    <div class='passphrase-modal-inner custom-modal-inner span8 offset2'>\n      <i class='icon-lock huge-icon'></i>\n      <p class='lead'>Please enter your secret passcode:</p>\n      <div class='control-group'>\n        <input id='passphrase' type='password'>\n      </div>\n      <p>\n        <a class='btn' id='passphrase-submit'>Decrypt my content</a>\n      </p>\n    </div>\n  </div>\n</div>\n";
   });
+templates['_video'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<video id=\"vid1\" autoplay></video>\n<video id=\"vid2\" autoplay></video>\n\n<div>\n  <button id=\"startButton\">Start</button>\n  <button id=\"callButton\">Call</button>\n  <button id=\"hangupButton\">Hang Up</button>\n</div>\n";
+  });
 })();
