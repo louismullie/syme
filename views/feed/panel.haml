@@ -1,14 +1,12 @@
 #feed-panel
   {{#with group.avatar}}
 
-  .group-photo{ :'data-placeholder' => '{{placeholder}}' }
-    %a#group-photo-edit.btn.btn-white{ href: '#' }
-      Change picture
-      %i.icon-picture
+  // Hidden file upload
+  %input#group-photo-file.hidden{ type: 'file', name: 'avatar' }
 
-    // Hidden file upload
-    %form
-      %input#group-photo-file{ type: 'file', name: 'avatar' }
+  %a#group-photo-edit{ href: '#', :'data-placeholder' => '{{placeholder}}' }
+    %span.cover
+      %span <i class="icon-picture"></i> Change picture
 
     {{#if placeholder}}
     %img{ src: '/img/groupavatar.jpg' }

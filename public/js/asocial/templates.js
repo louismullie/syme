@@ -563,14 +563,14 @@ helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.parti
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n  <div class='group-photo' data-placeholder='";
+  buffer += "\n  <!-- / Hidden file upload -->\n  <input class='hidden' id='group-photo-file' name='avatar' type='file'>\n  <a data-placeholder='";
   if (stack1 = helpers.placeholder) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.placeholder; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "'>\n    <a class='btn btn-white' href='#' id='group-photo-edit'>\n      Change picture\n      <i class='icon-picture'></i>\n    </a>\n    <!-- / Hidden file upload -->\n    <form>\n      <input id='group-photo-file' name='avatar' type='file'>\n    </form>\n    ";
+    + "' href='#' id='group-photo-edit'>\n    <span class='cover'>\n      <span><i class=\"icon-picture\"></i> Change picture</span>\n    </span>\n    ";
   stack1 = helpers['if'].call(depth0, depth0.placeholder, {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  </div>\n  ";
+  buffer += "\n  </a>\n  ";
   return buffer;
   }
 function program2(depth0,data) {
