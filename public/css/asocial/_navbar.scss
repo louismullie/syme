@@ -32,6 +32,17 @@
           text-decoration: none;
           color: darken($gray, 10%);
         }
+
+        &.btn {
+          @extend .btn-white;
+
+          width: 40px;
+          padding: 0;
+
+          text-align: center;
+
+          border-radius: 50%;
+        }
       }
 
       &#brand {
@@ -43,10 +54,6 @@
         @media #{$breakpointSmall} { display: none; }
       }
 
-      .btn {
-        @extend .btn-white;
-      }
-
       &#group-selector {
         display: none; // will be dynamically shown
 
@@ -55,10 +62,12 @@
         @include transform(translateX(-50%));
         margin: 0;
 
+        text-align: center;
         overflow-x: hidden;
 
-        max-width: 55%;
-        @media #{$breakpointSmall} { max-width: 60%; }
+        width: 55%;
+        @media #{$breakpointSmall} { width: 60%; }
+        @media #{$breakpointLarge} { width: 70%; }
 
         font: 200 1.2em $opensans;
         white-space: nowrap;
@@ -82,13 +91,16 @@
             &.title {
               color: $gray;
 
+              a:hover { text-decoration: underline; }
+
               @media #{$breakpointSmall} { display: none; }
             }
 
             &.group {
               overflow-x: hidden;
               text-overflow: ellipsis;
-              max-width: 100%;
+              max-width: 76%; // I know
+              @media #{$breakpointSmall} { max-width: 100%; }
             }
 
             // Separators

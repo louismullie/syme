@@ -1,5 +1,8 @@
 %form#feed-form{ method: 'post' }
   %a#feed-form-avatar
+    %span
+      %i.icon-picture
+
     {{#with user}} {{> feed-avatar}} {{/with}}
 
   %input#upload_avatar.hidden{ type: 'file', name: 'account-picture' }

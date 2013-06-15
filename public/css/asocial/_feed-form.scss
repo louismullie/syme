@@ -5,7 +5,7 @@ form#feed-form {
   padding-left: emCalc($avatarPostSize) + 1em;
   padding-bottom: $bodyPadding / 2;
 
-  border-bottom: 1px dashed #DDD;
+  border-bottom: 1px dashed #ddd;
 
   background: $bodyBackgroundColor;
 
@@ -17,10 +17,31 @@ form#feed-form {
     display: block;
     margin-right: 1em;
 
+    border-radius: 50%;
+
+    &:hover span {
+      opacity: 1;
+      background: rgba(black, 0.1);
+    }
+
+    span {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+
+      border-radius: 50%;
+
+      color: white;
+      text-align: center;
+      line-height: $avatarPostSize;
+
+      opacity: 0;
+
+      @include transition(background 0.2s ease, opacity 0.2s ease);
+    }
+
     img.avatar {
       width: 100%; height: auto; // Preserve aspect ratio
       border-radius: 50%;
-
       box-shadow: 0 0 16px 1px white;
     }
   }

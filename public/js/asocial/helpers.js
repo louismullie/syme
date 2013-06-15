@@ -312,8 +312,8 @@ guard('helpers', {
     // Fill modal with content
     $('#responsive-modal > div.container').html(html);
 
-    // Lock document scroll
-    $('body').addClass('noscroll');
+    // Lock document and blur it
+    $('body').addClass('noscroll modal-blur');
 
     // Bind closable event
     if(closable) {
@@ -373,7 +373,7 @@ guard('helpers', {
     window.setTimeout(function(){ $('#responsive-modal').remove() }, speed);
 
     // Unlock document scroll
-    $('body').removeClass('noscroll');
+    $('body').removeClass('noscroll modal-blur');
   },
 
   showAlert: function(content, options) {

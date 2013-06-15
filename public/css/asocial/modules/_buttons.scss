@@ -29,7 +29,7 @@
   border: none;
   border-radius: $baseBorderRadius;
 
-  @include transition(background-color .25s, color .25s);
+  @include transition(background-color .1s, color .1s);
 
   // States
 
@@ -75,14 +75,14 @@
     @include transition(color 0.1s ease);
 
     &:hover, &:focus {
-      background: inherit;
-      color: darken($gray, 20%);
+      background: white;
+      color: darken($gray, 40%);
       text-decoration: none;
     }
 
     &:active, &.active {
-      background: inherit;
-      color: darken($gray, 20%);
+      background: white;
+      color: darken($gray, 40%);
       text-decoration: none;
     }
   }

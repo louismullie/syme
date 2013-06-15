@@ -92,6 +92,19 @@ input[type="submit"] {
   visibility: hidden;
 }
 
+#spinner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+
+  display: none;
+  z-index: 4;
+  @extend .mtl;
+
+  text-align: center;
+  line-height: 40px;
+  font-size: 2em;
+}
+
 #main {
   padding-top: $bodyPadding + 80px;
 

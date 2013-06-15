@@ -28,7 +28,7 @@
 
     background: $popoverHeaderBackground;
 
-    @include arrow(top, 10px, 1px, 15px, $bodyBackgroundColor, rgba(black, 0.2));
+    @include arrow(top, 10px, 1px, 8px, $bodyBackgroundColor, rgba(black, 0.2));
   }
 
   &.right {
