@@ -14,6 +14,8 @@ module Asocial
     Dir['./observers/*.rb'].each { |file| require file }
     Dir['./generators/*.rb'].each { |file| require file }
 
+    require_specific('routes', ['stream', 'catch', 'group'])
+    
     require_all 'routes'
 
     # to remove
