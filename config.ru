@@ -74,7 +74,7 @@ require 'rack/csrf'
 use Rack::Csrf
 
 # Enable protection against remote referrers.
-use Rack::Protection::RemoteReferrer
+# use Rack::Protection::RemoteReferrer
 
 require './app'
 
