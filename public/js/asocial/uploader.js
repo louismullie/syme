@@ -163,6 +163,9 @@ guard('uploader', {
 
       // Hide container
       container.hide();
+
+      // Single: show attachments again
+      $('ul#attachments').show();
     });
 
     // Progress function
@@ -175,9 +178,12 @@ guard('uploader', {
       // Change box style
       box.addClass('done');
 
-      // Output id
+      // Set upload id
       $('#upload_id').val(upload_id);
     };
+
+    // Hide attachments
+    $('ul#attachments').hide();
 
     // Upload file
     if (asocial.uploader.hasImageMime(file)) {

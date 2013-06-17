@@ -207,6 +207,7 @@ form#feed-form {
     margin: 0;
     list-style-type: none;
 
+    font-size: .9em;
     line-height: 34px;
 
     li {
@@ -216,6 +217,7 @@ form#feed-form {
       margin-right: 1em;    &:last-child{ margin-right: 0; }
       padding-right: .3em;  &:last-child{ padding-right: 0; }
 
+      font-weight: 200;
       font-size: 0.9em;
       line-height: 2em;
 

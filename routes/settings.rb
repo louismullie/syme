@@ -1,5 +1,5 @@
 get '/settings', auth: [] do
 
-  empty_response
+  "Allo"
 
 end
