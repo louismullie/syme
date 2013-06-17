@@ -791,7 +791,7 @@ function program3(depth0,data) {
   if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "'>\n  ";
+    + "'>\n  <!-- / Every user avatar is pulled from this, however it is -->\n  <!-- / stylistically obsolete. To remove. -->\n  ";
   stack1 = helpers['if'].call(depth0, depth0.avatar, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n  <a class='";
@@ -885,7 +885,7 @@ function program4(depth0,data) {
 
   buffer += "<h4>\n  Members ("
     + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + ")\n  <span class='actions'>\n    <a class='btn btn-white hint--left' data-hint='Add user' href='#' id='add-user'>\n      <i class='icon-plus'></i>\n    </a>\n  </span>\n</h4>\n<ul id='userlist'>\n  ";
+    + ")\n  <span class='actions'>\n    <a class='btn btn-white hint--left' data-hint='Add user' href='#' id='add-user'>\n      <i class='icon-plus'></i>\n    </a>\n  </span>\n</h4>\n<ul class='scrollable' id='userlist'>\n  ";
   stack2 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n  <!-- / Invite link is like a normal avatar -->\n  <!-- /%a.avatar.invite-toggle{href: '#'} -->\n  <!-- /  // 1x1 transparent -->\n  <!-- /  %img{ src: 'data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' } -->\n  <!-- /  %i.icon-plus-sign -->\n  <!-- / Invites -->\n  <!-- /%form#invite{method: 'post'} -->\n  <!-- /  .invite-user -->\n  <!-- /    %input#email{type: \"text\", name: \"email\"} -->\n  <!-- /    %input.btn.btn-info{type: 'submit', value: '";
@@ -1253,7 +1253,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<div id='navbar'>\n  <div class='row'>\n    <div class='small-24'>\n      <ul>\n        <li id='brand'>\n          <a data-hbs='' href='/'>\n            Asocial\n          </a>\n        </li>\n        <li>\n          <a class='btn' data-popover='notifications-container' href='#' id='notifications'>\n            <i class='icon-bell-alt'></i>\n          </a>\n          <div class='popover' id='notifications-container'>\n            <h3>Notifications</h3>\n            <div id='notifications-content'></div>\n          </div>\n        </li>\n        <li id='group-selector'>\n          <ul><li class='title'>\n            <a data-hbs='' href='/'>Groups</a>\n          </li><li class='group'></li></ul>\n        </li>\n        <div class='pull-right'>\n          <div class='hide-for-small'>\n            <li>\n              <a class='btn' data-hbs='' href='/settings'>\n                <i class='icon-cog'></i>\n              </a>\n            </li>\n            <li>\n              <a class='btn' href='/logout'>\n                <i class='icon-signout'></i>\n              </a>\n            </li>\n          </div>\n          <div class='show-for-small'>\n            <li id='side-pane'>\n              <a class='btn' data-hbs='' href='#'>\n                <i class='icon-reorder'></i>\n              </a>\n            </li>\n          </div>\n        </div>\n      </ul>\n    </div>\n  </div>\n</div>\n";
+  return "<div id='navbar'>\n  <div class='row'>\n    <div class='small-24'>\n      <ul>\n        <li id='brand'>\n          <a data-hbs='' href='/'>\n            Asocial\n          </a>\n        </li>\n        <li>\n          <a class='btn' data-popover='notifications-container' href='#' id='notifications'>\n            <i class='icon-bell-alt'></i>\n          </a>\n          <div class='popover' id='notifications-container'>\n            <h3>Notifications</h3>\n            <div class='scrollable' id='notifications-content'></div>\n          </div>\n        </li>\n        <li id='group-selector'>\n          <ul><li class='title'>\n            <a data-hbs='' href='/'>Groups</a>\n          </li><li class='group'></li></ul>\n        </li>\n        <div class='pull-right'>\n          <div class='hide-for-small'>\n            <li>\n              <a class='btn' data-hbs='' href='/settings'>\n                <i class='icon-cog'></i>\n              </a>\n            </li>\n            <li>\n              <a class='btn' href='/logout'>\n                <i class='icon-signout'></i>\n              </a>\n            </li>\n          </div>\n          <div class='show-for-small'>\n            <li id='side-pane'>\n              <a class='btn' data-hbs='' href='#'>\n                <i class='icon-reorder'></i>\n              </a>\n            </li>\n          </div>\n        </div>\n      </ul>\n    </div>\n  </div>\n</div>\n";
   });
 templates['_register'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];

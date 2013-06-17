@@ -5,7 +5,7 @@
     %a#add-user.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Add user' }
       %i.icon-plus
 
-%ul#userlist
+%ul#userlist.scrollable
   {{#each users}}
   {{> feed-user}}
   {{/each}}
