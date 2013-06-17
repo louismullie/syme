@@ -39,10 +39,12 @@ guard('uploader', {
   },
 
   uploadFile: function (file, progress, success) {
-    this.upload(file, {}, progress, success);
+    this.upload(file, {}, progress, function(upload_id) {
+      success(upload_id);
+    });
   },
 
-  uploadImage: function (file, progress) {
+  uploadImage: function (file, progress, success) {
 
     var img = new Image();
 
@@ -69,7 +71,7 @@ guard('uploader', {
 
             _this.uploadThumbnail(file, upload_id);
 
-            $('#upload_id').val(upload_id);
+            success(upload_id);
 
           }
 
@@ -160,8 +162,12 @@ guard('uploader', {
     };
 
     // Success function
-    var success = function(){
+    var success = function(upload_id){
+      // Change box style
       box.addClass('done');
+
+      // Output id
+      $('#upload_id').val(upload_id);
     };
 
     if (asocial.uploader.hasImageMime(file)) {
