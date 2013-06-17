@@ -142,6 +142,36 @@ form#feed-form {
     border-radius: 0;
   }
 
+  #upload-box {
+    margin-bottom: 1em;
+
+    border: $baseBorderStyle;
+    border-radius: $baseBorderRadius;
+
+    font-size: .8em;
+
+    div.upload-row {
+      padding: 10px 15px;
+      border-bottom: $baseBorderStyle; &:last-child { border-bottom: none; }
+
+      // Background progress-bar. Animate background-size from 0% to 100%
+      background: -webkit-linear-gradient(left, $bodyBackgroundColor2, $bodyBackgroundColor2 50%);
+      background-repeat: repeat-y;
+      background-size: 0%;
+
+      font-weight: 200;
+
+      span.icon {
+        padding-right: .5em;
+      }
+
+      span.filesize {
+        padding-left: .5em;
+        color: $gray;
+      }
+    }
+  }
+
   ul#attachments {
     margin: 0;
     list-style-type: none;

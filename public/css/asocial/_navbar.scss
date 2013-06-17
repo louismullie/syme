@@ -72,7 +72,9 @@
           text-align: center;
         }
 
-        @media #{$breakpointLarge} { width: 70%; }
+        @media #{$breakpointLarge} {
+          width: 75%;
+        }
 
         font: 200 1.2em $opensans;
         white-space: nowrap;

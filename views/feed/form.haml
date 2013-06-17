@@ -27,6 +27,18 @@
   %input#upload_id{ type: 'hidden', name: 'upload_id' }
   %input#upload_file.hidden{ type: 'file' }
 
+  #upload-box
+    .upload-row
+      %span.icon
+        %i.icon-spinner.icon-spin
+
+      %span.filename Filename.pdf
+      %span.filesize 33.2 MB
+
+    .upload-row
+      %span.filename Filename.pdf
+      %span.filesize 33.2 MB
+
   .row.collapse
     .columns.small-24.large-20
       // Attachment box
