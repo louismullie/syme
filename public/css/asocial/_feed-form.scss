@@ -143,6 +143,8 @@ form#feed-form {
   }
 
   #upload-box {
+    display: none;
+
     margin-bottom: 1em;
 
     border: $baseBorderStyle;
@@ -158,11 +160,20 @@ form#feed-form {
       background: -webkit-linear-gradient(left, $bodyBackgroundColor2, $bodyBackgroundColor2 50%);
       background-repeat: repeat-y;
       background-size: 0%;
+      @include transition(background-size 0.1s ease);
 
       font-weight: 200;
 
       span.icon {
         padding-right: .5em;
+      }
+
+      span.filename {
+        overflow-x: hidden;
+        max-width: 50%;
+        display: inline-block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       span.filesize {

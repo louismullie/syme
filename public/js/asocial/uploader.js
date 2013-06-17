@@ -38,17 +38,8 @@ guard('uploader', {
     );
   },
 
-  uploadFile: function (file, progress) {
-
-    this.upload(
-
-      file, {}, progress,
-
-      function (upload_id) {
-        $('#upload_id').val(upload_id);
-      }
-    );
-
+  uploadFile: function (file, progress, success) {
+    this.upload(file, {}, progress, success);
   },
 
   uploadImage: function (file, progress) {
@@ -137,29 +128,51 @@ guard('uploader', {
 
   selectFile: function (file, type) {
 
+    // What to do otherwise?
     if (!(file instanceof File)) {
       file = $('#upload_file')[0].files[0];
     }
 
-    var shortFilename = asocial.helpers
-      .shortenString(file.name, 25);
+    // Get elements
+    var container = $('#upload-box'),
+        box       = container.find('.upload-row');
 
-    var formattedSize = ' (' + asocial.helpers
-      .formatSize(file.size) + ')';
+    // Show upload box
+    container.show();
 
-    $('.textarea-supplement-info').hide();
-    $('.textarea-supplement-file').removeClass('hidden')
-    .text(shortFilename + formattedSize);
+    // Reset box (as long as upload is single-file)
+    box.find('span.icon').show();
 
+    /* Eventually create rows. For now, as upload is a single-file
+       upload, only fill the existent static DOM */
+
+    // Fill filename
+    box.find('span.filename').text( file.name );
+
+    // Fill filesize
+    box.find('span.filesize').text(
+      asocial.helpers.formatSize(file.size)
+    );
+
+    // Progress function
     var progress = function(number) {
-      $('#progress_bar').css('width',
-        number.toString() + '%');
+      box.css('background-size', number.toString() + '%');
+    };
+
+    // Success function
+    var success = function(){
+      box
+        // Remove progress bar
+        .css('background-size', '0%')
+
+        // Remove spinner
+        .find('span.icon').hide();
     };
 
     if (asocial.uploader.hasImageMime(file)) {
-      asocial.uploader.uploadImage(file, progress);
+      asocial.uploader.uploadImage(file, progress, success);
     } else {
-      asocial.uploader.uploadFile(file, progress);
+      asocial.uploader.uploadFile(file, progress, success);
     }
 
   },
