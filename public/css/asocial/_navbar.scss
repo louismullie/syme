@@ -56,17 +56,22 @@
 
       &#group-selector {
         display: none; // will be dynamically shown
+        width: 55%;
 
-        position: absolute;
-        left: 50%;
-        @include transform(translateX(-50%));
-        margin: 0;
-
-        text-align: center;
         overflow-x: hidden;
 
-        width: 55%;
-        @media #{$breakpointSmall} { width: 60%; }
+        @media #{$breakpointSmall} {
+          width: 60%;
+
+          position: absolute;
+          left: 50%;
+          @include transform(translateX(-50%));
+
+          margin: 0;
+
+          text-align: center;
+        }
+
         @media #{$breakpointLarge} { width: 70%; }
 
         font: 200 1.2em $opensans;
