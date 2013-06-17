@@ -156,9 +156,18 @@ guard('uploader', {
       asocial.helpers.formatSize(file.size)
     );
 
+    // Delete/cancel upload event
+    box.find('a.delete-upload').one('click', function(){
+      // Delete upload_id
+      $('#upload_id').val('');
+
+      // Hide container
+      container.hide();
+    });
+
     // Progress function
     var progress = function(number) {
-      box.css('background-size', number.toString() + '%');
+      box.css('background-size', number + '%');
     };
 
     // Success function
@@ -170,6 +179,7 @@ guard('uploader', {
       $('#upload_id').val(upload_id);
     };
 
+    // Upload file
     if (asocial.uploader.hasImageMime(file)) {
       asocial.uploader.uploadImage(file, progress, success);
     } else {

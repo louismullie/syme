@@ -193,9 +193,7 @@ guard('helpers', {
      $('#feed-form #upload_id').val('');
      $('#feed-form #encrypted_content').val('');
      $('#feed-form #mentioned_users').val('');
-     $('#progress_bar').css('width', '0%');
-     $('.textarea-supplement-file').html('');
-     $('.textarea-supplement-info').show();
+     $('#upload-box').hide();
 
   },
 

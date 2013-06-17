@@ -160,11 +160,12 @@ form#feed-form {
       background: -webkit-linear-gradient(left, $bodyBackgroundColor2, $bodyBackgroundColor2 50%);
       background-repeat: repeat-y;
       background-size: 0%;
-      @include transition(background-size 0.1s ease);
+      @include transition(background-size 0.5s ease);
 
       &.done {
         background: rgba($success, 0.05);
         span.icon { display: none; }
+        a.delete-upload { display: inline-block; }
       }
 
       font-weight: 200;
@@ -184,6 +185,20 @@ form#feed-form {
       span.filesize {
         padding-left: .5em;
         color: $gray;
+      }
+
+      a.delete-upload {
+        display: none;
+        float: right;
+
+        color: $gray;
+
+        @include transition(color 0.1s ease);
+
+        &:hover {
+          text-decoration: none;
+          color: darken($gray, 40%);
+        }
       }
     }
   }
