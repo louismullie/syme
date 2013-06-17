@@ -141,7 +141,7 @@ guard('uploader', {
     container.show();
 
     // Reset box (as long as upload is single-file)
-    box.find('span.icon').show();
+    box.css('background-size', '0%').removeClass('done');
 
     /* Eventually create rows. For now, as upload is a single-file
        upload, only fill the existent static DOM */
@@ -161,12 +161,7 @@ guard('uploader', {
 
     // Success function
     var success = function(){
-      box
-        // Remove progress bar
-        .css('background-size', '0%')
-
-        // Remove spinner
-        .find('span.icon').hide();
+      box.addClass('done');
     };
 
     if (asocial.uploader.hasImageMime(file)) {

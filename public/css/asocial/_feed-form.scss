@@ -162,6 +162,11 @@ form#feed-form {
       background-size: 0%;
       @include transition(background-size 0.1s ease);
 
+      &.done {
+        background: rgba($success, 0.05);
+        span.icon { display: none; }
+      }
+
       font-weight: 200;
 
       span.icon {
