@@ -1130,6 +1130,10 @@ function program2(depth0,data) {
   if (stack1 = helpers.question) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.question; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
+    + "' data-invite-state='";
+  if (stack1 = helpers.state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
     + "' data-invite-token='";
   if (stack1 = helpers.token) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.token; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
@@ -1187,7 +1191,11 @@ function program9(depth0,data) {
   if (stack1 = helpers.inviter_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.inviter_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</b>'s confirmation.\n      We'll notify you when you can join the group.\n      ";
+    + "</b>'s confirmation to the group <b>";
+  if (stack1 = helpers.group_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.group_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</b>.\n      We'll notify you when you can join it.\n      ";
   return buffer;
   }
 

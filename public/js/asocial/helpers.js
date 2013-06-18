@@ -194,6 +194,7 @@ guard('helpers', {
      $('#feed-form #encrypted_content').val('');
      $('#feed-form #mentioned_users').val('');
      $('#upload-box').hide();
+     $('ul#attachments').show();
 
   },
 
