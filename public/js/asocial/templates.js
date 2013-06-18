@@ -834,52 +834,52 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += " -->\n  <!-- /";
+  buffer += "\n  ";
   stack1 = helpers.each.call(depth0, depth0.invite, {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " -->\n  <!-- /";
+  buffer += "\n  ";
   return buffer;
   }
 function program4(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += " -->\n  <!-- /%a.invite-confirm{href: '#', 'data-invite-id'         => '";
-  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "', -->\n  <!-- /                             'data-invite-token'      => '";
-  if (stack1 = helpers.token) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.token; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "', -->\n  <!-- /                             'data-invite-invitee_id' => '";
-  if (stack1 = helpers.invitee_id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.invitee_id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "', -->\n  <!-- /                             'data-invite-k_P'        => '";
-  if (stack1 = helpers.k_P) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.k_P; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "', -->\n  <!-- /                             'data-invite-PA_k'       => '";
+  buffer += "\n  <!-- / Replace by GET request with only invite ID, which returns the rest. -->\n  <a class='invite-confirm' data-invite-PA_k='";
   if (stack1 = helpers.PA_k) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.PA_k; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "', -->\n  <!-- /                             'data-invite-p_sB'       => '";
-  if (stack1 = helpers.p_sB) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.p_sB; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "', -->\n  <!-- /                             'data-invite-sB_salt'    => '";
-  if (stack1 = helpers.sB_salt) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.sB_salt; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "', -->\n  <!-- /                             'data-invite-a_P'        => '";
+    + "' data-invite-a_P='";
   if (stack1 = helpers.a_P) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.a_P; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "'} -->\n  <!-- /  Approve ";
+    + "' data-invite-id='";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "' data-invite-invitee_id='";
+  if (stack1 = helpers.invitee_id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.invitee_id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "' data-invite-k_P='";
+  if (stack1 = helpers.k_P) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.k_P; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "' data-invite-p_sB='";
+  if (stack1 = helpers.p_sB) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.p_sB; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "' data-invite-sB_salt='";
+  if (stack1 = helpers.sB_salt) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.sB_salt; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "' data-invite-token='";
+  if (stack1 = helpers.token) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.token; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "' href='#'>\n    Approve ";
   if (stack1 = helpers.invitee_full_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.invitee_full_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + " > -->\n  <!-- /";
+    + " >\n  </a>\n  ";
   return buffer;
   }
 
@@ -888,13 +888,13 @@ function program4(depth0,data) {
     + ")\n  <span class='actions'>\n    <a class='btn btn-white hint--left' data-hint='Add user' href='#' id='add-user'>\n      <i class='icon-plus'></i>\n    </a>\n  </span>\n</h4>\n<ul class='scrollable' id='userlist'>\n  ";
   stack2 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  <!-- / Invite link is like a normal avatar -->\n  <!-- /%a.avatar.invite-toggle{href: '#'} -->\n  <!-- /  // 1x1 transparent -->\n  <!-- /  %img{ src: 'data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' } -->\n  <!-- /  %i.icon-plus-sign -->\n  <!-- / Invites -->\n  <!-- /%form#invite{method: 'post'} -->\n  <!-- /  .invite-user -->\n  <!-- /    %input#email{type: \"text\", name: \"email\"} -->\n  <!-- /    %input.btn.btn-info{type: 'submit', value: '";
+  buffer += "\n  <!-- / Invite link is like a normal avatar -->\n  <a class='avatar invite-toggle' href='#'>\n    <!-- / 1x1 transparent -->\n    <img src='data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='>\n    <i class='icon-plus-sign'></i>\n  </a>\n  <!-- / Invites -->\n  <form id='invite' method='post'>\n    <div class='invite-user'>\n      <input id='email' name='email' type='text'>\n      <input class='btn btn-info' type='submit' value='";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "admin.invite", options) : helperMissing.call(depth0, "t", "admin.invite", options)))
-    + "'} -->\n  <!-- /  .invited-user.hidden -->\n  <!-- /    Your invite has been sent. -->\n  <!-- /";
+    + "'>\n    </div>\n    <div class='invited-user hidden'>\n      Your invite has been sent.\n    </div>\n  </form>\n  ";
   stack2 = helpers['if'].call(depth0, depth0.invite, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += " -->\n</ul>\n";
+  buffer += "\n</ul>\n";
   return buffer;
   });
 templates['_feed'] = template(function (Handlebars,depth0,helpers,partials,data) {
@@ -1129,6 +1129,10 @@ function program2(depth0,data) {
     + "' data-invite-question='";
   if (stack1 = helpers.question) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.question; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "' data-invite-state='";
+  if (stack1 = helpers.state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
     + "' data-invite-token='";
   if (stack1 = helpers.token) { stack1 = stack1.call(depth0, {hash:{},data:data}); }

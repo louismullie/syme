@@ -11,31 +11,32 @@
   {{/each}}
 
   // Invite link is like a normal avatar
-  //%a.avatar.invite-toggle{href: '#'}
-  //  // 1x1 transparent
-  //  %img{ src: 'data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' }
-  //  %i.icon-plus-sign
+  %a.avatar.invite-toggle{href: '#'}
+    // 1x1 transparent
+    %img{ src: 'data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' }
+    %i.icon-plus-sign
 
   // Invites
-  //%form#invite{method: 'post'}
-  //  .invite-user
-  //    %input#email{type: "text", name: "email"}
+  %form#invite{method: 'post'}
+    .invite-user
+      %input#email{type: "text", name: "email"}
+  
+      %input.btn.btn-info{type: 'submit', value: '{{t "admin.invite"}}'}
+  
+    .invited-user.hidden
+      Your invite has been sent.
 
-  //    %input.btn.btn-info{type: 'submit', value: '{{t "admin.invite"}}'}
-
-  //  .invited-user.hidden
-  //    Your invite has been sent.
-
-  //{{#if invite}}
-  //{{#each invite}}
-  //%a.invite-confirm{href: '#', 'data-invite-id'         => '{{id}}',
-  //                             'data-invite-token'      => '{{token}}',
-  //                             'data-invite-invitee_id' => '{{invitee_id}}',
-  //                             'data-invite-k_P'        => '{{k_P}}',
-  //                             'data-invite-PA_k'       => '{{PA_k}}',
-  //                             'data-invite-p_sB'       => '{{p_sB}}',
-  //                             'data-invite-sB_salt'    => '{{sB_salt}}',
-  //                             'data-invite-a_P'        => '{{a_P}}'}
-  //  Approve {{invitee_full_name}} >
-  //{{/each}}
-  //{{/if}}
+  {{#if invite}}
+  {{#each invite}}
+  // Replace by GET request with only invite ID, which returns the rest.
+  %a.invite-confirm{href: '#', 'data-invite-id'         => '{{id}}',
+                               'data-invite-token'      => '{{token}}',
+                               'data-invite-invitee_id' => '{{invitee_id}}',
+                               'data-invite-k_P'        => '{{k_P}}',
+                               'data-invite-PA_k'       => '{{PA_k}}',
+                               'data-invite-p_sB'       => '{{p_sB}}',
+                               'data-invite-sB_salt'    => '{{sB_salt}}',
+                               'data-invite-a_P'        => '{{a_P}}'}
+    Approve {{invitee_full_name}} >
+  {{/each}}
+  {{/if}}

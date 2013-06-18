@@ -5,7 +5,7 @@ get '/', auth: [] do
   end
 
   user_invites = Invite.where(
-    email: @user.email, state: 1)
+    email: @user.email, state: { '$in' => [1, 2]})
 
   invites = user_invites.empty? ? false :
 
