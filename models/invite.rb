@@ -25,6 +25,11 @@ class Invite
   # Transfer old group content.
   field :keys, type: String
   
+  # Step 1.
+  field :P
+  field :p_sB
+  field :sB_salt
+  
   # Step 2.
   field :k_P
   field :k_sA
