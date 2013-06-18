@@ -1138,7 +1138,7 @@ function program2(depth0,data) {
   if (stack1 = helpers.token) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.token; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "' href='#'>\n      <span>Click to accept</span>\n      <img class='placeholder' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    </a>\n  </div>\n  <div class='group-card-content'>\n    <p>\n      <b>";
+    + "' href='#'>\n      <span class='cover'>\n        <span class='accept'>Click to accept</span>\n        <span class='confirm'>Pending confirmation</span>\n      </span>\n      <img class='placeholder' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    </a>\n  </div>\n  <div class='group-card-content'>\n    <p>\n      <b>";
   if (stack1 = helpers.inviter_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.inviter_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)

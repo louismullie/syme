@@ -3,8 +3,16 @@
 
 %li.group-card.group-invite
   .group-banner
-    %a.group-banner-link.invite-link{href: '#', 'data-invite-token' => '{{token}}', 'data-invite-p' => '{{P}}', 'data-invite-question' => '{{question}}', 'data-invite-state' => '{{state}}',}
-      %span Click to accept
+    %a.group-banner-link.invite-link{ href: '#',
+                                      'data-invite-token' => '{{token}}',
+                                      'data-invite-p' => '{{P}}',
+                                      'data-invite-question' => '{{question}}',
+                                      'data-invite-state' => '{{state}}' }
+      %span.cover
+        %span.accept Click to accept
+
+        %span.confirm Pending confirmation
+
       %img.placeholder{ src: empty_image }
 
   .group-card-content

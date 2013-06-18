@@ -152,8 +152,11 @@
           display: block;
 
           &.invite-link {
-            span {
-              display: none;
+            &[data-invite-state="1"] span.cover span.accept { display: inline; }
+            &[data-invite-state="2"] span.cover span.confirm { display: inline; }
+
+            span.cover {
+              display: block;
 
               position: absolute;
               top: 0; left: 0; right: 0; bottom: 0;
@@ -165,10 +168,8 @@
               font-size: 2em;
               text-align: center;
               color: $black;
-            }
 
-            &:hover span {
-              display: block;
+              span.accept, span.confirm { display: none; }
             }
           }
 

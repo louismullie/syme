@@ -8,7 +8,7 @@ guard('socket', {
 
     invite: function(data) {
 
-      asocial.helpers.showAlert('Somebody has requested an invite!');
+     // Nothing for now
 
     }
 
