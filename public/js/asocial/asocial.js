@@ -20,7 +20,9 @@ $.each(Handlebars.templates, function (name, template) {
 
 // Execute global and route binders.
 $(document).ready(function(){
-
+  
+  // asocial.session = new Session(Backbone.history.start);
+  
   // Load current url and bind its binders
   asocial.binders.loadCurrentUrl();
 
