@@ -152,9 +152,6 @@
           display: block;
 
           &.invite-link {
-            &[data-invite-state="1"] span.cover span.accept { display: inline; }
-            &[data-invite-state="2"] span.cover span.confirm { display: inline; }
-
             span.cover {
               display: block;
 
@@ -168,8 +165,6 @@
               font-size: 2em;
               text-align: center;
               color: $black;
-
-              span.accept, span.confirm { display: none; }
             }
           }
 

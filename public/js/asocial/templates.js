@@ -1108,7 +1108,7 @@ function program10(depth0,data) {
 templates['_groups-invites'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Handlebars.helpers; data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
@@ -1121,7 +1121,7 @@ function program1(depth0,data) {
   }
 function program2(depth0,data) {
   
-  var buffer = "", stack1;
+  var buffer = "", stack1, stack2, options;
   buffer += "\n<li class='group-card group-invite'>\n  <div class='group-banner'>\n    <a class='group-banner-link invite-link' data-invite-p='";
   if (stack1 = helpers['P']) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0['P']; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
@@ -1130,15 +1130,45 @@ function program2(depth0,data) {
   if (stack1 = helpers.question) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.question; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "' data-invite-state='";
-  if (stack1 = helpers.state) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.state; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
     + "' data-invite-token='";
   if (stack1 = helpers.token) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.token; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "' href='#'>\n      <span class='cover'>\n        <span class='accept'>Click to accept</span>\n        <span class='confirm'>Pending confirmation</span>\n      </span>\n      <img class='placeholder' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    </a>\n  </div>\n  <div class='group-card-content'>\n    <p>\n      <b>";
+    + "' href='#'>\n      <span class='cover'>\n        ";
+  options = {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data};
+  stack2 = ((stack1 = helpers.compare),stack1 ? stack1.call(depth0, depth0.state, 1, options) : helperMissing.call(depth0, "compare", depth0.state, 1, options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n        ";
+  options = {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data};
+  stack2 = ((stack1 = helpers.compare),stack1 ? stack1.call(depth0, depth0.state, 2, options) : helperMissing.call(depth0, "compare", depth0.state, 2, options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n      </span>\n      <img class='placeholder' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    </a>\n  </div>\n  <div class='group-card-content'>\n    <p>\n      ";
+  options = {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data};
+  stack2 = ((stack1 = helpers.compare),stack1 ? stack1.call(depth0, depth0.state, 1, options) : helperMissing.call(depth0, "compare", depth0.state, 1, options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n      ";
+  options = {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data};
+  stack2 = ((stack1 = helpers.compare),stack1 ? stack1.call(depth0, depth0.state, 2, options) : helperMissing.call(depth0, "compare", depth0.state, 2, options));
+  if(stack2 || stack2 === 0) { buffer += stack2; }
+  buffer += "\n    </p>\n  </div>\n</li>\n";
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  
+  return " Accept invitation ";
+  }
+
+function program5(depth0,data) {
+  
+  
+  return " Pending confirmation ";
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n      <b>";
   if (stack1 = helpers.inviter_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.inviter_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -1146,7 +1176,18 @@ function program2(depth0,data) {
   if (stack1 = helpers.group_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.group_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</b>.\n    </p>\n  </div>\n</li>\n";
+    + "</b>.\n      ";
+  return buffer;
+  }
+
+function program9(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n      You are awaiting <b>";
+  if (stack1 = helpers.inviter_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.inviter_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</b>'s confirmation.\n      We'll notify you when you can join the group.\n      ";
   return buffer;
   }
 

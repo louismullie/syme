@@ -6,18 +6,23 @@
     %a.group-banner-link.invite-link{ href: '#',
                                       'data-invite-token' => '{{token}}',
                                       'data-invite-p' => '{{P}}',
-                                      'data-invite-question' => '{{question}}',
-                                      'data-invite-state' => '{{state}}' }
+                                      'data-invite-question' => '{{question}}' }
       %span.cover
-        %span.accept Click to accept
-
-        %span.confirm Pending confirmation
+        {{#compare state 1}} Accept invitation {{/compare}}
+        {{#compare state 2}} Pending confirmation {{/compare}}
 
       %img.placeholder{ src: empty_image }
 
   .group-card-content
     %p
+      {{#compare state 1}}
       <b>{{inviter_name}}</b> has invited you to join the group <b>{{group_name}}</b>.
+      {{/compare}}
+
+      {{#compare state 2}}
+      You are awaiting <b>{{inviter_name}}</b>'s confirmation.
+      We'll notify you when you can join the group.
+      {{/compare}}
 
 {{/each}}
 {{/if}}
