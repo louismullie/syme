@@ -106,6 +106,8 @@ DynamicView = Backbone.View.extend({
   
 });
 
+/*
+
 var AppRouter = Backbone.Router.extend({
   routes: {
     '*actions': 'defaultRoute',
@@ -228,3 +230,5 @@ router.on('route:listGroups', function(actions) {
 router.on('route:openGroup', function(actions) {
   router.loadDynamicPage(actions, true, true);
 });
+
+*/
