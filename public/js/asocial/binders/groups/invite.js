@@ -56,7 +56,8 @@ asocial.binders.add('groups', { invite: function() {
       });
 
       $.post('/invite/accept', keys, function (data) {
-        $that.parent().html('The invite has been accepted');
+        // Refresh page
+        asocial.binders.goToUrl('/');
       });
 
     });

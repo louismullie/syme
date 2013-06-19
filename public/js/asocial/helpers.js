@@ -324,8 +324,9 @@ guard('helpers', {
       // Close on escape and return key
       $(document).on('keydown', function(e){
 
+        // If escape or enter key
         if ( e.which == 27 || e.which == 13 )
-          // Hide or submit modal
+          // Hide or submit modal (if enter key)
           asocial.helpers.hideModal( e.which == 13 );
 
       });
@@ -395,7 +396,8 @@ guard('helpers', {
     var title  = typeof(options.title) === "undefined" ? 'Error' : options.title;
     var submit = typeof(options.submit) === "undefined" ? 'OK' : options.submit;
 
-    var content = this.render('modals-alert', { title: title, content: content, submit: submit, closable: closable });
+    var content = this.render('modals-alert',
+      { title: title, content: content, submit: submit, closable: closable });
 
     this.showModal(content, options);
   }

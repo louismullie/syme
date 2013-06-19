@@ -133,6 +133,23 @@
 
     list-style-type: none;
 
+    #invites {
+      padding-bottom: .25em; margin-bottom: .25em;
+      border-bottom: 2px solid #ddd;
+
+      #invites-header {
+        margin-bottom: .25em;
+
+        text-align: left;
+        font-weight: 200;
+        font-size: 1em;
+      }
+
+      li span {
+        color: $gray;
+      }
+    }
+
     li {
       display: block;
 

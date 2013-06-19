@@ -827,31 +827,21 @@ function program3(depth0,data) {
 templates['_feed-users'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.partials; data = data || {};
-  var buffer = "", stack1, stack2, self=this, functionType="function", escapeExpression=this.escapeExpression;
+  var buffer = "", stack1, stack2, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n  ";
-  stack1 = self.invokePartial(partials['feed-user'], 'feed-user', depth0, helpers, partials, data);
+  buffer += "\n  <div id='invites'>\n    ";
+  stack1 = helpers.each.call(depth0, depth0.invite, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  ";
+  buffer += "\n  </div>\n  ";
   return buffer;
   }
-
-function program3(depth0,data) {
+function program2(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n  ";
-  stack1 = helpers.each.call(depth0, depth0.invite, {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  ";
-  return buffer;
-  }
-function program4(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n  <!-- / Replace by GET request with only invite ID, which returns the rest. -->\n  <a class='invite-confirm' data-invite-PA_k='";
+  buffer += "\n    <li class='invite'>\n      <div id='invites-header'>Awaiting confirmation</div>\n      <!-- / Replace by GET request with only invite ID, which returns the rest. -->\n      <a class='invite-confirm' data-invite-PA_k='";
   if (stack1 = helpers.PA_k) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.PA_k; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -883,21 +873,35 @@ function program4(depth0,data) {
   if (stack1 = helpers.token) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.token; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "' href='#'>\n    Approve ";
+    + "' href='#'>\n        <img class='placeholder-avatar' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n        <span title='";
   if (stack1 = helpers.invitee_full_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.invitee_full_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + " >\n  </a>\n  ";
+    + "'>";
+  if (stack1 = helpers.invitee_full_name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.invitee_full_name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n      </a>\n    </li>\n    ";
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n  ";
+  stack1 = self.invokePartial(partials['feed-user'], 'feed-user', depth0, helpers, partials, data);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n  ";
   return buffer;
   }
 
   buffer += "<h4>\n  Members ("
     + escapeExpression(((stack1 = ((stack1 = depth0.users),stack1 == null || stack1 === false ? stack1 : stack1.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + ")\n  <span class='actions'>\n    <a class='btn btn-white hint--left' data-hint='Add user' href='#' id='add-user'>\n      <i class='icon-plus'></i>\n    </a>\n  </span>\n</h4>\n<ul class='scrollable' id='userlist'>\n  ";
-  stack2 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+    + ")\n  <span class='actions'>\n    <a class='btn btn-white hint--left' data-hint='Add user' href='#' id='add-user'>\n      <i class='icon-plus'></i>\n    </a>\n  </span>\n</h4>\n<ul class='scrollable' id='userlist'>\n  <!-- / Invite confirmations -->\n  ";
+  stack2 = helpers['if'].call(depth0, depth0.invite, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  <!-- / Invite link is like a normal avatar -->\n  <a class='avatar invite-toggle' href='#'>\n    <!-- / 1x1 transparent -->\n    <img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    <i class='icon-plus-sign'></i>\n  </a>\n  ";
-  stack2 = helpers['if'].call(depth0, depth0.invite, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  buffer += "\n  <!-- / User list -->\n  ";
+  stack2 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n</ul>\n";
   return buffer;

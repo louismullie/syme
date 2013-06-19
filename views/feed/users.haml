@@ -6,27 +6,34 @@
       %i.icon-plus
 
 %ul#userlist.scrollable
+  // Invite confirmations
+  {{#if invite}}
+
+  #invites
+    {{#each invite}}
+
+    %li.invite
+      #invites-header Awaiting confirmation
+
+      // Replace by GET request with only invite ID, which returns the rest.
+      %a.invite-confirm{href: '#', 'data-invite-id'         => '{{id}}',
+                                   'data-invite-token'      => '{{token}}',
+                                   'data-invite-invitee_id' => '{{invitee_id}}',
+                                   'data-invite-k_P'        => '{{k_P}}',
+                                   'data-invite-PA_k'       => '{{PA_k}}',
+                                   'data-invite-p_sB'       => '{{p_sB}}',
+                                   'data-invite-sB_salt'    => '{{sB_salt}}',
+                                   'data-invite-a_P'        => '{{a_P}}'}
+
+        %img.placeholder-avatar{ src: empty_image }
+
+        %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
+
+    {{/each}}
+
+  {{/if}}
+
+  // User list
   {{#each users}}
   {{> feed-user}}
   {{/each}}
-
-  // Invite link is like a normal avatar
-  %a.avatar.invite-toggle{href: '#'}
-    // 1x1 transparent
-    %img{ src: empty_image }
-    %i.icon-plus-sign
-
-  {{#if invite}}
-  {{#each invite}}
-  // Replace by GET request with only invite ID, which returns the rest.
-  %a.invite-confirm{href: '#', 'data-invite-id'         => '{{id}}',
-                               'data-invite-token'      => '{{token}}',
-                               'data-invite-invitee_id' => '{{invitee_id}}',
-                               'data-invite-k_P'        => '{{k_P}}',
-                               'data-invite-PA_k'       => '{{PA_k}}',
-                               'data-invite-p_sB'       => '{{p_sB}}',
-                               'data-invite-sB_salt'    => '{{sB_salt}}',
-                               'data-invite-a_P'        => '{{a_P}}'}
-    Approve {{invitee_full_name}} >
-  {{/each}}
-  {{/if}}
