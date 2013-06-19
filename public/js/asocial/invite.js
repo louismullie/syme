@@ -146,6 +146,40 @@ guard('invite', {
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
     }, { group_id: asocial.binders.getCurrentGroup(), force: true })
+  },
+
+  inviteSubmit: function(email, callback) {
+
+    asocial.auth.getPasswordLocal(function (password) {
+
+      // 1A: !(P, p).
+      var keys = asocial.crypto.generateRSA(true);
+
+      // 1B: !sB
+      var sB_salt = asocial.crypto.generateRandomHexSalt();
+      var sB = asocial.crypto.calculateHash(password, sB_salt);
+
+      // 1C: p -> {p}sB
+      var P = asocial.crypto.encode(keys.public_key);
+      var p = asocial.crypto.encode(keys.private_key);
+      var p_sB = $.base64.encode(sjcl.encrypt(sB, p));
+
+      // Build invitation.
+      var invitation = $.param({
+        email: email,
+        P: P, p_sB: p_sB,
+        sB_salt: sB_salt
+      });
+
+      // 1D: B -> R: (P, {p}sB)
+      var group = asocial.binders.getCurrentGroup();
+
+      $.post('/' + group + '/invite/send', invitation, function (data) {
+        callback(data);
+      });
+
+    });
+
   }
 
 });

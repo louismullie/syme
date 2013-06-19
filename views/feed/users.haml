@@ -13,18 +13,8 @@
   // Invite link is like a normal avatar
   %a.avatar.invite-toggle{href: '#'}
     // 1x1 transparent
-    %img{ src: 'data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==' }
+    %img{ src: empty_image }
     %i.icon-plus-sign
-
-  // Invites
-  %form#invite{method: 'post'}
-    .invite-user
-      %input#email{type: "text", name: "email"}
-  
-      %input.btn.btn-info{type: 'submit', value: '{{t "admin.invite"}}'}
-  
-    .invited-user.hidden
-      Your invite has been sent.
 
   {{#if invite}}
   {{#each invite}}

@@ -524,7 +524,15 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<h1>Sup!</h1>\n";
+  return "Invite a user!\n";
+  });
+templates['_feed-modals-invite'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "<div class='modal-title'>\n  Invite a user\n  <a href='#' role='close-modal'>\n    <i class='icon-remove-sign'></i>\n  </a>\n</div>\n<div class='modal-content'>\n  <form>\n    <input name='email' type='text'>\n    <a class='modal-button' href='#' role='submit'>\n      Invite\n    </a>\n  </form>\n</div>\n";
   });
 templates['_feed-notification'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
@@ -819,7 +827,7 @@ function program3(depth0,data) {
 templates['_feed-users'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.partials; data = data || {};
-  var buffer = "", stack1, stack2, options, self=this, functionType="function", escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+  var buffer = "", stack1, stack2, self=this, functionType="function", escapeExpression=this.escapeExpression;
 
 function program1(depth0,data) {
   
@@ -888,10 +896,7 @@ function program4(depth0,data) {
     + ")\n  <span class='actions'>\n    <a class='btn btn-white hint--left' data-hint='Add user' href='#' id='add-user'>\n      <i class='icon-plus'></i>\n    </a>\n  </span>\n</h4>\n<ul class='scrollable' id='userlist'>\n  ";
   stack2 = helpers.each.call(depth0, depth0.users, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
-  buffer += "\n  <!-- / Invite link is like a normal avatar -->\n  <a class='avatar invite-toggle' href='#'>\n    <!-- / 1x1 transparent -->\n    <img src='data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='>\n    <i class='icon-plus-sign'></i>\n  </a>\n  <!-- / Invites -->\n  <form id='invite' method='post'>\n    <div class='invite-user'>\n      <input id='email' name='email' type='text'>\n      <input class='btn btn-info' type='submit' value='";
-  options = {hash:{},data:data};
-  buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "admin.invite", options) : helperMissing.call(depth0, "t", "admin.invite", options)))
-    + "'>\n    </div>\n    <div class='invited-user hidden'>\n      Your invite has been sent.\n    </div>\n  </form>\n  ";
+  buffer += "\n  <!-- / Invite link is like a normal avatar -->\n  <a class='avatar invite-toggle' href='#'>\n    <!-- / 1x1 transparent -->\n    <img src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n    <i class='icon-plus-sign'></i>\n  </a>\n  ";
   stack2 = helpers['if'].call(depth0, depth0.invite, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack2 || stack2 === 0) { buffer += stack2; }
   buffer += "\n</ul>\n";
@@ -1299,6 +1304,43 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "login.password", options) : helperMissing.call(depth0, "t", "login.password", options)))
     + "' type='password'>\n          </div>\n          <label for='remember_me'>\n            <input id='remember_me' name='remember_me' type='checkbox'>\n            <span>Keep me logged in</span>\n          </label>\n          <input type='submit'>\n          <a class='btn btn-success' href='#' role='submit'>\n            Log in <i class=\"icon-spinner icon-spin\"></i>\n          </a>\n          <p class='switchmode'>\n            Need an account? <a href=\"/register\" data-hbs>Create one</a>.\n          </p>\n        </form>\n      </div>\n    </div>\n  </div>\n</div>\n";
   return buffer;
+  });
+templates['_modals-alert'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  
+  return "\n  <a href='#' role='close-modal'>\n    <i class='icon-remove-sign'></i>\n  </a>\n  ";
+  }
+
+  buffer += "<div class='modal-title'>\n  ";
+  if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\n  ";
+  stack1 = helpers['if'].call(depth0, depth0.closable, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>\n<div class='modal-content'>\n  ";
+  if (stack1 = helpers.content) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.content; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\n  <a class='modal-button' href='#' role='close-modal'>\n    ";
+  if (stack1 = helpers.submit) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.submit; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\n  </a>\n</div>\n";
+  return buffer;
+  });
+templates['_modals-invite'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Handlebars.helpers; data = data || {};
+  
+
+
+  return "Invite a user!\n";
   });
 templates['_navbar'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];

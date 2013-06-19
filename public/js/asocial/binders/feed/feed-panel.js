@@ -1,19 +1,5 @@
 asocial.binders.add('feed', { feed_panel: function(){
 
-  // Group photo edit button toggling
-  $("div.group-photo").on({
-    mouseenter: function(){
-      $(this).find('a#group-photo-edit')
-        .css({ display: 'block' })
-        .transition({ opacity: 1}, 100);
-    },
-    mouseleave: function(){
-      $(this).find('a#group-photo-edit')
-        .transition({ opacity: 0}, 100)
-        .css({ display: 'none' });
-    }
-  });
-
   // Group photo edit button action
   $('#main').on('click', '#group-photo-edit', function(e){
    $('#group-photo-file').trigger('click');
@@ -29,9 +15,32 @@ asocial.binders.add('feed', { feed_panel: function(){
 
   // Add new user
   $('#main').on('click', 'a#add-user', function(){
-    var content = asocial.helpers.render('feed-modals-add_user');
 
-    asocial.helpers.showModal(content, { small: true });
+    var content = asocial.helpers.render('feed-modals-invite');
+
+    asocial.helpers.showModal(content, {
+
+      classes: 'modal-small',
+
+      onshow: function(){
+
+        // Bind form action directly, to avoid event persistance
+        $('#responsive-modal form').submit(function(e){
+
+          e.preventDefault();
+
+          var email = $(this).find('input[name="email"]').val();
+
+          asocial.invite.inviteSubmit(email, function(data) {
+            asocial.helpers.showAlert('Invitation sent.');
+          });
+
+        });
+
+      }
+
+    });
+
   });
 
   //$('#main').on('click', '.user-icon', function(e){

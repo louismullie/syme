@@ -290,10 +290,14 @@ guard('helpers', {
 
     var options  = typeof(options)          === "undefined" ? {} : options;
 
+    // Options
     var closable = typeof(options.closable) === "undefined" ? true : options.closable;
     var classes  = typeof(options.classes)  === "undefined" ? '' : options.classes;
+
+    // Callbacks
     var onshow   = typeof(options.onshow)   === "undefined" ? function(){} : options.onshow;
     var onhide   = typeof(options.onhide)   === "undefined" ? function(){} : options.onhide;
+    var onsubmit = typeof(options.onsubmit) === "undefined" ? function(){} : options.onsubmit;
 
     // Kill previous modal if there is one
     $('#responsive-modal').remove();
@@ -301,12 +305,14 @@ guard('helpers', {
     // Create modal
     $('body').prepend(
       '<div id="responsive-modal">' +
-      '<div class="container ' + classes + '" />' +
+      '  <div class="container ' + classes + '" />' +
       '</div>'
     );
 
-    // Bind onhide callback to modal
-    $('#responsive-modal').data('onhide', onhide);
+    // Bind close callbacks to modal
+    $('#responsive-modal')
+      .data('onhide', onhide)
+      .data('onsubmit', onsubmit);
 
     // Fill modal with content
     $('#responsive-modal > div.container').html(html);
@@ -316,37 +322,33 @@ guard('helpers', {
 
     // Bind closable event
     if(closable) {
+
       // Close on escape and return key
       $(document).on('keydown', function(e){
-        // Hide modal
-        if (e.which == 27 || e.which == 13)
-          asocial.helpers.hideModal();
 
-        // Unbind keydown
-        $(this).off('keydown')
-          // Unbind container click
-          .find('#responsive-modal > div.container').off('click');
+        // Hide modal
+        if (e.which == 27) {
+          asocial.helpers.hideModal();
+        } else if (e.which == 13) {
+          asocial.helpers.hideModal(true);
+        }
       });
 
       // Close on click
-      $('#responsive-modal').on('click', function(e){
-        // Hide modal
+      $('#responsive-modal').click(function(){
         asocial.helpers.hideModal();
-
-        // Unbind click
-        $(this).off('click')
-          // Unbind container click
-          .find('div.container').off('click');
       });
 
       // Don't close when the container is clicked
-      $('#responsive-modal > div.container')
-        .on('click', function(e){ e.stopPropagation(); });
+      $('#responsive-modal > div.container').click( function(e){
+        e.stopPropagation();
+      });
+
     }
 
     // Close modals
     $('a[role="close-modal"]').one('click', function(){
-      asocial.helpers.hideModal();
+      asocial.helpers.hideModal( $(this).data('submit') );
     });
 
     // Onshow callback
@@ -357,19 +359,25 @@ guard('helpers', {
       .transition({ opacity: 1 }, 200);
   },
 
-  hideModal: function(speed) {
+  hideModal: function( submitted ) {
 
-    var callback = $('#responsive-modal').data('onhide') ?
+    // onhide()
+    var onhide = $('#responsive-modal').data('onhide') ?
       $('#responsive-modal').data('onhide') : function(){};
 
-    var speed  = typeof(speed)  === "undefined" ? 200 : speed;
+    // onsubmit(): defaults to onhide
+    var onsubmit = $('#responsive-modal').data('onsubmit') ?
+      $('#responsive-modal').data('onsubmit') : onhide;
 
-    // Onhide callback
-    callback();
+    // Callbacks (onsubmit breaks out of function)
+    if ( submitted ) { onsubmit(); return false; } else { onhide(); }
+
+    // Keydown event
+    $(document).off('keydown');
 
     // Remove modal
-    $('#responsive-modal').transition({ opacity: 0 }, speed);
-    window.setTimeout(function(){ $('#responsive-modal').remove() }, speed);
+    $('#responsive-modal').transition({ opacity: 0 }, 200);
+    window.setTimeout(function(){ $('#responsive-modal').remove() }, 200);
 
     // Unlock document scroll
     $('body').removeClass('noscroll modal-blur');
@@ -388,7 +396,7 @@ guard('helpers', {
     var title  = typeof(options.title) === "undefined" ? 'Error' : options.title;
     var submit = typeof(options.submit) === "undefined" ? 'OK' : options.submit;
 
-    var content = this.render('alert', { title: title, content: content, submit: submit, closable: closable });
+    var content = this.render('modals-alert', { title: title, content: content, submit: submit, closable: closable });
 
     this.showModal(content, options);
   }

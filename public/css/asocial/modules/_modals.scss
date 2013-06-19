@@ -42,25 +42,6 @@
     &.modal-alert {
       @media #{$breakpointLarge}  { width: 30%; }
       @media #{$breakpointMedium} { width: 35%; }
-
-      a.submit {
-        @extend .btn;
-
-        display: block;
-
-        margin-top: .8em;
-
-        background: $bodyBackgroundColor2;
-        border: $baseBorderStyle;
-
-        text-align: center;
-        color: $black;
-
-        &:hover, &:active {
-          color: inherit;
-          background: $bodyBackgroundColor3;
-        }
-      }
     }
 
     .modal-title {
@@ -95,6 +76,25 @@
 
       text-align: center;
       font-size: .9em;
+
+      a.modal-button {
+        @extend .btn;
+
+        display: block;
+
+        margin-top: .8em;
+
+        background: $bodyBackgroundColor2;
+        border: $baseBorderStyle;
+
+        text-align: center;
+        color: $black;
+
+        &:hover, &:active {
+          color: inherit;
+          background: $bodyBackgroundColor3;
+        }
+      }
     }
 
   }
