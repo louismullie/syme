@@ -49,14 +49,16 @@
   }
 
   &:before, &:after {
-    #{$propertyX}: 100%;
+    #{$propertyX}: 0%;
     bottom: 50%;
-  }
 
-  &:hover:before, &:hover:after {
     -webkit-transform: translateX($transitionDirection * $transitionDistance);
     -moz-transform: translateX($transitionDirection * $transitionDistance);
     transform: translateX($transitionDirection * $transitionDistance);
+  }
+
+  &:hover:before, &:hover:after {
+    #{$propertyX}: 100%;
   }
 }
 
