@@ -58,6 +58,11 @@
 
       p.explanation {
         font-size: .9em;
+
+        span.secret-question {
+          border-bottom: 1px dashed $darkgray;
+          cursor: help;
+        }
       }
 
       a.modal-button {
