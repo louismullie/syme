@@ -2,60 +2,62 @@
  * source: hint-position.scss
  *
  * Defines the positoning logic for the tooltips.
- * 
+ *
  * Classes added:
- * 	1) hint--top
- * 	2) hint--bottom
- * 	3) hint--left
- * 	4) hint--right
+ *  1) hint--top
+ *  2) hint--bottom
+ *  3) hint--left
+ *  4) hint--right
  */
 
 @mixin vertical-positioned-tooltip($propertyY, $transitionDirection) {
-	&:before {
-		// get the arrow out
-		margin-#{$propertyY}: -2 * $arrowBorderWidth;
-	}
+  &:before {
+    // get the arrow out
+    margin-#{$propertyY}: -2 * $arrowBorderWidth;
+    left: 50%;
+  }
 
-	&:after {
-		// bring back the tooltip by some offset so that arrow doesn't stick at end
-		margin-left: -1 * $arrowOffsetX;
-	}
+  &:after {
+    // bring back the tooltip by some offset so that arrow doesn't stick at end
+    margin-left: -1 * $arrowOffsetX;
+  }
 
-	&:before, &:after {
-		#{$propertyY}: 100%;
-		left: 50%;
-	}
+  &:before, &:after {
+    #{$propertyY}: 0%;
 
-	&:hover:before, &:hover:after {
-		-webkit-transform: translateY($transitionDirection * $transitionDistance);
-		-moz-transform: translateY($transitionDirection * $transitionDistance);
-		transform: translateY($transitionDirection * $transitionDistance);
-	}
+    -webkit-transform: translate( -50%, $transitionDirection * $transitionDistance );
+    -moz-transform: translate( -50%, $transitionDirection * $transitionDistance );
+    transform: translate( -50%, $transitionDirection * $transitionDistance );
+  }
+
+  &:hover:before, &:hover:after {
+    #{$propertyY}: 100%;
+  }
 }
 
 @mixin horizontal-positioned-tooltip($propertyX, $transitionDirection) {
-	&:before {
-		// get the arrow out
-		margin-#{$propertyX}: -2 * $arrowBorderWidth;
-		// bring back to center
-		margin-bottom: -1 * $arrowBorderWidth;
-	}
+  &:before {
+    // get the arrow out
+    margin-#{$propertyX}: -2 * $arrowBorderWidth;
+    // bring back to center
+    margin-bottom: -1 * $arrowBorderWidth;
+  }
 
-	&:after {
-		// bring back to center
-		margin-bottom: -1 * floor($tooltipHeight / 2);
-	}
+  &:after {
+    // bring back to center
+    margin-bottom: -1 * floor($tooltipHeight / 2);
+  }
 
-	&:before, &:after {
-		#{$propertyX}: 100%;
-		bottom: 50%;
-	}
+  &:before, &:after {
+    #{$propertyX}: 100%;
+    bottom: 50%;
+  }
 
-	&:hover:before, &:hover:after {
-		-webkit-transform: translateX($transitionDirection * $transitionDistance);
-		-moz-transform: translateX($transitionDirection * $transitionDistance);
-		transform: translateX($transitionDirection * $transitionDistance);
-	}
+  &:hover:before, &:hover:after {
+    -webkit-transform: translateX($transitionDirection * $transitionDistance);
+    -moz-transform: translateX($transitionDirection * $transitionDistance);
+    transform: translateX($transitionDirection * $transitionDistance);
+  }
 }
 
 
@@ -68,26 +70,26 @@
  * top tooltip
  */
 .hint--top {
-	@include vertical-positioned-tooltip('bottom', -1);
+  @include vertical-positioned-tooltip('bottom', -1);
 }
 
 /**
  * bottom tooltip
  */
 .hint--bottom {
-	@include vertical-positioned-tooltip('top', 1);
+  @include vertical-positioned-tooltip('top', 1);
 }
 
 /**
  * right tooltip
  */
 .hint--right {
-	@include horizontal-positioned-tooltip('left', 1);
+  @include horizontal-positioned-tooltip('left', 1);
 }
 
 /**
  * left tooltip
  */
 .hint--left {
-	@include horizontal-positioned-tooltip('right', -1);
+  @include horizontal-positioned-tooltip('right', -1);
 }
