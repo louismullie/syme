@@ -56,6 +56,8 @@ asocial.binders.add('feed', { feed_panel: function(){
 
               if ( data.status == "ok") {
                 asocial.helpers.showAlert('Your invitation was sent. We\'ll keep you posted.', { title: 'Success' });
+              } else if ( data.status == "own_email" ) {
+                asocial.helpers.showAlert('Your cannot invite yourself to a group');
               } else {
                 asocial.helpers.showAlert('An error occured when sending the invitation');
               }
