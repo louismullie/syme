@@ -297,7 +297,7 @@ guard('helpers', {
     // Callbacks
     var onshow   = typeof(options.onshow)   === "undefined" ? function(){} : options.onshow;
     var onhide   = typeof(options.onhide)   === "undefined" ? function(){} : options.onhide;
-    var onsubmit = typeof(options.onsubmit) === "undefined" ? function(){} : options.onsubmit;
+    var onsubmit = typeof(options.onsubmit) === "undefined" ? '' : options.onsubmit;
 
     // Kill previous modal if there is one
     $(document).off('keydown');
@@ -364,12 +364,12 @@ guard('helpers', {
     var onhide = $('#responsive-modal').data('onhide') ?
       $('#responsive-modal').data('onhide') : function(){};
 
-    // onsubmit(): defaults to onhide
-    var onsubmit = $('#responsive-modal').data('onsubmit') ?
-      $('#responsive-modal').data('onsubmit') : onhide;
-
-    // Callbacks (onsubmit breaks out of function)
-    if ( submitted ) { onsubmit(); return false; } else { onhide(); }
+    // Callbacks
+    if ( submitted && $('#responsive-modal').data('onsubmit') ) {
+      $('#responsive-modal').data('onsubmit')(); return false;
+    } else {
+      onhide();
+    }
 
     // Unbind keydown event
     $(document).off('keydown');

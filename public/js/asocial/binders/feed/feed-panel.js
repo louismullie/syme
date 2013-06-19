@@ -22,7 +22,9 @@ asocial.binders.add('feed', { feed_panel: function(){
 
       classes: 'modal-invite',
 
-      onshow: function(){
+      onsubmit: function() { },
+
+      onshow: function() {
 
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal form').submit(function(e){
