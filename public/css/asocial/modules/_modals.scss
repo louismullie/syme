@@ -49,6 +49,17 @@
       @media #{$breakpointLarge}  { width: 30%; }
       @media #{$breakpointMedium} { width: 35%; }
 
+      .modal-content { text-align: left }
+
+      p.header {
+        font: normal 1.2em/1.5em $opensans;
+        margin-bottom: .6em;
+      }
+
+      p.explanation {
+        font-size: .9em;
+      }
+
       a.modal-button {
         span.spinner { display: none; }
 

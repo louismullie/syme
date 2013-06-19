@@ -532,7 +532,7 @@ helpers = helpers || Handlebars.helpers; data = data || {};
   
 
 
-  return "<div class='modal-title'>\n  Invite a user\n  <a href='#' role='close-modal'>\n    <i class='icon-remove-sign'></i>\n  </a>\n</div>\n<div class='modal-content'>\n  <form action='post'>\n    <input name='email' placeholder='Enter an email' type='text'>\n    <a class='modal-button' href='#' role='submit'>\n      <span class='invite'>\n        Invite\n      </span>\n      <span class='spinner'>\n        <i class='icon-spinner icon-spin'></i>\n      </span>\n    </a>\n  </form>\n</div>\n";
+  return "<div class='modal-title'>\n  Invite a user\n  <a href='#' role='close-modal'>\n    <i class='icon-remove-sign'></i>\n  </a>\n</div>\n<div class='modal-content'>\n  <p class='header'>\n    Enter the email address of the person you want to invite\n    to your group below.\n  </p>\n  <p class='explanation'>\n    Your invitee will be asked to answer your group's secret\n    question in order to join the group. If the answer is incorrect,\n    we will transmit the answer to you so that you can review it manually.\n  </p>\n  <form action='post'>\n    <input name='email' placeholder='Enter an email' type='text'>\n    <a class='modal-button' href='#' role='submit'>\n      <span class='invite'>\n        Invite\n      </span>\n      <span class='spinner'>\n        <i class='icon-spinner icon-spin'></i>\n      </span>\n    </a>\n  </form>\n</div>\n";
   });
 templates['_feed-notification'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [2,'>= 1.0.0-rc.3'];

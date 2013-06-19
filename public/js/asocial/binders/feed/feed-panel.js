@@ -22,6 +22,10 @@ asocial.binders.add('feed', { feed_panel: function(){
 
       classes: 'modal-invite',
 
+      // Specify onsubmit() to prevent normal submitting enter key
+      // or submit button, and rather delegate it to the submit()
+      // event specified in onshow()
+
       onsubmit: function() { },
 
       onshow: function() {
@@ -31,25 +35,27 @@ asocial.binders.add('feed', { feed_panel: function(){
 
           e.preventDefault();
 
-          // Escape if form is locked
-          if($(this).data('active')) return false;
+          var $this = $(this);
 
-          var email = $(this).find('input[name="email"]').val();
+          // Escape if form is locked
+          if($this.data('active')) return false;
+
+          var email = $this.find('input[name="email"]').val();
 
           // If email isn't blank
           if( !!email ) {
 
             // Lock form
-            $(this).data('active', true);
+            $this.data('active', true);
 
             // Show spinner
-            $(this).find('a.modal-button').addClass('spinner');
+            $this.find('a.modal-button').addClass('spinner');
 
             // Submit invite
             asocial.invite.inviteSubmit(email, function(data) {
 
               if ( data.status == "ok") {
-                asocial.helpers.showAlert('Your invitation was sent.', { title: 'Success' });
+                asocial.helpers.showAlert('Your invitation was sent. We\'ll keep you posted.', { title: 'Success' });
               } else {
                 asocial.helpers.showAlert('An error occured when sending the invitation');
               }
