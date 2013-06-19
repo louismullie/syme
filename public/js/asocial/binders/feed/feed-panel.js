@@ -20,7 +20,7 @@ asocial.binders.add('feed', { feed_panel: function(){
 
     asocial.helpers.showModal(content, {
 
-      classes: 'modal-small',
+      classes: 'modal-invite',
 
       onshow: function(){
 
@@ -29,11 +29,32 @@ asocial.binders.add('feed', { feed_panel: function(){
 
           e.preventDefault();
 
+          // Escape if form is locked
+          if($(this).data('active')) return false;
+
           var email = $(this).find('input[name="email"]').val();
 
-          asocial.invite.inviteSubmit(email, function(data) {
-            asocial.helpers.showAlert('Invitation sent.');
-          });
+          // If email isn't blank
+          if( !!email ) {
+
+            // Lock form
+            $(this).data('active', true);
+
+            // Show spinner
+            $(this).find('a.modal-button').addClass('spinner');
+
+            // Submit invite
+            asocial.invite.inviteSubmit(email, function(data) {
+
+              if ( data.status == "ok") {
+                asocial.helpers.showAlert('Your invitation was sent.', { title: 'Success' });
+              } else {
+                asocial.helpers.showAlert('An error occured when sending the invitation');
+              }
+
+            });
+
+          }
 
         });
 

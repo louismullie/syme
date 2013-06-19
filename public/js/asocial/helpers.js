@@ -300,6 +300,7 @@ guard('helpers', {
     var onsubmit = typeof(options.onsubmit) === "undefined" ? function(){} : options.onsubmit;
 
     // Kill previous modal if there is one
+    $(document).off('keydown');
     $('#responsive-modal').remove();
 
     // Create modal
@@ -317,21 +318,16 @@ guard('helpers', {
     // Fill modal with content
     $('#responsive-modal > div.container').html(html);
 
-    // Lock document and blur it
-    $('body').addClass('noscroll modal-blur');
-
-    // Bind closable event
+    // Additional closable events
     if(closable) {
 
       // Close on escape and return key
       $(document).on('keydown', function(e){
 
-        // Hide modal
-        if (e.which == 27) {
-          asocial.helpers.hideModal();
-        } else if (e.which == 13) {
-          asocial.helpers.hideModal(true);
-        }
+        if ( e.which == 27 || e.which == 13 )
+          // Hide or submit modal
+          asocial.helpers.hideModal( e.which == 13 );
+
       });
 
       // Close on click
@@ -346,13 +342,16 @@ guard('helpers', {
 
     }
 
-    // Close modals
+    // Native close
     $('a[role="close-modal"]').one('click', function(){
       asocial.helpers.hideModal( $(this).data('submit') );
     });
 
-    // Onshow callback
+    // Callback
     onshow();
+
+    // Lock document and blur it
+    $('body').addClass('noscroll modal-blur');
 
     // Show modal
     $('#responsive-modal')
@@ -372,7 +371,7 @@ guard('helpers', {
     // Callbacks (onsubmit breaks out of function)
     if ( submitted ) { onsubmit(); return false; } else { onhide(); }
 
-    // Keydown event
+    // Unbind keydown event
     $(document).off('keydown');
 
     // Remove modal

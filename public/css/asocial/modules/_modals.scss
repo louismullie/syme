@@ -44,10 +44,25 @@
       @media #{$breakpointMedium} { width: 35%; }
     }
 
+    // Invite
+    &.modal-invite {
+      @media #{$breakpointLarge}  { width: 30%; }
+      @media #{$breakpointMedium} { width: 35%; }
+
+      a.modal-button {
+        span.spinner { display: none; }
+
+        &.spinner {
+          span.invite { display: none; }
+          span.spinner { display: inline; }
+        }
+      }
+    }
+
     .modal-title {
       padding: .5em 1em;
 
-      font: 200 1.2em/1.5em $opensans;
+      font: 200 1.1em/1.5em $opensans;
 
       background: $bodyBackgroundColor2;
       border-bottom: $baseBorderStyle;
@@ -66,10 +81,6 @@
         }
       }
     }
-
-    // &[data-closable] .modal-title a.close {
-    //   display: inline;
-    // }
 
     .modal-content {
       padding: .8em 1em;

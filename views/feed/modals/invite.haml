@@ -5,8 +5,12 @@
     %i.icon-remove-sign
 
 .modal-content
-  %form
-    %input{type: "text", name: "email"}
+  %form{ action: 'post' }
+    %input{type: 'text', name: 'email', placeholder: 'Enter an email'}
 
     %a.modal-button{ href: '#', role: 'submit' }
-      Invite
+      %span.invite
+        Invite
+
+      %span.spinner
+        %i.icon-spinner.icon-spin
