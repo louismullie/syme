@@ -22,7 +22,7 @@ guard('binders', {
 
     // Check function existence
     if(!$().binders[route]) return false;
-    
+
     // Unbind everything
     this.unbind();
 
@@ -37,10 +37,10 @@ guard('binders', {
     for (key in obj) {
       if (obj.hasOwnProperty(key)) obj[key]();
     }
-    
+
     // Keep track of bound functions.
     window.bound[route] = true;
-    
+
   },
 
   unbind: function() {
@@ -68,7 +68,7 @@ guard('binders', {
 
   // Load a urlComponent object into a container
   loadUrlComponent: function(urlComponent, container, callback) {
-    
+
     console.log('Loading url Components', urlComponent);
 
     var _this = this;
@@ -88,10 +88,9 @@ guard('binders', {
     if ( asocial.url.isLoggedOffRoute(urlComponent.route) ) {
 
       container.html( asocial.helpers.render(urlComponent.route) );
-      
-      if (!window.bound[urlComponent.binder])
-        this.bind(urlComponent.binder);
-      
+
+      this.bind(urlComponent.binder);
+
       callback();
 
     } else {
