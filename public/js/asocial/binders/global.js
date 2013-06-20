@@ -8,13 +8,28 @@ asocial.binders.add('global', { main: function(){
     var container = $( '#' + $(this).data('popover') );
 
     // Toggle it
-    container.is(':visible') ?
-      container.hide() :
+    if ( container.is(':visible') ) {
+      // Reset possible hidden tooltips
+      $(this).removeClass('hint--hidden');
+
+      // Hide popover
+      container.hide();
+    } else {
+      // Hide possible tooltips
+      $(this).addClass('hint--hidden');
+
+      // Show popover
       container.fadeIn(100);
+    }
+
   });
 
   // Hide popovers on outside click
   $(document).on('click', function(e){
+    // Reset possible hidden tooltips
+    $('a[data-popover]').removeClass('hint--hidden');
+
+    // Hide popover
     $('.popover').hide();
   });
 

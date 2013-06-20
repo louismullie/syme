@@ -14,6 +14,8 @@
   position: relative;
   display: inline-block;
 
+  &.hint--hidden::before, &.hint--hidden::after { display: none !important; }
+
   &:before, &:after {
     position: absolute;
 

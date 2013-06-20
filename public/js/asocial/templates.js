@@ -925,7 +925,7 @@ helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.parti
   if (stack2 = helpers.year) { stack2 = stack2.call(depth0, {hash:{},data:data}); }
   else { stack2 = depth0.year; stack2 = typeof stack2 === functionType ? stack2.apply(depth0) : stack2; }
   buffer += escapeExpression(stack2)
-    + "' id='feed'>\n      <!-- / New content button -->\n      <div id='newcontent'>\n        <a class='btn' href='#'>";
+    + "' id='feed'>\n      <!-- / New content button -->\n      <div id='newcontent'>\n        <a href='#'><i class=\"icon-refresh\"></i> ";
   options = {hash:{},data:data};
   buffer += escapeExpression(((stack1 = helpers['t']),stack1 ? stack1.call(depth0, "new_content", options) : helperMissing.call(depth0, "t", "new_content", options)))
     + " (<span></span>)</a>\n      </div>\n      <!-- / Feed errors -->\n      ";
