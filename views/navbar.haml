@@ -7,7 +7,7 @@
             = settings.app_title
 
         %li
-          %a#notifications.btn{ href: '#', 'data-popover' => 'notifications-container' }
+          %a#notifications.btn.hint--bottom{ href: '#', :'data-hint' => 'Notifications', 'data-popover' => 'notifications-container' }
             %i.icon-bell-alt
 
           #notifications-container.popover
@@ -25,11 +25,11 @@
         .pull-right
           .hide-for-small
             %li
-              %a.btn{ href: '/settings', :'data-hbs' => '' }
+              %a.btn.hint--bottom{ href: '/settings', :'data-hbs' => '', :'data-hint' => 'Settings' }
                 %i.icon-cog
 
             %li
-              %a.btn{ href: '/logout' }
+              %a.btn.hint--bottom{ href: '/logout', :'data-hint' => 'Log out' }
                 %i.icon-signout
 
           .show-for-small

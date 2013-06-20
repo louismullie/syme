@@ -19,7 +19,8 @@
 
   &:after {
     // bring back the tooltip by some offset so that arrow doesn't stick at end
-    margin-left: -1 * $arrowOffsetX;
+    //margin-left: -( $arrowOffsetX / 2 - $arrowBorderWidth / 2 );
+    left: 50%;
   }
 
   &:before, &:after {
