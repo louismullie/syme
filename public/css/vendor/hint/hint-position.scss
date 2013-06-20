@@ -14,17 +14,11 @@
   &:before {
     // get the arrow out
     margin-#{$propertyY}: -2 * $arrowBorderWidth;
-    left: 50%;
-  }
-
-  &:after {
-    // bring back the tooltip by some offset so that arrow doesn't stick at end
-    //margin-left: -( $arrowOffsetX / 2 - $arrowBorderWidth / 2 );
-    left: 50%;
   }
 
   &:before, &:after {
-    #{$propertyY}: 0%;
+    left: 50%;
+    #{$propertyY}: 50%;
 
     -webkit-transform: translate( -50%, $transitionDirection * $transitionDistance );
     -moz-transform: translate( -50%, $transitionDirection * $transitionDistance );
@@ -50,7 +44,7 @@
   }
 
   &:before, &:after {
-    #{$propertyX}: 0%;
+    #{$propertyX}: 50%;
     bottom: 50%;
 
     -webkit-transform: translateX($transitionDirection * $transitionDistance);
