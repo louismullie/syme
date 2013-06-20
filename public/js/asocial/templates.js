@@ -1002,11 +1002,11 @@ helpers = helpers || Handlebars.helpers; partials = partials || Handlebars.parti
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n    <a class='delete-group btn btn-white' data-group-id='";
+  buffer += "\n    <a class='delete-group btn btn-white hint--left' data-group-id='";
   if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "' href='#'>\n      <i class='icon-remove'></i>\n    </a>\n    ";
+    + "' data-hint='Delete' href='#'>\n      <i class='icon-remove'></i>\n    </a>\n    ";
   return buffer;
   }
 

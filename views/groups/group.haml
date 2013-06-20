@@ -2,7 +2,7 @@
   .group-banner
 
     {{#if deletable}}
-    %a.delete-group.btn.btn-white{ href: '#', :'data-group-id' => '{{id}}' }
+    %a.delete-group.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Delete' }
       %i.icon-remove
     {{/if}}
 
