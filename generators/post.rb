@@ -2,7 +2,7 @@ class PostGenerator
 
   CommentsPerThread = 3
 
-  def self.generate(post, current_user, show_updated_at = false)
+  def self.generate(post, current_user, current_group)
 
     comments = generate_comments(post, current_user)
     owner = generate_owner(post, current_user)
@@ -21,12 +21,14 @@ class PostGenerator
       key: current_key,
       deletable: deletable,
 
+      # Group id
+      group_id: current_group.id,
+
       # Time information.
       date: date,
       full_time: post.created_at
         .strftime("%d/%m/%Y at %H:%M"), # t(:some time locale)
       created_at: post.created_at.iso8601,
-      show_updated_at: show_updated_at,
       timestamp: post.created_at.to_i,
 
       # Attachment information.

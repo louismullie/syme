@@ -4,7 +4,7 @@
   "description": "The encrypted social network.",
   "main": "templates.js",
   "dependencies": {
-    "handlebars": "1.0.10"
+    "handlebars": "1.0.12"
   },
   "devDependencies": {},
   "scripts": {

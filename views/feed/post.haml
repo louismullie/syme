@@ -10,7 +10,7 @@
         {{owner.name}}
 
         // Post time
-        %a.time{ href: '#' }
+        %a.time{ href: '/{{group_id}}/posts/{{id}}', :'data-hbs' => '' }
           %time.timeago{ datetime: '{{created_at}}' }
 
       // Delete button

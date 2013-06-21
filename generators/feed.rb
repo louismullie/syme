@@ -2,7 +2,7 @@ class FeedGenerator
 
   def self.generate(posts, current_user, current_group)
 
-    posts = generate_posts(posts, current_user)
+    posts = generate_posts(posts, current_user, current_group)
     user = generate_user(current_user, current_group)
     users = generate_user_list(current_group, current_user)
     invite = generate_pending_invites(current_group, current_user)
@@ -45,12 +45,10 @@ class FeedGenerator
     end
   end
 
-  def self.generate_posts(posts, current_user, last_timestamp = false)
-
-    show_updated_at = generate_last_date(posts, last_timestamp)
+  def self.generate_posts(posts, current_user, current_group)
 
     posts.map do |post|
-      PostGenerator.generate(post, current_user, show_updated_at)
+      PostGenerator.generate(post, current_user, current_group)
     end
 
   end

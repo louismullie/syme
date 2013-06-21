@@ -57,11 +57,17 @@ class ::Time
 
 end
 
-
 class ::Hash
-  
+
   def to_struct
     Struct.new(*keys.map(&:intern)).new(*values)
   end
-  
+
+end
+
+# Taken from ROR source code:
+# will return true if it’s false, empty, or a whitespace string.
+# For example, “”, “ ”, nil, [], and {} are all blank.
+def blank?
+  respond_to?(:empty?) ? empty? : !self
 end

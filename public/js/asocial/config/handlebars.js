@@ -36,6 +36,14 @@ Handlebars.registerHelper('to_readable_size', function (bytes, precision) {
   }
 });
 
+Handlebars.registerHelper("debug", function(optionalValue) {
+  console.log('Current context:', this);
+
+  if (optionalValue) {
+    console.log('Additional value:', optionalValue);
+  }
+});
+
 Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
 
   // {{#compare variable ">" 5}}
