@@ -3,5 +3,4 @@
 .hbs/**/*
 
 *.log
-*.rdb
 *.pid
