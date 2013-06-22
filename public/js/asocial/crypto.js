@@ -288,7 +288,7 @@ guard('crypto', {
         message.content = JSON.stringify(message.content); // This is hacky...
         // Decrypt the message using the message key and private key.
         var decrypted = asocial.crypto.decryptMessage(message.content, message.key);
-        decrypted = marked(html_sanitize(decrypted));
+        decrypted = marked(decrypted);
         // Show the user tags.
         decrypted = asocial.helpers.replaceUserMentions(decrypted);
         // Hide the "This post is encrypted notice."
