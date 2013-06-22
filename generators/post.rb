@@ -2,7 +2,7 @@ class PostGenerator
 
   CommentsPerThread = 3
 
-  def self.generate(post, current_user, current_group)
+  def self.generate(post, current_user)
 
     comments = generate_comments(post, current_user)
     owner = generate_owner(post, current_user)
@@ -22,7 +22,7 @@ class PostGenerator
       deletable: deletable,
 
       # Group id
-      group_id: current_group.id,
+      group_id: post.group.id,
 
       # Time information.
       date: date,

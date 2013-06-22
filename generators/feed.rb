@@ -48,7 +48,7 @@ class FeedGenerator
   def self.generate_posts(posts, current_user, current_group)
 
     posts.map do |post|
-      PostGenerator.generate(post, current_user, current_group)
+      PostGenerator.generate(post, current_user)
     end
 
   end

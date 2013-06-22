@@ -7,7 +7,7 @@ module Asocial
     end
 
     EM.next_tick do
-      self.publisher = EM::Hiredis.connect
+      self.publisher = AMQP.connect(host: '127.0.0.1')
     end
 
     def self.scatter(group, action, model, &block)
@@ -34,36 +34,32 @@ module Asocial
       data = { action: action,
       model: model, data: data }
 
-      self.publish(user_id, data.to_json)
+      self.publish(user_id, data)
 
     end
 
     private
 
-    def self.publish(*args)
-      self.publisher.publish(*args)
+    def self.publish(user_id, data)
+      channel = Subscriber.channels[user_id]
+      exchange = channel.default_exchange
+      exchange.publish(data.to_json, routing_key: user_id)
     end
     
   end
 
-
   class Subscriber
 
     class << self
-      attr_accessor :subscriber
-      attr_accessor :subscribers
+      attr_accessor :connection
+      attr_accessor :channels
+      attr_accessor :clients
     end
 
     EM.next_tick do
 
-      self.subscriber = EM::Hiredis.connect
-      self.subscribers = {}
-
-      self.subscriber.on(:message) do |channel, message|
-        self.subscribers[channel].each do |client|
-          client << "data: #{message}\n\n"
-        end
-      end
+      self.connection = AMQP.connect(host: '127.0.0.1')
+      self.channels, self.clients = {}, {}
 
     end
 
@@ -72,7 +68,7 @@ module Asocial
       connected_users = []
 
       group.users.each do |user|
-        if self.subscribers[user.id.to_s]
+        if self.clients[user.id.to_s]
           connected_users << user.id.to_s
         end
       end
@@ -82,23 +78,36 @@ module Asocial
     end
 
     def self.subscribe(user_id, out)
+      
+      unless channels[user_id]
+        
+        channels[user_id] = AMQP::Channel.new(connection)
+        channel = channels[user_id]
+      
+        queue = channel.queue(user_id, auto_delete: true)
 
-      subscriber.subscribe(user_id)
-      subscribers[user_id] ||= []
-      subscribers[user_id] << out
-      warn out.inspect
-      subscribers[user_id].length
+        queue.subscribe do |payload|
+          self.clients[user_id].each do |client|
+            client << "data: #{payload}\n\n"
+          end
+        end
+
+      end
+      
+      self.clients[user_id] ||= []
+      self.clients[user_id] << out
+      self.clients[user_id].length
 
     end
 
     def self.unsubscribe(user_id, client_id)
 
-      if subscribers[user_id][client_id]
-        subscribers[user_id].delete_at(client_id)
+      if self.clients[user_id][client_id]
+        self.clients[user_id].delete_at(client_id)
       end
 
-      if subscribers[user_id].length == 0
-        subscriber.unsubscribe(user_id)
+      if self.clients[user_id].length == 0
+        self.clients.unsubscribe(user_id)
       end
 
     end

@@ -524,7 +524,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "Invite a user!\n";
+  return "<h1>Sup!</h1>\n";
   });
 templates['_feed-modals-invite'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -1345,14 +1345,6 @@ function program1(depth0,data) {
   buffer += escapeExpression(stack1)
     + "\n  </a>\n</div>\n";
   return buffer;
-  });
-templates['_modals-invite'] = template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
-
-
-  return "Invite a user!\n";
   });
 templates['_navbar'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];

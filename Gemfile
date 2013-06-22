@@ -50,13 +50,7 @@ gem 'bson_ext'
 gem 'mongoid'
 
 # Redis drivers.
-gem 'redis'
-gem 'hiredis'
-gem 'em-hiredis', '~> 0.1.1'
-gem 'em-websocket'
-
-# Memcache drivers.
-gem 'memcache-client'
+gem 'amqp'
 
 # Javascript bridge.
 gem 'therubyracer',
