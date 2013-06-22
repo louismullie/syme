@@ -88,3 +88,9 @@ gem 'analytics-ruby',
 # * Deployment *#
 gem 'capistrano'
 gem 'rvm-capistrano'
+
+group :development do
+  gem 'guard'
+  gem 'guard-haml'
+  gem 'guard-steering'
+end

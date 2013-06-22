@@ -4,13 +4,13 @@
 
     %ul
       // Invitations
-      {{> groups-invites}}
+      {{> groups-invites.hbs}}
 
       // Create group
-      {{> groups-create}}
+      {{> groups-create.hbs}}
 
       // Group Loop
-      {{#each groups}} {{> groups-group}} {{/each}}
+      {{#each groups}} {{> groups-group.hbs}} {{/each}}
 
     {{else}}
 
@@ -18,15 +18,15 @@
 
     %ul
       // Create group
-      {{> groups-create}}
+      {{> groups-create.hbs}}
 
       // Group Loop
-      {{#each groups}} {{> groups-group}} {{/each}}
-
+      {{#each groups}} {{> groups-group.hbs}} {{/each}}
+ 
     {{else}}
 
     // First group creation
-    {{> groups-create_first}}
+    {{> groups-first.hbs}}
 
     {{/if}}
 

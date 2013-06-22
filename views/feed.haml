@@ -1,7 +1,7 @@
 .row
   #feed-column
     // Feed form
-    {{> feed-form}}
+    {{> feed-form.hbs}}
 
     // Feed
     #feed{  'data-group-name' => '{{group.name}}',
@@ -13,14 +13,14 @@
         %a{href: '#'} <i class="icon-refresh"></i> {{t 'new_content'}} (<span></span>)
 
       // Feed errors
-      {{> error-alert}}
+      {{> error-alert.hbs}}
 
       // Posts loop
-      {{> feed-posts}}
+      {{> feed-posts.hbs}}
 
     // Load more button, triggered by infinite scroller
     // every few pages
-    #load-more
+    #load-more 
       %a{href: '#'}
         {{t 'feed.load_more'}}
 
@@ -28,4 +28,4 @@
 
   #feed-panel-column
     // Group panel
-    {{> feed-panel}}
+    {{> feed-panel.hbs}}

@@ -10,16 +10,8 @@ get '/*' do |route|
 
   pass if request.xhr? or route.index('.js')
 
-  # Otherwise, compile generic template which will be filled
-  # dynamically
-
-  Fifty.recompile_templates do
-    hbs = './node_modules/handlebars/bin/handlebars'
-    `#{hbs} .hbs/*.handlebars -f ./public/js/asocial/templates.js`
-  end
-
   csrf = Rack::Csrf.csrf_token(env)
 
-  haml(:layout) { '&nbsp' }
+  File.read('./.hbs/views/layout.hbs')
 
 end

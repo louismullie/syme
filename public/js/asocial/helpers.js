@@ -271,7 +271,7 @@ guard('helpers', {
   },
 
   render: function(template, data) {
-    return Handlebars.templates['_' + template](data);
+    return Handlebars.templates[template + '.hbs'](data);
   },
 
   getAndRender: function(template, url, callback, failure) {

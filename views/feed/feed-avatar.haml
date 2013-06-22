@@ -1,0 +1,9 @@
+{{#if placeholder}}
+
+%img.avatar{src: '/img/placeholder.gif'}
+
+{{else}}
+
+%img.avatar.encrypted-avatar{src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", 'data-user-id' => '{{id}}'}
+
+{{/if}}

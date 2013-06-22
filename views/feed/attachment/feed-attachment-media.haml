@@ -1,0 +1,11 @@
+// Display attachment information.
+{{#unless is_image}}
+%p
+  {{#if is_video}} {{t 'upload.video'}} {{/if}}
+  {{#if is_audio}} {{t 'upload.audio'}} {{/if}}
+  \:
+  {{> feed-attachment-encrypted.hbs}}
+{{/unless}}
+
+// Embed encrypted media.
+{{> feed-attachment-embed.hbs}}

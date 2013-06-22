@@ -70,7 +70,7 @@ use Rack::Session::Cookie,
 
 # Enable token protection against CSRF.
 require 'rack/csrf'
-use Rack::Csrf
+# use Rack::Csrf
 
 # Enable protection against remote referrers.
 use Rack::Protection::RemoteReferrer

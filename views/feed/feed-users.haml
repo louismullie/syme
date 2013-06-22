@@ -1,0 +1,39 @@
+%h4
+  Members ({{users.length}})
+
+  %span.actions
+    %a#add-user.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Add user' }
+      %i.icon-plus
+
+%ul#userlist.scrollable
+  // Invite confirmations
+  {{#if invite}}
+
+  #invites
+    {{#each invite}}
+
+    %li.invite
+      #invites-header Awaiting confirmation
+
+      // Replace by GET request with only invite ID, which returns the rest.
+      %a.invite-confirm{href: '#', 'data-invite-id'         => '{{id}}',
+                                   'data-invite-token'      => '{{token}}',
+                                   'data-invite-invitee_id' => '{{invitee_id}}',
+                                   'data-invite-k_P'        => '{{k_P}}',
+                                   'data-invite-PA_k'       => '{{PA_k}}',
+                                   'data-invite-p_sB'       => '{{p_sB}}',
+                                   'data-invite-sB_salt'    => '{{sB_salt}}',
+                                   'data-invite-a_P'        => '{{a_P}}'}
+
+        %img.placeholder-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" }
+
+        %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
+
+    {{/each}}
+
+  {{/if}}
+
+  // User list
+  {{#each users}}
+  {{> feed-user.hbs}}
+  {{/each}}

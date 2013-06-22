@@ -16,27 +16,13 @@ module Asocial
     require_specific('routes', ['stream', 'catch', 'group'])
     
     require_all 'routes'
-
-    # to remove
-    helpers Fifty
-
-    def initialize(*args, &block)
-      Fifty.context = self
-      super(*args, &block)
-    end
-
-    def call(env)
-      Fifty.logger = env['rack.logger']
-      super(env)
-    end
-    # to remove
     
     Mongoid.observers = PostObserver, CommentObserver,
     LikeObserver, NotificationObserver, InviteObserver,
     UserObserver
 
     Mongoid.instantiate_observers
-
+    
   end
 
 end

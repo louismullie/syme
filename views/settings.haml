@@ -12,7 +12,7 @@
 
     .tab-content
       #tab-informations.tab-pane.active
-        = haml :'settings/profile'
+        {{> settings-profile.hbs}}
 
       #tab-settings.tab-pane
-        = haml :'settings/settings'
+        {{> settings-settings.hbs}}

@@ -1,0 +1,20 @@
+#feed-panel
+  {{#with group.avatar}}
+
+  // Hidden file upload
+  %input#group-photo-file.hidden{ type: 'file', name: 'avatar' }
+
+  %a#group-photo-edit{ href: '#', :'data-placeholder' => '{{placeholder}}' }
+    %span.cover
+      %span <i class="icon-picture"></i> Change picture
+
+    {{#if placeholder}}
+    %img{ src: '/img/groupavatar.jpg' }
+    {{else}}
+    %img.encrypted-image{src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-key' => '{{key}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
+    {{/if}}
+
+  {{/with}}
+
+  // Userlist
+  {{> feed-users.hbs}}

@@ -1,5 +1,5 @@
 //= require ./locales
-//= require ./templates
+//= require_directory ./templates
 //= require ./guard
 //= require_directory ./config
 //= require ./crypto
