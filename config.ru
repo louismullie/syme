@@ -61,13 +61,12 @@ use ContentSecurityPolicy, directives: {
 require 'securerandom'
 
 # Setup server-side sessions.
-use Rack::Session::Memcache,
+use Rack::Session::Cookie,
   key: SecureRandom.hex(16),
   expire_after: 3600,
   secure: $secure,
   sidbits: 256,
   secure_random: SecureRandom
-
 
 # Enable token protection against CSRF.
 require 'rack/csrf'
