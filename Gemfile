@@ -49,8 +49,8 @@ gem 'mongo'
 gem 'bson_ext'
 gem 'mongoid'
 
-# Redis drivers.
-gem 'amqp'
+# RabbitMQ wrapper.
+gem 'magicbus'
 
 # Javascript bridge.
 gem 'therubyracer',

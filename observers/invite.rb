@@ -21,7 +21,7 @@ class InviteObserver < Mongoid::Observer
         ]
       }}, group)
       
-      Asocial::Publisher.broadcast(
+      MagicBus::Publisher.broadcast(
         group, :request, :invite, {
           group: group.name
       })
@@ -41,7 +41,7 @@ class InviteObserver < Mongoid::Observer
 
       end
       
-      Asocial::Publisher.broadcast(
+      MagicBus::Publisher.broadcast(
         group, :confirm, :invite, {
           group: group.name,
           group_id: group.id

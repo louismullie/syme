@@ -1,8 +1,7 @@
 module Asocial
 
   require './base'
-  require './pubsub'
-  
+
   class Application < Base
 
     Bundler.require :default, settings.environment

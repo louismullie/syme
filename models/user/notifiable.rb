@@ -21,14 +21,14 @@ module User::Notifiable
       notifications.where(unread_selector).first
       notification.actor_ids << id
       
-      Asocial::Publisher.broadcast(group, :update, :notification, 
+      MagicBus::Publisher.broadcast(group, :update, :notification, 
       NotificationGenerator.generate(notification, self))
       
     else
 
       notification = notifications.create(create_selector)
 
-      Asocial::Publisher.send_to(id, :create, :notification, 
+      MagicBus::Publisher.send_to(id, :create, :notification, 
       NotificationGenerator.generate(notification, self))
       
     end
@@ -59,7 +59,7 @@ module User::Notifiable
       group_id: group.id
     )
     
-    Asocial::Publisher.broadcast(group, :update, :notification, 
+    MagicBus::Publisher.broadcast(group, :update, :notification, 
     NotificationGenerator.generate(notification, group, self))
     
   end

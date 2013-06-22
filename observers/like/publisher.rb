@@ -4,7 +4,7 @@ module LikeObserver::Publisher
 
     group = like.likeable.parent_group
 
-    Asocial::Publisher.scatter(group, :update, :like) do |user|
+    MagicBus::Publisher.scatter(group, :update, :like) do |user|
 
       view = LikeGenerator.generate(like.likeable, user)
       data = { target: like.likeable.id, view: view }

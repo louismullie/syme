@@ -8,7 +8,7 @@ module ResourceObserver::Publisher
     data = { target: resource.id.to_s }
     group = resource.parent_group
     
-    Asocial::Publisher.broadcast(group, :delete, type, data)
+    MagicBus::Publisher.broadcast(group, :delete, type, data)
 
   end
 
