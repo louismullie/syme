@@ -2,4 +2,5 @@
 //= require ./underscore.min
 //= require ./backbone.min
 //= require ./backbone-relational
+//= require ./sjcl
 //= require_directory .
