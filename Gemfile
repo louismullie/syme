@@ -1,96 +1,80 @@
 source 'https://rubygems.org'
 
-# * Command-line tools #
+group :application do
+  
+  gem 'rack', '>= 1.5.2'
+  gem 'sinatra'
+  gem 'thin'
+  gem 'foreman'
+  
+end
 
-gem 'thin'
-gem 'foreman'
-gem 'rake'
+group :security do
+  
+  gem 'rack-ssl',
+    require: 'rack/ssl'
 
-# * Application layer #
-
-gem 'sinatra'
-gem 'yajl-ruby',
-  require: 'yajl/json_gem'
-
-# * Rack middleware * #
-
-gem 'rack', '>= 1.5.2'
-
-# CSRF protection.
-gem 'rack_csrf',
-  require: 'rack/csrf'
-
-# Browser version check.
-gem 'rack-caniuse',
-  require: 'rack/caniuse'
-
-# Prevent caching.
-gem 'rack-nocache',
-  require: 'rack/nocache'
-
-# Enforce use of SSL.
-gem 'rack-ssl',
-  require: 'rack/ssl'
-
-# Rewrite URLs to groups.
-gem 'rack-rewrite-matches',
-  require: 'rack/rewrite'
-
-# Enforce strict CSP.
-gem 'content-security-policy'
-
-# Get Analytics by Google.
-gem 'rack-google-analytics'
+  gem 'content-security-policy'
+  
+  gem 'rack_csrf',
+    require: 'rack/csrf'
+  
+end
 
 # * Drivers * #
 
-# MongoDB drivers.
-gem 'mongo'
-gem 'bson_ext'
-gem 'mongoid'
+group :database do
+  
+  gem 'mongo'
+  gem 'bson_ext'
+  gem 'mongoid'
+  gem 'magicbus'
+  
+end
 
-# RabbitMQ wrapper.
-gem 'magicbus'
+group :extensions do
+  
+  gem 'pony'
+  
+  gem 'stripe'
+  
+  gem 'analytics-ruby',
+    require: 'analytics-ruby'
+  
+end
 
-# Javascript bridge.
-gem 'therubyracer',
-  require: 'v8'
+group :deployment do
+  
+  gem 'capistrano'
+  gem 'rvm-capistrano'
+  
+end
 
-# * Asset pipeline * #
+group :assets do
+  
+  gem 'sprockets'
+  gem 'sass'
+  gem 'i18n'
 
-gem 'sprockets'
-
-# Templating
-gem 'fifty'
-
-# CSS preprocessors
-gem 'sass'
-
-# Javascript compilation.
-gem 'closure-compiler'
-
-# Text rendering.
-gem 'slodown'
-
-# Language locales.
-gem 'i18n'
-
-# * Mailing * #
-gem 'pony'
-
-# * Payment * #
-gem 'stripe'
-
-# * Analytics * #
-gem 'analytics-ruby',
-  require: 'analytics-ruby'
-
-# * Deployment *#
-gem 'capistrano'
-gem 'rvm-capistrano'
-
-group :development do
   gem 'guard'
   gem 'guard-haml'
   gem 'guard-steering'
+  
+  gem 'yajl-ruby',
+    require: 'yajl/json_gem'
+
+  gem 'closure-compiler'
+  
+  gem 'therubyracer',
+    require: 'v8'
+    
+end
+
+group :development do
+  
+  gem 'rake'
+  
+  gem 'rack-nocache',
+    require: 'rack/nocache'
+  
 end
