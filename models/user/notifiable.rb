@@ -13,7 +13,7 @@ module User::Notifiable
 
     create_selector.merge!({
       action: params[:action],
-      group_id: group.id
+      group_id: group.id.to_s
     })
 
     if unread_selector and notification =
@@ -56,7 +56,7 @@ module User::Notifiable
       actor_ids: user.id.to_s,
       action: action,
       read: false,
-      group_id: group.id
+      group_id: group.id.to_s
     )
     
     MagicBus::Publisher.broadcast(group, :update, :notification, 

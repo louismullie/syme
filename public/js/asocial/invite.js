@@ -15,7 +15,7 @@ guard('invite', {
       var PPA_k = $.base64.decode(PPA_k);
       var k_sA = $.base64.decode(k_sA);
 
-      var k = sjcl.decrypt(sA, k_sA);
+      var k = JSON.parse(sjcl.decrypt(sA, k_sA));
       var PPA = JSON.parse(sjcl.decrypt(k, PPA_k));
 
       // Retrieve security answer from inviter.
@@ -51,7 +51,6 @@ guard('invite', {
         invite_id: asocial.state.invite.id,
         group_id: asocial.binders.getCurrentGroup()
       });
-
 
       $.post('/invite/integrate', integration, function (data) {
 
@@ -151,34 +150,24 @@ guard('invite', {
   inviteSubmit: function(email, callback) {
 
     asocial.auth.getPasswordLocal(function (password) {
-
-      //var inviterKey = sjcl.ecc.elGamal.generateKeys(384, 10);
-      //var inviterPublic = inviterKey.pub;
+    
+      var keys = asocial.crypto.ecc.generateKeys();
       
-      // 1A: !(P, p).
-      var keys = asocial.crypto.generateRSA(true);
-
-      // 1B: !sB
-      var sB_salt = asocial.crypto.generateRandomHexSalt();
-      var sB = asocial.crypto.calculateHash(password, sB_salt);
-      alert(sB);
-      alert(sB_salt);
+      var invitePubKey = JSON.stringify(asocial.crypto.ecc.serializePublicKey(keys.pub));
+      var invitePrivKey = JSON.stringify(asocial.crypto.ecc.serializePrivateKey(keys.sec));
       
-      // 1C: p -> {p}sB
-      var P = asocial.crypto.encode(keys.public_key);
-      var p = asocial.crypto.encode(keys.private_key);
-      var p_sB = $.base64.encode(sjcl.encrypt(sB, p));
-
-      // Build invitation.
+      var invitePrivKeySalt = asocial.crypto.generateRandomHexSalt();
+      var invitePrivKeySymKey = asocial.crypto.calculateHash(password, invitePrivKeySalt);
+    
+      var encInviterPrivKey = sjcl.encrypt(invitePrivKeySymKey, invitePrivKey);
+      
       var invitation = $.param({
         email: email,
-        P: P, p_sB: p_sB,
-        sB_salt: sB_salt,
-        //inviterPublic: inviterKey.pub,
-        //inviterKey: inviterKey
+        inviter_pub_key: $.base64.encode(invitePubKey),
+        enc_inviter_priv_key: $.base64.encode(encInviterPrivKey),
+        inviter_priv_key_salt: invitePrivKeySalt
       });
 
-      // 1D: B -> R: (P, {p}sB)
       var group = asocial.binders.getCurrentGroup();
 
       $.post('/' + group + '/invite/send', invitation, function (data) {

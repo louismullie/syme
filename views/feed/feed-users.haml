@@ -14,17 +14,17 @@
 
     %li.invite
       #invites-header Awaiting confirmation
-
+      
       // Replace by GET request with only invite ID, which returns the rest.
-      %a.invite-confirm{href: '#', 'data-invite-id'         => '{{id}}',
-                                   'data-invite-token'      => '{{token}}',
-                                   'data-invite-invitee_id' => '{{invitee_id}}',
-                                   'data-invite-k_P'        => '{{k_P}}',
-                                   'data-invite-PA_k'       => '{{PA_k}}',
-                                   'data-invite-p_sB'       => '{{p_sB}}',
-                                   'data-invite-sB_salt'    => '{{sB_salt}}',
-                                   'data-invite-a_P'        => '{{a_P}}'}
-
+      %a.invite-confirm{href: '#',  'data-invite-id'         => '{{id}}',
+        'data-invite-token'      => '{{token}}',
+        'data-invite-invitee_id' => '{{invitee_id}}',
+        'data-invite-enc_inviter_priv_key' => '{{enc_inviter_priv_key}}',
+        'data-invite-inviter_priv_key_salt' => '{{inviter_priv_key_salt}}', 
+        'data-invite-invitee_pub_key' => '{{invitee_pub_key}}',
+        'data-invite-a_k' => '{{a_k}}',
+        'data-invite-PA_k' => '{{PA_k}}'}
+      
         %img.placeholder-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" }
 
         %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}

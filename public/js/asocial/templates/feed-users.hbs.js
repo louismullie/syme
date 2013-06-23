@@ -20,10 +20,14 @@ function program2(depth0,data) {
   foundHelper = helpers.PA_k;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.PA_k; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1) + "' data-invite-a_P='";
-  foundHelper = helpers.a_P;
+  buffer += escapeExpression(stack1) + "' data-invite-a_k='";
+  foundHelper = helpers.a_k;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.a_P; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.a_k; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1) + "' data-invite-enc_inviter_priv_key='";
+  foundHelper = helpers.enc_inviter_priv_key;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.enc_inviter_priv_key; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-invite-id='";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
@@ -32,18 +36,14 @@ function program2(depth0,data) {
   foundHelper = helpers.invitee_id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.invitee_id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1) + "' data-invite-k_P='";
-  foundHelper = helpers.k_P;
+  buffer += escapeExpression(stack1) + "' data-invite-invitee_pub_key='";
+  foundHelper = helpers.invitee_pub_key;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.k_P; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1) + "' data-invite-p_sB='";
-  foundHelper = helpers.p_sB;
+  else { stack1 = depth0.invitee_pub_key; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1) + "' data-invite-inviter_priv_key_salt='";
+  foundHelper = helpers.inviter_priv_key_salt;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.p_sB; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1) + "' data-invite-sB_salt='";
-  foundHelper = helpers.sB_salt;
-  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.sB_salt; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.inviter_priv_key_salt; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-invite-token='";
   foundHelper = helpers.token;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }

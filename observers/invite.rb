@@ -44,7 +44,7 @@ class InviteObserver < Mongoid::Observer
       MagicBus::Publisher.broadcast(
         group, :confirm, :invite, {
           group: group.name,
-          group_id: group.id
+          group_id: group.id.to_s
       })
 
     end

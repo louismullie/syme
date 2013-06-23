@@ -10,11 +10,11 @@ guard 'haml', haml_config do
   watch(/^.+(\.haml)/)
 end
 
-hbs_config = {
+hbs_config = { 
   input: './.hbs/views',
   output_folder: './public/js/asocial/templates',
   register_partials: true,
-  run_at_start: true
+  run_at_start: true 
 } 
 
 guard 'steering', hbs_config do
