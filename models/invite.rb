@@ -26,16 +26,20 @@ class Invite
   field :keys, type: String
   
   # Step 1.
-  field :P
-  field :p_sB
-  field :sB_salt
-  
+  field :inviter_pub_key
+  field :enc_inviter_priv_key
+  field :inviter_priv_key_salt
+
   # Step 2.
-  field :k_P
-  field :k_sA
+  field :invitee_pub_key
+  field :enc_invitee_priv_key
+  field :invitee_priv_key_salt
+  
   field :PA_k
-  field :a_P
+  field :a_k
+  
   field :a_PA
+  field :k_sA
   
   # Step 3.
   field :PPA_k

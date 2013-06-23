@@ -12,9 +12,9 @@ class NotificationGenerator
     group = Group.find(notification.group_id)
 
     g_notification = {
-      id:         notification.id,
-      post_id:    notification.post_id,
-      comment_id: notification.comment_id,
+      id:         notification.id.to_s,
+      post_id:    notification.post_id.to_s,
+      comment_id: notification.comment_id.to_s,
       action:     notification.action.to_s,
       group:      group.name,
       group_id:   group.id.to_s,

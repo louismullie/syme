@@ -61,7 +61,7 @@ asocial.binders.add('groups', { main: function() {
     var publicKey = asocial_public_key();
 
     // Serialize public key to JSON format.
-    var pKeyJson = asocial.crypto.serializePublicKey(publicKey);
+    var pKeyJson = asocial.crypto.ecc.serializePublicKey(publicKey);
 
     // Build a keylist with user's public key.
     var keylist =  {}; keylist[userId] = pKeyJson;

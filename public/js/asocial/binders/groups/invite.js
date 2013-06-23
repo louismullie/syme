@@ -13,53 +13,44 @@ asocial.binders.add('groups', { invite: function() {
 
       // Get invite token from accept link.
       var token = $that.data('invite-token');
-      var P = $that.data('invite-p');
+      var inviterPubKey = $that.data('invite-inviter_pub_key');
       
-      //var inviteeKey = sjcl.ecc.elGamal.generateKeys(384, 10); 
-      //var inviteePublic = inviteeKey.pub;
-
-      var a = prompt($that.data('invite-question'));
-
-      // 2A: generate k.
-      console.log("2A");
-      var k = asocial.crypto.generateRandomKey();
-
-      // 2B.1 retrieve P.
-      console.log("2B.1");
-      var P_txt = JSON.parse($.base64.decode(P));
-      var P = asocial.crypto.buildPublicKey(P_txt);
-
-      // 2B.2 retrieve sA.
-      console.log("2B.2");
-
-      var sA = asocial.crypto.calculateHash(
-        password, asocial.state.user.keypair_salt);
-
-      // 2B.3 retrieve PA.
-      console.log("2B.3")
-      var PA = asocial_public_key();
-      var PA_txt = JSON.stringify(
-        asocial.crypto.serializePublicKey(PA));
-
-      // 2C: A -> R: {k}P, {k}sA, {PA}k
-      var k_P = P.encrypt(k);
-      var a_P = P.encrypt(a);
-
-      var k_sA = sjcl.encrypt(sA, k);
-      var PA_k = sjcl.encrypt(k, PA_txt);
+      var inviterPublicKey = asocial.crypto.ecc.buildPublicKey(
+        JSON.parse($.base64.decode(inviterPubKey)));
+      
+      var inviteeKeys = asocial.crypto.ecc.generateKeys();
+      var inviteePrivKey = asocial.crypto.ecc.serializePrivateKey(inviteeKeys.sec);
+      var inviteePubKey = asocial.crypto.ecc.serializePublicKey(inviteeKeys.pub);
+      
+      var inviteePrivKeySalt = asocial.crypto.generateRandomHexSalt();
+      var inviteePrivKeySymKey = asocial.crypto.calculateHash(password, inviteePrivKeySalt);
+      
+      var encInviteePrivKey = sjcl.encrypt(inviteePrivKeySymKey,
+        $.base64.encode(JSON.stringify(inviteePrivKey)));
+      
+      var inviteAnswer = prompt($that.data('invite-question'));
+      
+      var k = inviteeKeys.sec.dh(inviterPublicKey); 
+      
+      var PA = asocial.crypto.ecc.serializePublicKey(asocial_public_key());
+      var PA_k = sjcl.encrypt(k, $.base64.encode(JSON.stringify(PA)));
+      
+      var sA = asocial.crypto.calculateHash(password, asocial.state.user.keypair_salt);
+      var k_sA = $.base64.encode(sjcl.encrypt(sA, JSON.stringify(k)));
+      
+      var a_k = sjcl.encrypt(k, inviteAnswer);
 
       // Build registration.
       var keys = $.param({
-        token: token,
-        user_id: asocial.state.user.id,
-        k_P: $.base64.encode(k_P),
-        k_sA: $.base64.encode(k_sA),
+        token: token, user_id: asocial.state.user.id,
+        invitee_pub_key: $.base64.encode(JSON.stringify(inviteePubKey)),
+        enc_invitee_priv_key: encInviteePrivKey,
+        invitee_priv_key_salt: inviteePrivKeySalt,
         PA_k: $.base64.encode(PA_k),
-        a_P: $.base64.encode(a_P),
-        // encryptedInviteeKey: encryptedInviteeKey,
-        // inviteePublic: inviteePublic
+        a_k: $.base64.encode(a_k),
+        k_sA: k_sA
       });
-
+      
       $.post('/invite/accept', keys, function (data) {
         // Refresh page
         asocial.binders.goToUrl('/');

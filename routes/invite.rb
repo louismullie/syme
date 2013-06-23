@@ -12,17 +12,14 @@ post '/:group_id/invite/send', auth: [] do |group_id|
   # Generate invitation token.
   token = SecureRandom.uuid
 
-  # Store P and P_sB.
   invite = @group.invites.create!(
-    inviter_id: @user.id.to_s,
-    email: params['email'],
-    privileges: :none,
-    token: token,
-    P: params['P'],
-    p_sB: params['p_sB'],
-    sB_salt: params['sB_salt']
+    inviter_id: @user.id.to_s, privileges: :none, 
+    email: params['email'], token: token,
+    inviter_pub_key: params['inviter_pub_key'],
+    enc_inviter_priv_key: params['enc_inviter_priv_key'],
+    inviter_priv_key_salt: params['inviter_priv_key_salt']
   )
-
+  
   invite.save!
 
   track @user, 'Invited a new group member'
@@ -71,15 +68,16 @@ post '/invite/accept' do
 
   invite = Invite.where(token: token).first
   @group = invite.group
-
-  # Invite
+  
   invitee = User.find(user_id)
   invite.invitee_id = invitee.id.to_s
-
-  invite.k_P = params['k_P']
-  invite.k_sA = params['k_sA']
+  
+  invite.invitee_pub_key = params['invitee_pub_key']
+  invite.enc_invitee_priv_key = params['enc_invitee_priv_key']
+  invite.invitee_priv_key_salt = params['invitee_priv_key_salt']
+  
   invite.PA_k = params['PA_k']
-  invite.a_P = params['a_P']
+  invite.a_k = params['a_k']
 
   invite.save!
 
@@ -141,6 +139,7 @@ post '/invite/confirm', auth: [] do
 
   invite.PPA_k = params[:PPA_k]
   invite.a_PA = params[:a_PA]
+  invite.k_sA = params[:k_sA]
   invite.state = 3
   invite.save!
 

@@ -20,7 +20,7 @@ asocial.binders.add('feed', { crypto: function(){
     var filename = link.data('attachment-filename');
     var key      = link.data('attachment-key');
 
-    key = asocial_private_key().decrypt(key);
+    key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
 
     asocial.crypto.getFile(id, key, function (url) {
 

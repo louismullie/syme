@@ -5,7 +5,7 @@ class FeedGenerator
     posts = generate_posts(posts, current_user, current_group)
     user = generate_user(current_user, current_group)
     users = generate_user_list(current_group, current_user)
-    invite = generate_pending_invites(current_group, current_user)
+    invite = InviteGenerator.generate_pending_invites(current_group, current_user)
     group = GroupGenerator.generate(current_group, current_user)
 
     {
@@ -76,28 +76,6 @@ class FeedGenerator
     end
 
     show_updated_at
-
-  end
-
-  def self.generate_pending_invites(group, user)
-
-    select = { inviter_id: user.id.to_s, state: 2 }
-
-    group.invites.where(select).map do |invite|
-      {
-        id: invite.id.to_s,
-        token: invite.token,
-
-        invitee_id: invite.invitee_id,
-        invitee_full_name: invite.invitee.full_name,
-
-        k_P: invite.k_P,
-        PA_k: invite.PA_k,
-        p_sB: invite.p_sB,
-        sB_salt: invite.sB_salt,
-        a_P: invite.a_P
-      }
-    end
 
   end
 
