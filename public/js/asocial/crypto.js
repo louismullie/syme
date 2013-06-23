@@ -28,10 +28,10 @@ guard('crypto', {
       var keypair = $.parseJSON(decryptedKeypairJson);
 
       // Build an RSAKey() object from the serialized private key.
-      var private_key = asocial.crypto.buildPrivateKey(keypair.private_key);
+      var private_key = asocial.crypto.ecc.buildPrivateKey(keypair.private_key);
 
       // Build an RSAKey() object from the serialized public key.
-      var public_key = asocial.crypto.buildPublicKey(keypair.public_key);
+      var public_key = asocial.crypto.ecc.buildPublicKey(keypair.public_key);
 
       // Define the private and public keys and prevent overwrite.
       guard('private_key', function () { return private_key; });
@@ -67,7 +67,7 @@ guard('crypto', {
       var keylist = {};
 
       $.each(keylistJson, function (userId, publicKeyInfo) {
-        keylist[userId] = asocial.crypto.buildPublicKey(publicKeyInfo);
+        keylist[userId] = asocial.crypto.ecc.buildPublicKey(publicKeyInfo);
       });
 
       window.asocial_keylist = function() { return keylist; }
@@ -80,24 +80,6 @@ guard('crypto', {
       return false;
 
     }
-  },
-
-  /*
-   * Build an RSAKey() object for a public
-   * key based on the key numbers "n" and "e",
-   * stored in string format in keyInfo.
-   */
-  buildPublicKey: function (keyInfo) {
-
-    // Create a blank RSAKey object.
-    var publicKey = new RSAKey();
-
-    // Set the public information from key info.
-    publicKey.setPublic(keyInfo.n, keyInfo.e);
-
-    // Return public key.
-    return publicKey;
-
   },
 
   encryptKeyList: function (hash, keylist) {
@@ -121,7 +103,7 @@ guard('crypto', {
     var _this = this;
 
     $.each(asocial_keylist(), function (id, key) {
-      public_keys[id] = _this.serializePublicKey(key);
+      public_keys[id] = _this.ecc.serializePublicKey(key);
     });
 
     return public_keys;
@@ -185,9 +167,11 @@ guard('crypto', {
     var encrypted_keys = {};
 
     $.each(public_keys, function (user_id, public_key) {
-      encrypted_keys[user_id] = public_key.encrypt(msg_key);
+      encrypted_keys[user_id] = asocial.crypto.ecc.encrypt(public_key, msg_key);
     });
-
+    
+    //alk = encrypted_keys;
+    
     return encrypted_keys;
 
   },
@@ -199,32 +183,18 @@ guard('crypto', {
 
   generateRSA: function (with_rsa) {
 
-    rsa = new RSAKey();
-    rsa.generate(1024, "10001");
+    //rsa = new RSAKey();
+    //rsa.generate(1024, "10001");
 
-    var public_key = {
-      n: rsa.n.toString(16),
-      e: rsa.e.toString(16)
-    };
-
-    var private_key = {
-      n: rsa.n.toString(16),
-      e: rsa.e.toString(16),
-      d: rsa.d.toString(16),
-      p: rsa.p.toString(16),
-      q: rsa.q.toString(16),
-      dmpq: rsa.dmp1.toString(16),
-      dmq1: rsa.dmq1.toString(16),
-      iqmp: rsa.coeff.toString(16)
-    };
-
+    var key = this.ecc.generateKeys();
+    
     var keypair = {
-      private_key: private_key,
-      public_key: public_key,
+      private_key: asocial.crypto.ecc.serializePrivateKey(key.sec),
+      public_key: asocial.crypto.ecc.serializePublicKey(key.pub),
     };
 
     if (with_rsa) {
-      keypair.rsa_key = rsa;
+      keypair.rsa_key = key;
     }
 
     return keypair;
@@ -249,7 +219,7 @@ guard('crypto', {
     var _this = this;
 
     $.each(public_key_infos, function(user_id, public_info) {
-      public_keys[user_id] = _this.buildPublicKey(public_info);
+      public_keys[user_id] = _this.ecc.buildPublicKey(public_info);
     });
 
     return public_keys;
@@ -257,22 +227,11 @@ guard('crypto', {
   },
 
 
-  buildPrivateKey: function (private_info) {
-
-    var private_key = new RSAKey();
-
-    private_key.setPrivateEx(private_info.n, private_info.e,
-    private_info.d, private_info.p, private_info.q,
-    private_info.dmpq, private_info.dmq1, private_info.iqmp);
-
-    return private_key;
-  },
-
   // Decrypt message using message key and private key.
   decryptMessage: function(message, msg_key) {
 
     var private_key = asocial_private_key();
-    var msg_key = private_key.decrypt(msg_key);
+    var msg_key = asocial.crypto.ecc.decrypt(private_key, msg_key);
     return sjcl.decrypt(msg_key, message);
 
   },
@@ -284,23 +243,23 @@ guard('crypto', {
       var _this = this;
       // Decrypt each encrypted post on the page.
       $.each($('.encrypted'), function (i, element) {
-
+        
         var message = $.parseJSON(element.innerText);
         message.content = JSON.stringify(message.content); // This is hacky...
-
+        
         // Decrypt the message using the message key and private key.
         var decrypted = asocial.crypto.decryptMessage(message.content, message.key);
         decrypted = marked(decrypted);
-
+        
         // Show the user tags.
         decrypted = asocial.helpers.replaceUserMentions(decrypted);
-
+        
         // Hide the "This post is encrypted notice."
         $(element).parent().find('.encrypted_notice').remove();
-
+        
         // Markdown the message and insert in place.
         $(element).replaceWith(decrypted);
-
+        
       });
 
       asocial.helpers.formatPostsAndComments();
@@ -328,7 +287,7 @@ guard('crypto', {
           group = image.data('attachment-group');
 
       // Safe global variable?
-      key = asocial_private_key().decrypt(key);
+      key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
 
       _this.getFile(id, key, function (url) {
 
@@ -356,7 +315,7 @@ guard('crypto', {
           group = $this.data('attachment-group');
 
       // Safe global variable?
-      key = asocial_private_key().decrypt(key);
+      key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
 
       _this.getFile(id, key, function (url) {
 
@@ -380,7 +339,7 @@ guard('crypto', {
       if (id == '') { return; }
 
       var key = element.data('key');
-      key = asocial_private_key().decrypt(key);
+      key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
 
       _this.getFile(id, key, function (url) {
         var avatars = $('.encrypted-avatar[data-user-id="' + user_id + '"]');
@@ -417,7 +376,7 @@ guard('crypto', {
 
     var download = function (id, key, group) {
 
-      var group = group || asocial.state.group.id;
+      var group = group || asocial.binders.getCurrentGroup();
 
       var baseUrl = '/' + group + '/file/';
 
@@ -486,65 +445,65 @@ guard('crypto', {
   decode: function (base64) {
     return JSON.parse($.base64.decode(base64));
   },
-
+  
   ecc: {
-
+    
     generateKeys: function () {
       return sjcl.ecc.elGamal.generateKeys(384, 1);
     },
-
-    serializePublicKey: function (key) {
-      return key.pub.serialize();
+    
+    serializePublicKey: function (publicKey) {
+      return publicKey.serialize();
     },
-
-    serializePrivateKey: function (key) {
-      return key.sec.serialize();
+    
+    serializePrivateKey: function (privateKey) {
+      return privateKey.serialize();
     },
-
+    
     buildPublicKey: function (pubJson) {
-
+      
       var point = sjcl.ecc.curves["c" + pubJson.curve].fromBits(pubJson.point);
-
+      
       var publicKey = new sjcl.ecc.elGamal.publicKey(pubJson.curve, point.curve, point);
-
+      
       return publicKey;
     },
-
+    
     buildPrivateKey: function (privJson) {
-
+      
       var exponent = sjcl.bn.fromBits(privJson.exponent);
-
+      
       var curve = "c" + privJson.curve;
       var privateKey = new sjcl.ecc.elGamal.secretKey(
-          privJson.curve, sjcl.ecc.curves[curve], ex);
-
+          privJson.curve, sjcl.ecc.curves[curve], exponent);
+          
       return privateKey;
     },
-
+    
     encrypt: function (publicKey, data) {
-
+      
       var symKey = publicKey.kem(0);
       var ciphertext = sjcl.encrypt(symKey.key, data);
-
+      
       var message = JSON.stringify({
         'ciphertext': ciphertext,
         'encrypted_key': symKey.tag
       });
-
-      return message;
+      
+      return $.base64.encode(message);
     },
-
+    
     decrypt: function (privateKey, message) {
-
-      var cipherMessage = JSON.parse(message);
-
+      
+      var cipherMessage = JSON.parse($.base64.decode(message));
+      
       var symKey = privateKey.unkem(cipherMessage.encrypted_key);
       var decryptedData = sjcl.decrypt(symKey, cipherMessage.ciphertext);
-
+      
       return decryptedData;
-
+      
     }
-
+    
   }
 
 });

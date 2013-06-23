@@ -1,11 +1,14 @@
-.row
-  .columns.small-24.large-12.large-centered
-    %h1.enormous
-      {{t 'not_found.title'}}
+.container
 
-    %p.lead
-      {{t 'not_found.text'}}
+  .row
 
-    %p.text-align-right
-      %a.btn.btn-large{href: '/'}
-        &lt; {{t 'not_found.button'}}
+    .span8.offset2
+
+      %h1.enormous
+        {{t 'not_found.title'}}
+      %p.lead
+        {{t 'not_found.text'}}
+      %p.text-align-right
+
+        %a.btn.btn-large{href: '/'}
+          &lt; {{t 'not_found.button'}}

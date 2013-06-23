@@ -3,7 +3,7 @@
     .small-24
       %ul
         %li#brand
-          %a{ href: '/', hbs: '' }
+          %a{ href: '/', :'data-hbs' => '' }
             Asocial
 
         %li
@@ -18,14 +18,14 @@
         %li#group-selector
           %ul<
             %li.title>
-              %a{ href: '/', hbs: '' } Groups
+              %a{ href: '/', :'data-hbs' => '' } Groups
 
             %li.group
 
         .pull-right
           .hide-for-small
             %li
-              %a.btn.hint--bottom{ href: '/settings', hbs: '', :'data-hint' => 'Settings' }
+              %a.btn.hint--bottom{ href: '/settings', :'data-hbs' => '', :'data-hint' => 'Settings' }
                 %i.icon-cog
 
             %li
@@ -34,5 +34,5 @@
 
           .show-for-small
             %li#side-pane
-              %a.btn{ href: '#', hbs: '' }
+              %a.btn{ href: '#', :'data-hbs' => '' }
                 %i.icon-reorder

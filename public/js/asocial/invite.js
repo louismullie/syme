@@ -15,12 +15,12 @@ guard('invite', {
       var PPA_k = $.base64.decode(PPA_k);
       var k_sA = $.base64.decode(k_sA);
 
-      var k = sjcl.decrypt(sA, k_sA);
+      var k = JSON.parse(sjcl.decrypt(sA, k_sA));
       var PPA = JSON.parse(sjcl.decrypt(k, PPA_k));
 
       // Retrieve security answer from inviter.
-      var securityAnswer = asocial_private_key()
-        .decrypt($.base64.decode(asocial.state.invite.a_PA));
+      var securityAnswer =asocial.crypto.ecc.decrypt(asocial_private_key(), 
+        $.base64.decode(asocial.state.invite.a_PA));
 
       // Generate a random key salt.
       var answerSalt = asocial.crypto.generateRandomHexSalt();
@@ -35,7 +35,7 @@ guard('invite', {
       asocial.state.group.answer = securityAnswer;
       asocial.state.group.answer_salt = answerSalt;
 
-      var PA = asocial.crypto.serializePublicKey(asocial_public_key());
+      var PA = asocial.crypto.ecc.serializePublicKey(asocial_public_key());
 
       PPA[asocial.state.user.id] = PA;
 
@@ -49,9 +49,8 @@ guard('invite', {
         answer: encodedAnswer,
         answer_salt: answerSalt,
         invite_id: asocial.state.invite.id,
-        group_id: asocial.state.group.id
+        group_id: asocial.binders.getCurrentGroup()
       });
-
 
       $.post('/invite/integrate', integration, function (data) {
 
@@ -59,7 +58,7 @@ guard('invite', {
 
           var ack = $.param({
             type: 'integrate',
-            group_id: asocial.state.group.id,
+            group_id: asocial.binders.getCurrentGroup(),
             invite_id: asocial.state.invite.id
           });
 
@@ -94,7 +93,7 @@ guard('invite', {
       var public_keys = {};
 
       $.each(keylist, function (id, key) {
-        public_keys[id] = asocial.crypto.serializePublicKey(key);
+        public_keys[id] = asocial.crypto.ecc.serializePublicKey(key);
       });
 
       var new_keys = JSON.parse($.base64.decode(asocial.state.invite.new_keys));
@@ -109,7 +108,7 @@ guard('invite', {
 
       var keylist = asocial.crypto.encryptKeyList(sB, public_keys);
 
-      var group_id = asocial.state.group.id;
+      var group_id = asocial.binders.getCurrentGroup();
 
       var update = $.param({
         keylist: keylist,
@@ -145,39 +144,31 @@ guard('invite', {
   refreshKeys: function () {
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
-    }, { group_id: asocial.state.group.id, force: true })
+    }, { group_id: asocial.binders.getCurrentGroup(), force: true })
   },
 
   inviteSubmit: function(email, callback) {
 
     asocial.auth.getPasswordLocal(function (password) {
-
-      //var inviterKey = sjcl.ecc.elGamal.generateKeys(384, 10);
-      //var inviterPublic = inviterKey.pub;
-
-      // 1A: !(P, p).
-      var keys = asocial.crypto.generateRSA(true);
-
-      // 1B: !sB
-      var sB_salt = asocial.crypto.generateRandomHexSalt();
-      var sB = asocial.crypto.calculateHash(password, sB_salt);
-
-      // 1C: p -> {p}sB
-      var P = asocial.crypto.encode(keys.public_key);
-      var p = asocial.crypto.encode(keys.private_key);
-      var p_sB = $.base64.encode(sjcl.encrypt(sB, p));
-
-      // Build invitation.
+    
+      var keys = asocial.crypto.ecc.generateKeys();
+      
+      var invitePubKey = JSON.stringify(asocial.crypto.ecc.serializePublicKey(keys.pub));
+      var invitePrivKey = JSON.stringify(asocial.crypto.ecc.serializePrivateKey(keys.sec));
+      
+      var invitePrivKeySalt = asocial.crypto.generateRandomHexSalt();
+      var invitePrivKeySymKey = asocial.crypto.calculateHash(password, invitePrivKeySalt);
+    
+      var encInviterPrivKey = sjcl.encrypt(invitePrivKeySymKey, invitePrivKey);
+      
       var invitation = $.param({
         email: email,
-        P: P, p_sB: p_sB,
-        sB_salt: sB_salt,
-        //inviterPublic: inviterKey.pub,
-        //inviterKey: inviterKey
+        inviter_pub_key: $.base64.encode(invitePubKey),
+        enc_inviter_priv_key: $.base64.encode(encInviterPrivKey),
+        inviter_priv_key_salt: invitePrivKeySalt
       });
 
-      // 1D: B -> R: (P, {p}sB)
-      var group = asocial.state.group.id;
+      var group = asocial.binders.getCurrentGroup();
 
       $.post('/' + group + '/invite/send', invitation, function (data) {
         callback(data);

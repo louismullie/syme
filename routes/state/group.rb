@@ -3,13 +3,13 @@ get '/state/group', auth: [] do
   content_type :json
 
   group_id = params[:group_id]
-
+  
   group = @user.groups.find(group_id)
 
   membership = @user.memberships.where(group_id: group.id).first
 
   full_names = group.users.map { |user| user.full_name }
-
+  
   group_token = {
     id: group.id.to_s,
     name: group.name,
@@ -19,7 +19,7 @@ get '/state/group', auth: [] do
     answer: membership.answer,
     answer_salt: membership.answer_salt
   }
-
+  
   group_token.to_json
 
 end

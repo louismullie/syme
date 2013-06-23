@@ -4,8 +4,7 @@
 //= require_directory ./config
 //= require ./crypto
 //= require ./helpers
-//= require ./session
-//= require ./router
+//= require ./url
 //= require ./binders
 //= require ./socket
 //= require ./uploader

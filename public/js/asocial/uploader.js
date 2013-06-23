@@ -8,7 +8,7 @@ guard('uploader', {
     progress = progress || function () {};
     success = success || function () {};
 
-    var group = asocial.state.group.id;
+    var group = asocial.binders.getCurrentGroup();
 
     uploader = new Uploader(file, key, keys, {
       data: data, baseUrl: '/' + group + '/file/'
@@ -29,7 +29,7 @@ guard('uploader', {
       function (upload) {
         var params = $.param({
           transfer_id: transfer_id,
-          group_id: asocial.state.group.id
+          group_id: asocial.binders.getCurrentGroup()
         });
 
         $.post('/send/file/start', params);

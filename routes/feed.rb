@@ -1,10 +1,6 @@
-get '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
+get '/:group_id', auth: [] do |group_id|
 
-  begin
-    @group = @user.groups.find(group_id)
-  rescue
-    pass
-  end
+  pass unless @group = @user.groups.find(group_id)
 
   posts = @group.posts.page(1)
 

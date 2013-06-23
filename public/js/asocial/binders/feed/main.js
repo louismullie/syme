@@ -21,18 +21,17 @@ asocial.binders.add('feed', { main: function(){
     }
   });
 
+  // ScrollToFixed
+  // $('#group-info').scrollToFixed({ marginTop: 20 });
+
   // Infinite scroller
   $('#feed').data('pagesloaded', 1);
 
-  $(window).data('infinite-scroll-done', false)
-           .data('infinite-scroll-async', false)
-           .data('infinite-scroll-manual', false);
-
   $(window).on('scroll', function(){
 
-    if( $(window).data('infinite-scroll-done'  )  ||
-        $(window).data('infinite-scroll-async' )  ||
-        $(window).data('infinite-scroll-manual')) return;
+    if($(window).data('infinite-scroll-done'  )  ||
+       $(window).data('infinite-scroll-async' )  ||
+       $(window).data('infinite-scroll-manual')) return;
 
     if($(window).scrollTop() >= $(document).height() - $(window).height() - 50){
 
@@ -62,7 +61,7 @@ asocial.binders.add('feed', { main: function(){
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
 
-      $.post('/' + asocial.state.group.id + '/page', request, function(data){
+      $.post('/' + asocial.binders.getCurrentGroup() + '/page', request, function(data){
 
         var lastPage = data.last_page,
             posts    = data.posts;

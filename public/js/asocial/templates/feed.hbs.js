@@ -12,15 +12,15 @@ Handlebars.templates['feed.hbs'] = Handlebars.template(function (Handlebars,dept
   buffer += "\n    <!-- / Feed -->\n    <div data-group-name='";
   stack1 = depth0.group;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.name;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
   buffer += escapeExpression(stack1) + "' data-month='";
   foundHelper = helpers.month;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.month; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.month; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-year='";
   foundHelper = helpers.year;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.year; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.year; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' id='feed'>\n      <!-- / New content button -->\n      <div id='newcontent'>\n        <a href='#'><i class=\"icon-refresh\"></i> ";
   foundHelper = helpers['t'];
   stack1 = foundHelper ? foundHelper.call(depth0, "new_content", {hash:{}}) : helperMissing.call(depth0, "t", "new_content", {hash:{}});

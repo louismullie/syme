@@ -276,7 +276,7 @@ guard('helpers', {
 
   getAndRender: function(template, url, callback, failure) {
 
-    var failure = failure || function(){};
+    failure = failure || function(){};
 
     $.getJSON(url, function (data) {
       callback( asocial.helpers.render(template, data) );

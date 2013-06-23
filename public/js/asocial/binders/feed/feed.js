@@ -14,7 +14,7 @@ asocial.binders.add('feed', { feed: function(){
     if (asocial.state.invite.update)
       asocial.invite.update();
 
-  }, { group_id: asocial.state.group.id });
+  }, { group_id: asocial.binders.getCurrentGroup() });
 
   // Unread button
   $('#main').on('click', '#newcontent a.btn', function(e){
@@ -48,7 +48,7 @@ asocial.binders.add('feed', { feed: function(){
   $('#main').on('click', '.post-header a.post-delete', function() {
 
       var post_id    = $(this).closest('.post').attr('id'),
-          group      = asocial.state.group.id,
+          group      = asocial.binders.getCurrentGroup(),
           route      = '/' + group + '/post/delete';
 
       if(confirm(locales.en.feed.delete_post_confirm)) {
