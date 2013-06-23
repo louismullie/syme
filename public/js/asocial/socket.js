@@ -182,7 +182,7 @@ guard('socket', {
       // If post is on the page yet
       if($('#' + data.target).length > 0){
 
-        var group = asocial.binders.getCurrentGroup();
+        var group = asocial.state.group.id;
         var url = '/' + group + '/post/lastof/';
 
         $.get(url + $('#feed').data('pagesloaded'),
@@ -258,7 +258,7 @@ guard('socket', {
     file: function (data) {
 
       // var buffers = {};
-      var group = asocial.binders.getCurrentGroup();
+      var group = asocial.state.group.id;
 
       if (data.action == 'request') {
 

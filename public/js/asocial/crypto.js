@@ -376,7 +376,7 @@ guard('crypto', {
 
     var download = function (id, key, group) {
 
-      var group = group || asocial.binders.getCurrentGroup();
+      var group = group || asocial.state.group.id;
 
       var baseUrl = '/' + group + '/file/';
 

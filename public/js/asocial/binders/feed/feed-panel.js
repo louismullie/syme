@@ -83,7 +83,7 @@ asocial.binders.add('feed', { feed_panel: function(){
   //      file: input.val(),
   //      // e.target.files[0]
   //      recipient_id: recipient_id,
-  //      group: asocial.binders.getCurrentGroup()
+  //      group: asocial.state.group.id
   //    }));
   //  }).trigger('click');
 

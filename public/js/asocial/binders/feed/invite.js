@@ -112,12 +112,12 @@ asocial.binders.add('feed', { invite: function(){
        var PPA_k = sjcl.encrypt(k, JSON.stringify(public_keys));
        var a_PA = asocial.crypto.ecc.encrypt(PA_obj, answer);
        
-      var group_id = asocial.binders.getCurrentGroup();
+      var group_id = asocial.state.group.id;
       
       $.get('/' + group_id + '/invite/keys',
         $.param({invite_id: invite_id }), function (keyData) {
 
-         var group_id = asocial.binders.getCurrentGroup();
+         var group_id = asocial.state.group.id;
 
          // Generate integration data for server.
          var confirmation = $.param({
@@ -131,7 +131,7 @@ asocial.binders.add('feed', { invite: function(){
            keylist_salt: keylist_salt
       });
       
-      var group_id = asocial.binders.getCurrentGroup();
+      var group_id = asocial.state.group.id;
        $.post('/invite/confirm', confirmation, function (data) {
 
          if (data.status == 'ok') {
@@ -140,7 +140,7 @@ asocial.binders.add('feed', { invite: function(){
 
            var broadcast = $.param({
              public_key: PA_msg, invitee_id: id_A,
-             group_id: asocial.binders.getCurrentGroup()
+             group_id: asocial.state.group.id
            });
 
            $.post('/invite/broadcast', broadcast, function (data) {
