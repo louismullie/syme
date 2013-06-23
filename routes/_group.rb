@@ -1,4 +1,4 @@
-get '/', auth: [] do
+get '/users/:id/groups', auth: [] do
 
   groups = @user.groups.map do |group|
     GroupGenerator.generate(group, @user)

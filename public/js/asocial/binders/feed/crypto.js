@@ -48,7 +48,7 @@ asocial.binders.add('feed', { crypto: function(){
   });
 
   // Shortcut for image attachment links
-  $(document).on('click', 'a.image-download', function(){
+  $('#main').on('click', 'a.image-download', function(){
     $(this).parent().find('.encrypted-file').click();
   });
 

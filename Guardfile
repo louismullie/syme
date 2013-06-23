@@ -15,7 +15,7 @@ hbs_config = {
   output_folder: './public/js/asocial/templates',
   register_partials: true,
   run_at_start: true
-} 
+}
 
 guard 'steering', hbs_config do
   watch(/^\.hbs\/views\/.+\.hbs$/)

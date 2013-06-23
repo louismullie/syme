@@ -58,11 +58,11 @@ asocial.binders.add('feed', { invite: function(){
        var PA_k = $.base64.decode($that.data('invite-pa_k'));
        var sB_salt = $that.data('invite-sb_salt');
        var a_P = $.base64.decode($that.data('invite-a_p'));
-       
+
        // var encryptedInviterKey = $.base64.decode($that.data('invite-inviterKey'));
        // var inviteePublic = $.base64.decode($that.data('invite-inviteePublic));
        // var inviterShared = inviterKey.dh(inviteePublic);
-       
+
        // 3B.
        console.log("3B");
        var p = asocial.crypto.buildPrivateKey(JSON.parse(
@@ -123,7 +123,7 @@ asocial.binders.add('feed', { invite: function(){
        var PA_obj = asocial.crypto.buildPublicKey(PA);
        var PPA_k = sjcl.encrypt(k, JSON.stringify(public_keys));
        var a_PA = PA_obj.encrypt(answer);
-       var group_id = asocial.binders.getCurrentGroup();
+       var group_id = asocial.state.group.id;
 
       $.get('/' + group_id + '/invite/keys',
         $.param({invite_id: invite_id }), function (keyData) {
@@ -154,7 +154,7 @@ asocial.binders.add('feed', { invite: function(){
 
            var broadcast = $.param({
              public_key: PA_msg, invitee_id: id_A,
-             group_id: asocial.binders.getCurrentGroup()
+             group_id: asocial.state.group.id
            });
 
            $.post('/invite/broadcast', broadcast, function (data) {

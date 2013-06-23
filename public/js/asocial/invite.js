@@ -49,7 +49,7 @@ guard('invite', {
         answer: encodedAnswer,
         answer_salt: answerSalt,
         invite_id: asocial.state.invite.id,
-        group_id: asocial.binders.getCurrentGroup()
+        group_id: asocial.state.group.id
       });
 
 
@@ -59,7 +59,7 @@ guard('invite', {
 
           var ack = $.param({
             type: 'integrate',
-            group_id: asocial.binders.getCurrentGroup(),
+            group_id: asocial.state.group.id,
             invite_id: asocial.state.invite.id
           });
 
@@ -109,7 +109,7 @@ guard('invite', {
 
       var keylist = asocial.crypto.encryptKeyList(sB, public_keys);
 
-      var group_id = asocial.binders.getCurrentGroup();
+      var group_id = asocial.state.group.id;
 
       var update = $.param({
         keylist: keylist,
@@ -145,7 +145,7 @@ guard('invite', {
   refreshKeys: function () {
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
-    }, { group_id: asocial.binders.getCurrentGroup(), force: true })
+    }, { group_id: asocial.state.group.id, force: true })
   },
 
   inviteSubmit: function(email, callback) {
@@ -154,7 +154,7 @@ guard('invite', {
 
       //var inviterKey = sjcl.ecc.elGamal.generateKeys(384, 10);
       //var inviterPublic = inviterKey.pub;
-      
+
       // 1A: !(P, p).
       var keys = asocial.crypto.generateRSA(true);
 
@@ -177,7 +177,7 @@ guard('invite', {
       });
 
       // 1D: B -> R: (P, {p}sB)
-      var group = asocial.binders.getCurrentGroup();
+      var group = asocial.state.group.id;
 
       $.post('/' + group + '/invite/send', invitation, function (data) {
         callback(data);

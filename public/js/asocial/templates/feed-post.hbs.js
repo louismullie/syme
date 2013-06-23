@@ -49,22 +49,22 @@ function program10(depth0,data) {
   buffer += "\n          <a class='like-count hint--top' data-hint='";
   foundHelper = helpers.liker_names;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.liker_names; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.liker_names; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "' href='#'><span>";
   foundHelper = helpers.like_count;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.like_count; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.like_count; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "</span>\n          Likes</a>\n          ";
   return buffer;}
 
   buffer += "<div class='post' data-encrypted='";
   foundHelper = helpers.encrypted;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.encrypted; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.encrypted; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "' id='";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "'>\n  <!-- / Avatar -->\n  ";
   stack1 = depth0.owner;
   stack1 = helpers['with'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(1, program1, data)});
@@ -72,19 +72,19 @@ function program10(depth0,data) {
   buffer += "\n  <div class='post-indent'>\n    <!-- / Post header -->\n    <div class='post-header'>\n      <!-- / Owner name -->\n      <p class='post-header-infos'>\n        ";
   stack1 = depth0.owner;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.name;
-  stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
   buffer += escapeExpression(stack1) + "\n        <!-- / Post time -->\n        <a class='time' data-hbs='' href='/";
   foundHelper = helpers.group_id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.group_id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.group_id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "/posts/";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "'>\n          <time class='timeago' datetime='";
   foundHelper = helpers.created_at;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.created_at; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.created_at; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "'></time>\n        </a>\n      </p>\n      <!-- / Delete button -->\n      ";
   stack1 = depth0.deletable;
   stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(3, program3, data)});
@@ -92,11 +92,11 @@ function program10(depth0,data) {
   buffer += "\n    </div>\n    <!-- / Post content -->\n    <div class='post-content'>\n      <!-- / Collapsable content -->\n      <div class='collapsable'>\n        <div class='encrypted_notice'>\n          <i>This post is encrypted.</i>\n        </div>\n        <div class='encrypted'>\n          {\"content\": ";
   foundHelper = helpers.content;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.content; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.content; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + ", \"key\": \"";
   foundHelper = helpers.key;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.key; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.key; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "\"}\n        </div>\n      </div>\n      <!-- / Attachment -->\n      ";
   stack1 = depth0.attachment;
   stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(5, program5, data)});
@@ -113,7 +113,7 @@ function program10(depth0,data) {
   buffer += "\n          &sdot;\n          <!-- / Comment count -->\n          <span class='comment-count'>";
   foundHelper = helpers.comment_count;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.comment_count; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  else { stack1 = depth0.comment_count; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "</span>\n          Comments\n        </div>\n      </div>\n    </div>\n    <div class='post-comments'>\n      ";
   stack1 = depth0;
   stack1 = self.invokePartial(partials['feed-comments.hbs'], 'feed-comments.hbs', stack1, helpers, partials);;
