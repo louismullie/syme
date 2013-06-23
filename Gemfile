@@ -1,80 +1,54 @@
 source 'https://rubygems.org'
 
-group :application do
+# * Application * #
+gem 'rack', '>= 1.5.2'
+gem 'sinatra'
+gem 'thin'
+gem 'foreman'
   
-  gem 'rack', '>= 1.5.2'
-  gem 'sinatra'
-  gem 'thin'
-  gem 'foreman'
-  
-end
+# * Security * #
+gem 'rack-ssl',
+  require: 'rack/ssl'
+gem 'content-security-policy'
+gem 'rack_csrf',
+  require: 'rack/csrf'
 
-group :security do
-  
-  gem 'rack-ssl',
-    require: 'rack/ssl'
+# * Database * #
+gem 'mongo'
+gem 'bson_ext'
+gem 'mongoid'
+gem 'magicbus'
 
-  gem 'content-security-policy'
-  
-  gem 'rack_csrf',
-    require: 'rack/csrf'
-  
-end
+# * Extensions * #
+gem 'pony'
+gem 'stripe'
+gem 'analytics-ruby',
+  require: 'analytics-ruby'
 
-# * Drivers * #
+# * Deployment * #  
+gem 'capistrano'
+gem 'rvm-capistrano'
+  
+# * Assets * #
+gem 'sprockets'
+gem 'sass'
+gem 'i18n'
 
-group :database do
-  
-  gem 'mongo'
-  gem 'bson_ext'
-  gem 'mongoid'
-  gem 'magicbus'
-  
-end
+gem 'guard'
+gem 'guard-haml'
+gem 'guard-steering'
 
-group :extensions do
-  
-  gem 'pony'
-  
-  gem 'stripe'
-  
-  gem 'analytics-ruby',
-    require: 'analytics-ruby'
-  
-end
+gem 'yajl-ruby',
+  require: 'yajl/json_gem'
 
-group :deployment do
-  
-  gem 'capistrano'
-  gem 'rvm-capistrano'
-  
-end
+gem 'closure-compiler'
 
-group :assets do
+gem 'therubyracer',
+  require: 'v8'
   
-  gem 'sprockets'
-  gem 'sass'
-  gem 'i18n'
-
-  gem 'guard'
-  gem 'guard-haml'
-  gem 'guard-steering'
-  
-  gem 'yajl-ruby',
-    require: 'yajl/json_gem'
-
-  gem 'closure-compiler'
-  
-  gem 'therubyracer',
-    require: 'v8'
-    
-end
-
+# * Development * #
 group :development do
-  
   gem 'rake'
-  
   gem 'rack-nocache',
     require: 'rack/nocache'
-  
 end
