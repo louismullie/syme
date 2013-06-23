@@ -12,6 +12,10 @@ module Asocial
       Dir["./#{dir}/**/*.rb"].each { |f| eval(File.read(f)) }
     end
 
+    def self.require_directory(dir)
+      Dir['./' + dir + '/*.rb'].each { |file| require file }
+    end
+    
     # Authorizations
     set(:auth) do |*roles|
       condition { halt 403 unless session[:user_id] }

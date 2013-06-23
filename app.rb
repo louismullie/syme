@@ -9,10 +9,10 @@ module Asocial
     configure { require_all 'config' }
     helpers   { require_all 'helpers' }
 
-    Dir['./models/*.rb'].each { |file| require file }
-    Dir['./observers/*.rb'].each { |file| require file }
-    Dir['./generators/*.rb'].each { |file| require file }
-
+    require_directory 'models'
+    require_directory 'observers'
+    require_directory 'generators'
+    
     require_specific('routes', ['stream', 'catch', 'group'])
     
     require_all 'routes'
