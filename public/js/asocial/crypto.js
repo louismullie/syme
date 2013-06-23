@@ -82,24 +82,6 @@ guard('crypto', {
     }
   },
 
-  /*
-   * Build an RSAKey() object for a public
-   * key based on the key numbers "n" and "e",
-   * stored in string format in keyInfo.
-   */
-  buildPublicKey: function (keyInfo) {
-
-    // Create a blank RSAKey object.
-    var publicKey = new RSAKey();
-
-    // Set the public information from key info.
-    publicKey.setPublic(keyInfo.n, keyInfo.e);
-
-    // Return public key.
-    return publicKey;
-
-  },
-
   encryptKeyList: function (hash, keylist) {
 
     return $.base64.encode(sjcl.encrypt(hash, JSON.stringify(keylist)));
@@ -244,17 +226,6 @@ guard('crypto', {
 
   },
 
-
-  buildPrivateKey: function (private_info) {
-
-    var private_key = new RSAKey();
-
-    private_key.setPrivateEx(private_info.n, private_info.e,
-    private_info.d, private_info.p, private_info.q,
-    private_info.dmpq, private_info.dmq1, private_info.iqmp);
-
-    return private_key;
-  },
 
   // Decrypt message using message key and private key.
   decryptMessage: function(message, msg_key) {
