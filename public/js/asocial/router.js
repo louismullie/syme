@@ -194,12 +194,12 @@ Router = Backbone.Router.extend({
 
       });
 
-      if ($('#notifications-content').children().length == 0) { alert(2);
+      if ($('#notifications-content').children().length == 0) {
 
         $('#notifications-content').html(
           asocial.helpers.render('feed-notifications-empty'));
 
-      } else { alert(3);
+      } else {
 
         $('#notifications')
           .prepend('<span class="notification-badge">' +
