@@ -284,17 +284,23 @@ guard('crypto', {
       var _this = this;
       // Decrypt each encrypted post on the page.
       $.each($('.encrypted'), function (i, element) {
+        
         var message = $.parseJSON(element.innerText);
         message.content = JSON.stringify(message.content); // This is hacky...
+        
         // Decrypt the message using the message key and private key.
         var decrypted = asocial.crypto.decryptMessage(message.content, message.key);
         decrypted = marked(decrypted);
+        
         // Show the user tags.
         decrypted = asocial.helpers.replaceUserMentions(decrypted);
+        
         // Hide the "This post is encrypted notice."
         $(element).parent().find('.encrypted_notice').remove();
+        
         // Markdown the message and insert in place.
         $(element).replaceWith(decrypted);
+        
       });
 
       asocial.helpers.formatPostsAndComments();
