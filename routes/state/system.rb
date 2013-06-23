@@ -4,7 +4,8 @@ get '/state/system' do
 
   data = {
     install: User.all.empty?,
-    logged_in: !@user.nil?
+    logged_in: !@user.nil?,
+    user_id: @user.nil? ? '' : @user.id
   }
   
   data.to_json

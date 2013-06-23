@@ -1,5 +1,10 @@
 asocial.binders.add('register', { main: function(){
-
+  
+  /*$.get('/users/' + asocial.state.system.user_id + '/qr_code' ,
+    $.param({email: email}), function (url) {
+      $('#login-form').prepend('<img src="' + url + '" />');
+  });*/
+  
   // Registering mode
   $('#auth').on('submit', '#register-form', function(e) {
 

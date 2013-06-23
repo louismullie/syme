@@ -121,3 +121,9 @@ delete '/users/:user_id', auth: [] do |user_id|
   empty_response
 
 end
+
+get '/users/:user_id/qr_code' do |user_id|
+  ga = GoogleAuthenticator.new
+  session['ga_secret_key'] = ga.secret_key
+  ga.qrcode_image_url(params[:email])
+end

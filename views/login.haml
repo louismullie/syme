@@ -19,6 +19,10 @@
             %i.icon-lock
             %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
 
+          .input-text-icon
+            %i.icon-lock
+            %input{type: 'text', name: 'qr_code', placeholder: 'Enter code here...'}
+
           %label{ for: 'remember_me' }
             %input#remember_me{type: 'checkbox', name: 'remember_me'}
             %span Keep me logged in

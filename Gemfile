@@ -12,6 +12,8 @@ gem 'rack-ssl',
 gem 'content-security-policy'
 gem 'rack_csrf',
   require: 'rack/csrf'
+gem 'base32' # dependency for Google Auth
+gem 'google_authenticator_auth'
 
 # * Database * #
 gem 'mongo'
@@ -45,6 +47,7 @@ gem 'closure-compiler'
 
 gem 'therubyracer',
   require: 'v8'
+  
   
 # * Development * #
 group :development do

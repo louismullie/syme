@@ -29,11 +29,13 @@ asocial.binders.add('login', { main: function(){
         // Authorize User
         asocial.auth.authorizeForUser(function () {
 
+          $('#login-form #ga_code').removeClass('hidden');
+          
           // Load HBS template
-          $('body').html( asocial.helpers.render('container') );
+          // $('body').html( asocial.helpers.render('container') );
 
           // Redirect to root, which is now group UI
-          asocial.binders.goToUrl('/');
+          // asocial.binders.goToUrl('/');
 
         }, password);
 
