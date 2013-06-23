@@ -58,10 +58,11 @@ asocial.binders.add('feed', { invite: function(){
        var PA_k = $.base64.decode($that.data('invite-pa_k'));
        var sB_salt = $that.data('invite-sb_salt');
        var a_P = $.base64.decode($that.data('invite-a_p'));
-
-       var sB = asocial.crypto.calculateHash(
-         password, sB_salt);
-
+       
+       // var encryptedInviterKey = $.base64.decode($that.data('invite-inviterKey'));
+       // var inviteePublic = $.base64.decode($that.data('invite-inviteePublic));
+       // var inviterShared = inviterKey.dh(inviteePublic);
+       
        // 3B.
        console.log("3B");
        var p = asocial.crypto.buildPrivateKey(JSON.parse(

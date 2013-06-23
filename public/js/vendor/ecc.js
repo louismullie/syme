@@ -787,14 +787,14 @@ sjcl.ecc.pointJac.prototype = {
  *
  * @constructor
  * @param {bigInt} p The prime modulus.
- * @param {bigInt} r The prime order of the curve.
+ * @param {bigInt} pMinusR The modulus minus prime order of the curve.
  * @param {bigInt} a The constant a in the equation of the curve y^2 = x^3 + ax + b (for NIST curves, a is always -3).
  * @param {bigInt} x The x coordinate of a base point of the curve.
  * @param {bigInt} y The y coordinate of a base point of the curve.
  */
-sjcl.ecc.curve = function(Field, r, a, b, x, y) {
+sjcl.ecc.curve = function(Field, pMinusR, a, b, x, y) {
   this.field = Field;
-  this.r = Field.prototype.modulus.sub(r);
+  this.r = Field.prototype.modulus.sub(pMinusR);
   this.a = new Field(a);
   this.b = new Field(b);
   this.G = new sjcl.ecc.point(this, new Field(x), new Field(y));
@@ -847,56 +847,64 @@ sjcl.ecc.curves = {
 
 /* Diffie-Hellman-like public-key system */
 sjcl.ecc._dh = function(cn) {
-  sjcl.ecc[cn] = {
-    /** @constructor */
-    publicKey: function(curve, point) {
-      this._curve = curve;
-      this._curveBitLength = curve.r.bitLength();
-      if (point instanceof Array) {
-        this._point = curve.fromBits(point);
-      } else {
-        this._point = point;
-      }
+    sjcl.ecc[cn] = {
+	publicKey: function(curve_id, curve, point) {
+	    this._curve = curve;
 
-      this.get = function() {
-        var pointbits = this._point.toBits();
-        var len = sjcl.bitArray.bitLength(pointbits);
-        var x = sjcl.bitArray.bitSlice(pointbits, 0, len/2);
-        var y = sjcl.bitArray.bitSlice(pointbits, len/2);
-        return { x: x, y: y };
-      }
-    },
+	    if (point instanceof Array) {
+	        this._point = curve.fromBits(point);
+	    } else {
+	        this._point = point;
+	    }
 
-    /** @constructor */
-    secretKey: function(curve, exponent) {
-      this._curve = curve;
-      this._curveBitLength = curve.r.bitLength();
-      this._exponent = exponent;
+	    if (curve_id) {
+	        this._curve_id = curve_id;
+	        this.serialize = function() {
+	            return {
+			'point': point.toBits(),
+	                'curve': curve_id
+	            };
+	        }
+	    }
+	},
 
-      this.get = function() {
-        return this._exponent.toBits();
-      }
-    },
+	
+	secretKey: function(curve_id, curve, exponent) {
+	    this._curve = curve;
+	    this._exponent = exponent;
 
-    /** @constructor */
-    generateKeys: function(curve, paranoia, sec) {
-      if (curve === undefined) {
-        curve = 256;
-      }
-      if (typeof curve === "number") {
-        curve = sjcl.ecc.curves['c'+curve];
-        if (curve === undefined) {
-          throw new sjcl.exception.invalid("no such curve");
-        }
-      }
-      if (sec === undefined) {
-        var sec = sjcl.bn.random(curve.r, paranoia);
-      }
-      var pub = curve.G.mult(sec);
-      return { pub: new sjcl.ecc[cn].publicKey(curve, pub),
-               sec: new sjcl.ecc[cn].secretKey(curve, sec) };
-    }
-  }; 
+	    if (curve_id) {
+	        this._curve_id = curve_id;
+	        this.serialize = function() {
+	            return {
+	                'exponent': exponent.toBits(),
+	                'curve': curve_id
+	            };
+	        }
+	    }
+	},
+
+	
+	generateKeys: function(curve, paranoia) {
+	    var curve_id;
+	    if (curve === undefined) {
+	        curve = 256;
+	    }
+	    if (typeof curve === "number") {
+	        curve_id = curve;
+	        curve = sjcl.ecc.curves['c' + curve];
+	        if (curve === undefined) {
+	            throw new sjcl.exception.invalid("no such curve");
+	        }
+	    }
+	    var sec = sjcl.bn.random(curve.r, paranoia),
+	    pub = curve.G.mult(sec);
+	    return {
+	        pub: new sjcl.ecc[cn].publicKey(curve_id, curve, pub),
+	        sec: new sjcl.ecc[cn].secretKey(curve_id, curve, sec)
+	    };
+	}
+    }; 
 };
 
 sjcl.ecc._dh("elGamal");
@@ -923,41 +931,29 @@ sjcl.ecc.elGamal.secretKey.prototype = {
 sjcl.ecc._dh("ecdsa");
 
 sjcl.ecc.ecdsa.secretKey.prototype = {
-  sign: function(hash, paranoia, fakeLegacyVersion, fixedKForTesting) {
-    if (sjcl.bitArray.bitLength(hash) > this._curveBitLength) {
-      hash = sjcl.bitArray.clamp(hash, this._curveBitLength);
-    }
-    var R  = this._curve.r,
-        l  = R.bitLength(),
-        k  = fixedKForTesting || sjcl.bn.random(R.sub(1), paranoia).add(1),
-        r  = this._curve.G.mult(k).x.mod(R),
-        ss = sjcl.bn.fromBits(hash).add(r.mul(this._exponent)),
-        s  = fakeLegacyVersion ? ss.inverseMod(R).mul(k).mod(R)
-             : ss.mul(k.inverseMod(R)).mod(R);
+  sign: function(hash, paranoia) {
+    var R = this._curve.r,
+        l = R.bitLength(),
+        k = sjcl.bn.random(R.sub(1), paranoia).add(1),
+        r = this._curve.G.mult(k).x.mod(R),
+        s = sjcl.bn.fromBits(hash).add(r.mul(this._exponent)).inverseMod(R).mul(k).mod(R);
     return sjcl.bitArray.concat(r.toBits(l), s.toBits(l));
   }
 };
 
 sjcl.ecc.ecdsa.publicKey.prototype = {
-  verify: function(hash, rs, fakeLegacyVersion) {
-    if (sjcl.bitArray.bitLength(hash) > this._curveBitLength) {
-      hash = sjcl.bitArray.clamp(hash, this._curveBitLength);
-    }
+  verify: function(hash, rs) {
     var w = sjcl.bitArray,
         R = this._curve.r,
-        l = this._curveBitLength,
+        l = R.bitLength(),
         r = sjcl.bn.fromBits(w.bitSlice(rs,0,l)),
-        ss = sjcl.bn.fromBits(w.bitSlice(rs,l,2*l)),
-        s = fakeLegacyVersion ? ss : ss.inverseMod(R),
+        s = sjcl.bn.fromBits(w.bitSlice(rs,l,2*l)),
         hG = sjcl.bn.fromBits(hash).mul(s).mod(R),
         hA = r.mul(s).mod(R),
         r2 = this._curve.G.mult2(hG, hA, this._point).x;
-    if (r.equals(0) || ss.equals(0) || r.greaterEquals(R) || ss.greaterEquals(R) || !r2.equals(r)) {
-      if (fakeLegacyVersion === undefined) {
-        return this.verify(hash, rs, true);
-      } else {
-        throw (new sjcl.exception.corrupt("signature didn't check out"));
-      }
+        
+    if (r.equals(0) || s.equals(0) || r.greaterEquals(R) || s.greaterEquals(R) || !r2.equals(r)) {
+      throw (new sjcl.exception.corrupt("signature didn't check out"));
     }
     return true;
   }

@@ -14,6 +14,9 @@ asocial.binders.add('groups', { invite: function() {
       // Get invite token from accept link.
       var token = $that.data('invite-token');
       var P = $that.data('invite-p');
+      
+      //var inviteeKey = sjcl.ecc.elGamal.generateKeys(384, 10); 
+      //var inviteePublic = inviteeKey.pub;
 
       var a = prompt($that.data('invite-question'));
 
@@ -52,7 +55,9 @@ asocial.binders.add('groups', { invite: function() {
         k_P: $.base64.encode(k_P),
         k_sA: $.base64.encode(k_sA),
         PA_k: $.base64.encode(PA_k),
-        a_P: $.base64.encode(a_P)
+        a_P: $.base64.encode(a_P),
+        // encryptedInviteeKey: encryptedInviteeKey,
+        // inviteePublic: inviteePublic
       });
 
       $.post('/invite/accept', keys, function (data) {

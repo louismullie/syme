@@ -152,6 +152,9 @@ guard('invite', {
 
     asocial.auth.getPasswordLocal(function (password) {
 
+      //var inviterKey = sjcl.ecc.elGamal.generateKeys(384, 10);
+      //var inviterPublic = inviterKey.pub;
+      
       // 1A: !(P, p).
       var keys = asocial.crypto.generateRSA(true);
 
@@ -168,7 +171,9 @@ guard('invite', {
       var invitation = $.param({
         email: email,
         P: P, p_sB: p_sB,
-        sB_salt: sB_salt
+        sB_salt: sB_salt,
+        //inviterPublic: inviterKey.pub,
+        //inviterKey: inviterKey
       });
 
       // 1D: B -> R: (P, {p}sB)
