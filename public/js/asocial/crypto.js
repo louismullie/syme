@@ -479,6 +479,66 @@ guard('crypto', {
 
   decode: function (base64) {
     return JSON.parse($.base64.decode(base64));
+  },
+  
+  ecc: {
+    
+    generateKeys: function () {
+      return sjcl.ecc.elGamal.generateKeys(384, 1);
+    },
+    
+    serializePublicKey: function (key) {
+      return key.pub.serialize();
+    },
+    
+    serializePrivateKey: function (key) {
+      return key.sec.serialize();
+    },
+    
+    buildPublicKey: function (pubJson) {
+      
+      var point = sjcl.ecc.curves["c" + pubJson.curve].fromBits(pubJson.point);
+      
+      var publicKey = new sjcl.ecc.elGamal.publicKey(pubJson.curve, point.curve, point);
+      
+      return publicKey;
+    },
+    
+    buildPrivateKey: function (privJson) {
+      
+      var exponent = sjcl.bn.fromBits(privJson.exponent);
+      
+      var curve = "c" + privJson.curve;
+      var privateKey = new sjcl.ecc.elGamal.secretKey(
+          privJson.curve, sjcl.ecc.curves[curve], ex);
+          
+      return privateKey;
+    },
+    
+    encrypt: function (publicKey, data) {
+      
+      var symKey = publicKey.kem(0);
+      var ciphertext = sjcl.encrypt(symKey.key, data);
+      
+      var message = JSON.stringify({
+        'ciphertext': ciphertext,
+        'encrypted_key': symKey.tag
+      });
+      
+      return message;
+    },
+    
+    decrypt: function (privateKey, message) {
+      
+      var cipherMessage = JSON.parse(message);
+      
+      var symKey = privateKey.unkem(cipherMessage.encrypted_key);
+      var decryptedData = sjcl.decrypt(symKey, cipherMessage.ciphertext);
+      
+      return decryptedData;
+      
+    }
+    
   }
 
 });
