@@ -67,7 +67,7 @@ use Rack::Session::Cookie,
   secure: $secure,
   sidbits: 256,
   secure_random: SecureRandom,
-  secret: SecureRandom.uuid
+  secret: '8dg236rgd31238fb13vd65'
 
 # Enable token protection against CSRF.
 require 'rack/csrf'
