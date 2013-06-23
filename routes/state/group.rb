@@ -11,6 +11,7 @@ get '/state/group', auth: [] do
   full_names = group.users.map { |user| user.full_name }
   
   group_token = {
+    id: group.id.to_s,
     name: group.name,
     full_names: full_names,
     keylist: membership.keylist,

@@ -27,7 +27,7 @@ asocial.binders.add('groups', { invite: function() {
       // 2B.1 retrieve P.
       console.log("2B.1");
       var P_txt = JSON.parse($.base64.decode(P));
-      var P = asocial.crypto.buildPublicKey(P_txt);
+      var P = asocial.crypto.ecc.buildPublicKey(P_txt);
 
       // 2B.2 retrieve sA.
       console.log("2B.2");
@@ -39,11 +39,11 @@ asocial.binders.add('groups', { invite: function() {
       console.log("2B.3")
       var PA = asocial_public_key();
       var PA_txt = JSON.stringify(
-        asocial.crypto.serializePublicKey(PA));
+        asocial.crypto.ecc.serializePublicKey(PA));
 
       // 2C: A -> R: {k}P, {k}sA, {PA}k
-      var k_P = P.encrypt(k);
-      var a_P = P.encrypt(a);
+      var k_P = asocial.crypto.ecc.encrypt(P, k);
+      var a_P = asocial.crypto.ecc.encrypt(P, a);
 
       var k_sA = sjcl.encrypt(sA, k);
       var PA_k = sjcl.encrypt(k, PA_txt);

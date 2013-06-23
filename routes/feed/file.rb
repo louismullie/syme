@@ -5,7 +5,7 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
   upload = @group.uploads.create(
     filename: params[:filename].slug,
     keys: JSON.parse(params[:keys]),
-    owner_id: @user.id,
+    owner_id: @user.id.to_s,
     type: params[:type],
     size: params[:size],
     image_size: params[:image_size],
@@ -48,7 +48,7 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
 
   { status: 'ok',
     upload: {
-      id: upload.id,
+      id: upload.id.to_s,
       key: upload.key_for_user(@user),
       size: upload.size,
       filename: upload.filename,

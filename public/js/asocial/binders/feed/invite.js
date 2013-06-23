@@ -6,13 +6,13 @@ asocial.binders.add('feed', { invite: function(){
 
     var $that = $(this);
 
-    function recrypt(rsa, arr) {
+    function recrypt(publicKey, arr) {
 
       var result = [];
 
       $.each(arr, function (ind, elem) {
-        var key = rsa.encrypt(
-          asocial_private_key().decrypt(elem.key));
+        var key = asocial.crypto.ecc.encrypt(publicKey,
+          asocial.crypto.ecc.decrypt(asocial_private_key(), elem.key));
 
         result.push({id: elem.id, key: key});
       });
@@ -21,16 +21,16 @@ asocial.binders.add('feed', { invite: function(){
 
     }
 
-    function recryptPosts(rsa, posts) {
+    function recryptPosts(publicKey, posts) {
 
       var result = [];
 
       $.each(posts, function (ind, post) {
-        var key = rsa.encrypt(
-          asocial_private_key().decrypt(post.key));
+        var key = asocial.crypto.ecc.encrypt(publicKey,
+          asocial.crypto.ecc.decrypt(asocial_private_key(), post.key));
 
         result.push({id: post.id, key: key,
-          comments: recrypt(rsa, post.comments)});
+          comments: recrypt(publicKey, post.comments)});
       });
 
       return result;
@@ -58,19 +58,24 @@ asocial.binders.add('feed', { invite: function(){
        var PA_k = $.base64.decode($that.data('invite-pa_k'));
        var sB_salt = $that.data('invite-sb_salt');
        var a_P = $.base64.decode($that.data('invite-a_p'));
-       
+       var sB = asocial.crypto.calculateHash(
+       -         password, sB_salt);
+      
        // var encryptedInviterKey = $.base64.decode($that.data('invite-inviterKey'));
        // var inviteePublic = $.base64.decode($that.data('invite-inviteePublic));
        // var inviterShared = inviterKey.dh(inviteePublic);
        
        // 3B.
+       console.log("3b");
+       
+       console.log($.base64.decode(sjcl.decrypt(sB, p_sB)));
        console.log("3B");
-       var p = asocial.crypto.buildPrivateKey(JSON.parse(
+       var p = asocial.crypto.ecc.buildPrivateKey(JSON.parse(
          $.base64.decode(sjcl.decrypt(sB, p_sB))));
 
        // 3C.
        console.log("3C");
-       var k = p.decrypt(k_P);
+       var k = asocial.crypto.ecc.decrypt(p, k_P);
 
        // 3D.
        console.log("3D");
@@ -104,7 +109,7 @@ asocial.binders.add('feed', { invite: function(){
        // Verification
        console.log('Verification')
        try {
-         var a = p.decrypt(a_P);
+         var a = asocial.crypto.ecc.decrypt(p, a_P);
        } catch (e) {
          if (!checkAnswer(a))
           return;
@@ -120,9 +125,9 @@ asocial.binders.add('feed', { invite: function(){
        var keylist = asocial.crypto.encryptKeyList(key, public_keys);
 
        // Store keylist for A encrypted using k.
-       var PA_obj = asocial.crypto.buildPublicKey(PA);
+       var PA_obj = asocial.crypto.ecc.buildPublicKey(PA);
        var PPA_k = sjcl.encrypt(k, JSON.stringify(public_keys));
-       var a_PA = PA_obj.encrypt(answer);
+       var a_PA = asocial.crypto.ecc.encrypt(PA_obj, answer);
        var group_id = asocial.binders.getCurrentGroup();
 
       $.get('/' + group_id + '/invite/keys',

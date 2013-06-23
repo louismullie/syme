@@ -19,8 +19,8 @@ guard('invite', {
       var PPA = JSON.parse(sjcl.decrypt(k, PPA_k));
 
       // Retrieve security answer from inviter.
-      var securityAnswer = asocial_private_key()
-        .decrypt($.base64.decode(asocial.state.invite.a_PA));
+      var securityAnswer =asocial.crypto.ecc.decrypt(asocial_private_key(), 
+        $.base64.decode(asocial.state.invite.a_PA));
 
       // Generate a random key salt.
       var answerSalt = asocial.crypto.generateRandomHexSalt();
@@ -35,7 +35,7 @@ guard('invite', {
       asocial.state.group.answer = securityAnswer;
       asocial.state.group.answer_salt = answerSalt;
 
-      var PA = asocial.crypto.serializePublicKey(asocial_public_key());
+      var PA = asocial.crypto.ecc.serializePublicKey(asocial_public_key());
 
       PPA[asocial.state.user.id] = PA;
 
@@ -94,7 +94,7 @@ guard('invite', {
       var public_keys = {};
 
       $.each(keylist, function (id, key) {
-        public_keys[id] = asocial.crypto.serializePublicKey(key);
+        public_keys[id] = asocial.crypto.ecc.serializePublicKey(key);
       });
 
       var new_keys = JSON.parse($.base64.decode(asocial.state.invite.new_keys));
@@ -161,7 +161,9 @@ guard('invite', {
       // 1B: !sB
       var sB_salt = asocial.crypto.generateRandomHexSalt();
       var sB = asocial.crypto.calculateHash(password, sB_salt);
-
+      alert(sB);
+      alert(sB_salt);
+      
       // 1C: p -> {p}sB
       var P = asocial.crypto.encode(keys.public_key);
       var p = asocial.crypto.encode(keys.private_key);
