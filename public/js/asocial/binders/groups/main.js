@@ -118,7 +118,7 @@ asocial.binders.add('groups', { main: function() {
 
       // Create the group, passing the encrypted key list.
       $.post('/groups', groupParams, function (group) {
-        asocial.binders.goToUrl('/' + group.id);
+        Router.navigate('/users/id/groups/' + group.id);
       });
 
     });

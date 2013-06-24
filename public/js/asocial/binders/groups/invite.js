@@ -53,7 +53,7 @@ asocial.binders.add('groups', { invite: function() {
       
       $.post('/invite/accept', keys, function (data) {
         // Refresh page
-        asocial.binders.goToUrl('/');
+        Router.navigate('/');
       });
 
     });

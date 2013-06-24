@@ -53,7 +53,7 @@ asocial.binders.add('register', { main: function(){
                   $('body').html( asocial.helpers.render('container') );
 
                   // Redirect to root, which is now group UI
-                  asocial.binders.goToUrl('/');
+                  Router.navigate('/');
 
                 }, password);
 
