@@ -6,7 +6,7 @@ asocial.binders.add('feed', { likes: function(){
         comment_id  = $(this).closest('.comment-box').attr('id'),
         type        = comment_id ? 'comment' : 'post',
         op          = $(this).hasClass('active') ? 'delete' : 'create',
-        group       = asocial.binders.getCurrentGroup(),
+        group       = asocial.state.group.id,
         route       = '/' + group + '/' + type + '/like/' + op;
 
     $.post(route, { post_id: post_id, comment_id: comment_id });

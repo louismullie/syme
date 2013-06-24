@@ -6,13 +6,13 @@ asocial.binders.add('login', { main: function(){
     e.preventDefault();
 
     var form = $(this);
-    
+
     // Lock event
     if(form.data('active')) return false;
     form.data('active', true);
     form.find('#error').removeClass('hidden').
       find('span').html('');
-    
+
     // Spinner
     $('a[role="submit"]').addClass('loading');
 
@@ -23,24 +23,16 @@ asocial.binders.add('login', { main: function(){
         password = form.find('input[name="password"]').val(),
         remember = form.find('input[name="remember_me"]').prop("checked");
 
-       // Try to log in
+      // Login
       asocial.auth.login(email, password, remember, function() {
 
-        // Authorize User
-        asocial.auth.authorizeForUser(function () {
-
-          // Load HBS template
-          $('body').html( asocial.helpers.render('container') );
-
-          // Redirect to root, which is now group UI
-          asocial.binders.goToUrl('/');
-
-        }, password);
+        // Redirect to root
+        Router.navigate('', { trigger: true, replace: true });
 
       }, function(reason) {
 
         var msg;
-        
+
         if (reason == 'server') {
           msg = 'A server error has occured.';
         } else if (reason == 'credentials') {
@@ -51,10 +43,10 @@ asocial.binders.add('login', { main: function(){
         } else {
           msg = 'An unknown error has occured.';
         }
-        
+
         form.find('#error').removeClass('hidden').
           find('span').html(msg);
-        
+
         // Unlock event
         form.data('active', false);
 

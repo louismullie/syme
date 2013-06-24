@@ -1,8 +1,4 @@
-window.bound = {};
-
 guard('binders', {
-
-  /* ----- CORE FUNCTIONS ----- */
 
   // Maybe should not use $.fn.binders
   // Use a local variable here instead.
@@ -26,27 +22,18 @@ guard('binders', {
     // Unbind everything
     this.unbind();
 
-    // Bind global
-    $().binders['global']['main']();
-
-    // Bind HBS navigation
-    this.hbsNavigation();
-
     // Execute every binded function to route
     var obj = $().binders[route], key;
     for (key in obj) {
       if (obj.hasOwnProperty(key)) obj[key]();
     }
 
-    // Keep track of bound functions.
-    window.bound[route] = true;
+    // Start idleTimeout if logged in
+    if(asocial.state.system.logged_in) this.idleTimeout();
 
   },
 
   unbind: function() {
-
-    // Unbind global events
-    $(document).off();
 
     // Unbind page events
     $('#main').off();
@@ -54,268 +41,46 @@ guard('binders', {
     // Unlock potential socket locking
     $(window).data('lockSocketUpdating', false);
 
-    // Unbind HBS links
-    $(document).off('click', 'a[data-hbs]');
-
-    // Deactivate and reset infinite scrolling
+    // Deactivate infinite scrolling
     $(window).off('scroll');
-    $(window).data('infinite-scroll-done'  , false)
-             .data('infinite-scroll-async' , false)
-             .data('infinite-scroll-manual', false);
   },
 
-  /* ----- HBS NAVIGATION AND URL HANDLING ----- */
-
-  // Load a urlComponent object into a container
-  loadUrlComponent: function(urlComponent, container, callback) {
-
-    console.log('Loading url Components', urlComponent);
-
-    var _this = this;
-    var callback = callback || function () {};
-
-    // Fallback
-    if (!window.History.enabled)
-      location.href = urlComponent.url;
-
-    // Error log
-    if (typeof(urlComponent.binder) === "undefined")
-      console.log('No binders specified');
-
-    // Default container
-    container = container || $('#main');
-
-    if ( asocial.url.isLoggedOffRoute(urlComponent.route) ) {
-
-      container.html( asocial.helpers.render(urlComponent.route) );
-
-      this.bind(urlComponent.binder);
-
-      callback();
-
-    } else {
-
-      if (asocial.state.system.logged_in) {
-
-        // Get the user's state (password key, user id, keypair) from server.
-        asocial.state.getState('user', function (authorized) {
-
-          // Show login screen if the user's state cannot be supplied.
-          if (!authorized) { return _this.goToUrl('/', $('body')); }
-
-          // Authorize the user locally by checking for his keypair
-          // and authorizing from a locally stored password otherwise.
-          asocial.auth.authorizeForUser(function (authorized) {
-
-            // Show the login screen if the user can't be authorized.
-            if (!authorized) { return _this.goToUrl('/', $('body')); }
-
-            // Get the user's socket after state and authorization are done.
-            asocial.socket.listen();
-
-            // If the route pertains to a group,
-            if (urlComponent.group)  {
-
-              // Get the group's state (keylist, user list) from server.
-              asocial.state.getState('group', function (authorized) {
-
-                // Authorize the user for the group by checking for
-                // ability to decrypt the group keylist.
-                asocial.auth.authorizeForGroup( function (authorized) {
-
-                  // Render the group route and callback.
-                  _this.renderRoute(urlComponent, container);
-                  callback();
-
-                });
-
-              // Pass the name of the group to getState().
-              }, { group_id: urlComponent.group });
-
-            // If the route pertains to a user,
-            } else {
-
-              // Just render the route and callback.
-              _this.renderRoute(urlComponent, container);
-              callback();
-
-            }
-
-          });
-
-        });
-
-      } else {
-
-        //$('body').html( asocial.helpers.render('error-notfound') );
-        window.location = '/';
-
-      }
-    }
-
-  },
-
-  renderRoute: function(urlComponent, container) {
-
-    var _this = this;
-
-    var template = urlComponent.route;
-    var url = '/' + urlComponent.url;
-
-    // Get JSON and fill HBS template
-    asocial.helpers.getAndRender(template, url, function(html) {
-
-      if (html) {
-        // Success
-        container.html(html);
-        _this.bind(urlComponent.binder);
-      } else {
-
-        // Failure
-        $('body').html( asocial.helpers.render('error-notfound') );
-        _this.unbind();
-
-      }
-
-    });
-
-  },
-
-  hbsNavigation : function() {
-
-    var _this = this;
-
-    // Prepare History object
-    var History = window.History;
-
-    // Check if Pushstate/popstate is available
-    if ( !History.enabled ) {
-
-      // Pushstate/popstate are unavailable. Fallback.
-      $(document).off('click', 'a[data-hbs]')
-        .on('click', 'a[data-hbs]', function(e) {
-
-        var urlComponent = asocial.url.urlComponent(e.currentTarget.href);
-
-        $(this).attr('href', '/' + urlComponent.url);
-
-      });
-
-      return false;
-    }
-
-    // Statechange (handles forward and backward navigation)
-    $(window).off('statechange')
-      .on('statechange', function() {
-        _this.loadCurrentUrl();
-    });
-
-    // Forward navigation
-    $(document).off('click', 'a[data-hbs]')
-      .on('click', 'a[data-hbs]', function(e) {
-
-      e.preventDefault();
-
-      var parser = document.createElement('a');
-      parser.href = e.currentTarget.href;
-
-      if (parser.pathname == '/' && window.location.pathname == '/') {
-        _this.loadUrl('/');
-      } else {
-        History.pushState({}, window.document.title, e.currentTarget.href);
-      }
-
-
-    });
-
-  },
-
-  /* ----- SHORTCUTS ----- */
-
-  loadCurrentUrl: function (callback) {
-
-    this.loadUrl(window.location.href, callback);
-  },
-
-  loadUrl: function(url, callback) {
-
-    var _this = this;
-
-    // Get system state and load appropriate route.
-    asocial.state.getState('system', function (authorized) {
-
-      // Get URL components of current URL
-      var urlComponent = asocial.url.urlComponent(url);
-
-      // Initialize variable
-      var container;
-
-      // Render container if user is logged in
-      if (asocial.state.system.logged_in) {
-        // Render HBS Container
-        $('body').html( asocial.helpers.render('container') );
-
-        asocial.state.getState('notifications', function () {
-
-          $.each(asocial.state.notifications, function (index, notification) {
-
-            $('#notifications-content').append(
-
-              asocial.helpers.render('feed-notification', {
-                html: asocial.helpers.notificationText(notification),
-                id: notification.id,
-                created_at: notification.created_at,
-                owner: notification.owner
-              })
-
-            );
-
-          });
-
-          if ($('#notifications-content').children().length == 0) {
-
-            $('#notifications-content').html(
-              asocial.helpers.render('feed-notifications-empty'));
-
-          } else {
-
-            $('#notifications')
-              .prepend('<span class="notification-badge">' +
-                asocial.state.notifications.length + '</a>');
+  idleTimeout: function(){
+
+    idleTime = 0;
+
+    var timerIncrement = function() {
+      idleTime++;
+
+      // After x minutes
+      if (idleTime > 5) {
+        // Clear interval
+        clearInterval(idleInterval);
+
+        // Log out
+        $.ajax('/logout', { type: 'get'} );
+
+        // Disconnection alert box
+        asocial.helpers.showAlert('You have been disconnected', {
+          title: 'Disconnected',
+          submit: 'Log in',
+          closable: false,
+          onhide: function(){
+            window.location = '/login';
           }
-
-        }, { force: true });
-
-      } else {
-        // If logged off, render in entire page
-        container = $('body');
+        });
       }
+    };
 
-      // Load route
-      _this.loadUrlComponent(urlComponent, container, callback);
+    var timerReset = function(){ idleTime = 0; };
 
-    });
+    // Increment the idle time counter every minute.
+    if ( typeof(idleInterval) === "undefined")
+      idleInterval = setInterval(timerIncrement, 60 * 1000);
 
-  },
+    // Zero the idle timer on mouse or keyboard activity.
+    $(document).mousemove(timerReset).keydown(timerReset);
 
-  goToUrl: function(href) {
-
-    var urlComponent = asocial.url.urlComponent(href);
-    History.pushState({}, window.document.title, href);
-
-  },
-
-  // Helpers
-
-  getCurrentGroup: function(route) {
-    // If there is a group, return group name; otherwise false.
-    var group = asocial.url.urlComponent(window.location.href).group
-    return typeof(group) === "undefined" ? '' : group;
-  },
-
-  getBinderFromRoute: function(route) {
-    return  asocial.url.revertToDefault.indexOf(route) === -1 ?
-            route : asocial.url.defaultLoggedInRoute;
   }
 
 });

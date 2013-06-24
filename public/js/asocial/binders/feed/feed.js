@@ -1,23 +1,7 @@
 asocial.binders.add('feed', { feed: function(){
 
-  // Check if need to integrate user within a group (1st
-  // visit on group) or if need to update a user's keylist
-  // (meaning one or more new users have joined the group).
-  asocial.state.getState('invite', function (authorized) {
-
-    // The user should always be authorized for the invite.
-    if (!authorized) { asocial.helpers.showAlert('Not authorized for invite!'); }
-
-    if (asocial.state.invite.integrate)
-      asocial.invite.integrate();
-
-    if (asocial.state.invite.update)
-      asocial.invite.update();
-
-  }, { group_id: asocial.binders.getCurrentGroup() });
-
   // Unread button
-  $('#main').on('click', '#newcontent a.btn', function(e){
+  $('#main').on('click', '#newcontent a', function(e){
 
     if(asocial.socket.updatedComments > 0){
       // If there are new comments, reset feed
@@ -48,7 +32,7 @@ asocial.binders.add('feed', { feed: function(){
   $('#main').on('click', '.post-header a.post-delete', function() {
 
       var post_id    = $(this).closest('.post').attr('id'),
-          group      = asocial.binders.getCurrentGroup(),
+          group      = asocial.state.group.id,
           route      = '/' + group + '/post/delete';
 
       if(confirm(locales.en.feed.delete_post_confirm)) {

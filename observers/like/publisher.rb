@@ -7,7 +7,7 @@ module LikeObserver::Publisher
     MagicBus::Publisher.scatter(group, :update, :like) do |user|
 
       view = LikeGenerator.generate(like.likeable, user)
-      data = { target: like.likeable.id, view: view }
+      data = { target: like.likeable.id.to_s, view: view }
 
     end
 

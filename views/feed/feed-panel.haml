@@ -6,7 +6,10 @@
 
   %a#group-photo-edit{ href: '#', :'data-placeholder' => '{{placeholder}}' }
     %span.cover
-      %span <i class="icon-picture"></i> Change picture
+      %span
+        %i.icon-picture
+        %i.icon-spinner.icon-spin
+        Change picture
 
     {{#if placeholder}}
     %img{ src: '/img/groupavatar.jpg' }
