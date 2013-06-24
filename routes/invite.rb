@@ -13,13 +13,13 @@ post '/:group_id/invite/send', auth: [] do |group_id|
   token = SecureRandom.uuid
 
   invite = @group.invites.create!(
-    inviter_id: @user.id.to_s, privileges: :none, 
+    inviter_id: @user.id.to_s, privileges: :none,
     email: params['email'], token: token,
     inviter_pub_key: params['inviter_pub_key'],
     enc_inviter_priv_key: params['enc_inviter_priv_key'],
     inviter_priv_key_salt: params['inviter_priv_key_salt']
   )
-  
+
   invite.save!
 
   track @user, 'Invited a new group member'
@@ -68,18 +68,18 @@ post '/invite/accept' do
 
   invite = Invite.where(token: token).first
   @group = invite.group
-  
+
   invitee = User.find(user_id)
   invite.invitee_id = invitee.id.to_s
-  
+
   invite.invitee_pub_key = params['invitee_pub_key']
   invite.enc_invitee_priv_key = params['enc_invitee_priv_key']
   invite.invitee_priv_key_salt = params['invitee_priv_key_salt']
-  
+
   invite.PA_k = params['PA_k']
   invite.a_k = params['a_k']
   invite.k_sA = params['k_sA']
-  
+
   invite.save!
 
   invite.state = 2
@@ -157,9 +157,9 @@ post '/invite/confirm', auth: [] do
 
   invitee.memberships << membership
 
-  membership.keylist = params[:keylist]
-  membership.keylist_salt = params[:keylist_salt]
-  membership.save!
+  # membership.keylist = params[:keylist]
+  # membership.keylist_salt = params[:keylist_salt]
+  # membership.save!
 
   invitee.save!
 

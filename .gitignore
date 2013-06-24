@@ -1,7 +1,8 @@
 *.DS_Store
 .sass-cache/**/*
 .hbs/**/*
-*.hbs.js
 
 *.log
 *.pid
+
+public/js/asocial/templates/**/*.js

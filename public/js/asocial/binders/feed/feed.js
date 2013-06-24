@@ -1,21 +1,5 @@
 asocial.binders.add('feed', { feed: function(){
 
-  // Check if need to integrate user within a group (1st
-  // visit on group) or if need to update a user's keylist
-  // (meaning one or more new users have joined the group).
-  asocial.state.getState('invite', function (authorized) {
-
-    // The user should always be authorized for the invite.
-    if (!authorized) { asocial.helpers.showAlert('Not authorized for invite!'); }
-
-    if (asocial.state.invite.integrate)
-      asocial.invite.integrate();
-
-    if (asocial.state.invite.update)
-      asocial.invite.update();
-
-  }, { group_id: asocial.state.group.id });
-
   // Unread button
   $('#main').on('click', '#newcontent a.btn', function(e){
 

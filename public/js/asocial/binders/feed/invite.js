@@ -53,25 +53,25 @@ asocial.binders.add('feed', { invite: function(){
 
        var invite_id = $that.data('invite-id');
        var id_A = $that.data('invite-invitee_id');
-       
+
        var encInviterPrivKey = $that.data('invite-enc_inviter_priv_key');
        var inviterPrivKeySalt = $that.data('invite-inviter_priv_key_salt');
        var inviteePublicKey = $that.data('invite-invitee_pub_key');
-       
+
        var a_k = $.base64.decode($that.data('invite-a_k'));
        var PA_k = $.base64.decode($that.data('invite-pa_k'));
-       
+
        var inviterPrivKeySymKey = asocial.crypto.calculateHash(password, inviterPrivKeySalt);
        var inviterPrivKeyJson = sjcl.decrypt(inviterPrivKeySymKey, $.base64.decode(encInviterPrivKey));
        var inviterPrivKey = asocial.crypto.ecc.buildPrivateKey(JSON.parse(inviterPrivKeyJson));
-       
+
        var inviteePublicKey = asocial.crypto.ecc.buildPublicKey(JSON.parse($.base64.decode(inviteePublicKey)));
-       
+
        var k = inviterPrivKey.dh(inviteePublicKey);
-       
+
        var a = sjcl.decrypt(k, a_k);
        var PA = JSON.parse($.base64.decode(sjcl.decrypt(k, PA_k)));
-       
+
        // Get serialized key list.
        var public_keys = asocial.crypto.serializeKeyList();
 
@@ -96,7 +96,7 @@ asocial.binders.add('feed', { invite: function(){
 
        // Verification
        console.log('Verification');
-       
+
        // Generate answer key.
        var decryptAnswerKey = asocial.crypto.calculateHash(password, asocial.state.group.answer_salt);
        var answer = sjcl.decrypt(decryptAnswerKey, $.base64.decode(asocial.state.group.answer));
@@ -111,9 +111,9 @@ asocial.binders.add('feed', { invite: function(){
        var PA_obj = asocial.crypto.ecc.buildPublicKey(PA);
        var PPA_k = sjcl.encrypt(k, JSON.stringify(public_keys));
        var a_PA = asocial.crypto.ecc.encrypt(PA_obj, answer);
-       
+
       var group_id = asocial.state.group.id;
-      
+
       $.get('/' + group_id + '/invite/keys',
         $.param({invite_id: invite_id }), function (keyData) {
 
@@ -126,11 +126,9 @@ asocial.binders.add('feed', { invite: function(){
            PPA_k: $.base64.encode(PPA_k),
            a_PA: $.base64.encode(a_PA),
            invitee_id: id_A,
-           keys: recryptKeys(PA_obj, keyData.keys),
-           keylist: keylist,
-           keylist_salt: keylist_salt
+           keys: recryptKeys(PA_obj, keyData.keys)
       });
-      
+
       var group_id = asocial.state.group.id;
        $.post('/invite/confirm', confirmation, function (data) {
 
