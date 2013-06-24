@@ -1,6 +1,7 @@
 get '/state/invite', auth: [] do
 
-    
+  content_type :json
+  
   group = Group.find(params[:group_id])
   
   invite = group.invites.where({

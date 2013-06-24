@@ -44,7 +44,8 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
   
   track @user, 'Uploaded a new file'
   
-  
+  content_type :json
+
   { status: 'ok',
     upload: {
       id: upload.id.to_s,
@@ -80,7 +81,8 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
     f.write(data)
   end
 
-  
+  content_type :json
+
   { status: 'ok' }.to_json
 
 end
@@ -99,7 +101,8 @@ get '/:group_id/file/download/:id', auth: [] do |group_id, id|
   chunk_files = File.join(dir, '*')
   chunks = Dir.glob(chunk_files).count
 
-  
+  content_type :json
+
   { status: 'ok',
     chunks: chunks,
     type: upload.type }.to_json

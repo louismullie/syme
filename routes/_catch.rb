@@ -12,8 +12,6 @@ get '/*' do |route|
 
   csrf = Rack::Csrf.csrf_token(env)
 
-  content_type :'text/html'
-  
   File.read('./.hbs/views/layout.hbs')
 
 end

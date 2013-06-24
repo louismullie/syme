@@ -2,7 +2,8 @@ require "base64"
 
 post '/:group_id/invite/send', auth: [] do |group_id|
 
-  
+  content_type :json
+
   @group = @user.groups.find(group_id)
 
   return { status: 'own_email' }.to_json if
@@ -32,7 +33,8 @@ get '/:group_id/invite/keys', auth: [] do |group_id|
 
   @group = Invite.find(params[:invite_id]).group
 
-  
+  content_type :json
+
   posts = @group.posts.map do |post|
     {
       id: post.id.to_s,
@@ -90,7 +92,8 @@ post '/invite/accept' do
   # Inviter
   inviter = @group.users.find(invite.inviter_id)
 
-  
+  content_type :json
+
   { status: 'ok' }.to_json
 
 end
@@ -161,7 +164,8 @@ post '/invite/confirm', auth: [] do
 
   track @user, 'Confirmed a new group member'
 
-  
+  content_type :json
+
   { status: 'ok' }.to_json
 
 end
@@ -184,7 +188,8 @@ post '/invite/integrate', auth: [] do
 
   track @user, 'Succesfully integrated new group'
 
-  
+  content_type :json
+
   { status: 'ok' }.to_json
 
 end
@@ -198,7 +203,8 @@ post '/invite/update', auth: [] do
   m.keylist_salt = params[:keylist_salt]
   m.save!
 
-  
+  content_type :json
+
   { status: 'ok' }.to_json
 
 end
@@ -218,7 +224,8 @@ post '/invite/broadcast', auth: [] do
 
   end
 
-  
+  content_type :json
+
   { status: 'ok' }.to_json
 
 end
@@ -251,7 +258,8 @@ post '/invite/acknowledge', auth: [] do
 
   end
 
-  
+  content_type :json
+
   { status: 'ok' }.to_json
 
 end
