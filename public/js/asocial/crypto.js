@@ -412,8 +412,9 @@ guard('crypto', {
 
           } else {
 
-            var blob = asocial.thumbnail
-              .dataURItoBlob(me.value);
+            // Replace this eventually
+            var blob = ThumbPick.prototype.dataURItoBlob(me.value);
+            
             display(id, blob, false);
 
           }

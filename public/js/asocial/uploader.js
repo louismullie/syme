@@ -78,8 +78,12 @@ guard('uploader', {
         );
 
       };
-
-      asocial.thumbnail.make(this, file.type, this.width, this.height, callback);
+      
+      var options = { image: this, mime: file.type };
+      
+      var compressor = new ThumbPick('#canvas');
+      
+      compressor.compress({ image: this, mime: file.type }, callback);
 
     };
 
@@ -111,10 +115,15 @@ guard('uploader', {
 
         _this.upload(image, data);
 
-      }
-
-      var thumbnail = asocial.thumbnail.make(
-        this, file.type, 680, 500, callback);
+      };
+      
+      var thumbnailer = new ThumbPick('#canvas');
+      
+      thumbnailer.thumbnail({
+        image: this, mime: file.type,
+        width: 680, height: 500,
+        compression: 0.6
+      }, callback);
 
     };
 
@@ -221,9 +230,17 @@ guard('uploader', {
 
     img.onload = function () {
 
-      asocial.thumbnail.make(
-
-        this, file.type, 700, 700, function (image) {
+      var thumbnailer = new ThumbPick('#canvas');
+      
+      thumbnailer.thumbnail(
+        
+        { image: this,
+          mime: file.type,
+          width: 700,
+          height: 700
+        },
+        
+        function (image) {
 
           var data = {
             mode: 'group_avatar',
@@ -250,9 +267,18 @@ guard('uploader', {
 
     img.onload = function () {
 
-      asocial.thumbnail.make(
-
-        this, file.type, 150, 150, function (image) {
+      var thumbnailer = new ThumbPick('#canvas');
+      
+      thumbnailer.thumbnail(
+        
+        {
+          image: this,
+          mime: file.type,
+          width: 150,
+          height: 150
+        },
+        
+        function (image) {
 
           var data = {
             mode: 'avatar',

@@ -12,7 +12,6 @@
 //= require ./auth
 //= require ./state
 //= require ./invite
-//= require ./thumbnail
 //= require ./test
 //= require ./asocial
 //= require_tree ./binders
