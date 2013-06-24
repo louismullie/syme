@@ -75,7 +75,8 @@ guard('binders', {
     var timerReset = function(){ idleTime = 0; };
 
     // Increment the idle time counter every minute.
-    idleInterval = setInterval(timerIncrement, 60 * 1000);
+    if ( typeof(idleInterval) === "undefined")
+      idleInterval = setInterval(timerIncrement, 60 * 1000);
 
     // Zero the idle timer on mouse or keyboard activity.
     $(document).mousemove(timerReset).keydown(timerReset);
