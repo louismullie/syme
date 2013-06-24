@@ -311,9 +311,7 @@ guard('helpers', {
     );
 
     // Bind close callbacks to modal
-    $('#responsive-modal')
-      .data('onhide', onhide)
-      .data('onsubmit', onsubmit);
+    $('#responsive-modal').data('onhide', onhide).data('onsubmit', onsubmit);
 
     // Fill modal with content
     $('#responsive-modal > div.container').html(html);
@@ -321,34 +319,33 @@ guard('helpers', {
     // Additional closable events
     if(closable) {
 
-      // Close on escape and return key
-      $(document).on('keydown', function(e){
-
-        // If escape or enter key
-        if ( e.which == 27 || e.which == 13 )
-          // Hide or submit modal (if enter key)
-          asocial.helpers.hideModal( e.which == 13 );
-
+      // Close on escape
+      $(document).one('keydown', function(e){
+        if ( e.which == 27 ) asocial.helpers.hideModal();
       });
 
-      // Close on click
+      // Close on outside click
       $('#responsive-modal').click(function(){
         asocial.helpers.hideModal();
-      });
 
-      // Don't close when the container is clicked
-      $('#responsive-modal > div.container').click( function(e){
-        e.stopPropagation();
+        $(this).find('div.container').click(function(e){
+          e.stopPropagation();
+        })
       });
 
     }
 
-    // Native close
+    // Submit on enter key
+    $(document).one('keydown', function(e){
+      if ( e.which == 13 ) asocial.helpers.hideModal(true);
+    });
+
+    // Close on clicking a[role="close-modal"]
     $('#responsive-modal a[role="close-modal"]').click(function(){
       asocial.helpers.hideModal();
     });
 
-    // Native submit
+    // Submit on clicking a[role="submit-modal"]
     $('#responsive-modal a[role="submit"]').click(function(){
       $('#responsive-modal form').submit();
     });
@@ -360,10 +357,8 @@ guard('helpers', {
     $('body').addClass('noscroll modal-blur');
     document.ontouchmove = function(e) { e.preventDefault(); }
 
-
     // Show modal
-    $('#responsive-modal')
-      .transition({ opacity: 1 }, 200);
+    $('#responsive-modal').transition({ opacity: 1 }, 200);
   },
 
   hideModal: function( submitted ) {
@@ -377,7 +372,7 @@ guard('helpers', {
       $('#responsive-modal').data('onhide')();
     }
 
-    // Unbind keydown event
+    // Unbind remaining keydown events
     $(document).off('keydown');
 
     // Remove modal
