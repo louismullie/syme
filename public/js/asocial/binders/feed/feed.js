@@ -1,7 +1,7 @@
 asocial.binders.add('feed', { feed: function(){
 
   // Unread button
-  $('#main').on('click', '#newcontent a.btn', function(e){
+  $('#main').on('click', '#newcontent a', function(e){
 
     if(asocial.socket.updatedComments > 0){
       // If there are new comments, reset feed
