@@ -1,7 +1,6 @@
 get '/state/group', auth: [] do
 
-  content_type :json
-
+  
   group_id = params[:group_id]
   
   group = @user.groups.find(group_id)

@@ -8,8 +8,7 @@ get '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
 
   posts = @group.posts.page(1)
 
-  content_type :json
-  FeedGenerator.generate(posts, @user, @group).to_json
+    FeedGenerator.generate(posts, @user, @group).to_json
 
 end
 
@@ -39,8 +38,7 @@ post '/:group_id/page', auth: [] do |group_id|
     ignore.include?(post.id)
   end
 
-  content_type :json
-
+  
   # Return nothing if there are no posts
   return empty_response if selected_posts.count == 0
 
@@ -61,8 +59,7 @@ get '/:group_id/posts/:id', auth: [] do |group_id, id|
 
   posts = [@group.posts.find(id)]
 
-  content_type :json
-  FeedGenerator.generate(posts, @user, @group).to_json
+    FeedGenerator.generate(posts, @user, @group).to_json
 
 end
 
@@ -70,8 +67,7 @@ get '/:group_id/archive/:year/?:month?', auth: [] do |group_id, year, month|
 
   @group = Group.find(group_id)
 
-  content_type :json
-
+  
   FeedGenerator.generate(posts, @user)
     .merge(time_scope).to_json
 

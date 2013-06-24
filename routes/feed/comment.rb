@@ -21,7 +21,6 @@ post '/:group_id/comment/create', auth: [] do |group_id|
 
   comment.save!
 
-  content_type :json
-  { status: 'ok' }
+    { status: 'ok' }
 
 end

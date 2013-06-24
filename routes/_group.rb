@@ -13,8 +13,7 @@ get '/users/:id/groups', auth: [] do
       InviteGenerator.generate(invite)
     end
 
-  content_type :json
-
+  
   {
     groups: groups,
     invites: invites

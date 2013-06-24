@@ -30,8 +30,7 @@ post '/groups', auth: [] do
 
   track @user, 'Created a new group'
 
-  content_type :json
-
+  
   { id: group.id.to_s,
     name: name,
     screen_name: screen_name
@@ -49,8 +48,7 @@ post '/:group_id/avatar', auth: [] do
 
   track @user, 'Added a group avatar'
 
-  content_type :json
-  { status: 'ok' }.to_json
+    { status: 'ok' }.to_json
 
 end
 

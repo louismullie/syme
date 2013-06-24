@@ -1,7 +1,5 @@
 get '/state/user', auth: [] do
 
-  content_type :json
-
   unless @user
     raise 'Cannot get state of undefined user.'
   end

@@ -23,8 +23,7 @@ post '/:group_id/post/create', auth: [] do |group_id|
   
   track @user, 'Created a new post'
 
-  content_type :json
-
+  
   { status: 'ok', id: post.id }.to_json
 
 end
@@ -34,16 +33,14 @@ get '/:group_id/post/:id', auth: [] do |group_id,id|
   @group = Group.find(group_id)
   post = @group.posts.find(id)
 
-  content_type :json
-
+  
   PostGenerator.generate(post, @user).to_json
 
 end
 
 get '/:group_id/post/lastof/:page', auth: [] do |group_id, page|
 
-  content_type :json
-
+  
   @group = Group.find(group_id)
 
   return '' if @group.posts.count == 0

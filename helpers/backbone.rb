@@ -4,6 +4,5 @@ end
 
 def empty_response
   status 200
-  content_type :json
-  {}.to_json
+    {}.to_json
 end
