@@ -217,9 +217,7 @@ Router = Backbone.Router.extend({
   },
 
   reload: function () {
-    var fragment = Backbone.history.fragment;
-    Backbone.history.fragment = null;
-    Router.navigate(fragment, true);
+    Backbone.history.loadUrl(Backbone.history.fragment);
   }
 
 });

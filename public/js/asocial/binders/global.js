@@ -83,7 +83,7 @@ asocial.binders.add('global', { main: function(){
 
   });
 
-  $('#notifications-container').on('click', '.notification-unread', function(e) {
+  $(document).on('click', '#notifications-container a.notification-unread', function(e) {
 
     var id = $(this).closest('.notification').attr('id');
 
