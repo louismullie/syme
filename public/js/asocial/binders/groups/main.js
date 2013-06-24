@@ -33,7 +33,7 @@ asocial.binders.add('groups', { main: function() {
     var message = 'Are you sure? Type "yes" to confirm.';
 
     if (prompt(message) == 'yes') {
-      $.ajax('/groups/' + groupId, {
+      $.ajax('http://localhost:5000/groups/' + groupId, {
         type: 'DELETE',
         success: function (resp) {
           Router.reload();
@@ -117,7 +117,7 @@ asocial.binders.add('groups', { main: function() {
       });
 
       // Create the group, passing the encrypted key list.
-      $.post('/groups', groupParams, function (group) {
+      $.post('http://localhost:5000/groups', groupParams, function (group) {
         alert('In');
         console.log('/users/' + asocial.state.user.id + '/groups')
         var route = '/users/' + asocial.state.user.id + '/groups';

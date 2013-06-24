@@ -27,7 +27,7 @@ asocial.binders.add('feed', { comments: function(){
       var mentions = JSON.stringify(asocial.helpers.findUserMentions(message));
 
       // Post the comment
-      $.post('/' + asocial.state.group.id + '/comment/create', $.param({
+      $.post('http://localhost:5000/' + asocial.state.group.id + '/comment/create', $.param({
         post_id: related_post_id,
         content: comment,
         mentioned_users: mentions

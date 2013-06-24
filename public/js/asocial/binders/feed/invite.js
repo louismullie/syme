@@ -114,7 +114,7 @@ asocial.binders.add('feed', { invite: function(){
 
       var group_id = asocial.state.group.id;
 
-      $.get('/' + group_id + '/invite/keys',
+      $.get('http://localhost:5000/' + group_id + '/invite/keys',
         $.param({invite_id: invite_id }), function (keyData) {
 
          var group_id = asocial.state.group.id;
@@ -130,7 +130,7 @@ asocial.binders.add('feed', { invite: function(){
       });
 
       var group_id = asocial.state.group.id;
-       $.post('/invite/confirm', confirmation, function (data) {
+       $.post('http://localhost:5000/invite/confirm', confirmation, function (data) {
 
          if (data.status == 'ok') {
 
@@ -141,7 +141,7 @@ asocial.binders.add('feed', { invite: function(){
              group_id: asocial.state.group.id
            });
 
-           $.post('/invite/broadcast', broadcast, function (data) {
+           $.post('http://localhost:5000/invite/broadcast', broadcast, function (data) {
 
              if (data.status == 'ok') {
                //asocial.helpers.showAlert('Go back to groups panel and click on the group.');

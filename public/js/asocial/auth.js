@@ -6,7 +6,7 @@ guard('auth', {
 
     var params = { email: email, full_name: full_name };
 
-    $.post('/register/1', params, function (data) {
+    $.post('http://localhost:5000/register/1', params, function (data) {
 
       if (data.error) {
 
@@ -18,7 +18,7 @@ guard('auth', {
 
         var params = $.param({ user_id: data.user_id, v: v });
 
-        $.post('/register/2', params, function (data) { success(data) });
+        $.post('http://localhost:5000/register/2', params, function (data) { success(data) });
 
       }
 
@@ -44,7 +44,7 @@ guard('auth', {
     var data = { user_id: user_id, keypair: keypair, keypair_salt: salt };
 
     // Register the new keypair with the server and callback.
-    $.post('/register/3', $.param(data), success);
+    $.post('http://localhost:5000/register/3', $.param(data), success);
 
   },
 
@@ -54,14 +54,14 @@ guard('auth', {
     var A = srp.getA().toString();
     var params = $.param({email: email, A: A});
 
-    $.post('/login/1', params, function (data) {
+    $.post('http://localhost:5000/login/1', params, function (data) {
 
       if (data.status == 'ok') {
 
         var M = srp.calcM(data.salt, data.B).toString();
         var params = $.param({ ssc: M });
 
-        $.post('/login/2', params, function (data) {
+        $.post('http://localhost:5000/login/2', params, function (data) {
           if (data.status == 'ok') {
             $('meta[name="_csrf"]').attr('content', data.csrf);
             asocial.state.getState('system', function () {

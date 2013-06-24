@@ -79,7 +79,7 @@ asocial.binders.add('feed', { feed_panel: function(){
   //  var recipient_id = $(this).parent().attr('id');
 
   //  input.change(function (e) {
-  //    $.post('/send/file', $.param({
+  //    $.post('http://localhost:5000/send/file', $.param({
   //      file: input.val(),
   //      // e.target.files[0]
   //      recipient_id: recipient_id,

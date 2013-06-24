@@ -51,7 +51,7 @@ asocial.binders.add('groups', { invite: function() {
         k_sA: k_sA
       });
 
-      $.post('/invite/accept', keys, function (data) {
+      $.post('http://localhost:5000/invite/accept', keys, function (data) {
         // Refresh page
         Router.reload();
       });

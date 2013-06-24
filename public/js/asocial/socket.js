@@ -134,7 +134,7 @@ guard('socket', {
     user: function (data) {
 
       // Force all clients to reload to get new public key
-      window.location.reload();
+      Router.reload();
 
     }
 
@@ -267,7 +267,7 @@ guard('socket', {
 
         asocial.helpers.showAlert(data.sender_name + sentence + filename);
 
-        $.post('/send/file/accept', $.param({
+        $.post('http://localhost:5000/send/file/accept', $.param({
           transfer_id: data.transfer_id, group_id: group
         }));
 
@@ -343,7 +343,7 @@ guard('socket', {
       if (typeof(document.eventSource) == 'undefined' ||
          document.eventSource.readyState != 1) {
 
-        document.eventSource = new EventSource('/stream');
+        document.eventSource = new EventSource('http://localhost:5000/stream');
 
         document.eventSource.onmessage = function(e) {
 

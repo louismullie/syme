@@ -32,7 +32,7 @@ guard('uploader', {
           group_id: asocial.state.group.id
         });
 
-        $.post('/send/file/start', params);
+        $.post('http://localhost:5000/send/file/start', params);
       }
 
     );

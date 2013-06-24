@@ -62,7 +62,7 @@ asocial.binders.add('feed', { main: function(){
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
 
-      $.post('/' + asocial.state.group.id + '/page', request, function(data){
+      $.post('http://localhost:5000/' + asocial.state.group.id + '/page', request, function(data){
 
         var lastPage = data.last_page,
             posts    = data.posts;
