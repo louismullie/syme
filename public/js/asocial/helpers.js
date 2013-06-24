@@ -276,7 +276,7 @@ guard('helpers', {
 
   getAndRender: function(template, url, callback, failure) {
 
-    failure = failure || function(){};
+    var failure = failure || function(){};
 
     $.getJSON(url, function (data) {
       callback( asocial.helpers.render(template, data) );
@@ -311,9 +311,7 @@ guard('helpers', {
     );
 
     // Bind close callbacks to modal
-    $('#responsive-modal')
-      .data('onhide', onhide)
-      .data('onsubmit', onsubmit);
+    $('#responsive-modal').data('onhide', onhide).data('onsubmit', onsubmit);
 
     // Fill modal with content
     $('#responsive-modal > div.container').html(html);
@@ -321,31 +319,35 @@ guard('helpers', {
     // Additional closable events
     if(closable) {
 
-      // Close on escape and return key
-      $(document).on('keydown', function(e){
-
-        // If escape or enter key
-        if ( e.which == 27 || e.which == 13 )
-          // Hide or submit modal (if enter key)
-          asocial.helpers.hideModal( e.which == 13 );
-
+      // Close on escape
+      $(document).one('keydown', function(e){
+        if ( e.which == 27 ) asocial.helpers.hideModal();
       });
 
-      // Close on click
+      // Close on outside click
       $('#responsive-modal').click(function(){
         asocial.helpers.hideModal();
-      });
 
-      // Don't close when the container is clicked
-      $('#responsive-modal > div.container').click( function(e){
-        e.stopPropagation();
+        $(this).find('div.container').click(function(e){
+          e.stopPropagation();
+        })
       });
 
     }
 
-    // Native close
-    $('a[role="close-modal"]').one('click', function(){
-      asocial.helpers.hideModal( $(this).data('submit') );
+    // Submit on enter key
+    $(document).one('keydown', function(e){
+      if ( e.which == 13 ) asocial.helpers.hideModal(true);
+    });
+
+    // Close on clicking a[role="close-modal"]
+    $('#responsive-modal a[role="close-modal"]').click(function(){
+      asocial.helpers.hideModal();
+    });
+
+    // Submit on clicking a[role="submit-modal"]
+    $('#responsive-modal a[role="submit"]').click(function(){
+      $('#responsive-modal form').submit();
     });
 
     // Callback
@@ -353,26 +355,24 @@ guard('helpers', {
 
     // Lock document and blur it
     $('body').addClass('noscroll modal-blur');
+    document.ontouchmove = function(e) { e.preventDefault(); }
 
     // Show modal
-    $('#responsive-modal')
-      .transition({ opacity: 1 }, 200);
+    $('#responsive-modal').transition({ opacity: 1 }, 200);
   },
 
   hideModal: function( submitted ) {
 
-    // onhide()
-    var onhide = $('#responsive-modal').data('onhide') ?
-      $('#responsive-modal').data('onhide') : function(){};
-
     // Callbacks
     if ( submitted && $('#responsive-modal').data('onsubmit') ) {
-      $('#responsive-modal').data('onsubmit')(); return false;
+      // onsubmit()
+      return $('#responsive-modal').data('onsubmit')();
     } else {
-      onhide();
+      // onhide()
+      $('#responsive-modal').data('onhide')();
     }
 
-    // Unbind keydown event
+    // Unbind remaining keydown events
     $(document).off('keydown');
 
     // Remove modal
@@ -381,6 +381,8 @@ guard('helpers', {
 
     // Unlock document scroll
     $('body').removeClass('noscroll modal-blur');
+    document.ontouchmove = function(e) { return true; }
+
   },
 
   showAlert: function(content, options) {

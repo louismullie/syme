@@ -4,14 +4,14 @@
 //= require_directory ./config
 //= require ./crypto
 //= require ./helpers
-//= require ./url
+//= require ./session
+//= require ./router
 //= require ./binders
 //= require ./socket
 //= require ./uploader
 //= require ./auth
 //= require ./state
 //= require ./invite
-//= require ./thumbnail
 //= require ./test
 //= require ./asocial
 //= require_tree ./binders

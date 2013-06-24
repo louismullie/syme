@@ -49,20 +49,20 @@ guard('invite', {
         answer: encodedAnswer,
         answer_salt: answerSalt,
         invite_id: asocial.state.invite.id,
-        group_id: asocial.binders.getCurrentGroup()
+        group_id: asocial.state.group.id
       });
 
-      $.post('/invite/integrate', integration, function (data) {
+      $.post('http://localhost:5000/invite/integrate', integration, function (data) {
 
         if (data.status == 'ok') {
 
           var ack = $.param({
             type: 'integrate',
-            group_id: asocial.binders.getCurrentGroup(),
+            group_id: asocial.state.group.id,
             invite_id: asocial.state.invite.id
           });
 
-          $.post('/invite/acknowledge', ack, function () {
+          $.post('http://localhost:5000/invite/acknowledge', ack, function () {
             // asocial.helpers.showAlert('Integrated the group successfully!');
             _this.refreshKeys();
           });
@@ -108,7 +108,7 @@ guard('invite', {
 
       var keylist = asocial.crypto.encryptKeyList(sB, public_keys);
 
-      var group_id = asocial.binders.getCurrentGroup();
+      var group_id = asocial.state.group.id;
 
       var update = $.param({
         keylist: keylist,
@@ -116,7 +116,7 @@ guard('invite', {
         group_id: group_id
       });
 
-      $.post('/invite/update', update, function (data) {
+      $.post('http://localhost:5000/invite/update', update, function (data) {
 
         if (data.status == 'ok') {
 
@@ -126,7 +126,7 @@ guard('invite', {
             new_keys: Object.keys(new_keys)
           });
 
-          $.post('/invite/acknowledge', ack, function () {
+          $.post('http://localhost:5000/invite/acknowledge', ack, function () {
             // asocial.helpers.showAlert('Added a new group member to your keys!');
             _this.refreshKeys();
           });
@@ -144,7 +144,7 @@ guard('invite', {
   refreshKeys: function () {
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
-    }, { group_id: asocial.binders.getCurrentGroup(), force: true })
+    }, { group_id: asocial.state.group.id, force: true })
   },
 
   inviteSubmit: function(email, callback) {
@@ -168,9 +168,9 @@ guard('invite', {
         inviter_priv_key_salt: invitePrivKeySalt
       });
 
-      var group = asocial.binders.getCurrentGroup();
+      var group = asocial.state.group.id;
 
-      $.post('/' + group + '/invite/send', invitation, function (data) {
+      $.post('http://localhost:5000/' + group + '/invite/send', invitation, function (data) {
         callback(data);
       });
 

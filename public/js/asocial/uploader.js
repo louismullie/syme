@@ -8,7 +8,7 @@ guard('uploader', {
     progress = progress || function () {};
     success = success || function () {};
 
-    var group = asocial.binders.getCurrentGroup();
+    var group = asocial.state.group.id;
 
     uploader = new Uploader(file, key, keys, {
       data: data, baseUrl: '/' + group + '/file/'
@@ -29,10 +29,10 @@ guard('uploader', {
       function (upload) {
         var params = $.param({
           transfer_id: transfer_id,
-          group_id: asocial.binders.getCurrentGroup()
+          group_id: asocial.state.group.id
         });
 
-        $.post('/send/file/start', params);
+        $.post('http://localhost:5000/send/file/start', params);
       }
 
     );
@@ -79,7 +79,11 @@ guard('uploader', {
 
       };
 
-      asocial.thumbnail.make(this, file.type, this.width, this.height, callback);
+      var options = { image: this, mime: file.type };
+
+      var compressor = new ThumbPick('#canvas');
+
+      compressor.compress({ image: this, mime: file.type }, callback);
 
     };
 
@@ -111,10 +115,15 @@ guard('uploader', {
 
         _this.upload(image, data);
 
-      }
+      };
 
-      var thumbnail = asocial.thumbnail.make(
-        this, file.type, 680, 500, callback);
+      var thumbnailer = new ThumbPick('#canvas');
+
+      thumbnailer.thumbnail({
+        image: this, mime: file.type,
+        width: 680, height: 500,
+        compression: 0.6
+      }, callback);
 
     };
 
@@ -194,47 +203,67 @@ guard('uploader', {
 
   },
 
-  selectAvatar: function (file, type) {
+  selectAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    if (!asocial.uploader.hasImageMime(file)) {
-      asocial.helpers.showAlert('This is not an image!');
-    } else {
-      this.uploadAvatar(file);
-    }
+    if (!asocial.uploader.hasImageMime(file))
+      return asocial.helpers.showAlert('This is not an image!');
 
-  },
+    this.uploadAvatar(file, function(url){
 
-  selectGroupAvatar: function (file) {
+      // Return thumbnail image data-url
+      thumbnailCallback(url);
 
-    if (!asocial.uploader.hasImageMime(file)) {
-      asocial.helpers.showAlert('This is not an image!');
-    } else {
-      this.uploadGroupAvatar(file);
-    }
+    }, uploadCallback);
 
   },
 
-  uploadGroupAvatar: function (file) {
+  selectGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
+
+    if (!asocial.uploader.hasImageMime(file))
+      return asocial.helpers.showAlert('This is not an image!');
+
+    this.uploadGroupAvatar(file, function(url){
+
+      // Return thumbnail image data-url
+      thumbnailCallback(url);
+
+    }, uploadCallback);
+
+  },
+
+  uploadGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
 
     var img = new Image();
     var _this = this;
 
     img.onload = function () {
 
-      asocial.thumbnail.make(
+      var thumbnailer = new ThumbPick('#canvas');
 
-        this, file.type, 700, 700, function (image) {
+      thumbnailer.thumbnail(
+
+        { image: this,
+          mime: file.type,
+          width: 700,
+          height: 700
+        },
+
+        // Blob callback: upload image
+        function (image) {
 
           var data = {
             mode: 'group_avatar',
             image_size: '700x700'
           };
 
-          _this.upload(image, data, function () {}, function () {
-            asocial.binders.loadCurrentUrl();
-          });
+          _this.upload(image, data, function () {}, uploadCallback);
 
-      });
+        },
+
+        // Url callback: pass thumbnail data url to caller function
+        function(url){ thumbnailCallback(url); }
+
+      );
 
     };
 
@@ -242,7 +271,7 @@ guard('uploader', {
 
   },
 
-  uploadAvatar: function (file) {
+  uploadAvatar: function (file, thumbnailCallback, uploadCallback) {
 
     img = new Image();
     var _this = this;
@@ -250,20 +279,33 @@ guard('uploader', {
 
     img.onload = function () {
 
-      asocial.thumbnail.make(
+      var thumbnailer = new ThumbPick('#canvas');
 
-        this, file.type, 150, 150, function (image) {
+      thumbnailer.thumbnail(
+
+        {
+          image: this,
+          mime: file.type,
+          width: 150,
+          height: 150
+        },
+
+        // Blob callback: upload image
+        function (image) {
 
           var data = {
             mode: 'avatar',
             image_size: '150x150'
           };
 
-          _this.upload(image, data, function () {},  function () {
-            asocial.binders.loadCurrentUrl();
-          }, 'allo');
+          _this.upload(image, data, function () {}, uploadCallback);
 
-      });
+        },
+
+        // Url callback: pass thumbnail data url to caller function
+        function(url){ thumbnailCallback(url); }
+
+      );
 
     };
 

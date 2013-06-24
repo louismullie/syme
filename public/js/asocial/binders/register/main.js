@@ -46,16 +46,7 @@ asocial.binders.add('register', { main: function(){
 
               asocial.auth.login(email, password, remember, function() {
 
-                // Authorize User
-                asocial.auth.authorizeForUser(function () {
-
-                  // Load HBS template
-                  $('body').html( asocial.helpers.render('container') );
-
-                  // Redirect to root, which is now group UI
-                  asocial.binders.goToUrl('/');
-
-                }, password);
+                Router.navigate('', { trigger: true, replace: true });
 
               });
 

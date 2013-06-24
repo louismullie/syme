@@ -1,24 +1,32 @@
-get '/:group_id', auth: [] do |group_id|
+get '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
 
-  pass unless @group = @user.groups.find(group_id)
+  group = begin
+    @user.groups.find(group_id)
+  rescue
+    error 404, 'group_not_found'
+  end
 
-  posts = @group.posts.page(1)
+  posts = group.posts.page(1)
 
   content_type :json
-  FeedGenerator.generate(posts, @user, @group).to_json
+  FeedGenerator.generate(posts, @user, group).to_json
 
 end
 
 post '/:group_id/page', auth: [] do |group_id|
 
-  pass unless @group = @user.groups.find(group_id)
+  group = begin
+    @user.groups.find(group_id)
+  rescue
+    error 404, 'group_not_found'
+  end
 
   page_num, last_timestamp, ignore = params[:page].to_i,
   params[:last_timestamp], [*params[:ignore]]
 
   year, month = params[:year], params[:month]
 
-  posts = @group.posts
+  posts = group.posts
 
   # Narrow post selection.
   if !month.blank?
@@ -51,20 +59,28 @@ post '/:group_id/page', auth: [] do |group_id|
 end
 
 # For single-page view, feed with one post.
-get '/:group_id/posts/:id', auth: [] do |group_id, id|
+get '/users/:user_id/groups/:group_id/posts/:post_id', auth: [] do |user_id, group_id, post_id|
 
-  pass unless @group = Group.find(group_id)
+  group = begin
+    @user.groups.find(group_id)
+  rescue
+    error 404, 'group_not_found'
+  end
 
-  posts = [@group.posts.find(id)]
+  posts = [group.posts.find(post_id)]
 
   content_type :json
-  FeedGenerator.generate(posts, @user, @group).to_json
+  FeedGenerator.generate(posts, @user, group).to_json
 
 end
 
 get '/:group_id/archive/:year/?:month?', auth: [] do |group_id, year, month|
 
-  @group = Group.find(group_id)
+  group = begin
+    @user.groups.find(group_id)
+  rescue
+    error 404, 'group_not_found'
+  end
 
   content_type :json
 

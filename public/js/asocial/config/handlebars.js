@@ -44,6 +44,14 @@ Handlebars.registerHelper("debug", function(optionalValue) {
   }
 });
 
+Handlebars.registerHelper("current_user_id", function() {
+  return asocial.state.user.id;
+});
+
+Handlebars.registerHelper("current_group_id", function() {
+  return asocial.state.group.id;
+});
+
 Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options) {
 
   // {{#compare variable ">" 5}}
