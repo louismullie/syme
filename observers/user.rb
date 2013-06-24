@@ -5,7 +5,7 @@ class UserObserver < Mongoid::Observer
   end
 
   def identify_user(user)
-    Analytics.id.to_sentify(
+    Analytics.identify(
       user_id: user.id.to_s,
       traits: {
         email: user.email,
