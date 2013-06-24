@@ -7,4 +7,7 @@ before do
     @user = User.find(user_id)
   end
   
+  # Default to JSON content type.
+  content_type 'application/json'
+   
 end
