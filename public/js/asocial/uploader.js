@@ -78,11 +78,11 @@ guard('uploader', {
         );
 
       };
-      
+
       var options = { image: this, mime: file.type };
-      
+
       var compressor = new ThumbPick('#canvas');
-      
+
       compressor.compress({ image: this, mime: file.type }, callback);
 
     };
@@ -116,9 +116,9 @@ guard('uploader', {
         _this.upload(image, data);
 
       };
-      
+
       var thumbnailer = new ThumbPick('#canvas');
-      
+
       thumbnailer.thumbnail({
         image: this, mime: file.type,
         width: 680, height: 500,
@@ -203,27 +203,35 @@ guard('uploader', {
 
   },
 
-  selectAvatar: function (file, type) {
+  selectAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    if (!asocial.uploader.hasImageMime(file)) {
-      asocial.helpers.showAlert('This is not an image!');
-    } else {
-      this.uploadAvatar(file);
-    }
+    if (!asocial.uploader.hasImageMime(file))
+      return asocial.helpers.showAlert('This is not an image!');
 
-  },
+    this.uploadAvatar(file, function(url){
 
-  selectGroupAvatar: function (file) {
+      // Return thumbnail image data-url
+      thumbnailCallback(url);
 
-    if (!asocial.uploader.hasImageMime(file)) {
-      asocial.helpers.showAlert('This is not an image!');
-    } else {
-      this.uploadGroupAvatar(file);
-    }
+    }, uploadCallback);
 
   },
 
-  uploadGroupAvatar: function (file) {
+  selectGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
+
+    if (!asocial.uploader.hasImageMime(file))
+      return asocial.helpers.showAlert('This is not an image!');
+
+    this.uploadGroupAvatar(file, function(url){
+
+      // Return thumbnail image data-url
+      thumbnailCallback(url);
+
+    }, uploadCallback);
+
+  },
+
+  uploadGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
 
     var img = new Image();
     var _this = this;
@@ -231,15 +239,16 @@ guard('uploader', {
     img.onload = function () {
 
       var thumbnailer = new ThumbPick('#canvas');
-      
+
       thumbnailer.thumbnail(
-        
+
         { image: this,
           mime: file.type,
           width: 700,
           height: 700
         },
-        
+
+        // Blob callback: upload image
         function (image) {
 
           var data = {
@@ -247,11 +256,14 @@ guard('uploader', {
             image_size: '700x700'
           };
 
-          _this.upload(image, data, function () {}, function () {
-            Router.reload();
-          });
+          _this.upload(image, data, function () {}, uploadCallback);
 
-      });
+        },
+
+        // Url callback: pass thumbnail data url to caller function
+        function(url){ thumbnailCallback(url); }
+
+      );
 
     };
 
@@ -259,7 +271,7 @@ guard('uploader', {
 
   },
 
-  uploadAvatar: function (file) {
+  uploadAvatar: function (file, thumbnailCallback, uploadCallback) {
 
     img = new Image();
     var _this = this;
@@ -268,16 +280,17 @@ guard('uploader', {
     img.onload = function () {
 
       var thumbnailer = new ThumbPick('#canvas');
-      
+
       thumbnailer.thumbnail(
-        
+
         {
           image: this,
           mime: file.type,
           width: 150,
           height: 150
         },
-        
+
+        // Blob callback: upload image
         function (image) {
 
           var data = {
@@ -285,11 +298,14 @@ guard('uploader', {
             image_size: '150x150'
           };
 
-          _this.upload(image, data, function () {},  function () {
-            Router.reload();
-          }, 'allo');
+          _this.upload(image, data, function () {}, uploadCallback);
 
-      });
+        },
+
+        // Url callback: pass thumbnail data url to caller function
+        function(url){ thumbnailCallback(url); }
+
+      );
 
     };
 

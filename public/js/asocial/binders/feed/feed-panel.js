@@ -1,29 +1,39 @@
 asocial.binders.add('feed', { feed_panel: function(){
 
   // Group photo edit button action
-  $('#main').on('click', '#group-photo-edit', function(e){
-    // For now, group picture uploading reloads page. Thus, lock event forever.
-    if($(this).data('active')) return false;
-    $(this).data('active', true);
+  $('#group-photo-edit').click(function(e){
 
-    // Spinner
-    $(this).find('span')
-      // Show icon without needing hovering
-      .css({opacity: 1})
-      // Change icon to spinner
-      .find('i')
-        .removeAttr('class')
-        .addClass('icon-spinner icon-spin');
+    // Lock event
+    if($(this).data('active')) return false;
+    $(this).attr('data-active', true);
 
    $('#group-photo-file').trigger('click');
+
   });
 
   // Group photo upload
   $('#main').on('change', '#group-photo-file', function(){
+    // Get filename
     var filename = asocial.helpers.getFilename($(this).val());
     if (filename == '') { return; }
 
-    asocial.uploader.selectGroupAvatar($(this)[0].files[0]);
+    // Thumbnail and upload avatar
+    asocial.uploader.selectGroupAvatar(
+      // Filename
+      $(this)[0].files[0],
+
+      // Thumnail callback
+      function(url) {
+        // Replace thumbnail in DOM
+        $('#group-photo-edit img').attr('src', url);
+      },
+
+      // Success callback
+      function() {
+        $('#group-photo-edit').removeAttr('data-active');
+      }
+    );
+
   });
 
   // Add new user

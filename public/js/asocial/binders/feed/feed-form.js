@@ -65,28 +65,41 @@ asocial.binders.add('feed', { feed_form: function(){
       asocial.uploader.selectFile(file);
     });
 
-  /* Avatar changing */
-
+  // Trigger avatar changing
   $('#feed-form-avatar').click(function() {
-    // For now, avatar uploading reloads page. Thus, lock event forever.
-    if($(this).data('active')) return false;
-    $(this).data('active', true);
 
-    // Spinner
-    $(this).find('span')
-      // Show icon without needing hovering
-      .css({opacity: 1})
-      // Change icon to spinner
-      .find('i')
-        .removeAttr('class')
-        .addClass('icon-spinner icon-spin');
+    // Lock event
+    if($(this).data('active')) return false;
+    $(this).attr('data-active', true);
 
     $('#upload_avatar').click();
+
   });
 
+  // Avatar changing
   $('#upload_avatar').on('change', function() {
+
+    // Get filename
     var filename = asocial.helpers.getFilename($(this).val());
-    asocial.uploader.selectAvatar($(this)[0].files[0]);
+
+    // Thumbnail and upload avatar
+    asocial.uploader.selectAvatar(
+      // Filename
+      $(this)[0].files[0],
+
+      // Thumnail callback
+      function(url) {
+        // Replace thumbnail in DOM
+        $('#feed-form-avatar img, img[data-user-id="' + asocial.state.user.id + '"]')
+          .attr('src', url);
+      },
+
+      // Success callback
+      function() {
+        $('#feed-form-avatar').removeAttr('data-active');
+      }
+    );
+
   });
 
   /* File upload */

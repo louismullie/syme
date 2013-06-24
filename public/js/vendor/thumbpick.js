@@ -1,27 +1,27 @@
 ThumbPick = function (canvasSelector) {
-  
+
   this.canvas = document.querySelector(canvasSelector);
-  
+
 };
 
 ThumbPick.prototype = {
-  
-  thumbnail: function (options, callback) {
-    
-    return this.process(options, callback);
-    
+
+  thumbnail: function (options, blobCallback, urlCallback) {
+
+    return this.process(options, blobCallback, urlCallback);
+
   },
-  
-  compress: function (options, callback) {
-    
+
+  compress: function (options, blobCallback, urlCallback) {
+
     options.width = options.image.width;
     options.height = options.image.height;
-    
-    return this.process(options, callback);
-    
+
+    return this.process(options, blobCallback, urlCallback);
+
   },
-  
-  process: function(options, callback) {
+
+  process: function(options, blobCallback, urlCallback) {
 
     // Get local variables from options.
     var originalImage = options.image;
@@ -29,7 +29,9 @@ ThumbPick.prototype = {
     var desiredWidth = options.width;
     var desiredHeight = options.height;
     var compression = options.compression;
-    
+
+    var urlCallback = urlCallback || function (){};
+
     // Set canvas width and height to originalImage's.
     this.canvas.width = desiredWidth;
     this.canvas.height = desiredHeight;
@@ -38,9 +40,9 @@ ThumbPick.prototype = {
     var ctx1 = canvas.getContext("2d");
 
     // Calculate the original ratio of the image.
-    var originalRatio = originalImage.width / 
+    var originalRatio = originalImage.width /
                         originalImage.height;
-    
+
     // Calculate the desired image ratio.
     var desiredRatio  = desiredWidth / desiredHeight;
 
@@ -51,9 +53,9 @@ ThumbPick.prototype = {
     // Crop only if ratios are different.
     if ( originalRatio != desiredRatio ) {
 
-      if ( ( desiredWidth >= desiredHeight ) && 
+      if ( ( desiredWidth >= desiredHeight ) &&
            ( originalRatio >= desiredRatio ) ||
-           ( desiredWidth < desiredHeight  ) && 
+           ( desiredWidth < desiredHeight  ) &&
            ( originalRatio < desiredRatio  ) ) {
 
         boxHeight  = originalImage.height;
@@ -62,7 +64,7 @@ ThumbPick.prototype = {
         leftOffset = Math.floor(
           ( originalImage.width - boxWidth ) / 2 );
 
-      
+
       } else {
 
         boxWidth  = originalImage.width;
@@ -89,9 +91,11 @@ ThumbPick.prototype = {
 
     // Get the data URI for the final image.
     var url = canvas.toDataURL(mimeType, 0.6);
-    
+
+    urlCallback(url);
+
     // Pass the image to callback as a Blob.
-    callback(this.dataURItoBlob(url));
+    blobCallback(this.dataURItoBlob(url));
 
   },
 
@@ -100,7 +104,7 @@ ThumbPick.prototype = {
 
      var header = dataURI.split(',')[0];
      var isBase64 = header.indexOf('base64') >= 0;
-     
+
      var byteString;
 
      if (isBase64) {
@@ -114,14 +118,14 @@ ThumbPick.prototype = {
 
      var ab = new ArrayBuffer(byteString.length);
      var ia = new Uint8Array(ab);
-     
+
      for (var i = 0; i < byteString.length; i++) {
          ia[i] = byteString.charCodeAt(i);
      }
 
-     var BlobBuilder = window.WebKitBlobBuilder || 
+     var BlobBuilder = window.WebKitBlobBuilder ||
                        window.MozBlobBuilder;
-    
+
      if (BlobBuilder) {
        var bb = new BlobBuilder();
        bb.append(ab);
@@ -133,5 +137,5 @@ ThumbPick.prototype = {
      }
 
   }
-  
+
 };
