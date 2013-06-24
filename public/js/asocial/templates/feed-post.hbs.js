@@ -73,10 +73,14 @@ function program10(depth0,data) {
   stack1 = depth0.owner;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.name;
   stack1 = typeof stack1 === functionType ? stack1() : stack1;
-  buffer += escapeExpression(stack1) + "\n        <!-- / Post time -->\n        <a class='time' hbs='' href='/";
-  foundHelper = helpers.group_id;
+  buffer += escapeExpression(stack1) + "\n        <!-- / Post time -->\n        <a class='time' hbs='' href='/users/";
+  foundHelper = helpers.current_user_id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.group_id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.current_user_id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "/groups/";
+  foundHelper = helpers.current_group_id;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.current_group_id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
   buffer += escapeExpression(stack1) + "/posts/";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }

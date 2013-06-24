@@ -103,7 +103,6 @@ Router = Backbone.Router.extend({
       // Otherwise, authorize user for group
       asocial.state.getState('group', function (authorized) {
 
-        alert( 1);
         // User can't access group: error
         if(!authorized) return Router.error();
 
@@ -111,7 +110,6 @@ Router = Backbone.Router.extend({
         // ability to decrypt the group keylist.
         asocial.auth.authorizeForGroup( function (authorized) {
 
-          alert(2);
           // User can't decrypt group keylist: error
           if(!authorized) return Router.error();
 

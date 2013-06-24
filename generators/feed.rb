@@ -37,8 +37,7 @@ class FeedGenerator
       membership = current_group.memberships.where(user_id: user.id).first
       {
         id: user.id.to_s,
-        is_current_user:
-        current_user.id == user.id,
+        is_current_user: current_user.id == user.id,
         full_name: user.full_name,
         avatar: AvatarGenerator.generate(membership, current_user)
       }

@@ -10,7 +10,7 @@
         {{owner.name}}
 
         // Post time
-        %a.time{ href: '/{{group_id}}/posts/{{id}}', hbs: '' }
+        %a.time{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{id}}', hbs: '' }
           %time.timeago{ datetime: '{{created_at}}' }
 
       // Delete button

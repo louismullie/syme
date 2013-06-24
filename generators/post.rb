@@ -21,9 +21,6 @@ class PostGenerator
       key: current_key,
       deletable: deletable,
 
-      # Group id
-      group_id: post.group.id,
-
       # Time information.
       date: date,
       full_time: post.created_at
