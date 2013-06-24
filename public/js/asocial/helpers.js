@@ -358,6 +358,8 @@ guard('helpers', {
 
     // Lock document and blur it
     $('body').addClass('noscroll modal-blur');
+    document.ontouchmove = function(e) { e.preventDefault(); }
+
 
     // Show modal
     $('#responsive-modal')
@@ -384,6 +386,8 @@ guard('helpers', {
 
     // Unlock document scroll
     $('body').removeClass('noscroll modal-blur');
+    document.ontouchmove = function(e) { return true; }
+
   },
 
   showAlert: function(content, options) {
