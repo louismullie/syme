@@ -10,19 +10,19 @@ function program1(depth0,data) {
   buffer += "\n<video alt='Encrypted video' class='encrypted-video' data-attachment-filename='";
   foundHelper = helpers.filename;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.filename; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.filename; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-attachment-id='";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-attachment-key='";
   foundHelper = helpers.key;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.key; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.key; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-attachment-size='";
   foundHelper = helpers.size;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.size; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.size; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-attachment-type='video' src=''></video>\n";
   return buffer;}
 
@@ -32,19 +32,19 @@ function program3(depth0,data) {
   buffer += "\n<audio alt='Encrypted audio' class='encrypted-audio' data-attachment-filename='";
   foundHelper = helpers.filename;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.filename; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.filename; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-attachment-id='";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-attachment-key='";
   foundHelper = helpers.key;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.key; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.key; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-attachment-size='";
   foundHelper = helpers.size;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
-  else { stack1 = depth0.size; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  else { stack1 = depth0.size; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1) + "' data-attachment-type='audio' src=''></audio>\n";
   return buffer;}
 
@@ -54,19 +54,19 @@ function program5(depth0,data) {
   buffer += "\n<a class='image-download' href='#'>\n  <img alt='Encrypted image' class='attached-image encrypted-image' data-attachment-filename='";
   stack1 = depth0.thumbnail;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.filename;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
   buffer += escapeExpression(stack1) + "' data-attachment-id='";
   stack1 = depth0.thumbnail;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.id;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
   buffer += escapeExpression(stack1) + "' data-attachment-key='";
   stack1 = depth0.thumbnail;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.key;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
   buffer += escapeExpression(stack1) + "' data-attachment-size='";
   stack1 = depth0.thumbnail;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.size;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
   buffer += escapeExpression(stack1) + "' data-attachment-type='image' src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'>\n</a>\n";
   return buffer;}
 

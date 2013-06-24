@@ -78,7 +78,8 @@ post '/invite/accept' do
   
   invite.PA_k = params['PA_k']
   invite.a_k = params['a_k']
-
+  invite.k_sA = params['k_sA']
+  
   invite.save!
 
   invite.state = 2
@@ -139,7 +140,7 @@ post '/invite/confirm', auth: [] do
 
   invite.PPA_k = params[:PPA_k]
   invite.a_PA = params[:a_PA]
-  invite.k_sA = params[:k_sA]
+
   invite.state = 3
   invite.save!
 

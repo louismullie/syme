@@ -168,6 +168,7 @@ guard('auth', {
     }
 
     var passwordKey = asocial.state.user.password_key;
+    
     var password = sjcl.decrypt(passwordKey, encryptedPassword);
 
     callback(password);

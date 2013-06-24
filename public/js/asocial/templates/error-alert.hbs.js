@@ -11,7 +11,7 @@ function program1(depth0,data) {
   stack1 = depth0.system;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.error;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.message;
-  stack1 = typeof stack1 === functionType ? stack1() : stack1;
+  stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
   buffer += escapeExpression(stack1) + "\n</div>\n";
   return buffer;}
 
