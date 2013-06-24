@@ -1,9 +1,0 @@
-
-Handlebars.templates = Handlebars.templates || {};
-Handlebars.templates['navbar.hbs'] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  helpers = helpers || Handlebars.helpers;
-  
-
-
-  return "<div id='navbar'>\n  <div class='row'>\n    <div class='small-24'>\n      <ul>\n        <li id='brand'>\n          <a hbs='' href='/'>\n            Asocial\n          </a>\n        </li>\n        <li>\n          <a class='btn hint--bottom' data-hint='Notifications' data-popover='notifications-container' href='#' id='notifications'>\n            <i class='icon-bell-alt'></i>\n          </a>\n          <div class='popover' id='notifications-container'>\n            <h3>Notifications</h3>\n            <div class='scrollable' id='notifications-content'></div>\n          </div>\n        </li>\n        <li id='group-selector'>\n          <ul><li class='title'>\n            <a hbs='' href='/'>Groups</a>\n          </li><li class='group'></li></ul>\n        </li>\n        <div class='pull-right'>\n          <div class='hide-for-small'>\n            <li>\n              <a class='btn hint--bottom' data-hint='Settings' hbs='' href='/settings'>\n                <i class='icon-cog'></i>\n              </a>\n            </li>\n            <li>\n              <a class='btn hint--bottom' data-hint='Log out' href='/logout'>\n                <i class='icon-signout'></i>\n              </a>\n            </li>\n          </div>\n          <div class='show-for-small'>\n            <li id='side-pane'>\n              <a class='btn' hbs='' href='#'>\n                <i class='icon-reorder'></i>\n              </a>\n            </li>\n          </div>\n        </div>\n      </ul>\n    </div>\n  </div>\n</div>\n";});
-Handlebars.registerPartial('navbar.hbs', Handlebars.templates['navbar.hbs']);

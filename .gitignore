@@ -5,4 +5,4 @@
 *.log
 *.pid
 
-public/js/asocial/templates/**/*.js
+*.hbs.js
