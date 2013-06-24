@@ -14,7 +14,7 @@ Handlebars.templates['settings.hbs'] = Handlebars.template(function (Handlebars,
   buffer += escapeExpression(stack1) + ", ";
   stack1 = depth0.user;
   stack1 = stack1 == null || stack1 === false ? stack1 : stack1.name;
-  stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1;
+  stack1 = typeof stack1 === functionType ? stack1() : stack1;
   buffer += escapeExpression(stack1) + "!</b>\n      ";
   foundHelper = helpers['t'];
   stack1 = foundHelper ? foundHelper.call(depth0, "settings.explanation", {hash:{}}) : helperMissing.call(depth0, "t", "settings.explanation", {hash:{}});
