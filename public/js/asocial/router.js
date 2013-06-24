@@ -18,6 +18,7 @@ Router = Backbone.Router.extend({
     'users/:user_id': 'user',
     'users/:user_id/groups': 'userGroups',
     'users/:user_id/groups/:group_id(/page-:page)': 'userGroup',
+    'users/:user_id/groups/:group_id/posts/:post_id': 'userGroupPost',
     'users/:user_id/groups/:group_id/archive/:year(-:month)(/page-:page)': 'userGroupArchive',
 
     /* Catch-all for 404 */
@@ -60,6 +61,10 @@ Router = Backbone.Router.extend({
   },
 
   userGroup: function(user_id, group_id) {
+    this.loadDynamicPage('feed', group_id);
+  },
+
+  userGroupPost: function(user_id, group_id, post_id) {
     this.loadDynamicPage('feed', group_id);
   },
 
