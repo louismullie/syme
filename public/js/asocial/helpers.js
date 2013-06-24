@@ -344,8 +344,13 @@ guard('helpers', {
     }
 
     // Native close
-    $('a[role="close-modal"]').one('click', function(){
-      asocial.helpers.hideModal( $(this).data('submit') );
+    $('#responsive-modal a[role="close-modal"]').click(function(){
+      asocial.helpers.hideModal();
+    });
+
+    // Native submit
+    $('#responsive-modal a[role="submit"]').click(function(){
+      $('#responsive-modal form').submit();
     });
 
     // Callback
@@ -361,15 +366,13 @@ guard('helpers', {
 
   hideModal: function( submitted ) {
 
-    // onhide()
-    var onhide = $('#responsive-modal').data('onhide') ?
-      $('#responsive-modal').data('onhide') : function(){};
-
     // Callbacks
     if ( submitted && $('#responsive-modal').data('onsubmit') ) {
-      $('#responsive-modal').data('onsubmit')(); return false;
+      // onsubmit()
+      return $('#responsive-modal').data('onsubmit')();
     } else {
-      onhide();
+      // onhide()
+      $('#responsive-modal').data('onhide')();
     }
 
     // Unbind keydown event
