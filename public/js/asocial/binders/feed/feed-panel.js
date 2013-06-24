@@ -2,6 +2,19 @@ asocial.binders.add('feed', { feed_panel: function(){
 
   // Group photo edit button action
   $('#main').on('click', '#group-photo-edit', function(e){
+    // For now, group picture uploading reloads page. Thus, lock event forever.
+    if($(this).data('active')) return false;
+    $(this).data('active', true);
+
+    // Spinner
+    $(this).find('span')
+      // Show icon without needing hovering
+      .css({opacity: 1})
+      // Change icon to spinner
+      .find('i')
+        .removeAttr('class')
+        .addClass('icon-spinner icon-spin');
+
    $('#group-photo-file').trigger('click');
   });
 

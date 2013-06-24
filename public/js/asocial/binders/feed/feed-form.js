@@ -5,6 +5,9 @@ asocial.binders.add('feed', { feed_form: function(){
 
     e.preventDefault();
 
+    if($(this).data('active')) return false;
+    $(this).data('active', true);
+
     // Get the message from the textarea.
     var message = $(this).find('textarea').val();
     // If there isn't a post or uploaded file, don't submit the form
@@ -27,6 +30,7 @@ asocial.binders.add('feed', { feed_form: function(){
     $.post(url, request, function(data){
 
       asocial.helpers.resetFeedForm();
+      $(this).data('active', false);
 
     }).fail(function(){
 
@@ -64,6 +68,19 @@ asocial.binders.add('feed', { feed_form: function(){
   /* Avatar changing */
 
   $('#feed-form-avatar').click(function() {
+    // For now, avatar uploading reloads page. Thus, lock event forever.
+    if($(this).data('active')) return false;
+    $(this).data('active', true);
+
+    // Spinner
+    $(this).find('span')
+      // Show icon without needing hovering
+      .css({opacity: 1})
+      // Change icon to spinner
+      .find('i')
+        .removeAttr('class')
+        .addClass('icon-spinner icon-spin');
+
     $('#upload_avatar').click();
   });
 
