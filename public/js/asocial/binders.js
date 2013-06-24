@@ -1,7 +1,5 @@
 guard('binders', {
 
-  /* ----- CORE FUNCTIONS ----- */
-
   // Maybe should not use $.fn.binders
   // Use a local variable here instead.
   add: function(route, objectExtention) {

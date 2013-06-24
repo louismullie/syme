@@ -6,14 +6,14 @@
       %i.icon-remove
     {{/if}}
 
-    %a.group-banner-link{ href: '/{{id}}', :'data-hbs' => '' }
+    %a.group-banner-link{ href: '/users/{{current_user_id}}/groups/{{id}}', hbs: '' }
       // Group avatar
       {{#with avatar}} {{> groups-avatar.hbs}} {{/with}}
 
   .group-card-content
     {{#if PPA_k}}
     // Invite link
-    %a.group-link.integrate-link{  href: '/{{id}}', :'data-hbs' => '',
+    %a.group-link.integrate-link{  href: '/{{id}}', hbs: '',
                         :'data-invite-id' => '{{invite_id}}',
                         :'data-invite-PPA_k' => '{{PPA_k}}',
                         :'data-invite-k_sA' => '{{k_sA}}',
@@ -27,7 +27,7 @@
     {{#if new_keys}}
 
     // Confirmation link
-    %a.group-link.update-link{ href: '/{{id}}', :'data-hbs' => '',
+    %a.group-link.update-link{ href: '/{{id}}', hbs: '',
                     :'data-invite-new_keys' => '{{new_keys}}',
                     :'data-group-name' => '{{name}}'}
       {{name}}
@@ -35,7 +35,7 @@
     {{else}}
 
     // Normal link
-    %a.group-link{href: '/{{id}}', :'data-hbs' => ''}
+    %a.group-link{href: '/users/{{current_user_id}}/groups/{{id}}', hbs: ''}
       {{name}}
 
     {{/if}}

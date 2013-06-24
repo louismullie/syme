@@ -31,7 +31,7 @@ function program5(depth0,data) {
   foundHelper = helpers.name;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "' data-hbs='' data-invite-PPA_k='";
+  buffer += escapeExpression(stack1) + "' data-invite-PPA_k='";
   foundHelper = helpers.PPA_k;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.PPA_k; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -43,7 +43,7 @@ function program5(depth0,data) {
   foundHelper = helpers.k_sA;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.k_sA; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "' href='/";
+  buffer += escapeExpression(stack1) + "' hbs='' href='/";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -70,11 +70,11 @@ function program8(depth0,data) {
   foundHelper = helpers.name;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "' data-hbs='' data-invite-new_keys='";
+  buffer += escapeExpression(stack1) + "' data-invite-new_keys='";
   foundHelper = helpers.new_keys;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.new_keys; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
-  buffer += escapeExpression(stack1) + "' href='/";
+  buffer += escapeExpression(stack1) + "' hbs='' href='/";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -88,7 +88,11 @@ function program8(depth0,data) {
 function program10(depth0,data) {
   
   var buffer = "", stack1, foundHelper;
-  buffer += "\n    <!-- / Normal link -->\n    <a class='group-link' data-hbs='' href='/";
+  buffer += "\n    <!-- / Normal link -->\n    <a class='group-link' hbs='' href='/users/";
+  foundHelper = helpers.current_user_id;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.current_user_id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "/groups/";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
@@ -103,7 +107,11 @@ function program10(depth0,data) {
   stack1 = depth0.deletable;
   stack1 = helpers['if'].call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(1, program1, data)});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n    <a class='group-banner-link' data-hbs='' href='/";
+  buffer += "\n    <a class='group-banner-link' hbs='' href='/users/";
+  foundHelper = helpers.current_user_id;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.current_user_id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }
+  buffer += escapeExpression(stack1) + "/groups/";
   foundHelper = helpers.id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1() : stack1; }

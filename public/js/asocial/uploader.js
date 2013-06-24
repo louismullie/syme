@@ -231,7 +231,7 @@ guard('uploader', {
           };
 
           _this.upload(image, data, function () {}, function () {
-            asocial.binders.loadCurrentUrl();
+            Router.reload();
           });
 
       });
@@ -260,7 +260,7 @@ guard('uploader', {
           };
 
           _this.upload(image, data, function () {},  function () {
-            asocial.binders.loadCurrentUrl();
+            Router.reload();
           }, 'allo');
 
       });

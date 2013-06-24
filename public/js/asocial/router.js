@@ -103,6 +103,7 @@ Router = Backbone.Router.extend({
       // Otherwise, authorize user for group
       asocial.state.getState('group', function (authorized) {
 
+        alert( 1);
         // User can't access group: error
         if(!authorized) return Router.error();
 
@@ -110,6 +111,7 @@ Router = Backbone.Router.extend({
         // ability to decrypt the group keylist.
         asocial.auth.authorizeForGroup( function (authorized) {
 
+          alert(2);
           // User can't decrypt group keylist: error
           if(!authorized) return Router.error();
 
@@ -179,7 +181,7 @@ Router = Backbone.Router.extend({
   // Move that out of here
   renderNotifications: function() {
 
-    asocial.state.getState('notifications', function () { console.log(asocial.state.notifications);
+    asocial.state.getState('notifications', function () {
 
       $.each(asocial.state.notifications, function (index, notification) {
 
@@ -209,6 +211,12 @@ Router = Backbone.Router.extend({
 
     }, { force: true });
 
+  },
+
+  reload: function () {
+    var fragment = Backbone.history.fragment;
+    Backbone.history.fragment = null;
+    Router.navigate(fragment, true);
   }
 
 });

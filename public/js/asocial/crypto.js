@@ -53,6 +53,8 @@ guard('crypto', {
 
     try {
 
+      console.log('Password', password);
+
       var keylist = asocial.state.group.keylist;
       var keylistSjcl = $.base64.decode(keylist);
 
@@ -76,6 +78,8 @@ guard('crypto', {
 
     }  catch(e) {
 
+      alert('Catch'); console.log(e);
+
       // Return false if decryption failed due to wrong password.
       return false;
 
@@ -83,7 +87,6 @@ guard('crypto', {
   },
 
   encryptKeyList: function (hash, keylist) {
-
     return $.base64.encode(sjcl.encrypt(hash, JSON.stringify(keylist)));
 
   },
@@ -169,9 +172,9 @@ guard('crypto', {
     $.each(public_keys, function (user_id, public_key) {
       encrypted_keys[user_id] = asocial.crypto.ecc.encrypt(public_key, msg_key);
     });
-    
+
     //alk = encrypted_keys;
-    
+
     return encrypted_keys;
 
   },
@@ -187,7 +190,7 @@ guard('crypto', {
     //rsa.generate(1024, "10001");
 
     var key = this.ecc.generateKeys();
-    
+
     var keypair = {
       private_key: asocial.crypto.ecc.serializePrivateKey(key.sec),
       public_key: asocial.crypto.ecc.serializePublicKey(key.pub),
@@ -243,23 +246,23 @@ guard('crypto', {
       var _this = this;
       // Decrypt each encrypted post on the page.
       $.each($('.encrypted'), function (i, element) {
-        
+
         var message = $.parseJSON(element.innerText);
         message.content = JSON.stringify(message.content); // This is hacky...
-        
+
         // Decrypt the message using the message key and private key.
         var decrypted = asocial.crypto.decryptMessage(message.content, message.key);
         decrypted = marked(decrypted);
-        
+
         // Show the user tags.
         decrypted = asocial.helpers.replaceUserMentions(decrypted);
-        
+
         // Hide the "This post is encrypted notice."
         $(element).parent().find('.encrypted_notice').remove();
-        
+
         // Markdown the message and insert in place.
         $(element).replaceWith(decrypted);
-        
+
       });
 
       asocial.helpers.formatPostsAndComments();
@@ -445,65 +448,65 @@ guard('crypto', {
   decode: function (base64) {
     return JSON.parse($.base64.decode(base64));
   },
-  
+
   ecc: {
-    
+
     generateKeys: function () {
       return sjcl.ecc.elGamal.generateKeys(384, 1);
     },
-    
+
     serializePublicKey: function (publicKey) {
       return publicKey.serialize();
     },
-    
+
     serializePrivateKey: function (privateKey) {
       return privateKey.serialize();
     },
-    
+
     buildPublicKey: function (pubJson) {
-      
+
       var point = sjcl.ecc.curves["c" + pubJson.curve].fromBits(pubJson.point);
-      
+
       var publicKey = new sjcl.ecc.elGamal.publicKey(pubJson.curve, point.curve, point);
-      
+
       return publicKey;
     },
-    
+
     buildPrivateKey: function (privJson) {
-      
+
       var exponent = sjcl.bn.fromBits(privJson.exponent);
-      
+
       var curve = "c" + privJson.curve;
       var privateKey = new sjcl.ecc.elGamal.secretKey(
           privJson.curve, sjcl.ecc.curves[curve], exponent);
-          
+
       return privateKey;
     },
-    
+
     encrypt: function (publicKey, data) {
-      
+
       var symKey = publicKey.kem(0);
       var ciphertext = sjcl.encrypt(symKey.key, data);
-      
+
       var message = JSON.stringify({
         'ciphertext': ciphertext,
         'encrypted_key': symKey.tag
       });
-      
+
       return $.base64.encode(message);
     },
-    
+
     decrypt: function (privateKey, message) {
-      
+
       var cipherMessage = JSON.parse($.base64.decode(message));
-      
+
       var symKey = privateKey.unkem(cipherMessage.encrypted_key);
       var decryptedData = sjcl.decrypt(symKey, cipherMessage.ciphertext);
-      
+
       return decryptedData;
-      
+
     }
-    
+
   }
 
 });

@@ -36,7 +36,7 @@ asocial.binders.add('groups', { main: function() {
       $.ajax('/groups/' + groupId, {
         type: 'DELETE',
         success: function (resp) {
-          asocial.binders.loadCurrentUrl();
+          Router.reload();
         },
         error: function (resp) {
           asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
@@ -118,7 +118,11 @@ asocial.binders.add('groups', { main: function() {
 
       // Create the group, passing the encrypted key list.
       $.post('/groups', groupParams, function (group) {
-        Router.navigate('/users/id/groups/' + group.id);
+        alert('In');
+        console.log('/users/' + asocial.state.user.id + '/groups')
+        var route = '/users/' + asocial.state.user.id + '/groups';
+
+        Router.reload();
       });
 
     });
