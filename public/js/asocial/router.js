@@ -23,7 +23,7 @@ Router = Backbone.Router.extend({
 
     /* Catch-all for 404 */
 
-    '*catchall': '404'
+    '*catchall': 'notfound'
 
   },
 
@@ -47,11 +47,11 @@ Router = Backbone.Router.extend({
   /* LOGGED-OFF ROUTES */
 
   login: function() {
-    this.loadStaticPage('login');
+    this.loadStaticPage('login', true);
   },
 
   register: function() {
-    this.loadStaticPage('register');
+    this.loadStaticPage('register', true);
   },
 
   /* LOGGED-IN ROUTES */
@@ -70,7 +70,7 @@ Router = Backbone.Router.extend({
 
   /* ERRORS */
 
-  404: function(){
+  notfound: function(){
     this.loadStaticPage('error-notfound');
   },
 
@@ -81,16 +81,30 @@ Router = Backbone.Router.extend({
 
   /* HELPERS */
 
-  loadStaticPage: function(template) {
+  loadStaticPage: function(template, logged_off_only) {
 
-    // Render template
-    var view = Handlebars.templates[template + '.hbs']();
+    // By default, static pages can be accessed while logged in
+    var logged_off_only = logged_off_only || false;
 
-    // Fill body
-    $('body').html(view);
+    var renderStaticPage = function() {
 
-    // Binders
-    asocial.binders.bind(template);
+      // Render template
+      var view = Handlebars.templates[template + '.hbs']();
+
+      // Fill body
+      $('body').html(view);
+
+      // Binders
+      asocial.binders.bind(template);
+
+    };
+
+    // If route is logged_off only
+    logged_off_only ?
+      // Not found if logged in, render if logged off
+      this.authenticate( function(){ Router.notfound() }, renderStaticPage ) :
+      // Otherwise, render
+      renderStaticPage();
 
   },
 
