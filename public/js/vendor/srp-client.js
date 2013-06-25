@@ -203,7 +203,7 @@ SRPClient.prototype = {
   /* Return a random hexadecimal salt */
   randomHexSalt: function() {
     
-    return srp.randomBigInt(16).toString(16);
+    return this.randomBigInt(16).toString(16);
     
   },
   
