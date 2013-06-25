@@ -12,6 +12,7 @@ gem 'rack-ssl',
 gem 'content-security-policy'
 gem 'rack_csrf',
   require: 'rack/csrf'
+gem 'srp-rb'
 
 # * Database * #
 gem 'mongo'
