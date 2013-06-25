@@ -85,7 +85,7 @@
     .collapsable {
       position: relative;
       overflow: hidden;
-
+      
       // Css-only text expander
       margin-bottom: .5em; /* child <p> margin-bottom */
       line-height: 1.2em; /* child <p> line-height */
@@ -96,6 +96,8 @@
 
         font-size: .9em;
         font-weight: 200;
+        
+        word-break: break-word;
 
         &:last-child {
           margin-bottom: 0;
@@ -254,6 +256,8 @@
               font-weight: 200;
               line-height: 1.4em;
 
+              word-break: break-word;
+              
               a.commenter-name {
                 padding-right: .4em;
                 font-weight: normal;
