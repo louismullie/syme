@@ -95,12 +95,28 @@ guard('auth', {
 
   },
   
-  logout: function () {
+  logout: function (callback) {
+    
+    var callback = callback || function () {};
     
     $.ajax('http://localhost:5000/sessions/xyz', {
       type: 'delete',
-      success: function () {
-        window.location = '/login';
+      success: callback
+    });
+    
+  },
+  
+  disconnect: function () {
+    
+    asocial.auth.logout();
+    
+    // Force disconnection
+    asocial.helpers.showAlert('You have been disconnected', {
+      title: 'Disconnected',
+      submit: 'Log in',
+      closable: false,
+      onhide: function(){
+        Router.nagivate('login', true);
       }
     });
     

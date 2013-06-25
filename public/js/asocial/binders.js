@@ -54,21 +54,13 @@ guard('binders', {
 
       // After x minutes
       if (idleTime > 5) {
+        
         // Clear interval
         clearInterval(idleInterval);
 
         // Log out
-        $.ajax('http://localhost:5000/sessions/xyz', { type: 'delete'} );
-
-        // Disconnection alert box
-        asocial.helpers.showAlert('You have been disconnected', {
-          title: 'Disconnected',
-          submit: 'Log in',
-          closable: false,
-          onhide: function(){
-            window.location = '/login';
-          }
-        });
+        asocial.auth.disconnect();
+        
       }
     };
 
