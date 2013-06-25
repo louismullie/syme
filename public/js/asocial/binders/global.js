@@ -48,42 +48,7 @@ asocial.binders.add('global', { main: function(){
     $(this).closest('form').submit();
   });
 
-  // Implement session timeouts
-  $(document).ready(function () {
-
-    var idleTime = 0;
-
-    function timerIncrement() {
-      idleTime = idleTime + 1;
-      if (idleTime > 20) { // 20 minutes
-
-        // Log out
-        $.ajax('http://localhost:5000/logout', { type: 'get'} );
-
-        // Force disconnection
-        asocial.helpers.showAlert('You have been disconnected', {
-          title: 'Disconnected',
-          submit: 'Log in',
-          closable: false,
-          onhide: function(){
-            Router.nagivate('login', true);
-          }
-        });
-
-      }
-    }
-
-    // Increment the idle time counter every minute.
-    var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
-
-    // Zero the idle timer on mouse movement.
-    $(this).mousemove(function (e) { idleTime = 0; });
-
-    $(this).keypress(function (e) { idleTime = 0; });
-
-  });
-
-  $(document).on('click', '#notifications-container a.notification-unread', function(e) {
+  $(document).on('click', '.notification-content a', function(e) {
 
     var id = $(this).closest('.notification').attr('id');
 
@@ -113,6 +78,15 @@ asocial.binders.add('global', { main: function(){
       }
 
     });
+
+    // If click isn't the delete badge, kill tooltip
+    if ( $(this).attr('href') != '#' ) {
+      // Reset possible hidden tooltips
+      $('a[data-popover]').removeClass('hint--hidden');
+
+      // Hide popover
+      $('.popover').hide();
+    }
 
   });
 

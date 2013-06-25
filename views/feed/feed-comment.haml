@@ -35,7 +35,7 @@
 
     &sdot;
 
-    %a.like-count.hint--top{ href: '#', 'data-hint' => '{{liker_names}}' }<
+    %a{ href: '#', class: 'like-count hint--top {{#compare like_count 0}}collapsed{{/compare}}', 'data-hint' => '{{liker_names}}' }<
       <span>{{like_count}}</span>
       %i.icon-thumbs-up-alt
 

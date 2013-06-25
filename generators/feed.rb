@@ -58,7 +58,7 @@ class FeedGenerator
 
     last_date = last_timestamp ?
     Time.at(last_timestamp.to_i)
-    .round_to_day : Time.now + 1
+      .round_to_day : Time.now + 1
     show_updated_at = nil
 
     # Generate a big hash for each post

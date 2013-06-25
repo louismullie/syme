@@ -57,7 +57,7 @@ guard('binders', {
         // Clear interval
         clearInterval(idleInterval);
 
-        // Log out
+        // Log out server-side
         $.ajax('/logout', { type: 'get'} );
 
         // Disconnection alert box
@@ -66,7 +66,7 @@ guard('binders', {
           submit: 'Log in',
           closable: false,
           onhide: function(){
-            window.location = '/login';
+            Router.navigate('logout', { trigger: true, replace: true });
           }
         });
       }

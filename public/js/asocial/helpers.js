@@ -203,23 +203,33 @@ guard('helpers', {
     var actors = '<b class="actor">' + notification.actors + '</b>';
     var action = notification.action;
 
-    var text;
+    var text, ressource;
 
-    if (action == 'new_post' || action == 'comment_on_own_post' ||
-        action == 'comment_on_same_post' || action == 'like_on_post' ||
+    if (action == 'new_post' ||
+        action == 'comment_on_same_post' ||
+        action == 'like_on_post' ||
         action == 'mention_in_post') {
 
-      resource = '<a href="/' + notification.group +
-        '/posts/' + notification.post_id + '">post</a>';
+      resource =  '<a hbs href="' +
+                  '/users/'   + asocial.state.user.id +
+                  '/groups/'  + notification.group_id +
+                  '/posts/'   + notification.post_id +
+                  '">post</a>';
 
     } else if(action == 'like_on_comment' ||
-              action == 'mention_in_comment') {
+              action == 'mention_in_comment' ||
+              action == 'comment_on_own_post' ) {
 
-      resource = '<a href="/' + notification.group +
-      '/posts/' + notification.post_id + '/comments/' +
-      notification.comment_id + '">comment</a>';
+      resource =  '<a hbs href="' +
+                  '/users/'   + asocial.state.user.id +
+                  '/groups/'  + notification.group_id +
+                  '/posts/'   + notification.post_id +
+                  '#'         + notification.comment_id +
+                  '">post</a>';
 
     }
+
+    console.log('Ressource', resource);
 
     if (action == 'new_post') {
 
@@ -248,14 +258,15 @@ guard('helpers', {
 
       if (action == 'request_invite_confirm') {
 
-        return text = actors + ' has asked to join  ' +
-                      notification.group + '. Confirm <a href="/' +
-                      notification.group_id + '" data-hbs="#">here</a>.' ;
+        return text = actors + ' has asked to join  ' + notification.group +
+                      '<a hbs href="' +
+                      '/users/'   + asocial.state.user.id +
+                      '/groups/'  + notification.group_id +
+                      '">Confirm here</a>.';
 
       } else if (action == 'confirm_invite') {
 
-        return text = actors + ' has joined the group ' +
-                      notification.group + '.';
+        return text = actors + ' has joined the group ' + notification.group + '.';
 
       } else {
 
@@ -265,8 +276,10 @@ guard('helpers', {
 
     }
 
-    return text + ' in <a href="/' + notification.group_id +
-                  '" data-hbs="#">' + notification.group + '</a>';
+    return text + ' on <a hbs href="' +
+                  '/users/'   + asocial.state.user.id +
+                  '/groups/'  + notification.group_id +
+                  '">' + notification.group + '</a>.';
 
   },
 

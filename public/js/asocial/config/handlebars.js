@@ -1,3 +1,9 @@
+$.fn.renderHbsTemplate = function(data){
+  this.html( Handlebars.templates[ this.attr('partial') + '.hbs' ](data) );
+
+  return this;
+}
+
 Handlebars.registerHelper('t',
   function(path) {
     var current = locales[locale];

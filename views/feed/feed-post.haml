@@ -54,17 +54,15 @@
         // Informations
         .post-footer-informations.columns.small-12
           // Like count
-          {{#with likeable}}
-          %a.like-count.hint--top{ href: '#', 'data-hint' => '{{liker_names}}' }<
-            %span {{like_count}}
-            Likes
-          {{/with}}
+          %span{ partial: 'feed-post-footer-likes' }
+            {{> feed-post-footer-likes.hbs}}
 
+          // Separator when there is both like and comment count
           &sdot;
 
           // Comment count
-          %span.comment-count {{comment_count}}
-          Comments
+          %span{ partial: 'feed-post-footer-comments' }
+            {{> feed-post-footer-comments.hbs}}
 
     .post-comments
       {{> feed-comments.hbs}}

@@ -37,11 +37,11 @@ class PostGenerator
 
       # Comment information.
       comments: comments,
-      comment_count: comments.count.to_s,
+      comment_count: comments.count,
       comments_collapsed: comments.count >
-      CommentsPerThread ? '' : 'hidden',
+        CommentsPerThread ? '' : 'hidden',
       comments_collapsed_count: comments.count -
-      CommentsPerThread
+        CommentsPerThread
     }
 
   end

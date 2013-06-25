@@ -202,14 +202,14 @@
 
       .post-footer-informations {
         text-align: right;
-
-
       }
     }
 
     .post-comments {
       padding-left: 1em;
       border-left: 4px solid #ddd;
+
+      &.collapsed { display: none; }
 
       .comments {
 

@@ -112,24 +112,17 @@
     to(transparent)
   );
 
-  @include linear-gradient(
-    -45deg,
-    $stripeColor 25%,
-    transparent 25%,
-    transparent 50%,
-    $stripeColor 50%,
-    $stripeColor 75%,
-    transparent 75%,
-    transparent
-  );
-}
+  $gradient: "-45deg,
+              $stripeColor 25%,
+              transparent 25%,
+              transparent 50%,
+              $stripeColor 50%,
+              $stripeColor 75%,
+              transparent 75%,
+              transparent";
 
-@mixin linear-gradient($arguments...){
-  background-image: -webkit-linear-gradient($arguments);
-  background-image: -moz-linear-gradient($arguments);
-  background-image: -ms-linear-gradient($arguments);
-  background-image: -o-linear-gradient($arguments);
-  background-image: linear-gradient($arguments);
+  background-image: linear-gradient($gradient);
+
 }
 
 @mixin scroll-shadow($background: white, $width: 5px) {

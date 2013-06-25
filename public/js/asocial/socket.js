@@ -148,11 +148,8 @@ guard('socket', {
 
     like: function(data){
 
-      console.log('New like:', data);
-
-      var target      = $('#' + data.target),
-          action_link = target.find('a.like-action').first(),
-          count_link  = target.find('a.like-count').first();
+      var target       = $('#' + data.target),
+          action_link  = target.find('a.like-action').first();;
 
       // Toggle action link
       data.view.liked_by_user ?
@@ -160,8 +157,8 @@ guard('socket', {
         action_link.removeClass('active');
 
       // Update list of names and counter
-      count_link.attr('data-hint', data.view.liker_names);
-      count_link.find('span').html(data.view.like_count);
+      target.find('[partial="feed-post-footer-likes"]')
+        .renderHbsTemplate({ likeable: data.view });
     },
 
     notification: function(data){
@@ -198,8 +195,7 @@ guard('socket', {
 
       var comment           = $('#' + data.target),
           comment_container = comment.closest('.comments'),
-          comments          = comment_container.find('.comment-box'),
-          global_count      = comment_container.closest('.post').find('.post-comments span');
+          comments          = comment_container.find('.comment-box');
 
       // Remove comment
       comment.remove();
@@ -238,7 +234,8 @@ guard('socket', {
       }
 
       // Reset comment count counter
-      global_count.html( comments.length );
+      comment_container.closest('.post').find('[partial="feed-post-footer-comments"]')
+        .renderHbsTemplate({ comment_count: comments.length });
 
     },
 

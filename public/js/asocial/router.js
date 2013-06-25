@@ -12,6 +12,7 @@ Router = Backbone.Router.extend({
 
     'login':    'login',
     'register': 'register',
+    'logout':   'logout',
 
     /* Logged-in routes */
 
@@ -52,6 +53,10 @@ Router = Backbone.Router.extend({
 
   register: function() {
     this.loadStaticPage('register', true);
+  },
+
+  logout: function() {
+    window.location = '/';
   },
 
   /* LOGGED-IN ROUTES */
@@ -112,6 +117,9 @@ Router = Backbone.Router.extend({
 
     // Optional group id for routes that require group authentication
     var group_id = group_id || false;
+
+    // Show spinner
+    $('#spinner').show();
 
     this.authenticate(function(){
 
@@ -190,6 +198,9 @@ Router = Backbone.Router.extend({
       // Binders
       asocial.binders.bind(template);
 
+      // Hide spinner
+      $('#spinner').hide();
+
     }).fail(Router.error);
 
   },
@@ -197,7 +208,7 @@ Router = Backbone.Router.extend({
   authenticate: function(success, failure) {
 
     // If there is already a session, success
-    if ( asocial.state.session) return success();
+    if (asocial.state.session) return success();
 
     // Otherwise, authentificate
     asocial.state.getState('system', function () {

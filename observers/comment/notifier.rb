@@ -24,6 +24,7 @@ module CommentObserver::Notifier
       action: :comment_on_own_post,
       unread: { post_id: post.id.to_s },
       create: {
+        post_id: post.id.to_s,
         comment_id: comment.id.to_s,
         actor_ids: [commenter.id.to_s]
     }}, post.group)
