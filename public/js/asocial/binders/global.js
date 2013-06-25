@@ -58,7 +58,7 @@ asocial.binders.add('global', { main: function(){
       if (idleTime > 20) { // 20 minutes
 
         // Log out
-        $.ajax('http://localhost:5000/logout', { type: 'get'} );
+        $.ajax('http://localhost:5000/sessions/xyz', { type: 'delete'} );
 
         // Force disconnection
         asocial.helpers.showAlert('You have been disconnected', {
@@ -114,6 +114,10 @@ asocial.binders.add('global', { main: function(){
 
     });
 
+  });
+  
+  $(document).on('click', '#logout', function (e) {
+    asocial.auth.logout();
   });
 
 } }); // asocial.binders.add();

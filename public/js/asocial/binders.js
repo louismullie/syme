@@ -58,7 +58,7 @@ guard('binders', {
         clearInterval(idleInterval);
 
         // Log out
-        $.ajax('/logout', { type: 'get'} );
+        $.ajax('http://localhost:5000/sessions/xyz', { type: 'delete'} );
 
         // Disconnection alert box
         asocial.helpers.showAlert('You have been disconnected', {

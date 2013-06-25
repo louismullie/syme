@@ -94,6 +94,17 @@ guard('auth', {
     });
 
   },
+  
+  logout: function () {
+    
+    $.ajax('http://localhost:5000/sessions/xyz', {
+      type: 'delete',
+      success: function () {
+        window.location = '/login';
+      }
+    });
+    
+  },
 
   authorize: function (fn, callback, password) {
 

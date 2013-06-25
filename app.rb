@@ -13,10 +13,9 @@ module Asocial
     require_directory 'observers'
     require_directory 'generators'
     
-    require_specific('routes', ['stream', 'catch', 'group'])
-    
     require_all 'routes'
     
+    # Model observers.
     Mongoid.observers = PostObserver, CommentObserver,
     LikeObserver, NotificationObserver, InviteObserver,
     UserObserver

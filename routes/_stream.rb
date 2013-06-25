@@ -1,4 +1,6 @@
-get '/stream', auth: [], provides: 'text/event-stream' do
+# EventSource connection for client applications.
+get '/users/:user_id/stream', auth: [],
+  provides: 'text/event-stream' do |user_id|
 
   user_id = @user.id.to_s
   

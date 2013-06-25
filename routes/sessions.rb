@@ -82,3 +82,10 @@ post '/login/2' do
   end
 
 end
+
+# Clear session.
+delete '/sessions/:session_id' do |session_id|
+  
+  session.clear
+  
+end
