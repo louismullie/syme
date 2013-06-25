@@ -1,6 +1,6 @@
 guard('invite', {
 
-  integrate: function () {
+  integrate: function (callback) {
 
     var _this = this;
 
@@ -64,7 +64,7 @@ guard('invite', {
 
           $.post('http://localhost:5000/invite/acknowledge', ack, function () {
             // asocial.helpers.showAlert('Integrated the group successfully!');
-            _this.refreshKeys();
+            _this.refreshKeys(callback);
           });
 
         } else {
@@ -77,7 +77,7 @@ guard('invite', {
 
   },
 
-  update: function () {
+  update: function (callback) {
 
     var _this = this;
 
@@ -128,7 +128,7 @@ guard('invite', {
 
           $.post('http://localhost:5000/invite/acknowledge', ack, function () {
             // asocial.helpers.showAlert('Added a new group member to your keys!');
-            _this.refreshKeys();
+            _this.refreshKeys(callback);
           });
 
         } else {
@@ -141,9 +141,11 @@ guard('invite', {
 
   },
 
-  refreshKeys: function () {
+  refreshKeys: function (callback) {
+    var callback = callback || function () {};
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
+      callback();
     }, { group_id: asocial.state.group.id, force: true })
   },
 

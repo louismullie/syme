@@ -120,22 +120,26 @@ Router = Backbone.Router.extend({
           if(!authorized) return Router.error();
 
           if (asocial.state.invite.integrate) {
-            asocial.invite.integrate();
-          } else if (asocial.state.invite.update) {
-            asocial.invite.update();
-          } else {
             
+            asocial.invite.integrate(function () {
+              Router.renderDynamicTemplate(template);
+            });
+            
+          } else if (asocial.state.invite.update) {
+            asocial.invite.update(function () {
+              Router.renderDynamicTemplate(template);
+            });
+            
+          } else {
+          
             // Authorize the user for the group by checking for
             // ability to decrypt the group keylist.
             asocial.auth.authorizeForGroup( function (authorized) {
-
               // User can't decrypt group keylist: error
               if(!authorized) return Router.error();
-
               Router.renderDynamicTemplate(template);
-
             });
-            
+
           }
 
         }, { group_id: asocial.state.group.id });
@@ -150,7 +154,7 @@ Router = Backbone.Router.extend({
     });
 
   },
-
+  
   renderDynamicTemplate: function(template) {
 
     // Get current URL
