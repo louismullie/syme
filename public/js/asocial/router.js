@@ -108,36 +108,37 @@ Router = Backbone.Router.extend({
       // Otherwise, authorize user for group
       asocial.state.getState('group', function (authorized) {
 
+        // User can't access group: error
+        if(!authorized) return Router.error();
+
         // Check if need to integrate user within a group (1st
         // visit on group) or if need to update a user's keylist
         // (meaning one or more new users have joined the group).
         asocial.state.getState('invite', function (authorized) {
 
-          // The user should always be authorized for the invite.
-          if (!authorized) { asocial.helpers.showAlert('Not authorized for invite!'); }
-
-          if (asocial.state.invite.integrate)
-            asocial.invite.integrate();
-
-          if (asocial.state.invite.update)
-            asocial.invite.update();
-
-        }, { group_id: asocial.state.group.id });
-
-
-        // User can't access group: error
-        if(!authorized) return Router.error();
-
-        // Authorize the user for the group by checking for
-        // ability to decrypt the group keylist.
-        asocial.auth.authorizeForGroup( function (authorized) {
-
-          // User can't decrypt group keylist: error
+          // User can't access invite: error
           if(!authorized) return Router.error();
 
-          Router.renderDynamicTemplate(template);
+          if (asocial.state.invite.integrate) {
+            asocial.invite.integrate();
+          } else if (asocial.state.invite.update) {
+            asocial.invite.update();
+          } else {
+            
+            // Authorize the user for the group by checking for
+            // ability to decrypt the group keylist.
+            asocial.auth.authorizeForGroup( function (authorized) {
 
-        });
+              // User can't decrypt group keylist: error
+              if(!authorized) return Router.error();
+
+              Router.renderDynamicTemplate(template);
+
+            });
+            
+          }
+
+        }, { group_id: asocial.state.group.id });
 
       }, { group_id: group_id });
 
