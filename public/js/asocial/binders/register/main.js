@@ -20,21 +20,23 @@ asocial.binders.add('register', { main: function(){
         remember  = form.find('input[name="remember_me"]').prop("checked");
 
     var user = new User();
-    var srp = new SRP(email, password);
+    var srp = new SRPClient(email, password);
 
     user.save(
 
       { email: email, full_name: fullName },
 
       { success: function (model, response) {
-
-        var verifierSalt = response.verifier.salt;
-        var verifier = srp.calcV(verifierSalt).toString();
+        
+        var verifierSalt = srp.randomHexSalt();
+        
+        var verifierBn = srp.calculateV(verifierSalt);
+        var verifierHex = verifierBn.toString(16);
 
         model.save({
 
           verifier: new Verifier({
-            content: verifier,
+            content: verifierHex,
             salt: verifierSalt
           })
 

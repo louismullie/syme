@@ -1,30 +1,5 @@
 guard('auth', {
-
-  register: function(email, password, full_name, success, fail) {
-
-    var srp = new SRP(email, password);
-
-    var params = { email: email, full_name: full_name };
-
-    $.post('http://localhost:5000/register/1', params, function (data) {
-
-      if (data.error) {
-
-        fail(data.error);
-
-      } else {
-
-        var v = srp.calcV(data.salt).toString();
-
-        var params = $.param({ user_id: data.user_id, v: v });
-
-        $.post('http://localhost:5000/register/2', params, function (data) { success(data) });
-
-      }
-
-    });
-  },
-
+  
   /* Generate a random RSA keypair for the user,
    * encrypt with a hash of the user's password,
    * and store keypair and hash salt on server.
@@ -50,29 +25,46 @@ guard('auth', {
 
   login: function(email, password, remember, success, fail) {
 
-    var srp = new SRP(email, password);
-    var A = srp.getA().toString();
-    var params = $.param({email: email, A: A});
-
+    var srp = new SRPClient(email, password);
+    
+    var a = srp.srpRandom();
+    var A = srp.calculateA(a);
+    
+    var params = $.param({ email: email, A: A.toString(16) });
+    
     $.post('http://localhost:5000/login/1', params, function (data) {
+      
+      if (data.B && data.salt) {
 
-      if (data.status == 'ok') {
-
-        var M = srp.calcM(data.salt, data.B).toString();
-        var params = $.param({ ssc: M });
+        var salt = data.salt;
+        var B = new BigInteger(data.B, 16);
+        var u = srp.calculateU(A, B);
+        var Sc = srp.calculateS(B, salt, u, a);
+        var M = srp.calculateM(email, salt, A, B, Sc);
+        
+        var params = $.param({ M: M.toString(16) });
 
         $.post('http://localhost:5000/login/2', params, function (data) {
+          
           if (data.status == 'ok') {
+            
             $('meta[name="_csrf"]').attr('content', data.csrf);
+            
             asocial.state.getState('system', function () {
               success(data);
             }, { force: true });
+          
           } else if (data.status == 'error') {
+            
             console.log('State ERROR', data);
             fail(data.reason);
+            
           } else {
+            
             fail('server');
+            
           }
+          
         });
 
         var storage = remember ? localStorage: sessionStorage;
@@ -101,6 +93,33 @@ guard('auth', {
 
     });
 
+  },
+  
+  logout: function (callback) {
+    
+    var callback = callback || function () {};
+    
+    $.ajax('http://localhost:5000/sessions/xyz', {
+      type: 'delete',
+      success: callback
+    });
+    
+  },
+  
+  disconnect: function () {
+    
+    asocial.auth.logout();
+    
+    // Force disconnection
+    asocial.helpers.showAlert('You have been disconnected', {
+      title: 'Disconnected',
+      submit: 'Log in',
+      closable: false,
+      onhide: function(){
+        Router.nagivate('login', true);
+      }
+    });
+    
   },
 
   authorize: function (fn, callback, password) {

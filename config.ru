@@ -14,17 +14,7 @@ if ENV['RACK_ENV'] == 'PRODUCTION'
   require 'rack/ssl'
   use Rack::SSL
 
-
   # use Rack::Protection::EscapedParams
-
-  # Enable browser feature detection.
-  use Rack::CanIUse,
-  features: [
-    # Required for cryptography.
-    'filereader', 'blobbuilder',
-    'bloburls', 'typedarrays',
-    'webworkers'
-  ]
 
 =end
 
@@ -72,6 +62,10 @@ use Rack::Session::Cookie,
 # Enable token protection against CSRF.
 require 'rack/csrf'
 # use Rack::Csrf
+
+use Rack::Protection, except: :http_origin
+
+use Rack::Protection::HttpOrigin #, origin_whitelist: ["chrome-extension://aejoelaoggembcahagimdiliamlcdmfm", "http://fizz.buzz.com"]
 
 # Enable protection against remote referrers.
 use Rack::Protection::RemoteReferrer

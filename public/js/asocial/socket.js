@@ -340,7 +340,8 @@ guard('socket', {
       if (typeof(document.eventSource) == 'undefined' ||
          document.eventSource.readyState != 1) {
 
-        document.eventSource = new EventSource('http://localhost:5000/stream');
+        document.eventSource = new EventSource('http://localhost:5000/users/' +
+        asocial.state.user.id + '/stream');
 
         document.eventSource.onmessage = function(e) {
 

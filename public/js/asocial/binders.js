@@ -54,22 +54,10 @@ guard('binders', {
 
       // After x minutes
       if (idleTime > 5) {
-        // Clear interval
         clearInterval(idleInterval);
-
-        // Log out server-side
-        $.ajax('/logout', { type: 'get'} );
-
-        // Disconnection alert box
-        asocial.helpers.showAlert('You have been disconnected', {
-          title: 'Disconnected',
-          submit: 'Log in',
-          closable: false,
-          onhide: function(){
-            Router.navigate('logout', { trigger: true, replace: true });
-          }
-        });
+        asocial.auth.disconnect();
       }
+      
     };
 
     var timerReset = function(){ idleTime = 0; };

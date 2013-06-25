@@ -24,18 +24,13 @@ end
 post '/users' do
 
   user = get_model(request)
-
-  logger.info user
-
-  logger.info user
-  logger.info User.where(email: user.email).any?
-
+  
   # Get the e-mail from params.
   email = user.email
 
   # Get the full name from params.
   full_name = user.full_name
-
+  
   # Make sure email and full name are present.
   if email.blank? && full_name.blank?
     error 400, 'missing_params'
@@ -46,21 +41,16 @@ post '/users' do
     error 400, 'email_taken'
   end
 
-  # Generate a salt for the client.
-  salt = random_bytes(16).hex.to_s # FIX
-
   # Validate and create the user.
   user = begin
     User.create!(
       email: user.email,
-      full_name: user.full_name
+      full_name: user.full_name,
     )
   # Return bad request if validation fails.
   rescue Mongoid::Errors::Validations
     error 400, 'validation_failed'
   end
-
-  user.verifier = Verifier.new(salt: salt)
 
   user.save!
 
@@ -86,8 +76,15 @@ put '/users' do
 
   # Update verifier
   if model.verifier
-    user.verifier.content = model.verifier['content']
+    
+    # Build the verifier with the salt.
+    user.verifier = Verifier.new(
+      salt:  model.verifier['salt'],
+      content:  model.verifier['content']
+    )
+
     user.verifier.save!
+    
   end
 
   # Update keypair.
