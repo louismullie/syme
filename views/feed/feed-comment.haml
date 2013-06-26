@@ -26,17 +26,11 @@
     %a.time{ href: '#' }
       %time.timeago{ datetime: '{{full_time}}' }
 
-    {{#with likeable}}
-
     // Like action
-    %a{ href: '#', class: 'like-action {{#if liked_by_user}}active{{/if}}' }<
+    %a{ href: '#', class: 'like-action {{#if likeable.liked_by_user}}active{{/if}}' }<
       %span.default-text> Like
       %span.active-text Unlike
 
-    &sdot;
-
-    %a{ href: '#', class: 'like-count hint--top {{#compare like_count 0}}collapsed{{/compare}}', 'data-hint' => '{{liker_names}}' }<
-      <span>{{like_count}}</span>
-      %i.icon-thumbs-up-alt
-
-    {{/with}}
+    // Like count
+    %span{ partial: 'feed-like-count' }
+      {{> feed-like-count.hbs}}

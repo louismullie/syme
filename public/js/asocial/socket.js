@@ -72,7 +72,6 @@ guard('socket', {
       if($('#' + data.target).length) {
 
         var post               = $('#' + data.target),
-            global_count       = post.find('span.comment-count'),
             container          = post.find('.comments'),
             showmore           = container.find('.show-more'),
             showmore_count     = showmore.find('span'),
@@ -94,7 +93,8 @@ guard('socket', {
         container.append(asocial.helpers.render('feed-comment', data.view));
 
         // Reset comment count counter
-        global_count.html( post.find('.comment-box').length );
+        post.find('[partial="feed-comment-count"]')
+          .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
 
         // Decrypt new comment
         asocial.crypto.decryptPostsAndComments();
@@ -149,7 +149,7 @@ guard('socket', {
     like: function(data){
 
       var target       = $('#' + data.target),
-          action_link  = target.find('a.like-action').first();;
+          action_link  = target.find('a.like-action').first();
 
       // Toggle action link
       data.view.liked_by_user ?
@@ -157,7 +157,7 @@ guard('socket', {
         action_link.removeClass('active');
 
       // Update list of names and counter
-      target.find('[partial="feed-post-footer-likes"]')
+      target.find('[partial="feed-like-count"]').first()
         .renderHbsTemplate({ likeable: data.view });
     },
 
@@ -228,13 +228,8 @@ guard('socket', {
         }
       }
 
-      // If there are no more comments, hide comment box
-      if( comments.length == 0 ){
-        comment_container.addClass('hidden');
-      }
-
       // Reset comment count counter
-      comment_container.closest('.post').find('[partial="feed-post-footer-comments"]')
+      comment_container.closest('.post').find('[partial="feed-comment-count"]')
         .renderHbsTemplate({ comment_count: comments.length });
 
     },

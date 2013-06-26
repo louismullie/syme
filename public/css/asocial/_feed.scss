@@ -156,9 +156,9 @@
         position: absolute;
         top: 0; right: 0;
 
-        padding: 0 0.5em;
+        padding: 0 0.3em;
         font-size: 0.8em;
-        line-height: 1.8em;
+        line-height: 1.5em;
       }
     }
 
@@ -204,6 +204,16 @@
 
       .post-footer-informations {
         text-align: right;
+
+        & > span {
+          margin-left: .5em;
+
+          a:hover {
+            text-decoration: none;
+
+            span { text-decoration: underline; }
+          }
+        }
       }
     }
 
@@ -246,9 +256,9 @@
             top: 0; right: 0;
             z-index: 3;
 
-            padding: 0 0.5em;
+            padding: 0 0.3em;
             font-size: 0.8em;
-            line-height: 1.8em;
+            line-height: 1.5em;
           }
 
           img.avatar {
@@ -301,6 +311,8 @@
             }
 
             a.like-count {
+              margin-left: .5em;
+
               font-weight: normal;
 
               &:hover { text-decoration: none; }
