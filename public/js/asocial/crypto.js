@@ -43,8 +43,7 @@ guard('crypto', {
   encryptKeyList: function (keylistKey, keylistJson) {
     
     var keylistTxt = JSON.stringify(keylistJson);
-    var encKeylistTxt = sjcl.encrypt(hash, keylistTxt);
-    return $.base64.encode(encKeylistTxt);
+    return asocial.crypto.encryptEncode64(keylistKey, keylistTxt);
 
   },
   
@@ -98,6 +97,10 @@ guard('crypto', {
     return sjcl.decrypt(key, $.base64.decode(message));
   },
 
+  encryptEncode64: function (key, message) {
+    return $.base64.encode(sjcl.encrypt(key, message));
+  },
+  
   serializeKeyList: function () {
 
     var public_keys = {};
@@ -149,10 +152,13 @@ guard('crypto', {
 
   generateRandomKey: function () {
 
-    var rand = sjcl.codec.hex.fromBits(sjcl.random.randomWords(2, 0));
-    var msg_hash = new sjcl.hash.sha256.hash(rand);
-    var msg_key = sjcl.codec.hex.fromBits(msg_hash);
-    return msg_key;
+    var randWords = sjcl.random.randomWords(2, 0);
+    var randHex = sjcl.codec.hex.fromBits(randWords);
+    
+    var randHexHash = new sjcl.hash.sha256.hash(randHex);
+    var randKey = sjcl.codec.hex.fromBits(randHexHash);
+    
+    return randKey;
 
   },
 
@@ -171,59 +177,55 @@ guard('crypto', {
 
   generateEncryptedKeyPair: function (hash) {
     
-    return this.encryptKeyPair(hash, this.generateKeypair(false));
+    return this.encryptKeyPair(hash, this.generateKeypair());
     
   },
 
-  generateKeypair: function (with_rsa) {
+  generateKeypair: function () {
 
     var key = this.ecc.generateKeys();
     var _this = asocial.crypto;
     
-    var keypair = {
-      private_key: _this.ecc.serializePrivateKey(key.sec),
-      public_key: _this.ecc.serializePublicKey(key.pub),
+    var privateKeyJsonTxt = _this.ecc.serializePrivateKey(key.sec);
+    var publicKeyJsonTxt = _this.ecc.serializePublicKey(key.pub);
+    
+    return {
+      private_key: privateKeyJsonTxt,
+      public_key: publicKeyJsonTxt
     };
-
-    if (with_rsa) {
-      keypair.rsa_key = key;
-    }
-
-    return keypair;
 
   },
 
   encryptKeyPair: function (hash, keypair) {
 
-    var keys = {
-      private_key: keypair.private_key,
-      public_key: keypair.public_key
-    };
-
-    return $.base64.encode(sjcl.encrypt(hash, JSON.stringify(keys)));
+    var keypairTxt = JSON.stringify(keypair);
+    return asocial.crypto.encryptEncode64(hash, keypairTxt);
 
   },
 
-  // Decode the Base64-encoded public keys.
   buildPublicKeys: function(public_key_infos) {
 
-    var public_keys = {};
     var _this = this;
+    var publicKeys = {};
 
-    $.each(public_key_infos, function(user_id, public_info) {
-      public_keys[user_id] = _this.ecc.buildPublicKey(public_info);
+    $.each(public_key_infos, function(userId, publicKeyJson) {
+      
+        var publicKey = _this.ecc.buildPublicKey(publicKeyJson);
+        publicKeys[userId] = publicKey;
+        
     });
 
-    return public_keys;
+    return publicKeys;
 
   },
 
-
-  // Decrypt message using message key and private key.
-  decryptMessage: function(message, msg_key) {
-     var private_key = asocial_private_key();
-     var msg_key = asocial.crypto.ecc.decrypt(private_key, msg_key);
-     return sjcl.decrypt(msg_key, message);
+  decryptMessage: function(encMsg, encMsgKey) {
+    
+     var privateKey = asocial_private_key();
+     var decMsgKey = this.ecc.decrypt(privateKey, encMsgKey);
+     
+     return sjcl.decrypt(decMsgKey, encMsg);
+     
   },
 
   decryptPostsAndComments: function() {
@@ -431,19 +433,6 @@ guard('crypto', {
   generateRandomHexSalt: function (words) {
     var words = words || 4;
     return sjcl.codec.hex.fromBits(sjcl.random.randomWords(words,0));
-  },
-
-  testPEM: function () {
-
-    var decryptedHexKey = PKCS5PKEY.getDecryptedKeyHex("-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,9388FB300C43FA748A7B3F6D2C576765\n\nW0dc/M4XISrMIxarDBVyUv1AXh9qYYiuiCKJCihaShjDNF9PhVDdzYLlEG+/Ex0E\nfzgpdJd2jzLiV+DDAbOT76XrkbyL0ld5bWlab1D5F196sfmGW39FufadVT6WaC5b\na3NfLpU+io3PZPm4VM6GbIubZlYOMwNl4cN5z/pyaJjtVHiYVq4rD4XIKcEAAW1X\n0lYzfYz6o7/PiZhUjICmcQ1XkvuF8KEaHrkKbYrEC1y/u0+RdxaRdIR5glG7z4Ot\nL4GJIykT6wrfQagsp+El63TI+1/LYVfAeZDnt9bKnn/OiJ6Xvbih4nisTEaKnqiW\n64aalxxownu/aqkzjq7w11RXWVb0vKy0FJUF6wHKrbZTXHlm0O9oPmxEZcp3zXqw\nsnkozbuy7PcGFHgzuZBJTtJK4wpuzj/zTJ+2Ph61vkJ74vywCPq2wbhXNOF4tXf+\npSwj25rWOhbgGKMtZlYKFt9q78SogXgj/27AIL0Br2QFFx1oMhk8K6euIWMweLZE\ngVrfDWk95pf/oIRpfGPZguJqFRtJ+GviQ9NKEFwvg90UbdfqFa78He2uisQp7NcE\nEQHmn9tLymlhjrkVLrxlighrPeUIp8wITGT/yre/qv/0VYSxqovyUX5wgMcMgm8F\n7WkD3uebuMuCMleOQFqnKfBvyyrfU8YGYA8gj+4RxjqCHHPfrl5AJIq2g57jcUU4\nH2seDySpULO3Lt7xsKFrxOX7sCS+sH0Gk5YAJFFfseLgr68EzDQVogbv4+hm8Dw0\nynlfNYwTWZnX3SlgX6Hq8Ro3XHq1It5bKVPkO2BrI1e+MFcBy/p8wEPwmvfCYeuX\nlX1KApLBp+a2BhrSdDMqIcU30XVihg4NweGvZi6B55I6gOPt3ExVegXAL0YHe7ky\nN4k8uDNmy1Er3/HALATg3DJEHkZthsSmVqotSMP5wOVClDv/C8lOcOErkKEg7coZ\nthl0HiDr+QPlY3UyYIu4nqRgVgboY7MCMAukIO4DY5uv3DtIomhsX/EmipDFw7m7\n1uCdPiWQ6WriRyd763gYTe9vlREje0kc2Fj1C2J1RLg6n7cHcnCrClj7PeqhLK7L\n4IqvT/tdzf/L8KL1RizJljDBPWEe+EqDdFCpKbdkix6h8oiQy9hGyW+8aYKzin0n\nc6UAURGDWGptAHPX5/Bi3OT0KzdizRM9nNrG45zw4DwbmQ8KxaZIHmy5FWYVfS+x\nz0c+J4wAFl96anX1SnwWnEBhovjri3divFAAfT6/5KfH7R5WkeCZSTNvkoEmOPuj\nW8I8N8lJzOzinY7EcwE7yMoPKJ+iB4flPCqzQ5zjfIhDd2S6GmQXXQhfLS0x2x+q\ntE5DR3sDxc/ugYlRpLzJrJYwnxFcJ5SE8gLphu15P+R5iRkxDcygetpPfOJjYBop\nsZ3mJsrV2OGKRMqEGLUZ3/TM9tYfKhtq2crcRZC+5GoG1s8lplM742hEHm/NM3+N\nmS0/GAKQ+r3AjNPX4brbzkmoJtoI7dIbDfyBZAV/ssZxRyW4jm/OcnI2fjvBeCp6\njTX+XvbZgRFvh3iOrARkHtxfXzne1egD4eApuB4jRxikzk4ZYnGRx6q90T1i5H4+\n-----END RSA PRIVATE KEY-----\n", "password");
-
-    var rsa = new RSAKey();
-    rsa.readPrivateKeyFromASN1HexString(decryptedHexKey);
-
-    var pem = PKCS5PKEY.getEryptedPKCS5PEMFromRSAKey(rsa, "password", "AES-128-CBC");
-
-    return rsa;
-
   },
 
   encode: function (json) {
