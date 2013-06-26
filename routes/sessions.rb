@@ -1,3 +1,16 @@
+get '/state/system' do
+
+  content_type :json
+
+  data = {
+    install: User.all.empty?,
+    logged_in: !@user.nil?
+  }
+  
+  data.to_json
+
+end
+
 # Step 1: The user sends an identifier and public ephemeral key, A
 # The server responds with the salt and public ephemeral key, B
 post '/login/1' do

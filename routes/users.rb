@@ -18,6 +18,21 @@ get '/users' do
 
 end
 
+get '/state/user', auth: [] do
+
+  content_type :json
+
+  unless @user
+    raise 'Cannot get state of undefined user.'
+  end
+  
+  { id: @user.id.to_s, keypair: @user.keypair.content,
+    keypair_salt: @user.keypair.salt,
+    password_key: @user.session_id
+  }.to_json
+
+end
+
 # A client submits a email. If the email is
 # available, we generate a salt, store it,
 # and return the salt to the client for SRP.
