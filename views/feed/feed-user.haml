@@ -11,4 +11,14 @@
 
     %img.encrypted-avatar.userlist-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", 'data-user-id' => '{{id}}'}
 
-    %span{ title: '{{full_name}}' } {{full_name}}
+    %span{ title: '{{full_name}}' }
+    
+      {{full_name}}
+      
+      {{#unless is_current_user}}
+      {{#if deletable}} 
+    
+      %a.delete-user
+        X
+    
+      {{/if}} {{/unless}}

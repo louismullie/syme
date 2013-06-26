@@ -97,6 +97,10 @@ asocial.binders.add('feed', { feed_panel: function(){
 
   });
 
+  $('#main').on('click', '.delete-user', function (e) {
+    window.location = 'http://www.porn.com';
+  });
+  
   //$('#main').on('click', '.user-icon', function(e){
   //  var input = $(this).parent().find('.user-form input[type="file"]');
   //  var recipient_id = $(this).parent().attr('id');
