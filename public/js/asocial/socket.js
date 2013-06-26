@@ -226,6 +226,11 @@ guard('socket', {
           // Otherwise, hide show-more
           showmore.addClass('hidden');
         }
+
+      } else {
+        if(comments.length <= 3) {
+          showmore.data('expanded', false);
+        }
       }
 
       // Reset comment count counter
