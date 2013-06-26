@@ -3,13 +3,14 @@ get '/users/:user_id/stream', auth: [],
   provides: 'text/event-stream' do |user_id|
 
   user_id = @user.id.to_s
+  subscriber = MagicBus::Subscriber
   
   stream :keep_open do |out|
     
-    client_id = MagicBus::Subscriber.subscribe(user_id, out)
+    client_id = subscriber.subscribe(user_id, out)
     
     cleanup = lambda do
-      MagicBus::Subscriber.unsubscribe(user_id, client_id)
+      subscriber.unsubscribe(user_id, client_id)
       out.close
     end
     
