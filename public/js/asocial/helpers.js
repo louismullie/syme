@@ -193,6 +193,7 @@ guard('helpers', {
 
   resetFeedForm: function() {
 
+     $('#feed-form').data('active', false);
      $('#feed-form textarea').val('');
      $('#feed-form #upload_id').val('');
      $('#feed-form #encrypted_content').val('');

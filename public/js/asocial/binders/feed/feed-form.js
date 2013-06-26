@@ -4,7 +4,7 @@ asocial.binders.add('feed', { feed_form: function(){
   $('#main').on('submit', '#feed-form', function(e){
 
     e.preventDefault();
-
+    
     if($(this).data('active')) return false;
     $(this).data('active', true);
 
@@ -30,10 +30,11 @@ asocial.binders.add('feed', { feed_form: function(){
     $.post(url, request, function(data){
 
       asocial.helpers.resetFeedForm();
-      $(this).data('active', false);
 
     }).fail(function(){
 
+      alert('Posting failed');
+      
       // Implement error if posting failed
 
     });

@@ -231,13 +231,10 @@ guard('crypto', {
 
 
   // Decrypt message using message key and private key.
-  decryptMessage: function(asymKey, message) {
-
-    var private_key = asocial_private_key();
-    var symKey = asocial.crypto.ecc.decrypt(private_key, asymKey);
-    
-    return sjcl.decrypt(symKey, message);
-
+  decryptMessage: function(msg_key, message) {
+     var private_key = asocial_private_key();
+     var msg_key = asocial.crypto.ecc.decrypt(private_key, msg_key);
+     return sjcl.decrypt(msg_key, message);
   },
 
   decryptPostsAndComments: function() {

@@ -70,7 +70,8 @@ post '/groups', auth: [] do
 
   group.memberships << membership
   group.users << @user
-
+  group.touch
+  
   @user.groups << @group
   @user.memberships << membership
 
