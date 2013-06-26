@@ -430,6 +430,10 @@ guard('helpers', {
     var options  = typeof(options) === "undefined" ? {} : options;
     var closable = typeof(options.closable) === "undefined" ? true : options.closable;
 
+    // Defaults options.classes to 'modal-confirm'
+    options['classes'] = typeof(options.classes) === "undefined" ?
+      'modal-confirm' : options.classes;
+
     // Default title, submit and cancel
     var title  = typeof(options.title) === "undefined" ? 'Confirm' : options.title;
     var submit = typeof(options.submit) === "undefined" ? 'OK' : options.submit;

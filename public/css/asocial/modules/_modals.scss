@@ -44,6 +44,23 @@
       @media #{$breakpointMedium} { width: 35%; }
     }
 
+    // Confirm
+    &.modal-confirm {
+      @media #{$breakpointLarge}  { width: 30%; }
+      @media #{$breakpointMedium} { width: 35%; }
+
+      .modal-buttons {
+        margin-top: .8em;
+
+        @include column-gap(1em);
+        @include column-count(2);
+
+        a.modal-button {
+          margin: 0;
+        }
+      }
+    }
+
     // Invite
     &.modal-invite {
       @media #{$breakpointLarge}  { width: 30%; }
@@ -146,7 +163,7 @@
         text-align: center;
         color: $black;
 
-        &:hover, &:active {
+        &:hover, &:active, &[role="submit-modal"] {
           color: inherit;
           background: $bodyBackgroundColor3;
         }

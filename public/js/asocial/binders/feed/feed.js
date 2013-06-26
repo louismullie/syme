@@ -35,9 +35,19 @@ asocial.binders.add('feed', { feed: function(){
           group      = asocial.state.group.id,
           route      = '/' + group + '/post/delete';
 
-      if(confirm(locales.en.feed.delete_post_confirm)) {
-        $.post(route, $.param({ post_id: post_id }));
-      }
+      asocial.helpers.showConfirm(
+        'Do you really want to delete this post?',
+        {
+          closable: true,
+          title: 'Delete post',
+          submit: 'Delete',
+          cancel: 'Cancel',
+
+          onsubmit: function(){
+            $.post(route, { post_id: post_id });
+          }
+        }
+      );
 
   });
 

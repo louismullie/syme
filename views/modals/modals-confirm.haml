@@ -9,8 +9,9 @@
 .modal-content
   {{content}}
 
-  %a.modal-button{ href: '#', role: 'submit-modal' }
-    {{submit}}
+  .modal-buttons
+    %a.modal-button{ href: '#', role: 'submit-modal' }
+      {{submit}}
 
-  %a.modal-button{ href: '#', role: 'close-modal' }
-    {{cancel}}
+    %a.modal-button{ href: '#', role: 'close-modal' }
+      {{cancel}}
