@@ -177,6 +177,11 @@
 
           &.image-download {
             display: block;
+
+            img {
+              width: 100%;
+              @include inclined-stripes(transparent, 50px, rgba(0, 0, 0, .05));
+            }
           }
         }
       }
