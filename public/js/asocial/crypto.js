@@ -231,7 +231,7 @@ guard('crypto', {
 
 
   // Decrypt message using message key and private key.
-  decryptMessage: function(msg_key, message) {
+  decryptMessage: function(message, msg_key) {
      var private_key = asocial_private_key();
      var msg_key = asocial.crypto.ecc.decrypt(private_key, msg_key);
      return sjcl.decrypt(msg_key, message);

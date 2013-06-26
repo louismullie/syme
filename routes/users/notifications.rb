@@ -25,7 +25,7 @@ delete '/users/:user_id/notifications/:notification_id',
   auth: [] do |user_id, notification_id|
   
   notification = @user.notifications.find(notification_id)
-  notification.destroy!
+  notification.destroy
   
   status 204
   
