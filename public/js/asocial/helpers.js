@@ -229,8 +229,6 @@ guard('helpers', {
 
     }
 
-    console.log('Ressource', resource);
-
     if (action == 'new_post') {
 
       text = actors + ' posted a new post';
@@ -340,10 +338,10 @@ guard('helpers', {
       // Close on outside click
       $('#responsive-modal').click(function(){
         asocial.helpers.hideModal();
+      });
 
-        $(this).find('div.container').click(function(e){
-          e.stopPropagation();
-        })
+      $('#responsive-modal div.container').click(function(e){
+        e.stopPropagation();
       });
 
     }
