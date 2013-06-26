@@ -1,0 +1,16 @@
+.modal-title
+  {{title}}
+
+  {{#if closable}}
+  %a.hint--left{ href: '#', role: 'close-modal', :'data-hint' => 'Close' }
+    %i.icon-remove-sign
+  {{/if}}
+
+.modal-content
+  {{content}}
+
+  %a.modal-button{ href: '#', role: 'submit-modal' }
+    {{submit}}
+
+  %a.modal-button{ href: '#', role: 'close-modal' }
+    {{cancel}}

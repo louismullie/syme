@@ -6,7 +6,7 @@ guard('helpers', {
   },
 
   formatPostsAndComments: function() {
-    
+
     // Put commenter name and comment tools in first paragraph of comment
     $('.comment-box > a.commenter-name').each(function(){
       $(this).prependTo( $(this).parent().find('.collapsable p:first-child') );
@@ -17,9 +17,9 @@ guard('helpers', {
 
     // Parse oEmbed links. Use fill mode to strip links.
     $('.post-content').oembed();
-    
+
     $('time.timeago').timeago();
-    
+
   },
 
   // Increment unread counter when there is a new comment/post
@@ -362,6 +362,11 @@ guard('helpers', {
     });
 
     // Submit on clicking a[role="submit-modal"]
+    $('#responsive-modal a[role="submit-modal"]').click(function(){
+      asocial.helpers.hideModal(true);
+    });
+
+    // Submit on clicking a[role="submit-modal"]
     $('#responsive-modal a[role="submit"]').click(function(){
       $('#responsive-modal form').submit();
     });
@@ -382,7 +387,7 @@ guard('helpers', {
     // Callbacks
     if ( submitted && $('#responsive-modal').data('onsubmit') ) {
       // onsubmit()
-      return $('#responsive-modal').data('onsubmit')();
+      $('#responsive-modal').data('onsubmit')();
     } else {
       // onhide()
       $('#responsive-modal').data('onhide')();
@@ -418,6 +423,24 @@ guard('helpers', {
       { title: title, content: content, submit: submit, closable: closable });
 
     this.showModal(content, options);
+  },
+
+  showConfirm: function(content, options) {
+
+    var options  = typeof(options) === "undefined" ? {} : options;
+    var closable = typeof(options.closable) === "undefined" ? true : options.closable;
+
+    // Default title, submit and cancel
+    var title  = typeof(options.title) === "undefined" ? 'Confirm' : options.title;
+    var submit = typeof(options.submit) === "undefined" ? 'OK' : options.submit;
+    var cancel = typeof(options.cancel) === "undefined" ? 'Cancel' : options.cancel;
+
+    // Render content
+    var content = this.render('modals-confirm',
+      { content: content, closable: closable, title: title, submit: submit, cancel: cancel });
+
+    this.showModal(content, options);
+
   },
 
   showLightbox: function(url) {
