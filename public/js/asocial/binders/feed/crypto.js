@@ -50,11 +50,17 @@ asocial.binders.add('feed', { crypto: function(){
   // Shortcut for image attachment links
   $('#main').on('click', 'a.image-download', function() {
 
+    // Show mofo spinner
+    var spinner = setTimeout(function () { $('#spinner').show(); }, 500);
+
     var id       = $(this).data('attachment-id');
     var filename = $(this).data('attachment-filename');
     var key      = $(this).data('attachment-key');
-    
+
     asocial.crypto.getFile(id, key, function (url) {
+      // Hide mofo spinner
+      clearTimeout(spinner); $('#spinner').hide();
+
       asocial.helpers.showLightbox(url);
     });
 

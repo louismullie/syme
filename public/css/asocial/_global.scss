@@ -92,6 +92,8 @@ input[type="submit"] {
   z-index: 4;
   @extend .mtl;
 
+  color: $gray;
+
   text-align: center;
   line-height: 40px;
   font-size: 2em;
