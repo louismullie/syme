@@ -18,7 +18,7 @@
 
   &:before, &:after {
     left: 50%;
-    #{$propertyY}: 50%;
+    #{$propertyY}: 80%;
 
     -webkit-transform: translate( -50%, $transitionDirection * $transitionDistance );
     -moz-transform: translate( -50%, $transitionDirection * $transitionDistance );
@@ -44,7 +44,7 @@
   }
 
   &:before, &:after {
-    #{$propertyX}: 50%;
+    #{$propertyX}: 80%;
     bottom: 50%;
 
     -webkit-transform: translateX($transitionDirection * $transitionDistance);
