@@ -1,5 +1,5 @@
 guard('auth', {
-  
+
   /* Generate a random RSA keypair for the user,
    * encrypt with a hash of the user's password,
    * and store keypair and hash salt on server.
@@ -26,14 +26,14 @@ guard('auth', {
   login: function(email, password, remember, success, fail) {
 
     var srp = new SRPClient(email, password);
-    
+
     var a = srp.srpRandom();
     var A = srp.calculateA(a);
-    
+
     var params = $.param({ email: email, A: A.toString(16) });
-    
+
     $.post('http://localhost:5000/login/1', params, function (data) {
-      
+
       if (data.B && data.salt) {
 
         var salt = data.salt;
@@ -41,30 +41,30 @@ guard('auth', {
         var u = srp.calculateU(A, B);
         var Sc = srp.calculateS(B, salt, u, a);
         var M = srp.calculateM(email, salt, A, B, Sc);
-        
+
         var params = $.param({ M: M.toString(16) });
 
         $.post('http://localhost:5000/login/2', params, function (data) {
-          
+
           if (data.status == 'ok') {
-            
+
             $('meta[name="_csrf"]').attr('content', data.csrf);
-            
+
             asocial.state.getState('system', function () {
               success(data);
             }, { force: true });
-          
+
           } else if (data.status == 'error') {
-            
+
             console.log('State ERROR', data);
             fail(data.reason);
-            
+
           } else {
-            
+
             fail('server');
-            
+
           }
-          
+
         });
 
         var storage = remember ? localStorage: sessionStorage;
@@ -94,32 +94,34 @@ guard('auth', {
     });
 
   },
-  
+
   logout: function (callback) {
-    
+
     var callback = callback || function () {};
-    
+
+    asocial_state = {};
+
     $.ajax('http://localhost:5000/sessions/xyz', {
       type: 'delete',
       success: callback
     });
-    
+
   },
-  
+
   disconnect: function () {
-    
+
     asocial.auth.logout();
-    
+
     // Force disconnection
     asocial.helpers.showAlert('You have been disconnected', {
       title: 'Disconnected',
       submit: 'Log in',
       closable: false,
       onhide: function(){
-        Router.nagivate('login', true);
+        window.location = '/login';
       }
     });
-    
+
   },
 
   authorize: function (fn, callback, password) {
@@ -187,7 +189,7 @@ guard('auth', {
     }
 
     var passwordKey = asocial.state.user.password_key;
-    
+
     var password = sjcl.decrypt(passwordKey, encryptedPassword);
 
     callback(password);

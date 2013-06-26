@@ -56,7 +56,7 @@ Router = Backbone.Router.extend({
   },
 
   logout: function() {
-    window.location = '/';
+    asocial.auth.logout();
   },
 
   /* LOGGED-IN ROUTES */
@@ -142,18 +142,18 @@ Router = Backbone.Router.extend({
           if(!authorized) return Router.error();
 
           if (asocial.state.invite.integrate) {
-            
+
             asocial.invite.integrate(function () {
               Router.renderDynamicTemplate(template);
             });
-            
+
           } else if (asocial.state.invite.update) {
             asocial.invite.update(function () {
               Router.renderDynamicTemplate(template);
             });
-            
+
           } else {
-          
+
             // Authorize the user for the group by checking for
             // ability to decrypt the group keylist.
             asocial.auth.authorizeForGroup( function (authorized) {
@@ -176,7 +176,7 @@ Router = Backbone.Router.extend({
     });
 
   },
-  
+
   renderDynamicTemplate: function(template) {
 
     // Get current URL
