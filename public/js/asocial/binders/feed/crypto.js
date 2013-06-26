@@ -48,8 +48,21 @@ asocial.binders.add('feed', { crypto: function(){
   });
 
   // Shortcut for image attachment links
-  $('#main').on('click', 'a.image-download', function(){
-    $(this).parent().find('.encrypted-file').click();
+  $('#main').on('click', 'a.image-download', function() {
+    
+    var img      = $(this).find('.attached-image');
+    var id       = img.data('attachment-id');
+    var filename = img.data('attachment-filename');
+    var key      = img.data('attachment-key');
+    
+    key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
+    
+    asocial.crypto.getFile(id, key, function (url) {
+
+      asocial.helpers.showLigthBox(url);
+      
+    });
+
   });
 
 } }); // asocial.binders.add();
