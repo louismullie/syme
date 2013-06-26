@@ -75,6 +75,37 @@
       }
     }
 
+    // Lightbox
+    &.modal-lightbox {
+      max-height: 768px;
+
+      @media #{$breakpointLarge}  { width: 70%; }
+      @media #{$breakpointMedium} { width: 80%; }
+
+      // Align image to center
+      text-align: center;
+
+      #lightbox-container {
+        display: inline-block;
+        position: relative;
+
+        a[role="close-modal"] {
+          position: fixed; top: 10px; right: 10px;
+          color: $black;
+
+          font-size: 1.5em;
+          text-shadow: 0 0 10px white;
+
+          @include transition(color 0.2s ease);
+
+          &:hover {
+            color: darken($gray, 20%);
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
     .modal-title {
       padding: .5em 1em;
 
@@ -84,8 +115,6 @@
       border-bottom: $baseBorderStyle;
 
       a[role="close-modal"] {
-        //display: none;
-
         float: right;
         color: $gray;
 

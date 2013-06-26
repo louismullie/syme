@@ -413,6 +413,23 @@ guard('helpers', {
       { title: title, content: content, submit: submit, closable: closable });
 
     this.showModal(content, options);
+  },
+
+  showLightbox: function(url) {
+
+    // Url is required to proceed
+    if ( typeof(url) === "undefined" ) return false;
+
+    var template = this.render('feed-modals-lightbox', { url: url });
+
+    this.showModal(template, {
+      classes: 'modal-lightbox',
+
+      onshow: function() {
+        asocial.binders.bind('modal-lightbox');
+      }
+    });
+
   }
 
 });

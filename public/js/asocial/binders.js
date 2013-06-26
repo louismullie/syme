@@ -53,11 +53,11 @@ guard('binders', {
       idleTime++;
 
       // After x minutes
-      if (idleTime > 5) {
+      if (idleTime > 20) {
         clearInterval(idleInterval);
         asocial.auth.disconnect();
       }
-      
+
     };
 
     var timerReset = function(){ idleTime = 0; };
