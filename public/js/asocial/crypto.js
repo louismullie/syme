@@ -1,103 +1,101 @@
 guard('crypto', {
 
-  /*
-   * Decrypt the current user's keypair and store
-   * the keys in the methods asocial_private_key()
-   * as well as asocial_public_key().
-   */
   decryptKeypair: function(password) {
-
-    try {
-
-      // Retrieve the salt that derives the encryption key.
-      var salt  = asocial.state.user.keypair_salt;
-
-      // Derive the encryption key from the password.
-      var key = asocial.crypto.calculateHash(password, salt);
-
-      // Retrieve the user's encrypted keypair.
-      var keypair = asocial.state.user.keypair;
-
-      // Retrieve the JSON string representing the keypair.
-      var keypairSjcl = $.base64.decode(keypair);
-
-      // Decrypt the keypair using the symmetric key.
-      var decryptedKeypairJson = sjcl.decrypt(key, keypairSjcl);
-
-      // Parse the decrypted keypair as JSON text.
-      var keypair = $.parseJSON(decryptedKeypairJson);
-
-      // Build an RSAKey() object from the serialized private key.
-      var private_key = asocial.crypto.ecc.buildPrivateKey(keypair.private_key);
-
-      // Build an RSAKey() object from the serialized public key.
-      var public_key = asocial.crypto.ecc.buildPublicKey(keypair.public_key);
-
-      // Define the private and public keys and prevent overwrite.
-      guard('private_key', function () { return private_key; });
-      guard('public_key', function () { return public_key; });
-
-      // Return true if the keys were successfully decrypted.
+    
+    var _this = asocial.crypto;
+    
+    if (typeof(asocial_private_key) !== 'undefined' &&
+        typeof(asocial_public_key)  !== 'undefined')
       return true;
-
+      
+    try {
+      return _this.doDecryptKeypair(password);
     } catch(e) {
-      // Return false if decryption failed due to wrong password.
-      return false;
-
+      asocial.error.fatalError();
     }
 
   },
+  
+  doDecryptKeypair: function (password) {
+    
+    var _this = asocial.crypto;
+    
+    var keypairSalt  = asocial.state.user.keypair_salt;
+    var keypairKey = _this.calculateHash(password, keypairSalt);
 
-  // TODO: refactor this with decryptKeypair.
+    var encKeypairTxt64 = asocial.state.user.keypair;
+    
+    var decKeypairJson = _this.decode64Decrypt(keypairKey, encKeypairTxt64);
+
+    var keypairJson = $.parseJSON(decKeypairJson);
+
+    var privateKey = _this.ecc.buildPrivateKey(keypairJson.private_key);
+
+    var publicKey = _this.ecc.buildPublicKey(keypairJson.public_key);
+
+    guard('private_key', function () { return privateKey; });
+    guard('public_key', function () { return publicKey; });
+    
+    return true;
+
+  },
+
+  encryptKeyList: function (keylistKey, keylistJson) {
+    
+    var keylistTxt = JSON.stringify(keylistJson);
+    var encKeylistTxt = sjcl.encrypt(hash, keylistTxt);
+    return $.base64.encode(encKeylistTxt);
+
+  },
+  
   decryptKeylist: function (password) {
 
-    try {
-
-      console.log('Password', password);
-
-      var keylist = asocial.state.group.keylist;
-      var keylistSjcl = $.base64.decode(keylist);
-
-      var salt  = asocial.state.group.keylist_salt;
-
-      var key = asocial.crypto.calculateHash(password, salt);
-
-      var decryptedKeylist = sjcl.decrypt(key, keylistSjcl);
-
-      var keylistJson = $.parseJSON(decryptedKeylist);
-
-      var keylist = {};
-
-      $.each(keylistJson, function (userId, publicKeyInfo) {
-        keylist[userId] = asocial.crypto.ecc.buildPublicKey(publicKeyInfo);
-      });
-
-      window.asocial_keylist = function() { return keylist; }
-
-      return true;
-
-    }  catch(e) {
-
-      alert('Catch'); console.log(e);
-
-      // Return false if decryption failed due to wrong password.
+   var _this = asocial.crypto;
+    
+   try {
+      return _this.doDecryptKeylist(password);
+   }  catch(e) {
+      asocial.error.fatalError();
       return false;
-
-    }
+   }
+    
   },
+  
+  doDecryptKeylist: function (password) {
+    
+    var _this = asocial.crypto;
+    
+    var encKeylistTxt64 = asocial.state.group.keylist;
+    
+    var encKeylistSalt  = asocial.state.group.keylist_salt;
+    var encKeylistKey = _this.calculateHash(password, encKeylistSalt);
+    
+    var decKeylist = _this.decode64Decrypt(encKeylistKey, encKeylistTxt64);
 
-  encryptKeyList: function (hash, keylist) {
-    return $.base64.encode(sjcl.encrypt(hash, JSON.stringify(keylist)));
+    var keylistJson = $.parseJSON(decKeylist);
 
+    var keylist = _this.buildKeylistFromJson(keylistJson)
+
+    window.asocial_keylist = function() { return keylist; }
+    
+    return true;
+    
   },
-
-  serializePublicKey: function (publicKey) {
-
-    return {
-      n: publicKey.n.toString(16),
-      e: publicKey.e.toString(16)
-    };
-
+  
+  buildKeylistFromJson: function (keylistJson) {
+    
+    var keylist = {}, _this = asocial.crypto;
+    
+    $.each(keylistJson, function (userId, publicKeyJson) {
+      keylist[userId] = _this.ecc.buildPublicKey(publicKeyJson);
+    });
+    
+    return keylist;
+  
+  },
+  
+  decode64Decrypt: function (key, message) {
+    return sjcl.decrypt(key, $.base64.decode(message));
   },
 
   serializeKeyList: function () {
@@ -122,18 +120,12 @@ guard('crypto', {
 
     var _this = this;
 
-    _this.decryptAvatars();
-    
-    _this.decryptPostsAndComments();
-    
-    _this.decryptMedia();
+    this.decryptAvatars();
+    this.decryptPostsAndComments();
+    this.decryptMedia();
     
   },
 
-  /*
-   * Hash a password using PBKDF2 with a salt,
-   * performing 2000 iterations of SHA256.
-   */
   calculateHash: function (pass, salt) {
 
     hash = sjcl.misc.pbkdf2(pass, salt, 2000, 256);
@@ -167,33 +159,30 @@ guard('crypto', {
   generateMessageKeys: function (msg_key) {
 
     var public_keys = asocial_keylist();
-    var encrypted_keys = {};
+    var encrypted_keys = {}, _this = asocial.crypto;
 
     $.each(public_keys, function (user_id, public_key) {
-      encrypted_keys[user_id] = asocial.crypto.ecc.encrypt(public_key, msg_key);
+      encrypted_keys[user_id] = _this.ecc.encrypt(public_key, msg_key);
     });
-
-    //alk = encrypted_keys;
 
     return encrypted_keys;
 
   },
 
-  // Generate a new public/private key pair.
   generateEncryptedKeyPair: function (hash) {
-    return this.encryptKeyPair(hash, this.generateRSA(false));
+    
+    return this.encryptKeyPair(hash, this.generateKeypair(false));
+    
   },
 
-  generateRSA: function (with_rsa) {
-
-    //rsa = new RSAKey();
-    //rsa.generate(1024, "10001");
+  generateKeypair: function (with_rsa) {
 
     var key = this.ecc.generateKeys();
-
+    var _this = asocial.crypto;
+    
     var keypair = {
-      private_key: asocial.crypto.ecc.serializePrivateKey(key.sec),
-      public_key: asocial.crypto.ecc.serializePublicKey(key.pub),
+      private_key: _this.ecc.serializePrivateKey(key.sec),
+      public_key: _this.ecc.serializePublicKey(key.pub),
     };
 
     if (with_rsa) {
@@ -254,7 +243,7 @@ guard('crypto', {
         decrypted = asocial.helpers.replaceUserMentions(decrypted);
 
         // Hide the "This post is encrypted notice."
-        $('#' + id).find('.encrypted_notice').remove();
+        $('#' + id).find('.encrypted-notice').remove();
 
         // Markdown the message and insert in place.
         $('#' + id).find('.encrypted').replaceWith(decrypted);

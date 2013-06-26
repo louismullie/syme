@@ -11,6 +11,7 @@
 //= require ./uploader
 //= require ./auth
 //= require ./state
+//= require ./error
 //= require ./invite
 //= require ./test
 //= require ./asocial

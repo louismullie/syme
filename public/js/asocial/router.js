@@ -81,7 +81,7 @@ Router = Backbone.Router.extend({
 
   error: function(){
     // Redirect to error page
-    alert('Fatal error');
+    asocial.error.fatalError();
   },
 
   /* HELPERS */

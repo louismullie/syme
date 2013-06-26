@@ -1,9 +1,5 @@
 guard('auth', {
 
-  /* Generate a random RSA keypair for the user,
-   * encrypt with a hash of the user's password,
-   * and store keypair and hash salt on server.
-   */
   keygen: function(user_id, password, success) {
 
     // Generate a random salt for the password hash.

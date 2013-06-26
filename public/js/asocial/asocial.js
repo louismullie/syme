@@ -7,6 +7,7 @@ guard('asocial', {
   uploader: asocial_uploader,
   auth: asocial_auth,
   state: asocial_state,
+  error: asocial_error,
   invite: asocial_invite
 
 });
