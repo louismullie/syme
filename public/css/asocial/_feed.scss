@@ -85,7 +85,7 @@
     .collapsable {
       position: relative;
       overflow: hidden;
-      
+
       // Css-only text expander
       margin-bottom: .5em; /* child <p> margin-bottom */
       line-height: 1.2em; /* child <p> line-height */
@@ -96,7 +96,7 @@
 
         font-size: .9em;
         font-weight: 200;
-        
+
         word-break: break-word;
 
         &:last-child {
@@ -222,6 +222,8 @@
         }
 
         .comment-box {
+          position: relative;
+
           border-bottom: 1px solid #ddd;
           padding-bottom: .5em;
           margin-bottom: .5em;
@@ -236,7 +238,18 @@
           }
 
           // For now
-          a.comment-delete { display: none; }
+          a.comment-delete {
+            display: none;
+            opacity: 0;
+
+            position: absolute;
+            top: 0; right: 0;
+            z-index: 3;
+
+            padding: 0 0.5em;
+            font-size: 0.8em;
+            line-height: 1.8em;
+          }
 
           img.avatar {
             width: $avatarCommentSize;
@@ -257,7 +270,7 @@
               line-height: 1.4em;
 
               word-break: break-word;
-              
+
               a.commenter-name {
                 padding-right: .4em;
                 font-weight: normal;

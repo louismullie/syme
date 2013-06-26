@@ -47,9 +47,19 @@ asocial.binders.add('feed', { comments: function(){
           group      = asocial.state.group.id,
           route      = '/' + group + '/comment/delete';
 
-      if(confirm(locales.en.feed.delete_comment_confirm)) {
-        $.post(route, $.param({ post_id: post_id, comment_id: comment_id }));
-      }
+      asocial.helpers.showConfirm(
+        'Do you really want to delete this comment?',
+        {
+          closable: true,
+          title: 'Delete comment',
+          submit: 'Delete',
+          cancel: 'Cancel',
+
+          onsubmit: function(){
+            $.post(route, { post_id: post_id, comment_id: comment_id });
+          }
+        }
+      );
 
   });
 

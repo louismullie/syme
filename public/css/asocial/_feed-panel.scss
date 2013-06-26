@@ -187,6 +187,10 @@
           color: $black;
         }
 
+        &.current {
+          font-weight: bold;
+        }
+
         span.online-status{
           display: inline-block;
 

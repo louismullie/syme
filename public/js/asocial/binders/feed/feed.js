@@ -14,19 +14,19 @@ asocial.binders.add('feed', { feed: function(){
 
   });
 
-  // Delete post toggling
-  $("div.post-header").on({
+  // Delete post/comment toggling
+  $('#main').on({
     mouseenter: function(){
-      $(this).find('a.post-delete')
+      $(this).find('a.post-delete, a.comment-delete').first()
         .css({ display: 'block' })
         .transition({ opacity: 1}, 100);
     },
     mouseleave: function(){
-      $(this).find('a.post-delete')
+      $(this).find('a.post-delete, a.comment-delete').first()
         .transition({ opacity: 0}, 100)
         .css({ display: 'none' });
     }
-  });
+  }, 'div.post-header, div.comment-box');
 
   // Delete post
   $('#main').on('click', '.post-header a.post-delete', function() {
