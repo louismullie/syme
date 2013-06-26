@@ -163,6 +163,8 @@
               line-height: 160px;
               font-weight: 200;
               font-size: 2em;
+                @media #{$breakpointMedium} { font-size: 1.4em; }
+
               text-align: center;
               color: $black;
             }
