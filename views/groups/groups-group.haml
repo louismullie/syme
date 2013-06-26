@@ -9,9 +9,9 @@
     %a.group-banner-link{ href: '/users/{{current_user_id}}/groups/{{id}}', hbs: '' }
       // Group avatar
       {{#with avatar}} {{> groups-avatar.hbs}} {{/with}}
-    
+
   .group-card-content
-    
+
     {{#if PPA_k}}
     // Invite link
     %a.group-link.integrate-link{  href: '/{{id}}', hbs: '',
@@ -39,9 +39,11 @@
     %a.group-link{href: '/users/{{current_user_id}}/groups/{{id}}', hbs: ''}
       {{name}}
 
-    {{/if}}
-    
+    .group-updated-at
+      Updated
+      %time.timeago{ datetime: '{{updated_at}}' }
 
     {{/if}}
-    
-    %time.timeago{ datetime: '{{updated_at}}' }
+
+
+    {{/if}}

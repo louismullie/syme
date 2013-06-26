@@ -3,6 +3,9 @@ asocial.binders.add('groups', { main: function() {
   // Decrypt group avatars.
   asocial.crypto.decryptMedia();
 
+  // Timeago
+  $('time.timeago').timeago();
+
   // Group delete button toggling
   $("div.group-banner").on({
     mouseenter: function(){
@@ -118,7 +121,7 @@ asocial.binders.add('groups', { main: function() {
 
       // Create the group, passing the encrypted key list.
       $.post('http://localhost:5000/groups', groupParams, function (group) {
-    
+
         console.log('/users/' + asocial.state.user.id + '/groups')
         var route = '/users/' + asocial.state.user.id + '/groups';
 
@@ -128,7 +131,5 @@ asocial.binders.add('groups', { main: function() {
     });
 
   });
-  
-  $('time.timeago').timeago();
 
 } }); // asocial.binders.add();
