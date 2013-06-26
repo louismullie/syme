@@ -82,8 +82,6 @@ guard('hangout',
       var blob = dataURItoBlob(url);
     
       var reader = new FileReader();
-
-      var onload = 
     
       reader.onload = function(FREvent) {
         

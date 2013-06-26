@@ -268,6 +268,7 @@ function Downloader(id, key, options) {
   this.options = {}; options = options || {};
   this.options.numWorkers = options.numWorkers || 4;
   this.options.baseUrl = options.baseUrl || '/file/';
+  this.options.privKey = options.privKey;
   this.options.workerPath = options.workerPath ||
                           '/js/asocial/workers/';
   //////////
@@ -391,7 +392,7 @@ function Downloader(id, key, options) {
     this.workerPool.queueJob({
       id: this.fileId, chunk: chunk,
       worker: worker, key: this.key,
-      url: fileUrl
+      url: fileUrl, privKey: this.options.privKey
     }, this);
 
   };

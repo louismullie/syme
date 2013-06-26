@@ -1,4 +1,5 @@
 importScripts('sjcl.js');
+importScripts('ecc.js');
 
 var decodeBase64 = function(s) {
     var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
@@ -11,14 +12,47 @@ var decodeBase64 = function(s) {
     return r;
 };
 
+var buildPrivateKey = function (privJson) {
+
+  var exponent = sjcl.bn.fromBits(privJson.exponent);
+
+  var curve = "c" + privJson.curve;
+  var privateKey = new sjcl.ecc.elGamal.secretKey(
+      privJson.curve, sjcl.ecc.curves[curve], exponent);
+
+  return privateKey;
+};
+
+var decrypt = function (privateKey, message) {
+
+  var cipherMessage = JSON.parse(decodeBase64(message));
+
+  var symKey = privateKey.unkem(cipherMessage.encrypted_key);
+  var decryptedData = sjcl.decrypt(symKey, cipherMessage.ciphertext);
+
+  return decryptedData;
+
+};
+
+var privateKey = null;
+
 self.onmessage = function(event) {
   
   var id = event.data['id'];
   var chunk = event.data['chunk'];
-  var key = event.data['key'];
+
   var worker = event.data['worker'];
   var url = event.data['url'];
   
+  var encKey = event.data['key'];
+  
+  if (!privateKey) {
+    var privKeyJson = event.data['privKey'];
+    var privKey = buildPrivateKey(privKeyJson);
+  }
+  
+  var key = decrypt(privKey, encKey);
+    
   var xhr = new XMLHttpRequest();
   
   xhr.addEventListener('load', function(event) {

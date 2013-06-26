@@ -258,16 +258,22 @@ guard('crypto', {
         '/js/asocial/workers/decrypt2.js', 4, callback
       );
       
+      var privKeyJson = this.ecc.serializePrivateKey(asocial_private_key());
+      
       // Decrypt each encrypted post on the page.
       $.each($('.encrypted'), function (i, element) {
 
         var message = $.parseJSON(element.innerText);
         message.content = JSON.stringify(message.content);
-        var key = asocial.crypto.ecc.decrypt(asocial_private_key(), message.key);
         
         var post = $(element).closest('.post');
-
-        workerPool.queueJob({ id: post.attr('id'), msg: message.content, key: key });
+        
+        workerPool.queueJob({
+          id: post.attr('id'),
+          msg: message.content,
+          key: message.key,
+          privKey: privKeyJson
+        });
         
       });
 
@@ -295,9 +301,6 @@ guard('crypto', {
           type = image.data('attachment-type'),
           group = image.data('attachment-group');
 
-      // Safe global variable?
-      key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
-
       _this.getFile(id, key, function (url) {
 
         if (type == 'image') {
@@ -323,9 +326,6 @@ guard('crypto', {
           key = $this.data('attachment-key'),
           group = $this.data('attachment-group');
 
-      // Safe global variable?
-      key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
-
       _this.getFile(id, key, function (url) {
 
         $this.css("background-image", "url('" + url + "')");
@@ -348,8 +348,7 @@ guard('crypto', {
       if (id == '') { return; }
 
       var key = element.data('key');
-      key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
-
+      
       _this.getFile(id, key, function (url) {
         var avatars = $('.encrypted-avatar[data-user-id="' + user_id + '"]');
         $.each(avatars, function (index, element) { element.src = url; });
@@ -389,8 +388,12 @@ guard('crypto', {
 
       var baseUrl = '/' + group + '/file/';
 
-      var downloader = new Downloader(id,
-          key, { baseUrl: baseUrl } );
+      var downloader = new Downloader(id, key,
+        {
+            baseUrl: baseUrl,
+            privKey: asocial.crypto.ecc.serializePrivateKey(asocial_private_key())
+        }
+      );
 
       downloader.start(
         function() {},

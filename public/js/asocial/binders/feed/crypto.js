@@ -53,9 +53,7 @@ asocial.binders.add('feed', { crypto: function(){
     var id       = img.data('attachment-id');
     var filename = img.data('attachment-filename');
     var key      = img.data('attachment-key');
-
-    key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
-
+    
     asocial.crypto.getFile(id, key, function (url) {
       asocial.helpers.showLightbox(url);
     });
