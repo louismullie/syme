@@ -13,6 +13,8 @@ class GroupGenerator
       avatar: AvatarGenerator.generate(group, user),
       user_count: group.users.count,
       palette: group.palette.to_json,
+      updated_at: group.updated_at
+        .strftime("%d/%m/%Y at %H:%M"),
       deletable: deletable
     }
 

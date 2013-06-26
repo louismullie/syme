@@ -2,6 +2,9 @@
 post '/:group_id/comment/create', auth: [] do |group_id|
 
   @group = @user.groups.find(group_id)
+
+  @group.touch
+
   post = @group.posts.find(params[:post_id])
 
   post.touch

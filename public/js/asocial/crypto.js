@@ -127,7 +127,7 @@ guard('crypto', {
     _this.decryptMedia();
 
     $('time.timeago').timeago();
-
+    
   },
 
   /*

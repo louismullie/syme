@@ -103,6 +103,8 @@ post '/invite/confirm', auth: [] do
 
   @group = Group.find(params[:group_id])
 
+  @group.touch
+
   invite = @group.invites.find(params[:invite_id])
   invitee_id = invite.invitee.id.to_s
 

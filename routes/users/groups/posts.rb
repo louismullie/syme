@@ -2,6 +2,8 @@ post '/:group_id/post/create', auth: [] do |group_id|
 
   @group = @user.groups.find(group_id)
 
+  @group.touch
+
   message = JSON.parse(params[:encrypted_content])
   mentions = JSON.parse(params[:mentioned_users])
 

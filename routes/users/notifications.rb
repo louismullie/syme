@@ -21,9 +21,10 @@ post '/notifications/:id/:action', auth: [] do |id, action|
   
 end
 
-delete '/notifications/:id', auth: [] do |id|
+delete '/users/:user_id/notifications/:notification_id',
+  auth: [] do |user_id, notification_id|
   
-  notification = @user.notifications.find(id)
+  notification = @user.notifications.find(notification_id)
   notification.destroy!
   
   status 204

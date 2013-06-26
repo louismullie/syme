@@ -2,6 +2,9 @@
 post '/:group_id/:model/delete', auth: [] do |group_id, model|
 
   @group = Group.find(group_id)
+  
+  @group.touch
+
   post = @group.posts.find(params[:post_id])
 
   resource = if model == 'comment'
@@ -24,6 +27,9 @@ end
 post '/:group_id/:model/like/:operation', auth: [] do |group_id, model, operation|
 
   @group = Group.find(group_id)
+  
+  @group.touch
+
   post = @group.posts.find(params[:post_id])
 
   likeable = model == 'comment' ?

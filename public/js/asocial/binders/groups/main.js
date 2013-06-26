@@ -128,5 +128,7 @@ asocial.binders.add('groups', { main: function() {
     });
 
   });
+  
+  $('time.timeago').timeago();
 
 } }); // asocial.binders.add();

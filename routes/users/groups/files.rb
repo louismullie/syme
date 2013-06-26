@@ -2,6 +2,8 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
 
   @group = @user.groups.find(group_id)
 
+  @group.touch
+
   upload = @group.uploads.create(
     filename: params[:filename].slug,
     keys: JSON.parse(params[:keys]),
