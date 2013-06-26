@@ -454,7 +454,7 @@ guard('helpers', {
       classes: 'modal-lightbox',
 
       onshow: function() {
-        asocial.binders.bind('modal-lightbox');
+        $().binders['modals']['lightbox']();
       }
     });
 

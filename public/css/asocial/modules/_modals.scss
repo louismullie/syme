@@ -79,8 +79,8 @@
     &.modal-lightbox {
       max-height: 768px;
 
-      @media #{$breakpointLarge}  { width: 70%; }
-      @media #{$breakpointMedium} { width: 80%; }
+      @media #{$breakpointLarge}  { max-width: 70%; }
+      @media #{$breakpointMedium} { max-width: 80%; }
 
       // Align image to center
       text-align: center;
@@ -90,7 +90,7 @@
         position: relative;
 
         a[role="close-modal"] {
-          position: fixed; top: 10px; right: 10px;
+          position: absolute; top: 10px; right: 10px;
           color: $black;
 
           font-size: 1.5em;
@@ -99,7 +99,7 @@
           @include transition(color 0.2s ease);
 
           &:hover {
-            color: darken($gray, 20%);
+            color: black;
             text-decoration: none;
           }
         }
