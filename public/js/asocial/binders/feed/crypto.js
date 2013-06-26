@@ -49,10 +49,10 @@ asocial.binders.add('feed', { crypto: function(){
 
   // Shortcut for image attachment links
   $('#main').on('click', 'a.image-download', function() {
-    var img      = $(this).find('.attached-image');
-    var id       = img.data('attachment-id');
-    var filename = img.data('attachment-filename');
-    var key      = img.data('attachment-key');
+
+    var id       = $(this).data('attachment-id');
+    var filename = $(this).data('attachment-filename');
+    var key      = $(this).data('attachment-key');
     
     asocial.crypto.getFile(id, key, function (url) {
       asocial.helpers.showLightbox(url);

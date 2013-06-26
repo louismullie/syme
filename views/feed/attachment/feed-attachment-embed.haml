@@ -12,7 +12,11 @@
 
 {{#if is_image}}
 
-%a.image-download{href: '#'}
+%a.image-download{href: '#', 'data-attachment-id' => '{{id}}',
+                             'data-attachment-filename' => '{{filename}}',
+                             'data-attachment-size' => '{{size}}',
+                             'data-attachment-key' => '{{key}}'}
+  
   %img.attached-image.encrypted-image{src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", alt: 'Encrypted image', 'data-attachment-id' => '{{thumbnail.id}}', 'data-attachment-filename' => '{{thumbnail.filename}}', 'data-attachment-size' => '{{thumbnail.size}}', 'data-attachment-key' => '{{thumbnail.key}}', 'data-attachment-type' => 'image'}
 
 {{/if}}
