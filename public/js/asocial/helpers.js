@@ -6,6 +6,7 @@ guard('helpers', {
   },
 
   formatPostsAndComments: function() {
+    
     // Put commenter name and comment tools in first paragraph of comment
     $('.comment-box > a.commenter-name').each(function(){
       $(this).prependTo( $(this).parent().find('.collapsable p:first-child') );
@@ -15,7 +16,10 @@ guard('helpers', {
     asocial.helpers.collapseHTML(5, 'See more');
 
     // Parse oEmbed links. Use fill mode to strip links.
-    $('.post-content').oembed(); //.fitVids(); // - violates CSP
+    $('.post-content').oembed();
+    
+    $('time.timeago').timeago();
+    
   },
 
   // Increment unread counter when there is a new comment/post

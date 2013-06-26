@@ -123,10 +123,10 @@ guard('crypto', {
     var _this = this;
 
     _this.decryptAvatars();
+    
     _this.decryptPostsAndComments();
+    
     _this.decryptMedia();
-
-    $('time.timeago').timeago();
     
   },
 
@@ -231,48 +231,66 @@ guard('crypto', {
 
 
   // Decrypt message using message key and private key.
-  decryptMessage: function(message, msg_key) {
+  decryptMessage: function(asymKey, message) {
 
     var private_key = asocial_private_key();
-    var msg_key = asocial.crypto.ecc.decrypt(private_key, msg_key);
-    return sjcl.decrypt(msg_key, message);
+    var symKey = asocial.crypto.ecc.decrypt(private_key, asymKey);
+    
+    return sjcl.decrypt(symKey, message);
 
   },
 
   decryptPostsAndComments: function() {
 
     try {
-
+      
       var _this = this;
-      // Decrypt each encrypted post on the page.
-      $.each($('.encrypted'), function (i, element) {
+      
+      var callback = function (response) {
+        
+        var message = response.data.data;
+        var id = response.data.id;
 
-        var message = $.parseJSON(element.innerText);
-        message.content = JSON.stringify(message.content); // This is hacky...
-
-        // Decrypt the message using the message key and private key.
-        var decrypted = asocial.crypto.decryptMessage(message.content, message.key);
-        decrypted = marked(decrypted);
+        var decrypted = marked(message);
 
         // Show the user tags.
         decrypted = asocial.helpers.replaceUserMentions(decrypted);
 
         // Hide the "This post is encrypted notice."
-        $(element).parent().find('.encrypted_notice').remove();
+        $('#' + id).find('.encrypted_notice').remove();
 
         // Markdown the message and insert in place.
-        $(element).replaceWith(decrypted);
+        $('#' + id).find('.encrypted').replaceWith(decrypted);
+        
+        asocial.helpers.formatPostsAndComments();
+        
+      };
+      
+      var workerPool = new WorkerPool(
+        '/js/asocial/workers/decrypt2.js', 4, callback
+      );
+      
+      // Decrypt each encrypted post on the page.
+      $.each($('.encrypted'), function (i, element) {
 
+        var message = $.parseJSON(element.innerText);
+        message.content = JSON.stringify(message.content);
+        var key = asocial.crypto.ecc.decrypt(asocial_private_key(), message.key);
+        
+        var post = $(element).closest('.post');
+
+        workerPool.queueJob({ id: post.attr('id'), msg: message.content, key: key });
+        
       });
 
-      asocial.helpers.formatPostsAndComments();
-
     } catch (e) {
-
-      asocial.helpers.showAlert('Could not decrypt resource.');
+      
+     console.log(e);
+      
+     asocial.helpers.showAlert('Could not decrypt resource.');
 
     }
-
+    
   },
 
   // Rename to decryptmedia.
