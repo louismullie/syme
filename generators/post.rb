@@ -29,7 +29,7 @@ class PostGenerator
       timestamp: post.created_at.to_i,
 
       # Attachment information.
-      has_attachment: post.has_attachment?,
+      has_attachment: !post.attachment.nil?,
       attachment: attachment,
 
       # Likes and likers.

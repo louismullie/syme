@@ -17,13 +17,9 @@ class User
   
   has_many :posts
   has_many :memberships
-
-  # Read-only attributes.
+  
   field :email, type: String
   field :invite_id, type: String
-
-  # Modifiable accessible attributes.
-  field :avatar_id, type: String
 
   field :full_name, type: String, default: 'Anonymous'
 

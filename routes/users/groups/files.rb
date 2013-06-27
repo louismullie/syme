@@ -4,35 +4,66 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
 
   @group.touch
 
-  upload = @group.uploads.create(
+  selector = {
     filename: params[:filename].slug,
     keys: JSON.parse(params[:keys]),
     owner_id: @user.id.to_s,
     type: params[:type],
     size: params[:size],
-    image_size: params[:image_size],
-  )
+    image_size: params[:image_size]
+  }
 
-  id = upload.id.to_s
-  dir = File.join('uploads', id)
-  FileUtils.mkdir(dir)
-
-  if params[:mode] == 'thumbnail'
-    original = @group.uploads.find(
-      params[:upload_id])
-    original.add_thumbnail(upload)
+  upload = if params[:mode] == 'thumbnail'
+    
+    thumbnail = @group.thumbnails.create(selector)
+    
+    original = @group.attachments.find(params[:upload_id])
+    
+    original.thumbnail = thumbnail
+    thumbnail.save!
+    
+    thumbnail
+    
   elsif params[:mode] == 'avatar'
+    
+    upload = @group.user_avatars.create(selector)
+    
     membership = @user.memberships
       .where(group_id: @group.id).first
-    if membership.avatar_id
-      @group.uploads.find(membership.avatar_id).delete
+    
+    if membership.user_avatar
+      membership.user_avatar.destroy
     end
-    membership.avatar_id = upload.id.to_s
+    
+    membership.user_avatar = upload
     membership.save!
+    
+    upload
+    
   elsif params[:mode] == 'group_avatar'
-    @group.avatar_id = upload.id.to_s
-    @group.palette = [params[:dominant], params[:first_median], params[:second_median]]
+    
+    upload = GroupAvatar.create(selector)
+    
+    if @group.group_avatar
+      @group.group_avatar.destroy
+    end
+    
+    @group.group_avatar = upload
+    
+    @group.palette = [params[:dominant],
+      params[:first_median], params[:second_median]]
+      
     @group.save!
+    
+    upload
+    
+  else
+    
+    upload = @group.attachments.create(selector)
+    @group.save!
+    
+    upload
+    
   end
 
 =begin
@@ -44,6 +75,9 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
   end
 =end
   
+  dir = File.join('uploads', upload.id)
+  FileUtils.mkdir(dir)
+
   track @user, 'Uploaded a new file'
   
   content_type :json
@@ -63,8 +97,6 @@ end
 post '/:group_id/file/upload/append', auth: [] do |group_id|
 
   @group = @user.groups.find(group_id)
-
-  logger.info params
 
   id = params[:id]
   chunk = params[:chunk]

@@ -16,11 +16,11 @@ class Post < Resource
   # Every post belongs to a group.
   belongs_to :group
   
+  # A post may have an upload.
+  has_one :attachment
+  
   # The encrypted content of the post.
   field :content, type: String
-  
-  # The upload ID of the post.
-  field :upload_id, type: String
   
   # The encrypted keys for the post.
   field :keys, type: Hash, default: {}
@@ -38,20 +38,8 @@ class Post < Resource
   attr_readonly :content, :keys, :upload_id
   attr_accessible :content, :keys, :upload_id
   
-  # Whether the post has an associated
-  # attachment stored on GridFS.
-  def has_attachment?
-    !upload_id.nil?
-  end
-  
-  def upload
-    has_attachment? ? group.uploads.find(upload_id) : nil
-  end
-  
   def delete
-    if has_attachment?
-      upload.destroy
-    end
+    attachment.destroy if attachment
     super
   end
   

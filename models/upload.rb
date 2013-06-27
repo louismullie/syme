@@ -6,15 +6,12 @@ class Upload < Resource
   
   require_relative 'upload/storable'
   require_relative 'upload/detectable'
-  require_relative 'upload/resizable'
   
   include Upload::Storable
   include Upload::Detectable
-  include Upload::Resizable
 
   # Relations
   belongs_to :group
-  belongs_to :post
 
   #  General fields (read-only)  #
 

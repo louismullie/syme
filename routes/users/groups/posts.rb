@@ -7,19 +7,18 @@ post '/:group_id/post/create', auth: [] do |group_id|
   message = JSON.parse(params[:encrypted_content])
   mentions = JSON.parse(params[:mentioned_users])
 
-  upload = if !(upload_id = params[:upload_id]).blank?
-    @group.uploads.find(upload_id)
+  attachment = if !(upload_id = params[:upload_id]).blank?
+    @group.attachments.find(upload_id)
   end
   
   post = @group.posts.create(
     owner_id: @user.id,
     content: message['content'],
     keys: message['keys'],
-    mentions: mentions,
-    upload_id: upload ? upload.id : nil
+    mentions: mentions
   )
   
-  # post.upload = upload if upload
+  post.attachment = attachment if attachment
   
   post.save!
   

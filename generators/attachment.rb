@@ -2,9 +2,9 @@ class AttachmentGenerator
   
   def self.generate(post, user)
         
-    return false unless post.has_attachment?
+    return false unless post.attachment
     
-    upload = post.upload
+    upload = post.attachment
     
     thumbnail = generate_thumbnail(upload, user)
     
@@ -32,7 +32,7 @@ class AttachmentGenerator
 
   def self.generate_thumbnail(upload, user)
     
-    return {} unless upload.has_thumbnail?
+    return {} unless upload.thumbnail
     
     thumbnail = upload.thumbnail 
     

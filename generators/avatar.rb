@@ -8,9 +8,13 @@ class AvatarGenerator
       membership_or_group.group
     end
     
-    if membership_or_group.has_avatar?
-      
-      avatar = membership_or_group.avatar
+    avatar = if membership_or_group.is_a?(Group)
+      membership_or_group.group_avatar
+    elsif membership_or_group.is_a?(Membership)
+      membership_or_group.user_avatar
+    end
+    
+    if avatar
       
       {
         placeholder: false,
