@@ -26,7 +26,8 @@ $(function(){
   // Bind a[hbs] to router
   $(document).on('click', 'a[hbs]', function(e){
     e.preventDefault();
-    Router.navigate( $(this).attr('href'), { trigger: true } );
+
+    Router.navigate( $(this).attr('href') );
   });
 
   // Bind global binders

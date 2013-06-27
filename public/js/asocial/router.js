@@ -2,11 +2,18 @@ Router = Backbone.Router.extend({
 
   /* RULES */
 
+  navigate: function (url) {
+
+    Backbone.history.loadUrl(url);
+
+  },
+
   routes: {
 
     /* Root */
 
     '': 'root',
+    'asocial.html': 'root',
 
     /* Logged-off routes */
 
