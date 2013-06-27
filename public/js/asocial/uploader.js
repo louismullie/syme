@@ -11,7 +11,7 @@ guard('uploader', {
     var group = asocial.state.group.id;
 
     uploader = new Uploader(file, key, keys, {
-      data: data, baseUrl: '/' + group + '/file/'
+      data: data, baseUrl: 'http://localhost:5000/' + group + '/file/'
     });
 
     uploader.start(progress, success);

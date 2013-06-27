@@ -255,7 +255,7 @@ guard('crypto', {
       };
       
       var workerPool = new WorkerPool(
-        '/js/asocial/workers/decrypt2.js', 4, callback
+        'js/asocial/workers/decrypt2.js', 4, callback
       );
       
       var privKeyJson = this.ecc.serializePrivateKey(asocial_private_key());
@@ -386,7 +386,7 @@ guard('crypto', {
 
       var group = group || asocial.state.group.id;
 
-      var baseUrl = '/' + group + '/file/';
+      var baseUrl = 'http://localhost:5000/' + group + '/file/';
 
       var downloader = new Downloader(id, key,
         {

@@ -25,7 +25,7 @@ asocial.binders.add('feed', { feed_form: function(){
     var request = $(this).serialize();
 
     var group = asocial.state.group.id;
-    var url = '/' + group + '/post/create';
+    var url = 'http://localhost:5000/' + group + '/post/create';
 
     $.post(url, request, function(data){
 

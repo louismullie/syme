@@ -33,7 +33,7 @@ asocial.binders.add('feed', { feed: function(){
 
       var post_id    = $(this).closest('.post').attr('id'),
           group      = asocial.state.group.id,
-          route      = '/' + group + '/post/delete';
+          route      = 'http://localhost:5000/' + group + '/post/delete';
 
       asocial.helpers.showConfirm(
         'Do you really want to delete this post?',

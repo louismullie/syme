@@ -45,7 +45,7 @@ asocial.binders.add('feed', { comments: function(){
       var post_id    = $(this).closest('.post').attr('id'),
           comment_id = $(this).closest('.comment-box').attr('id'),
           group      = asocial.state.group.id,
-          route      = '/' + group + '/comment/delete';
+          route      = 'http://localhost:5000/' + group + '/comment/delete';
 
       asocial.helpers.showConfirm(
         'Do you really want to delete this comment?',

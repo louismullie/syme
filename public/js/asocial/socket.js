@@ -180,7 +180,7 @@ guard('socket', {
       if($('#' + data.target).length > 0){
 
         var group = asocial.state.group.id;
-        var url = '/' + group + '/post/lastof/';
+        var url = 'http://localhost:5000/' + group + '/post/lastof/';
 
         $.get(url + $('#feed').data('pagesloaded'),
         function(data){ $('#feed').append(data); });

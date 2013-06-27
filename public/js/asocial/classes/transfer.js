@@ -15,7 +15,7 @@ function Uploader(file, key, keys, options) {
   this.options.key        = options.key;
   this.options.data       = options.data       || {};
   this.options.baseUrl    = options.baseUrl    || '/file/';
-  this.options.workerPath = options.workerPath || '/js/asocial/workers/';
+  this.options.workerPath = options.workerPath || 'js/asocial/workers/';
   this.options.numWorkers = options.numWorkers || 4;
   this.options.chunkSize  = options.chunkSize  ||
                             0.8 * 1024 * 1024;
@@ -270,7 +270,7 @@ function Downloader(id, key, options) {
   this.options.baseUrl = options.baseUrl || '/file/';
   this.options.privKey = options.privKey;
   this.options.workerPath = options.workerPath ||
-                          '/js/asocial/workers/';
+                          'js/asocial/workers/';
   //////////
 
   this.mimeType = null;
