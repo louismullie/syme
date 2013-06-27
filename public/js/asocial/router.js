@@ -187,7 +187,7 @@ Router = Backbone.Router.extend({
   renderDynamicTemplate: function(template) {
 
     // Get current URL
-    var url = '/' + Backbone.history.fragment;
+    var url = 'http://localhost:5000/' + Backbone.history.fragment;
 
     // Retreive data
     $.getJSON(url, function (data) {
@@ -226,7 +226,7 @@ Router = Backbone.Router.extend({
     asocial.state.getState('system', function () {
 
       // If there is no user, failure
-      if (!asocial.state.system.logged_in) return failure();
+      if (!asocial.state.system || !asocial.state.system.logged_in) return failure();
 
       // Create session, then success
       asocial.state.session = new Session(success);
