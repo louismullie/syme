@@ -24,10 +24,11 @@ asocial.binders.add('login', { main: function(){
         remember = form.find('input[name="remember_me"]').prop("checked");
 
       // Login
-      asocial.auth.login(email, password, remember, function() {
+      asocial.auth.login(email, password, remember, function(data) {
 
         // Redirect to root
-        Router.navigate('', { trigger: true, replace: true });
+        Router.navigate('/users/' + data.user_id + '/groups',
+          { trigger: true, replace: true });
 
       }, function(reason) {
 
