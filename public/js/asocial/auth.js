@@ -114,7 +114,7 @@ guard('auth', {
       submit: 'Log in',
       closable: false,
       onhide: function(){
-        window.location = '/login';
+        window.location = '/';
       }
     });
 

@@ -64,7 +64,9 @@ Router = Backbone.Router.extend({
   },
 
   logout: function() {
-    asocial.auth.logout();
+    asocial.auth.logout(function () {
+      window.location = '';
+    });
   },
 
   /* LOGGED-IN ROUTES */

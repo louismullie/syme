@@ -90,11 +90,5 @@ asocial.binders.add('global', { main: function(){
     }
 
   });
-  
-  $(document).on('click', '#logout', function (e) {
-    asocial.auth.logout(function () {
-      window.location = '/login';
-    });
-  });
 
 } }); // asocial.binders.add();
