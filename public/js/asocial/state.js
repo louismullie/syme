@@ -20,7 +20,7 @@ var asocial_state = {
       callback(true); return;
     }
 
-    $.getJSON('/state/' + type, $.param(options),
+    $.getJSON('http://localhost:5000/state/' + type, $.param(options),
 
       function (data) {
 

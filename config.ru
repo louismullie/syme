@@ -63,9 +63,9 @@ use Rack::Session::Cookie,
 require 'rack/csrf'
 # use Rack::Csrf
 
-use Rack::Protection, except: :http_origin
+# use Rack::Protection, except: :http_origin
 
-use Rack::Protection::HttpOrigin #, origin_whitelist: ["chrome-extension://aejoelaoggembcahagimdiliamlcdmfm", "http://fizz.buzz.com"]
+# use Rack::Protection::HttpOrigin, origin_whitelist: ['chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa']
 
 # Enable protection against remote referrers.
 use Rack::Protection::RemoteReferrer

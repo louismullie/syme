@@ -122,8 +122,7 @@ asocial.binders.add('groups', { main: function() {
       // Create the group, passing the encrypted key list.
       $.post('http://localhost:5000/groups', groupParams, function (group) {
 
-        console.log('/users/' + asocial.state.user.id + '/groups')
-        var route = '/users/' + asocial.state.user.id + '/groups';
+        var route = 'http://localhost:5000/users/' + asocial.state.user.id + '/groups';
 
         Router.reload();
       });
