@@ -1,5 +1,23 @@
 asocial.binders.add('register', { main: function(){
 
+  $('#auth').on('keydown', 'input[name="password"]', function () {
+    
+    $('#password-score').removeClass('hidden');
+
+    var passwordScore = zxcvbn($(this).val()).score;
+    
+    var strengthExplanation = {
+      0: 'poor',
+      1: 'okay',
+      2: 'good',
+      3: 'excellent',
+      4: 'perfect',
+    }[passwordScore];
+    
+    $('#password-score').html(strengthExplanation);
+    
+  });
+
   // Registering mode
   $('#auth').on('submit', '#register-form', function(e) {
 
