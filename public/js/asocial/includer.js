@@ -12,6 +12,7 @@
 //= require ./auth
 //= require ./state
 //= require ./error
+//= require ./compat
 //= require ./invite
 //= require ./test
 //= require ./asocial

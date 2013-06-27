@@ -8,7 +8,8 @@ guard('asocial', {
   auth: asocial_auth,
   state: asocial_state,
   error: asocial_error,
-  invite: asocial_invite
+  invite: asocial_invite,
+  compat: asocial_compat
 
 });
 
@@ -32,5 +33,10 @@ $(function(){
 
   // Bind global binders
   $().binders['global']['main']();
+
+  // Trigger root.
+  if (asocial.compat.inChromeExtension()) {
+    Router.navigate('/');
+  }
 
 });

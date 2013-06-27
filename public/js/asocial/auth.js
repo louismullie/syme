@@ -76,6 +76,16 @@ guard('auth', {
         window.password =
         sjcl.encrypt(password_key, password);
 
+        if (asocial.compat.inChromeExtension()) {
+          
+          chrome.storage.local.set({
+            'password':  sjcl.encrypt(password_key, password)
+          }, function () {
+            console.log('Stored pass');
+          });
+
+        }
+        
       } else if (data.status == 'error') {
 
         fail(data.reason);
@@ -157,7 +167,6 @@ guard('auth', {
 
   },
 
-
   passwordStoredIn: function (storage) {
     return typeof(storage.password) != 'undefined';
   },
@@ -180,17 +189,30 @@ guard('auth', {
       encryptedPassword = localStorage.password;
     } else if (this.passwordStoredIn(sessionStorage)) {
       encryptedPassword = sessionStorage.password;
+    }
+    
+    var passwordKey = asocial.state.user.password_key;
+    
+    if (!encryptedPassword) {
+      if (asocial.compat.inChromeExtension()) {
+        
+        chrome.storage.local.get('password', function (obj) {
+          if (obj.password) {
+            var password = sjcl.decrypt(passwordKey, obj.password);
+            callback(password);
+          } else {
+            callback(false);
+          }
+        });
+        
+      } else {
+        callback(false);
+      }
     } else {
-      return false;
+      var password = sjcl.decrypt(passwordKey, encryptedPassword);
+      callback(password);
     }
 
-    var passwordKey = asocial.state.user.password_key;
-
-    var password = sjcl.decrypt(passwordKey, encryptedPassword);
-
-    callback(password);
-    return true;
-
   }
-
+  
 });
