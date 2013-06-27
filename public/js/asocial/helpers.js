@@ -357,12 +357,14 @@ guard('helpers', {
     });
 
     // Close on clicking a[role="close-modal"]
-    $('#responsive-modal a[role="close-modal"]').click(function(){
+    $('#responsive-modal a[role="close-modal"]').click(function(e){
+      e.preventDefault();
       asocial.helpers.hideModal();
     });
 
     // Submit on clicking a[role="submit-modal"]
-    $('#responsive-modal a[role="submit-modal"]').click(function(){
+    $('#responsive-modal a[role="submit-modal"]').click(function(e){
+      e.preventDefault();
       asocial.helpers.hideModal(true);
     });
 

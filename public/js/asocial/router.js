@@ -4,6 +4,7 @@ Router = Backbone.Router.extend({
 
   navigate: function (url) {
 
+    // Override pushstate and load url directly
     Backbone.history.loadUrl(url);
 
   },

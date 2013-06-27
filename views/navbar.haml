@@ -5,7 +5,7 @@
     .small-24
       %ul
         %li#brand
-          %a{ href: '/', hbs: '' }
+          %a{ href: '', hbs: '' }
             Asocial
 
         %li
@@ -20,18 +20,18 @@
         %li#group-selector
           %ul<
             %li.title>
-              %a{ href: '/', hbs: '' } Groups
+              %a{ href: '', hbs: '' } Groups
 
             %li.group
 
         .pull-right
           .hide-for-small
             %li
-              %a.btn.hint--bottom{ href: '/settings', hbs: '', :'data-hint' => 'Settings' }
+              %a.btn.hint--bottom{ href: 'settings', hbs: '', :'data-hint' => 'Settings' }
                 %i.icon-cog
 
             %li
-              %a#logout.btn.hint--bottom{ href: '/logout', hbs: '', :'data-hint' => 'Log out' }
+              %a#logout.btn.hint--bottom{ href: 'logout', hbs: '', :'data-hint' => 'Log out' }
                 %i.icon-signout
 
           .show-for-small
