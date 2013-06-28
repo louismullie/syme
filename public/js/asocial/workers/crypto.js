@@ -1,132 +1,77 @@
-importScripts('sjcl.js');
-importScripts('ecc.js');
-importScripts('underscore.min.js');
-
-Keyfile = function(keyfile, currentUserId) {
-  
-  var that = this;
-  
-  that.keyfile = keyfile;
-  that.currentUserId = currentUserId;
-  
-  that.publicSignatureKey = function(groupId, userId) {
-    
-    var typeCallback = that.signatureKeypairForUser;
-    var keypair = that.getKeypair(groupId, userId, typeCallback);
-  
-    return keypair.publicKey;
-    
-  };
-  
-  that.publicEncryptionKey = function(groupId, userId) {
-    
-    var typeCallback = that.encryptionKeypairForUser;
-    var keypair = that.getKeypair(groupId, userId, typeCallback);
-  
-    return keypair.publicKey;
-    
-  };
-  
-  that.privateSignatureKey = function(groupId) {
-    
-    var typeCallback = that.signatureKeypairForUser;
-    var keypair = that.getKeypair(groupId, currentUserId, typeCallback);
-  
-    if (!keypair.privateKey) throw 'Private key does not exist..'
-  
-    return keypair.privateKey;
-    
-  };
-  
-  that.privateEncryptionKey = function(groupId) {
-    
-    var typeCallback = that.encryptionKeypairForUser;
-    var keypair = that.getKeypair(groupId, currentUserId, typeCallback);
-  
-    if (!keypair.privateKey) throw 'Private key does not exist.'
-  
-    return keypair.privateKey;
-    
-  };
-  
-  that.getKeypair = function (groupId, userId, typeCallback) {
-    
-    var userId = userId || that.currentUserId;
-    var keylist = that.keylistForGroup(groupId);
-    
-    return typeCallback(keylist, userId);
-    
-  };
-  
-  that.keylistForGroup = function (groupId) {
-    
-    var keylist = that.keyfile[groupId];
-    if (!keylist) throw 'Group does not exist.'
-    
-    return keylist;
-    
-  };
-  
-  that.keypairsForUser = function (keylist, userId) {
-    
-    var keypairs = keylist[userId];
-    
-    if (!keypairs)  throw 'User does not exist.'
-    
-    if (!keypairs.encryptionKeypair)
-      throw 'Encryption keypair does not exist.'
-      
-    if (!keypairs.signatureKeypair)
-      throw 'Signature keypair does not exist.'
-    
-    return keypairs;
-    
-  };
-  
-  // Type is 'encryptionKeypair' or 'signatureKeypair'
-  that.keypairForUser = function(keylist, userId, type) {
-    
-    var keypairs = that.keypairsForUser(keylist, userId)
-    var keypair = keypairs[type];
-    
-    if (!keypair.publicKey)
-      throw 'Public key does not exist.'
-    
-    return keypair;
-    
-  };
-  
-  that.encryptionKeypairForUser = function(keylist, userId) {
-    
-    return that.keypairForUser(keylist, userId, 'encryptionKeypair');
-    
-  };
-  
-  that.signatureKeypairForUser = function(keylist, userId) {
-    
-    return that.keypairForUser(keylist, userId, 'signatureKeypair');
-    
-  };
-  
-};
+importScripts('keyfile.js');
+importScripts('formData.js');
 
 Crypto = {
   
-  keylist: null,
+  keyfile: null,
   
-  decryptKeyfile: function(keyfileTxt64, password) {
+  generateKeyfile: function (currentUserId) {
     
-    // Base-64 decode and decrypt the key file.
-    var keyfileTxt = this.base64decode(keyfileTxt64);
-    var keyfileJson = sjcl.decrypt(password, keyfileTxt);
+    this.keyfile = new Keyfile({}, currentUserId);
+    
+    return null;
+    
+  },
+  
+  decryptKeyfile: function (encKeyfileTxt64, password, currentUserId) {
+    
+    var keyfileTxt = this.decode64ThenDecrypt(
+      password, encKeyfileTxt64);
+    
+    var keyfileJson = JSON.parse(keyfileTxt);
+    
+    var _this = this;
+    
+    var keyfile = {};
     
     // Iterate over every keylist inside the keyfile.
     _.each(keyfileJson, function (keylistId, keylistJson) {
       
-        // Build the keypairs inside the key list and register.
-       this.keylist[keylistId] = this.buildKeylist(keylistJson);
+       // Build the keypairs inside the key list and register.
+       keyfile[keylistId] = _this.buildKeylist(keylistJson);
       
     });
+    
+    return this.buildKeyfile(keyfile, currentUserId);
+    
+  },
+  
+  buildKeyfile: function (keyfileJson, currentUserId) {
+    
+    this.keyfile = new Keyfile(keyfileJson, currentUserId);
+    
+    return null;
+    
+  },
+  
+  generateKeylist: function (keylistId) {
+    
+    if (!this.keyfile) throw 'Keyfile is not initialized.';
+    
+    var encryptionKeypair = this.generateEncryptionKeypair();
+    var signatureKeypair = this.generateSignatureKeypair();
+    
+    this.keyfile.createKeylist(keylistId, {
+      encryptionKeypair: encryptionKeypair,
+      signatureKeypair: signatureKeypair
+    });
+    
+  },
+  
+  getKeyfile: function () {
+    
+    if (!this.keyfile) throw 'Keyfile not initialized.';
+    
+    return this.keyfile.keyfile;
+    
+  },
+  
+  getEncryptedKeyfile: function (password) {
+    
+    var keyfile      = this.getKeyfile();
+    var keyfileTxt   = JSON.stringify(keyfile);
+    
+    return this.encryptThenEncode64(password, keyfileTxt);
     
   },
   
@@ -134,11 +79,13 @@ Crypto = {
     
     var keylist = {};
     
+    var _this = this;
+    
     // Iterate over every keypair inside the keyfile.
     _.each(keylistJson, function (userId, keypairs) {
-    
+
       // Build the key objects and register them.
-      var keypairs = this.buildKeypairs(keypairs);
+      var keypairs = _this.buildKeypairs(keypairs);
       keylist[keylistId][userId] = keypairs;
     
     });
@@ -148,8 +95,8 @@ Crypto = {
     
   },
   
-  buildKeypairs: function(keypairs) {
-    
+  buildKeypairs: function(keypairsJson) {
+      
     // Verify that encryption keys are present.
     if (!keypairsJson.encryptionKeypair)
       throw 'Encryption key(s) missing.'
@@ -403,14 +350,14 @@ Crypto = {
   
   },
 
-  decode64Decrypt: function (key, message) {
+  decode64ThenDecrypt: function (key, message) {
     
     // Base64-decode, then decrypt the resulting message.
     return sjcl.decrypt(key, this.decodeBase64(message));
     
   },
 
-  encryptEncode64: function (key, message) {
+  encryptThenEncode64: function (key, message) {
     
     // Encrypt, then Base64-encode the resulting message.
     return this.encodeBase64(sjcl.encrypt(key, message));
@@ -435,34 +382,132 @@ Crypto = {
  
  seedRandom: function (randomValues) {
    return sjcl.random.addEntropy(randomValues);
+ },
+ 
+ file: {
+   
+   upload: function (data, pass, worker, id, csrf, url) {
+     
+     var data = event.data['data'];
+     var pass = event.data['pass'];
+     var worker = event.data['worker'];
+     var id = event.data['id'];
+     var csrf = event.data['csrf'];
+     var url = event.data['url'];
+
+     var key = data.key;
+     var chunk = data.chunk;
+
+     var reader = new FileReader();
+
+     reader.onload = function(event) {
+
+       var chunk = event.target.result;
+
+       var encrypted = sjcl.encrypt(key, chunk);
+       var data = new Blob([encrypted]);
+
+       var fd = new FormData();
+
+       fd.append("id", id);
+       fd.append("chunk", pass * 4 + worker);
+       fd.append("data", data);
+
+       var xhr = new XMLHttpRequest();
+
+       xhr.addEventListener("error", function(evt) {
+         throw "Client error on upload.";
+       }, false);
+
+       xhr.addEventListener("abort", function(evt) {
+         throw "Upload aborted.";
+       }, false);
+
+       xhr.addEventListener("load", function(evt) {
+
+         postMessage({
+           status: 'ok', id: id,
+           pass: pass, worker: worker
+         });
+
+       });
+
+       xhr.open('POST', url);
+
+       xhr.setRequestHeader('X_CSRF_TOKEN', csrf);
+       xhr.send(fd);
+
+     };
+
+     reader.readAsDataURL(chunk);
+
+   },
+   
+
+   download: function () {
+     
+     var id = event.data['id'];
+     var chunk = event.data['chunk'];
+
+     var worker = event.data['worker'];
+     var url = event.data['url'];
+
+     var encKey = event.data['key'];
+
+     if (!privateKey) {
+       var privKeyJson = event.data['privKey'];
+       var privKey = buildPrivateKey(privKeyJson);
+     }
+
+     var key = decrypt(privKey, encKey);
+
+     var xhr = new XMLHttpRequest();
+
+     xhr.addEventListener('load', function(event) {
+
+       if (event.target.status != 200) {
+
+         throw 'Server error (' + event.target.status + ')';
+
+       } else {
+
+         var cryptChunk = event.target.responseText;
+         var plainChunk = sjcl.decrypt(key, cryptChunk);
+
+         var byteString = decodeBase64(decodeBase64(
+           plainChunk.split(',')[1]));
+
+         var ab = new ArrayBuffer(byteString.length);
+         var ia = new Uint8Array(ab);
+
+         for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+         }
+
+         postMessage({
+           id: id,
+           data: ia,
+           worker: worker,
+           chunk: chunk,
+           status: 'ok'
+         });
+
+       }
+
+     });
+
+     xhr.addEventListener(
+       "error", function () { throw "Error!"; }, false);
+
+     xhr.addEventListener(
+       "abort", function () { throw "Abort!"; }, false);
+
+     xhr.open('GET', url + '/' + chunk);
+     xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
+     xhr.send('');
+     
+   }
+   
  }
-
-};
-
-self.onmessage = function(event) {
-  
-  var method = event.data['method'];
-  var params = event.data['params'];
-  var callback = event.data['callback'];
-  
-  //try {
-    
-    if (!method || !params)
-      throw 'Missing required parameters.'
-    
-    var result = Crypto[method].apply(Crypto, params);
-    
-    postMessage({
-      status: 'ok',
-      result: result,
-      callback: callback
-    });
-    
-  //} catch (error) {
-    
-  //  postMessage({ id: id,
-  //    status: 'error', error: error });
-    
-  //}
 
 };
