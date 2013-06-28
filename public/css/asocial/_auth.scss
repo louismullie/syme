@@ -47,6 +47,14 @@
       }
     }
 
+    #password-score {
+      &[data-strength="0"] { background: $danger;  }
+      &[data-strength="1"] { background: $warning; }
+      &[data-strength="2"] { background: $green;   }
+      &[data-strength="3"] { background: $green;   }
+      &[data-strength="4"] { background: $green;   }
+    }
+
     a[role="submit"] {
       display: block;
       width: 100%;

@@ -22,10 +22,10 @@
           .input-text-icon
             %i.icon-lock
             %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
-            
-          #password-score.hidden
-          
-            
+
+            #password-score.hidden.validation-indicator
+
+
           %input{ type: 'submit' }
           %a.btn.btn-success{ href: '#', role: 'submit' }
             Register <i class="icon-spinner icon-spin"></i>

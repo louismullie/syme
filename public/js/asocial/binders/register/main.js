@@ -1,21 +1,30 @@
 asocial.binders.add('register', { main: function(){
 
-  $('#auth').on('keydown', 'input[name="password"]', function () {
-    
-    $('#password-score').removeClass('hidden');
+  $('#auth').on('input', 'input[name="password"]', function () {
 
-    var passwordScore = zxcvbn($(this).val()).score;
-    
+    // Get password value
+    var val = $(this).val();
+
+    // Add or remove hidden class
+    $('#password-score')[ val.length > 1 ? 'removeClass' : 'addClass' ]('hidden');
+
+    // Password strength
+    var strength = zxcvbn(val).score;
+
+    // Password strength indicators
     var strengthExplanation = {
       0: 'poor',
       1: 'okay',
       2: 'good',
       3: 'excellent',
       4: 'perfect',
-    }[passwordScore];
-    
-    $('#password-score').html(strengthExplanation);
-    
+    }[ strength ];
+
+    // Fill in strength indicator
+    $('#password-score')
+      .attr('data-strength', strength)
+      .html(strengthExplanation);
+
   });
 
   // Registering mode
@@ -45,9 +54,9 @@ asocial.binders.add('register', { main: function(){
       { email: email, full_name: fullName },
 
       { success: function (model, response) {
-        
+
         var verifierSalt = srp.randomHexSalt();
-        
+
         var verifierBn = srp.calculateV(verifierSalt);
         var verifierHex = verifierBn.toString(16);
 

@@ -4,9 +4,9 @@ require 'sinatra/base'
 $root = File.dirname(__FILE__)
 
 if ENV['RACK_ENV'] == 'PRODUCTION'
-  
+
   $env = :production
-  
+
 =begin
   $env, $secure = :production, true
 
@@ -59,6 +59,15 @@ use Rack::Session::Cookie,
   secure_random: SecureRandom,
   secret: '8dg236rgd31238fb13vd65'
 
+# Additional mime types
+Rack::Mime::MIME_TYPES.merge!({
+  ".eot" => "application/vnd.ms-fontobject",
+  ".ttf" => "application/x-font-ttf",
+  ".otf" => "font/otf",
+  ".svg" => "image/svg+xml",
+  ".woff" => "application/x-font-woff"
+})
+
 # Enable token protection against CSRF.
 require 'rack/csrf'
 # use Rack::Csrf
@@ -73,19 +82,19 @@ use Rack::Protection::RemoteReferrer
 require './app'
 
 map '/assets' do
-  
+
   environment = Sprockets::Environment.new
-  
+
   environment.append_path 'public/js'
   environment.append_path 'public/css'
-  
+
   if $env == :production
     environment.js_compressor = Closure::Compiler.new
     environment.css_compressor = :sass
   end
-  
+
   run environment
-  
+
 end
 
 map '/' do
