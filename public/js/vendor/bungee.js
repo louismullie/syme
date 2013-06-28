@@ -246,7 +246,7 @@ function Uploader(file, key, keys, options) {
 
   };
 
-}
+};
 
 function Downloader(id, key, options) {
 
@@ -397,4 +397,4 @@ function Downloader(id, key, options) {
 
   };
 
-}
+};

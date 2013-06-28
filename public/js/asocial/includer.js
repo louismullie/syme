@@ -14,8 +14,8 @@
 //= require ./error
 //= require ./compat
 //= require ./invite
-//= require ./test
 //= require ./asocial
+//= require_tree ./models
 //= require_tree ./binders
 //= require_tree ./classes
 //= require ./binders/global

@@ -43,16 +43,3 @@ var User = Backbone.RelationalModel.extend({
   }
 
 });
-
-
-var Verifier = Backbone.RelationalModel.extend({
-
-  idAttribute: "_id",
-
-});
-
-var Keypair = Backbone.RelationalModel.extend({
-
-  idAttribute: "_id",
-
-});

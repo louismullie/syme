@@ -1,24 +1,5 @@
 guard('auth', {
 
-  keygen: function(user_id, password, success) {
-
-    // Generate a random salt for the password hash.
-    var salt = asocial.crypto.generateRandomHexSalt();
-
-    // Derive key form the user's password using the hex salt.
-    var key = asocial.crypto.calculateHash(password, salt);
-
-    // Generate an RSA keypair, convert to JSON and encrypt with key.
-    var keypair = asocial.crypto.generateEncryptedKeyPair(key);
-
-    // Build a request for the server to create a keypair for the user.
-    var data = { user_id: user_id, keypair: keypair, keypair_salt: salt };
-
-    // Register the new keypair with the server and callback.
-    $.post('http://localhost:5000/register/3', $.param(data), success);
-
-  },
-
   login: function(email, password, remember, success, fail) {
 
     var srp = new SRPClient(email, password);
