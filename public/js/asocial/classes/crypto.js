@@ -3,6 +3,17 @@ Crypto = function (workerUrl) {
   var _this = this;
   var callbacks = 
   
+  this.queueJob = function (job, successCb, errorCb) {
+    
+    if (asocial.compat.inPhoneGap()) {
+      cordova.exec(successCb, errorCb, 'Crypto',
+        job.method, job.params);
+    } else {
+      this.workerPool.queueJob(job, successCb);
+    }
+    
+  };
+  
   this.generateKeyfile = function (userId, password, encryptedKeyfileCb) {
     
     // Generate initial keyfile.
