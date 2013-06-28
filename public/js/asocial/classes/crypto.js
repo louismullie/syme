@@ -14,28 +14,16 @@ Crypto = function (workerUrl) {
     
   };
   
-  this.generateKeyfile = function (userId, password, encryptedKeyfileCb) {
+  this.getEncryptedKeyfile = function (userId, encryptedKeyfileCb) {
     
-    // Generate initial keyfile.
     Crypto.workerPool.queueJob({
       
-      method: 'generateKeyfile',
-      params: [userId, password]
-    
-    // Generate keylist for group.
-    }, function () {
-      
-    Crypto.workerPool.queueJob({
-      
-      method: 'getEncryptedKeyfile',
-      params: [password]
+      method: 'getEncryptedKeyfile'
     
     // Return encrypted keyfile.
-    }, function (response) {
-      
-      encryptedKeyfileCb(response.result);
-
-    }); });
+    }, function (message) {
+      encryptedKeyfileCb(message.result);
+    });
     
   };
   
@@ -87,28 +75,16 @@ Crypto = function (workerUrl) {
     }); });
   };
   
-  this.decryptKeyfile = function (keyfile, userId, password, doneCallback) {
+  this.initializeKeyfile = function (userId, password, encKeyfile, doneCallback) {
     
     // Broadcast the public keyfile.
     Crypto.workerPool.queueJob({
       
-      method: 'decryptKeyfile',
-      params: [keyfile, password, userId]
+      method: 'initializeKeyfile',
+      params: [userId, password, encKeyfile]
       
     }, doneCallback);
-    
-  };
-  
-  this.initializeKeyfile = function (keyfile, password, userId, doneCallback) {
-    
-    if (keyfile) {
-      this.decryptKeyfile(keyfile, userId, password, doneCallback);
-    } else {
-      this.generateKeyfile(userId, password, doneCallback);
-    }
-    
-    return null;
-    
+
   };
   
   this.seedRandom = function () {

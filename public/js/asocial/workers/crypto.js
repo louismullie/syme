@@ -3,43 +3,9 @@ importScripts('formData.js');
 
 Crypto = {
   
-  keyfile: null,
-  
-  generateKeyfile: function (currentUserId) {
+  initializeKeyfile: function (currentUserId, password, keyfileJson) {
     
-    this.keyfile = new Keyfile({}, currentUserId);
-    
-    return null;
-    
-  },
-  
-  decryptKeyfile: function (encKeyfileTxt64, password, currentUserId) {
-    
-    var keyfileTxt = this.decode64ThenDecrypt(
-      password, encKeyfileTxt64);
-    
-    var keyfileJson = JSON.parse(keyfileTxt);
-    
-    var _this = this;
-    
-    var keyfile = {};
-    
-    // Iterate over every keylist inside the keyfile.
-    _.each(keyfileJson, function (keylistJson, keylistId) {
-      
-       // Build the keypairs inside the key list and register.
-       keyfile[keylistId] = _this.buildKeylist(keylistJson);
-      
-    });
-    
-    return this.buildKeyfile(keyfile, currentUserId);
-    
-  },
-  
-  buildKeyfile: function (keyfileJson, currentUserId) {
-    
-    this.keyfile = new Keyfile(keyfileJson, currentUserId);
-    
+    this.keyfile = new Keyfile(currentUserId, password, keyfileJson);
     return null;
     
   },
@@ -47,14 +13,14 @@ Crypto = {
   generateKeylist: function (keylistId) {
     
     var keyfile = this.getKeyfile();
+    return keyfile.generateKeylist();
     
-    var encryptionKeypair = this.generateEncryptionKeypair();
-    var signatureKeypair = this.generateSignatureKeypair();
-
-    keyfile.createKeylist(keylistId, {
-      encryptionKeypair: encryptionKeypair,
-      signatureKeypair: signatureKeypair
-    });
+  },
+  
+  getEncryptedKeyfile: function () {
+    
+    var keyfile = this.getKeyfile();
+    return keyfile.getEncryptedKeyfile();
     
   },
   
@@ -67,112 +33,14 @@ Crypto = {
     
   },
   
-  getKeylist: function (keylistId) {
-    
-    if (!this.keyfile)
-      throw 'Keyfile is not initialized.';
-    
-    return this.keyfile.getKeylist(keylistId);
-  },
-  
-  getEncryptedKeyfile: function (password) {
-    
-    var keyfileJson = this.getKeyfile().serialize();
-    var keyfileTxt = JSON.stringify(keyfileJson);
-    
-    return this.encryptThenEncode64(password, keyfileTxt);
-    
-  },
-  
-  buildKeylist: function (keylistJson) {
-    
-    var keylist = {};
-    
-    var _this = this;
-    
-    // Iterate over every keypair inside the keyfile.
-    _.each(keylistJson, function (keypairs, userId) {
-
-      // Build the key objects and register them.
-      var keypairs = _this.buildKeypairs(keypairs);
-      keylist[keylistId][userId] = keypairs;
-    
-    });
-    
-    // Return the final keylist.
-    return keylist;
-    
-  },
-  
-  buildKeypairs: function(keypairsJson) {
-      
-    // Verify that encryption keys are present.
-    if (!keypairsJson.encryptionKeypair)
-      throw 'Encryption key(s) missing.';
-    
-    // Verify that the decryption keys are present.
-    if (!keypairsJson.signatureKeypair)
-      throw 'Signature key(s) missing.'
-    
-    // Build the keypair objects.
-    var keypairs = {
-      encryption: this.buildKeypair(keypairsJson.encryptionKeypair), 
-      signature: this.buildKeypair(keypairsJson.signatureKeypair)
-    };
-    
-    // Return the keypairs in JSON format.
-    return keypairs;
-    
-  },
-  
-  addKeypairsToKeylist: function (keylistId, userId, keypairsJson) {
+  // Private
+  addKeylistMember: function (keylistId, userId, keypairsJson) {
     
     var keyfile = this.getKeyfile();
     
-    keyfile.addKeypairsToKeylist(keylistId, userId, keypairsJson);
+    keyfile.addKeylistMember(keylistId, userId, keypairsJson);
     
     return null;
-    
-  },
-  
-  buildKeypair: function(keypairJson) {
-    
-    // Check for presence of the public key.
-    if (!keypairJson.publicKey)
-      throw 'Public key is missing.'
-      
-    // Build the public key and the keypair object.
-    var publicKey = this.buildPublicKey(keypairJson.publicKey);
-    var keypair = { publicKey: publicKey };
-    
-    // Build the private key if it is present.
-    if (keypairJson.privateKey) {
-      keypair.privateKey =
-      this.buildPrivateKey(keypairJson.privateKey);
-    }
-    
-    // Return the keypair objects.
-    return keypair;
-    
-  },
-  
-  generateEncryptionKeypair: function () {
-    
-    // Generate a new keypair for ECC encryption.
-    var keypair = sjcl.ecc.elGamal.generateKeys(384, 1);
-    
-    // Serialize the keypair to JSON.
-    return this.serializeKeypair(keypair);
-    
-  },
-  
-  generateSignatureKeypair: function () {
-    
-    // Generate a new keypair for ECDSA signing.
-    var keypair = sjcl.ecc.ecdsa.generateKeys(384, 1);
-    
-    // Serialize the keypair to JSON.
-    return this.serializeKeypair(keypair);
     
   },
   
@@ -309,75 +177,6 @@ Crypto = {
 
   },
 
-  serializePublicKey: function (publicKey) {
-    
-    // Calls the ECC branch serialize method.
-    return publicKey.serialize();
-    
-  },
-
-  buildPublicKey: function (pubJson) {
-
-    // Retrieve the point from the serialized key.
-    var point = sjcl.ecc.curves["c" + pubJson.curve]
-      .fromBits(pubJson.point);
-
-    // Build the key from the curve and the point.
-    var publicKey = new sjcl.ecc.elGamal
-      .publicKey(pubJson.curve, point.curve, point);
-
-    // Return the public key object.
-    return publicKey;
-    
-  },
-
-  serializePrivateKey: function (privateKey) {
-    
-    // Calls the ECC branch serialize method.
-    return privateKey.serialize();
-    
-  },
-
-  buildPrivateKey: function (privJson) {
-
-    // Retrieve the exponent from the serialized key.
-    var exponent = sjcl.bn.fromBits(privJson.exponent);
-
-    // Retrieve the curve number and build the private key.
-    var curve = "c" + privJson.curve;
-    var privateKey = new sjcl.ecc.elGamal.secretKey(
-        privJson.curve, sjcl.ecc.curves[curve], exponent);
-
-    // Return the private key object.
-    return privateKey;
-  },
-
-  serializeKeypair: function (keypair) {
-    
-    var privateKey = keypair.sec || keypair.privateKey;
-    var publicKey = keypair.pub || keypair.publicKey;
-    
-    if (privateKey)
-      privateKeyJson = this.serializePrivateKey(privateKey);
-    
-    var publicKeyJson = this.serializePublicKey(publicKey);
-    
-    return { privateKey: privateKeyJson, publicKey: publicKeyJson };
-  
-  },
-  
-  serializeKeypairs: function (keypairs) {
-    
-    var signatureKeypair = this
-      .serializeKeypair(keypairs.signatureKeypair);
-    
-    var encryptionKeypair = this
-      .serializeKeypair(keypairs.encryptionKeypair);
-    
-    return { encryptionKeypair: encryptionKeypair,
-             signatureKeypair: signatureKeypair };
-    
-  },
 
   decode64ThenDecrypt: function (key, message) {
     
