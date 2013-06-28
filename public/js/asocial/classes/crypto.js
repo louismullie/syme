@@ -47,7 +47,7 @@ Crypto = function (workerUrl) {
       method: 'generateKeylist',
       params: [keylistId]
     
-    // Get encrypted keylist.
+    // Get encrypted keyfile.
     }, function () {
     
     Crypto.workerPool.queueJob({
@@ -59,10 +59,32 @@ Crypto = function (workerUrl) {
     }, function (response) {
       
       // Crypto.workerPool.broadcast(keyfile)
-      encryptedKeyfileCb(response.result)
+      alert(response.result)
     
     }); });
     
+  };
+  
+  this.addKeypairsToKeylist = function (keylistId, userId, keypairs, password, encryptedKeyfileCb) {
+    Crypto.workerPool.queueJob({
+      
+      method: 'addKeypairsToKeylist',
+      params: [keylistId, userId, keypairs]
+    
+    // Get encrypted keyfile.
+    }, function (response) {
+       
+    Crypto.workerPool.queueJob({
+
+      method: 'getEncryptedKeyfile',
+      params: [password]
+
+    // Return encrypted keyfile.
+    }, function (response) {
+
+      alert(response.result)
+
+    }); });
   };
   
   this.decryptKeyfile = function (keyfile, userId, password, doneCallback) {

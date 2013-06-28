@@ -5,9 +5,47 @@ Keyfile = function(keyfile, currentUserId) {
   that.keyfile = keyfile;
   that.currentUserId = currentUserId;
   
+  that.serialize = function () {
+    return JSON.stringify(that.keyfile);
+  };
+  
   that.createKeylist = function (keylistId, currentUserKeypair) {
+    
     that.keyfile[keylistId] = {};
+    
     that.keyfile[keylistId][that.currentUserId] = currentUserKeypair;
+    
+  };
+  
+  that.getKeylist = function (keylistId) {
+    
+    var keylist = that.keyfile[keylistId];
+    
+    if (!keylist)
+      throw 'Keylist does not exist.'
+    
+    return keylist;
+    
+  };
+  
+  that.addKeypairsToKeylist = function (keylistId, userId, keypairs) {
+    
+    if (!that.keyfile[keylistId])
+      throw 'Keylist does not exist.'
+    
+    that.keyfile[keylistId][userId] = keypairs;
+    
+    return null;
+      
+  };
+  
+  that.getKeypair = function (groupId, userId, typeCallback) {
+    
+    var userId = userId || that.currentUserId;
+    var keylist = that.keylistForGroup(groupId);
+    
+    return typeCallback(keylist, userId);
+    
   };
   
   that.publicSignatureKey = function(groupId, userId) {
@@ -47,24 +85,6 @@ Keyfile = function(keyfile, currentUserId) {
     if (!keypair.privateKey) throw 'Private key does not exist.'
   
     return keypair.privateKey;
-    
-  };
-  
-  that.getKeypair = function (groupId, userId, typeCallback) {
-    
-    var userId = userId || that.currentUserId;
-    var keylist = that.keylistForGroup(groupId);
-    
-    return typeCallback(keylist, userId);
-    
-  };
-  
-  that.keylistForGroup = function (groupId) {
-    
-    var keylist = that.keyfile[groupId];
-    if (!keylist) throw 'Group does not exist.'
-    
-    return keylist;
     
   };
   

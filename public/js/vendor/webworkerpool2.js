@@ -10,6 +10,7 @@ function WorkerPool2(url, size) {
     this.pending = [];
     this.workers = [];
     this.active = 0;
+    //this.channels = {};
 
     for(i = 0; i < this.size; i++) {
       this.pending[i] = 0;
@@ -18,11 +19,18 @@ function WorkerPool2(url, size) {
     this.createWorkers = function () {
 
       var _this = this;
-
+      
       for (var n = 0; n < this.size; n += 1) {
 
         var worker = new Worker(this.url);
-
+        
+        //this.channels[n] = {};
+        
+        //for (var o = 0; o < this.size; o += 1) {
+        //  if (n == 0) continue;
+        //  this.channels[o].push(new MessageChannel()); 
+        //}
+        
         worker.onmessage = function (msg) {
 
           var context = _this.contexts[msg.data.id];
@@ -81,8 +89,8 @@ function WorkerPool2(url, size) {
       if (job) {
         this.active++;
         this.workers[minIndex].postMessage(job);
+        //  job, this.channels[minIndex]);
       }
-
 
     };
 

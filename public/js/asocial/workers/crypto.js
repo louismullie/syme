@@ -25,7 +25,7 @@ Crypto = {
     var keyfile = {};
     
     // Iterate over every keylist inside the keyfile.
-    _.each(keyfileJson, function (keylistId, keylistJson) {
+    _.each(keyfileJson, function (keylistJson, keylistId) {
       
        // Build the keypairs inside the key list and register.
        keyfile[keylistId] = _this.buildKeylist(keylistJson);
@@ -46,12 +46,12 @@ Crypto = {
   
   generateKeylist: function (keylistId) {
     
-    if (!this.keyfile) throw 'Keyfile is not initialized.';
+    var keyfile = this.getKeyfile();
     
     var encryptionKeypair = this.generateEncryptionKeypair();
     var signatureKeypair = this.generateSignatureKeypair();
-    
-    this.keyfile.createKeylist(keylistId, {
+
+    keyfile.createKeylist(keylistId, {
       encryptionKeypair: encryptionKeypair,
       signatureKeypair: signatureKeypair
     });
@@ -60,16 +60,25 @@ Crypto = {
   
   getKeyfile: function () {
     
-    if (!this.keyfile) throw 'Keyfile not initialized.';
+    if (!this.keyfile)
+      throw 'Keyfile not initialized.';
     
-    return this.keyfile.keyfile;
+    return this.keyfile;
     
+  },
+  
+  getKeylist: function (keylistId) {
+    
+    if (!this.keyfile)
+      throw 'Keyfile is not initialized.';
+    
+    return this.keyfile.getKeylist(keylistId);
   },
   
   getEncryptedKeyfile: function (password) {
     
-    var keyfile      = this.getKeyfile();
-    var keyfileTxt   = JSON.stringify(keyfile);
+    var keyfileJson = this.getKeyfile().serialize();
+    var keyfileTxt = JSON.stringify(keyfileJson);
     
     return this.encryptThenEncode64(password, keyfileTxt);
     
@@ -82,7 +91,7 @@ Crypto = {
     var _this = this;
     
     // Iterate over every keypair inside the keyfile.
-    _.each(keylistJson, function (userId, keypairs) {
+    _.each(keylistJson, function (keypairs, userId) {
 
       // Build the key objects and register them.
       var keypairs = _this.buildKeypairs(keypairs);
@@ -99,24 +108,16 @@ Crypto = {
       
     // Verify that encryption keys are present.
     if (!keypairsJson.encryptionKeypair)
-      throw 'Encryption key(s) missing.'
-    
-    // Retrieve the encryption keys.
-    var encPubKey = keypairsJson.encryptionKeypair.publicKey;
-    var encPrivKey = keypairsJson.encryptionKeypair.privateKey;
+      throw 'Encryption key(s) missing.';
     
     // Verify that the decryption keys are present.
     if (!keypairsJson.signatureKeypair)
       throw 'Signature key(s) missing.'
     
-    // Retrieve the signature keys.
-    var sigPubKey = keypairsJson.signatureKeypair.publicKey;
-    var sigPrivKey = keypairsJson.signatureKeypair.privateKey;
-    
     // Build the keypair objects.
     var keypairs = {
-      encryption: this.buildKeypair(encPubKey, encPrivKey), 
-      signature: this.buildKeypair(sigPubKey, sigPrivKey)
+      encryption: this.buildKeypair(keypairsJson.encryptionKeypair), 
+      signature: this.buildKeypair(keypairsJson.signatureKeypair)
     };
     
     // Return the keypairs in JSON format.
@@ -124,24 +125,34 @@ Crypto = {
     
   },
   
-  buildKeypair: function(publicKeyJson, privateKeyJson) {
+  addKeypairsToKeylist: function (keylistId, userId, keypairsJson) {
+    
+    var keyfile = this.getKeyfile();
+    
+    keyfile.addKeypairsToKeylist(keylistId, userId, keypairsJson);
+    
+    return null;
+    
+  },
+  
+  buildKeypair: function(keypairJson) {
     
     // Check for presence of the public key.
-    if (!publicKeyJson)
+    if (!keypairJson.publicKey)
       throw 'Public key is missing.'
       
     // Build the public key and the keypair object.
-    var publicKey = this.buildPublicKey(publicKeyJson);
-    var keypairJson = { publicKey: publicKey };
+    var publicKey = this.buildPublicKey(keypairJson.publicKey);
+    var keypair = { publicKey: publicKey };
     
     // Build the private key if it is present.
-    if (privateKeyJson) {
-      keypairJson.privateKey =
-      this.buildPrivateKey(privateKeyJson);
+    if (keypairJson.privateKey) {
+      keypair.privateKey =
+      this.buildPrivateKey(keypairJson.privateKey);
     }
     
-    // Return the keypair objects as JSON.
-    return keypairJson;
+    // Return the keypair objects.
+    return keypair;
     
   },
   
@@ -343,11 +354,29 @@ Crypto = {
 
   serializeKeypair: function (keypair) {
     
-    var privateKey = this.serializePrivateKey(keypair.sec);
-    var publicKey = this.serializePublicKey(keypair.pub);
+    var privateKey = keypair.sec || keypair.privateKey;
+    var publicKey = keypair.pub || keypair.publicKey;
     
-    return { privateKey: privateKey, publicKey: publicKey };
+    if (privateKey)
+      privateKeyJson = this.serializePrivateKey(privateKey);
+    
+    var publicKeyJson = this.serializePublicKey(publicKey);
+    
+    return { privateKey: privateKeyJson, publicKey: publicKeyJson };
   
+  },
+  
+  serializeKeypairs: function (keypairs) {
+    
+    var signatureKeypair = this
+      .serializeKeypair(keypairs.signatureKeypair);
+    
+    var encryptionKeypair = this
+      .serializeKeypair(keypairs.encryptionKeypair);
+    
+    return { encryptionKeypair: encryptionKeypair,
+             signatureKeypair: signatureKeypair };
+    
   },
 
   decode64ThenDecrypt: function (key, message) {
