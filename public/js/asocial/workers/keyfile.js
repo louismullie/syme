@@ -10,8 +10,7 @@ Keyfile = function(userId, password, encKeyfile) {
   
   that.getEncryptedKeyfile = function () {
     
-    var keyfileJson = that.serialize();
-    var keyfileTxt = JSON.stringify(keyfileJson);
+    var keyfileTxt = JSON.stringify(that.serialize());
   
     return Crypto.encryptThenEncode64(that.password, keyfileTxt);
 
@@ -23,7 +22,7 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var keyfileJson = JSON.parse(keyfileTxt);
     
-    return that.buildKeyfile(keyfileJson, currentUserId);
+    return that.buildKeyfile(keyfileJson, that.userId);
     
   };
   
@@ -81,8 +80,8 @@ Keyfile = function(userId, password, encKeyfile) {
     
     // Build the keypair objects.
     var keypairs = {
-      encryption: encryptionKeypair, 
-      signature: signatureKeypair
+      encryptionKeypair: encryptionKeypair, 
+      signatureKeypair: signatureKeypair
     };
     
     // Return the keypairs in JSON format.
@@ -142,11 +141,33 @@ Keyfile = function(userId, password, encKeyfile) {
 
   that.serialize = function () {
     
-    return JSON.stringify(that.keyfile);
+    var keyfileJson = {};
+    
+    _.each(that.keyfile, function (keylist, keylistId) {
+      keyfileJson[keylistId] = that.serializeKeylist(keylist);
+    });
+    
+    return keyfileJson;
+    
+  };
+  
+  that.serializeKeylist = function (keylist) {
+    
+    var keylistJson = {};
+    
+    _.each(keylist, function (keypairs, userId) {
+      keylistJson[userId] = that.serializeKeypairs(keypairs);
+    });
+    
+    return keylistJson;
     
   };
   
   that.serializeKeypairs = function (keypairs) {
+    
+    if (typeof(keypairs.signatureKeypair) == 'undefined' ||
+        typeof(keypairs.encryptionKeypair) == 'undefined')
+      throw JSON.stringify(keypairs.signatureKeypair);
     
     var signatureKeypair = that
       .serializeKeypair(keypairs.signatureKeypair);
@@ -176,26 +197,28 @@ Keyfile = function(userId, password, encKeyfile) {
   that.serializePublicKey = function (publicKey) {
     
     // Calls the ECC branch serialize method.
-    return publicKey.serialize();
+    return publicKey.serialize ? publicKey.serialize() : publicKey;
     
   };
   
   that.serializePrivateKey = function (privateKey) {
     
     // Calls the ECC branch serialize method.
-    return privateKey.serialize();
+    return privateKey.serialize ? privateKey.serialize() : privateKey;
     
   };
   
-  that.generateKeylist = function (keylistId) {
+  that.createKeylist = function (keylistId) {
     
     var encryptionKeypair = that.generateEncryptionKeypair();
     var signatureKeypair = that.generateSignatureKeypair();
 
-    that.createKeylist(keylistId, {
+    that.keyfile[keylistId] = {};
+    
+    that.keyfile[keylistId][that.userId] = {
       encryptionKeypair: encryptionKeypair,
       signatureKeypair: signatureKeypair
-    });
+    };
     
   };
   
@@ -205,7 +228,7 @@ Keyfile = function(userId, password, encKeyfile) {
     var keypair = sjcl.ecc.elGamal.generateKeys(384, 1);
     
     // Serialize the keypair to JSON.
-    return that.serializeKeypair(keypair);
+    return { publicKey: keypair.pub, privateKey: keypair.sec };
     
   };
   
@@ -215,17 +238,7 @@ Keyfile = function(userId, password, encKeyfile) {
     var keypair = sjcl.ecc.ecdsa.generateKeys(384, 1);
     
     // Serialize the keypair to JSON.
-    return that.serializeKeypair(keypair);
-    
-  };
-  
-  that.createKeylist = function (keylistId, currentUserKeypairs) {
-    
-    if (!that.keyfile)
-      
-    that.keyfile[keylistId] = {};
-    
-    that.keyfile[keylistId][that.userId] = currentUserKeypairs;
+    return { publicKey: keypair.pub, privateKey: keypair.sec };
     
   };
   
@@ -240,12 +253,10 @@ Keyfile = function(userId, password, encKeyfile) {
     
   };
   
-  that.createKeypairs = function (keylistId, userId, keypairsJson) {
+  that.addKeypairs = function (keylistId, userId, keypairsJson) {
     
     if (!that.keyfile[keylistId])
       throw 'Keylist does not exist.'
-    
-    that.keyfileJson[keylistId][userId] = keypairsJson;
     
     var keypairs = that.buildKeypairs(keypairsJson);
     
@@ -255,93 +266,30 @@ Keyfile = function(userId, password, encKeyfile) {
       
   };
   
-  that.getKeypair = function (groupId, userId, typeCallback) {
-    
-    var userId = userId || that.currentUserId;
-    var keylist = that.keylistForGroup(groupId);
-    
-    return typeCallback(keylist, userId);
-    
-  };
-  
   that.getPublicSignatureKey = function(groupId, userId) {
     
-    var typeCallback = that.signatureKeypairForUser;
-    var keypair = that.getKeypair(groupId, userId, typeCallback);
-  
-    return keypair.publicKey;
+    var keylist = this.getKeylist(groupId);
     
-  };
+    if (!keylist[that.userId] ||
+        !keylist[that.userId].signatureKeypair ||
+        !keylist[that.userId].signatureKeypair.publicKey)
+      throw 'Private key not initialized.'
   
-  that.getPublicEncryptionKey = function(groupId, userId) {
+    return keylist[that.userId].signatureKeypair.publicKey;
     
-    var typeCallback = that.encryptionKeypairForUser;
-    var keypair = that.getKeypair(groupId, userId, typeCallback);
-  
-    return keypair.publicKey;
-    
-  };
-  
-  that.getPrivateSignatureKey = function(groupId) {
-    
-    var typeCallback = that.signatureKeypairForUser;
-    var keypair = that.getKeypair(groupId, currentUserId, typeCallback);
-  
-    if (!keypair.privateKey) throw 'Private key does not exist..'
-  
-    return keypair.privateKey;
     
   };
   
   that.getPrivateEncryptionKey = function(groupId) {
     
-    var typeCallback = that.encryptionKeypairForUser;
-    var keypair = that.getKeypair(groupId, currentUserId, typeCallback);
+    var keylist = this.getKeylist(groupId);
+    
+    if (!keylist[that.userId] ||
+        !keylist[that.userId].encryptionKeypair ||
+        !keylist[that.userId].encryptionKeypair.privateKey)
+      throw 'Private key not initialized.'
   
-    if (!keypair.privateKey) throw 'Private key does not exist.'
-  
-    return keypair.privateKey;
-    
-  };
-  
-  that.getKeypairsForUser = function (keylist, userId) {
-    
-    var keypairs = keylist[userId];
-    
-    if (!keypairs)  throw 'User does not exist.'
-    
-    if (!keypairs.encryptionKeypair)
-      throw 'Encryption keypair does not exist.'
-      
-    if (!keypairs.signatureKeypair)
-      throw 'Signature keypair does not exist.'
-    
-    return keypairs;
-    
-  };
-  
-  // Type is 'encryptionKeypair' or 'signatureKeypair'
-  that.getKeypair = function(keylist, userId, type) {
-    
-    var keypairs = that.keypairsForUser(keylist, userId)
-    var keypair = keypairs[type];
-    
-    if (!keypair.publicKey)
-      throw 'Public key does not exist.'
-    
-    return keypair;
-    
-  };
-  
-  that.getEncryptionKeypair = function(keylist, userId) {
-    
-    return that.getKeypair(keylist, userId, 'encryptionKeypair');
-    
-  };
-  
-  that.getSignatureKeypair = function(keylist, userId) {
-    
-    return that.getKeypair(keylist, userId, 'signatureKeypair');
+    return keylist[that.userId].encryptionKeypair.privateKey;
     
   };
   

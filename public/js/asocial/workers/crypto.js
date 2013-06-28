@@ -3,17 +3,19 @@ importScripts('formData.js');
 
 Crypto = {
   
-  initializeKeyfile: function (currentUserId, password, keyfileJson) {
+  /* App */
+  
+  initializeKeyfile: function (userId, password, encKeyfile) {
     
-    this.keyfile = new Keyfile(currentUserId, password, keyfileJson);
+    this.keyfile = new Keyfile(userId, password, encKeyfile);
     return null;
     
   },
   
-  generateKeylist: function (keylistId) {
+  createKeylist: function (keylistId) {
     
     var keyfile = this.getKeyfile();
-    return keyfile.generateKeylist();
+    return keyfile.createKeylist(keylistId);
     
   },
   
@@ -21,6 +23,13 @@ Crypto = {
     
     var keyfile = this.getKeyfile();
     return keyfile.getEncryptedKeyfile();
+    
+  },
+  
+  addKeypairs: function (keylistId, userId, keypairsJson) {
+    
+    var keyfile = this.getKeyfile();
+    return keyfile.addKeypairs(keylistId, userId, keypairsJson);
     
   },
   
@@ -33,16 +42,7 @@ Crypto = {
     
   },
   
-  // Private
-  addKeylistMember: function (keylistId, userId, keypairsJson) {
-    
-    var keyfile = this.getKeyfile();
-    
-    keyfile.addKeylistMember(keylistId, userId, keypairsJson);
-    
-    return null;
-    
-  },
+  /* // App */
   
   generateRandomHex: function (bytes) {
 
@@ -81,60 +81,68 @@ Crypto = {
     
   },
   
-  encryptMessage: function (keylist, sender, recipients, plainTxt) {
+  encryptMessage: function (keylistId, message) {
     
-    // Get the sender's private signature key.
-    var privateSignatureKey = keylist.privateSignatureKey(sender);
-
     // Encrypt the message using the symmetric key.
-    var symmetricEncryptionKey = this.generateRandomSymmetricKey();
-    var encryptedMessage = sjcl.encrypt(symmetricEncryptionKey, plainTxt);
+    var symKey = this.generateRandomHex(256);
+    var keyfile = this.getKeyfile();
     
+    var encryptedMessage = sjcl.encrypt(symKey, message);
+
     // Encrypt and sign a copy of the symmetric key for everyone.
-    var encryptedKeys = this.encryptMessageKey(symmetricEncryptionKey);
+    var encryptedKeys = this.encryptMessageKeys(keylistId, message, symKey);
     
     // Stringify and base-64 encode the final message, then return it.
-    var messageJson = { message: encryptedMessage, keys: encryptedKeys };
+    var messageJson = { message: encryptedMessage, keys:
+        encryptedKeys, senderId: keyfile.userId };
     
-    return Crypto.encodeBase64(JSON.stringify(messageJson));
+    return this.encodeBase64(JSON.stringify(messageJson));
     
   },
   
-  encryptMessageKey: function (keylist, sender, recipient, messageKey) {
+  encryptMessageKeys: function (keylistId, message, messageKey) {
     
     var encryptedKeys =  {};
     
-    // Get the sender's private signature key.
-    var privateSignatureKey = keylist.getPrivateSignatureKey(recipient);
+    var keyfile = this.getKeyfile();
+    var senderId = keyfile.userId;
+    var keylist = keyfile.getKeylist(keylistId);
     
-    _recipients.each(function (recipient) {
+    // Get the sender's private signature key.
+    var privateSignatureKey = keylist[senderId].signatureKeypair.privateKey;
+
+    _.each(keylist, function (keypairs, recipientId) {
       
-      // Get the recipient's public encryption keys.
-      var publicEncryptionKey = keylist.getPublicEncryptionKey(recipient);
-      
-      // Prepend the sender name to the plaintext.
-      var messageTxt = JSON.stringify({
-        recipient: recipient, message: messageKey });
+      //if (recipientId != senderId) {
+        
+        // Get the recipient's public encryption keys.
+        var publicEncryptionKey = keypairs.encryptionKeypair.publicKey;
+        
+        // Prepend the sender name to the plaintext.
+        var messageTxt = JSON.stringify({
+          recipient: recipientId, message: messageKey });
 
-      // Sign the message using the sender's private key.
-      var sha256 = sjcl.hash.sha256.hash(messageTxt);
-      var signature = privateSignatureKey.sign(sha256);
-      var signatureTxt = JSON.stringify(signature);
+        // Sign the message using the sender's private key.
+        var sha256 = sjcl.hash.sha256.hash(messageTxt);
+        var signature = privateSignatureKey.sign(sha256);
+        var signatureTxt = JSON.stringify(signature);
 
-      // Append the sender's signature to the message.
-      var contentTxt = JSON.stringify({
-        message: messageTxt, signature: signature});
+        // Append the sender's signature to the message.
+        var contentTxt = JSON.stringify({
+          message: messageTxt, signature: signature});
 
-      // Encrypt the message using the recipient public key.
-      var symKey = publicEncryptionKey.kem(0);
-      var cipherTxt = sjcl.encrypt(symKey.key, contentTxt);
+        // Encrypt the message using the recipient public key.
+        var symKey = publicEncryptionKey.kem(0);
+        var cipherTxt = sjcl.encrypt(symKey.key, contentTxt);
 
-      // Build the final message and convert it to a string.
-      var messageJson = { 'ct': cipherTxt, 'tag': symKey.tag };
-      var messageTxt = JSON.stringify(messageJson);
-      var messageBase64 = Crypto.encodeBase64(messageTxt);
-      
-      encryptedKeys[recipient] = messageBase64;
+        // Build the final message and convert it to a string.
+        var messageJson = { 'ct': cipherTxt, 'tag': symKey.tag };
+        var messageTxt = JSON.stringify(messageJson);
+        var messageBase64 = Crypto.encodeBase64(messageTxt);
+
+        encryptedKeys[recipientId] = messageBase64;
+        
+      //}
       
     });
     
@@ -142,19 +150,36 @@ Crypto = {
     
   },
 
-  decryptMessage: function (keylist, sender, recipient, messageTxt64) {
+  decryptMessage: function (keylistId, messageTxt64) {
     
-    // Get the encryption and signature keys.
-    var privateDecryptionKey = keylist.getPrivateDecryptionKey(recipient);
-    var publicSignatureKey = keylist.getPpublicSignatureKey(sender);
-
+    // Get the keyfile.
+    var keyfile = this.getKeyfile();
+    
     // Base-64 decode and JSON-parse the received message.
     var messageTxt = Crypto.decodeBase64(messageTxt64);
     var messageJson = JSON.parse(messageTxt);
 
+    var senderId = messageJson.senderId;
+  
+    // Get the encryption and signature keys.
+    var privateEncryptionKey = keyfile
+      .getPrivateEncryptionKey(keylistId, keyfile.userId);
+    
+    var publicSignatureKey = keyfile
+      .getPublicSignatureKey(keylistId, senderId);
+      
+    var encMessage = messageJson.message;
+    
+    var encSymKeyTxt64 = messageJson.keys[keyfile.userId];
+    var messageJson = JSON.parse(this.decodeBase64(encSymKeyTxt64));
+    
     // Decrypt the message using the recipient's private key.
-    var symKey = privateKey.unkem(messageJson.tag);
+    var symKey = privateEncryptionKey.unkem(messageJson.tag);
+    
+    throw symKey;
+    
     var contentTxt = sjcl.decrypt(symKey, messageJson.ct);
+
     var contentJson = JSON.parse(contentTxt);
     
     // Verify the message signature using the signature public key.

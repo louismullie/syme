@@ -14,7 +14,7 @@ Crypto = function (workerUrl) {
     
   };
   
-  this.getEncryptedKeyfile = function (userId, encryptedKeyfileCb) {
+  this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
     
     Crypto.workerPool.queueJob({
       
@@ -27,57 +27,32 @@ Crypto = function (workerUrl) {
     
   };
   
-  this.generateKeylist = function (keylistId, password, encryptedKeyfileCb) {
+  this.createKeylist = function (keylistId, doneCallback) {
     
     // Generate keylist for group.
     Crypto.workerPool.queueJob({
       
-      method: 'generateKeylist',
+      method: 'createKeylist',
       params: [keylistId]
     
     // Get encrypted keyfile.
-    }, function () {
-    
-    Crypto.workerPool.queueJob({
-      
-      method: 'getEncryptedKeyfile',
-      params: [password]
-    
-    // Return encrypted keyfile.
-    }, function (response) {
-      
-      // Crypto.workerPool.broadcast(keyfile)
-      alert(response.result)
-    
-    }); });
+    }, doneCallback);
     
   };
   
-  this.addKeypairsToKeylist = function (keylistId, userId, keypairs, password, encryptedKeyfileCb) {
+  this.addKeypairs = function (keylistId, userId, keypairs) {
+    
     Crypto.workerPool.queueJob({
       
-      method: 'addKeypairsToKeylist',
+      method: 'addKeypairs',
       params: [keylistId, userId, keypairs]
+      
+    });
     
-    // Get encrypted keyfile.
-    }, function (response) {
-       
-    Crypto.workerPool.queueJob({
-
-      method: 'getEncryptedKeyfile',
-      params: [password]
-
-    // Return encrypted keyfile.
-    }, function (response) {
-
-      alert(response.result)
-
-    }); });
   };
   
   this.initializeKeyfile = function (userId, password, encKeyfile, doneCallback) {
     
-    // Broadcast the public keyfile.
     Crypto.workerPool.queueJob({
       
       method: 'initializeKeyfile',
@@ -85,6 +60,32 @@ Crypto = function (workerUrl) {
       
     }, doneCallback);
 
+  };
+  
+  this.encryptMessage = function(keylistId, message, encryptedMessageCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'encryptMessage',
+      params: [keylistId, message]
+      
+    }, function (response) {
+      encryptedMessageCb(response.result);
+    });
+    
+  };
+  
+  this.decryptMessage = function (keylistId, message, decryptedMessageCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'decryptMessage',
+      params: [keylistId, message]
+      
+    }, function (response) {
+      decryptedMessageCb(response.result);
+    });
+    
   };
   
   this.seedRandom = function () {
@@ -113,3 +114,7 @@ Crypto = function (workerUrl) {
 };
 
 Crypto = new Crypto('js/asocial/workers/asocial.js');
+
+// Crypto.initializeKeyfile('louis', 'password');
+// Crypto.createKeylist('bruncheurs');
+// Crypto.getEncryptedKeyfile('louis', alert);
