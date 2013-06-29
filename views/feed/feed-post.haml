@@ -62,4 +62,5 @@
             {{> feed-comment-count.hbs}}
 
     .post-comments
+      {{#compare 'user.id' true}}TRUE{{/compare}}
       {{> feed-comments.hbs}}

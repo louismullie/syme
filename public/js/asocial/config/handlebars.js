@@ -1,8 +1,41 @@
+// Global helper
+// when calling Handlebars.compileTemplate(), you will be
+// able to call to get an absolute-context element like
+// this: {{global 'feed.panel.title'}}
+
+Handlebars.compileTemplate = function(template, data) {
+
+  // Set HBS globals
+  Handlebars.currentContext = data;
+
+  // Compile template
+  return Handlebars.templates[template + '.hbs'](data);
+
+};
+
+Handlebars.registerHelper("global", function(string) {
+
+  if( !_.isObject(Handlebars.currentContext) )
+    return console.log('HBS current context not defined');
+
+  var array = string.split('.');
+
+  var global = Handlebars.currentContext;
+  while (array.length > 0 ) {
+    global = global[array.shift()];
+  }
+
+  return global;
+
+});
+
 $.fn.renderHbsTemplate = function(data){
   this.html( Handlebars.templates[ this.attr('partial') + '.hbs' ](data) );
 
   return this;
 }
+
+// Helpers
 
 Handlebars.registerHelper('t',
   function(path) {
@@ -94,6 +127,11 @@ Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options
 
   if (!operators[operator]) {
     throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
+  }
+
+  // Plugin for global helpers
+  if ( typeof lvalue === "string" ) {
+    lvalue = Handlebars.helpers.global(lvalue);
   }
 
   result = operators[operator](lvalue, rvalue);

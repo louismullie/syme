@@ -10,18 +10,18 @@ post '/:group_id/post/create', auth: [] do |group_id|
   attachment = if !(upload_id = params[:upload_id]).blank?
     @group.attachments.find(upload_id)
   end
-  
+
   post = @group.posts.create(
     owner_id: @user.id,
     content: message['content'],
     keys: message['keys'],
     mentions: mentions
   )
-  
+
   post.attachment = attachment if attachment
-  
+
   post.save!
-  
+
   track @user, 'Created a new post'
 
   content_type :json
@@ -30,7 +30,7 @@ post '/:group_id/post/create', auth: [] do |group_id|
 
 end
 
-get '/:group_id/post/:id', auth: [] do |group_id,id|
+get '/:group_id/post/:id', auth: [] do |group_id, id|
 
   @group = Group.find(group_id)
   post = @group.posts.find(id)
@@ -59,6 +59,7 @@ get '/:group_id/post/lastof/:page', auth: [] do |group_id, page|
   end
 
 end
+
 get '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
 
   group = begin
@@ -131,7 +132,8 @@ get '/users/:user_id/groups/:group_id/posts/:post_id', auth: [] do |user_id, gro
   posts = [group.posts.find(post_id)]
 
   content_type :json
-  FeedGenerator.generate(posts, @user, group).to_json
+  FeedGenerator.generate(posts, @user, group)
+    .merge({ single_post: true }).to_json
 
 end
 

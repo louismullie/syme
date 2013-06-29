@@ -1,30 +1,33 @@
 .row
   #feed-column
     // Feed form
-    {{> feed-form.hbs}}
+    {{#unless single_post}} {{> feed-form.hbs}} {{/unless}}
 
     // Feed
-    #feed{  'data-group-name' => '{{group.name}}',
-            'data-year' => '{{ year }}',
-            'data-month' => '{{ month }}' }
+    #feed{ :'data-group-name' => '{{group.name}}', :'data-year' => '{{ year }}', :'data-month' => '{{ month }}', :'data-single-post' => '{{{single_post}}}' }
+
+      {{#unless single_post}}
 
       // New content button
       #newcontent
         %a{href: '#'} <i class="icon-refresh"></i> {{t 'new_content'}} (<span></span>)
 
-      // Feed errors
-      {{> error-alert.hbs}}
+      {{/unless}}
 
       // Posts loop
       {{> feed-posts.hbs}}
 
     // Load more button, triggered by infinite scroller
     // every few pages
-    #load-more 
+    {{#unless single_post}}
+
+    #load-more
       %a{href: '#'}
         {{t 'feed.load_more'}}
 
         %i.icon-long-arrow-down
+
+    {{/unless}}
 
   #feed-panel-column
     // Group panel

@@ -105,7 +105,7 @@ Router = Backbone.Router.extend({
   userGroupPost: function(user_id, group_id, post_id) {
     this.loadDynamicPage('feed', group_id,
       // Specific binders
-      ['comments', 'post', 'main', 'panel', 'shared', 'invite']);
+      ['comments', 'posts', 'main', 'panel', 'shared', 'invite']);
   },
 
   /* ERRORS */
@@ -230,7 +230,7 @@ Router = Backbone.Router.extend({
       }
 
       // Render template
-      var view = Handlebars.templates[template + '.hbs'](data);
+      var view = Handlebars.compileTemplate(template, data);
 
       // Fill container with template
       $('#main').html(view);
