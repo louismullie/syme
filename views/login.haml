@@ -7,9 +7,8 @@
       .columns.small-24.large-12.large-centered
         %form#login-form{method: 'post'}
           // Error message
-          #error.hidden
-            %i.icon-warning-sign
-            %span
+          #error.validation-container.hidden
+            %span.validation-message.no-arrow
 
           .input-text-icon
             %i.icon-envelope

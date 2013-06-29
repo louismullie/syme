@@ -22,9 +22,10 @@
   }
 
   .validation-message {
-    $validationBackgroundColor: lighten(#2ecc71, 10%);
+    $validationBackgroundColor: lighten($green, 10%);
 
     position: relative;
+    display: block;
 
     margin-bottom: 1em;
     padding: .5em 1em;
@@ -46,5 +47,7 @@
 
       @include triangle($validationArrowSize, $validationBackgroundColor, up);
     }
+
+    &.no-arrow::before { display: none !important; }
   }
 }

@@ -93,19 +93,18 @@ asocial.binders.add('register', { main: function(){
 
     e.preventDefault();
 
+    var $this = $(this);
+
     // Lock event
-    if($(this).data('active')) return false;
-    $(this).data('active', true);
+    if( !!$this.data('active') ) { return false } else { $this.data('active', true) };
 
     // Spinner
     $('a[role="submit"]').addClass('loading');
 
-    var form      = $(this);
-
-    var email     = form.find('input[name="email"]').val(),
-        password  = form.find('input[name="password"]').val(),
-        fullName = form.find('input[name="full_name"]').val(),
-        remember  = form.find('input[name="remember_me"]').prop("checked");
+    var email     = $this.find('input[name="email"]').val(),
+        password  = $this.find('input[name="password"]').val(),
+        fullName  = $this.find('input[name="full_name"]').val(),
+        remember  = $this.find('input[name="remember_me"]').prop("checked");
 
     var user = new User();
     var srp = new SRPClient(email, password);
@@ -153,19 +152,42 @@ asocial.binders.add('register', { main: function(){
 
       error: function (model, response) {
 
-        // @Chris implement error handling here.
-        var msg = JSON.parse(response.responseText);
-        console.log(msg);
+        var jsonResponse = JSON.parse(response.responseText);
+        var error = jsonResponse.error;
 
-        asocial.helpers.showAlert('Registration error.', { onhide: function(){ window.location = '/'; } });
+        var errorType = {
+
+          email_taken: {
+            field: "email",
+            message: "This email is already taken"
+          }
+
+        }[error];
+
+        // Console if there's no error message
+        if( !errorType ) return console.log("No error message for" + error);
+
+        // Set container as closest .validation-container
+        var container = $('input[name="' + errorType.field + '"]')
+          .closest('div.validation-container');
+
+        // Get message box
+        var box = container.find('div.validation-message').length == 0
+          // If message box doesn't exist, create it
+          ? $('<div class="validation-message" />').appendTo(container)
+          // If it exists, select it
+          : container.find('div.validation-message').attr('data-related-input', errorType.field);
+
+        // Fill message in box
+        box.html( errorType['message'] );
 
         // Unlock event
-        $(this).data('active', false);
+        $this.data('submit-failed', true).data('active', false);
 
         // Spinner
         $('a[role="submit"]').removeClass('loading');
 
-      }}
+      } } // success
 
     );
 
