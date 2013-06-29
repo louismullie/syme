@@ -2,12 +2,35 @@ Router = Backbone.Router.extend({
 
   /* RULES */
 
-  navigate: function (url) {
+  navigate: function (fragment, options) {
+
+    var history = Backbone.history;
+
+    // Default options and options === true to {trigger: options}
+    if (!options || options === true) options = {trigger: options};
+
+    // Set fragment
+    fragment = history.getFragment( fragment || '' );
+
+    // // If pushState is available, push/replace fragment as data to preserve blank url.
+    // console.log(options.replace ? 'replaceState' : 'pushState', { fragment: fragment });
+    // if (history._hasPushState)
+    //   History[options.replace ? 'replaceState' : 'pushState'](
+    //     { fragment: fragment }, document.title, '#'
+    //   );
 
     // Override pushstate and load url directly
-    Backbone.history.loadUrl(url);
+    history.loadUrl(fragment);
 
   },
+
+  // Bypass checkURL to load the current pushed fragment
+  // Unused for now
+  // checkUrl: function(e) {
+  //   var state = History.getLastStoredState();
+  //   console.log('Old fragment: ', state.data.fragment);
+  //   Backbone.history.loadUrl( state.data.fragment );
+  // },
 
   routes: {
 

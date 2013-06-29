@@ -24,6 +24,9 @@ $(function(){
   Router = new Router;
   Backbone.history.start({ pushState: true });
 
+  // Hardwire History.checkUrl() to Router.checkUrl()
+  // Backbone.$(window).off('popstate').on('popstate', Router.checkUrl);
+
   // Bind a[hbs] to router
   $(document).on('click', 'a[hbs]', function(e){
     e.preventDefault();

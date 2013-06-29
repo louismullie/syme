@@ -5,13 +5,10 @@ asocial.binders.add('login', { main: function(){
 
     e.preventDefault();
 
-    var form = $(this);
+    var $this = $(this);
 
     // Lock event
-    if(form.data('active')) return false;
-    form.data('active', true);
-    form.find('#error').removeClass('hidden').
-      find('span').html('');
+    if(!!$this.data('active')) { return false; } else { $this.data('active', true); }
 
     // Spinner
     $('a[role="submit"]').addClass('loading');
@@ -19,9 +16,9 @@ asocial.binders.add('login', { main: function(){
     // Exit if form is in registering mode
     if( $(this).data('registering') ) return true;
 
-    var email    = form.find('input[name="email"]').val(),
-        password = form.find('input[name="password"]').val(),
-        remember = form.find('input[name="remember_me"]').prop("checked");
+    var email    = $this.find('input[name="email"]').val(),
+        password = $this.find('input[name="password"]').val(),
+        remember = $this.find('input[name="remember_me"]').prop("checked");
 
       // Login
       asocial.auth.login(email, password, remember, function(data) {
@@ -45,11 +42,11 @@ asocial.binders.add('login', { main: function(){
           msg = 'An unknown error has occured.';
         }
 
-        form.find('#error').removeClass('hidden').
+        $this.find('#error').removeClass('hidden').
           find('span').html(msg);
 
         // Unlock event
-        form.data('active', false);
+        $this.data('active', false);
 
         // Spinner
         $('a[role="submit"]').removeClass('loading');

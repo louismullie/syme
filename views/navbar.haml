@@ -5,7 +5,7 @@
     .small-24
       %ul
         %li#brand
-          %a{ href: '', hbs: '' }
+          %a{ href: 'users/{{current_user_id}}/groups', hbs: '' }
             Asocial
 
         %li
@@ -20,7 +20,7 @@
         %li#group-selector
           %ul<
             %li.title>
-              %a{ href: '', hbs: '' } Groups
+              %a{ href: 'users/{{current_user_id}}/groups', hbs: '' } Groups
 
             %li.group
 

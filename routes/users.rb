@@ -5,12 +5,12 @@ get '/users' do
   id, email = params[:id], params[:email]
 
   # Make sure either ID or e-mail was provided.
-  unless id || email
+  if id.blank? || email.blank?
     error 400, 'missing_params'
   end
 
   if User.where(id: id).any? ||
-     User.where(email: email).any?
+    User.where(email: email).any?
     status 302
   else
     error 404, 'user_not_found'
@@ -25,7 +25,7 @@ get '/state/user', auth: [] do
   unless @user
     raise 'Cannot get state of undefined user.'
   end
-  
+
   { id: @user.id.to_s, keypair: @user.keypair.content,
     keypair_salt: @user.keypair.salt,
     password_key: @user.session_id
@@ -39,13 +39,13 @@ end
 post '/users' do
 
   user = get_model(request)
-  
+
   # Get the e-mail from params.
   email = user.email
 
   # Get the full name from params.
   full_name = user.full_name
-  
+
   # Make sure email and full name are present.
   if email.blank? && full_name.blank?
     error 400, 'missing_params'
@@ -91,7 +91,7 @@ put '/users' do
 
   # Update verifier
   if model.verifier
-    
+
     # Build the verifier with the salt.
     user.verifier = Verifier.new(
       salt:  model.verifier['salt'],
@@ -99,7 +99,7 @@ put '/users' do
     )
 
     user.verifier.save!
-    
+
   end
 
   # Update keypair.
