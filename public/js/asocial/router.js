@@ -80,7 +80,9 @@ Router = Backbone.Router.extend({
   },
 
   userGroupPost: function(user_id, group_id, post_id) {
-    this.loadDynamicPage('feed', group_id);
+    this.loadDynamicPage('feed', group_id,
+      // Specific binders
+      ['comments', 'post', 'main', 'panel', 'shared', 'invite']);
   },
 
   /* ERRORS */
@@ -123,7 +125,7 @@ Router = Backbone.Router.extend({
 
   },
 
-  loadDynamicPage: function (template, group_id) {
+  loadDynamicPage: function (template, group_id, specific_binders) {
 
     // Optional group id for routes that require group authentication
     var group_id = group_id || false;
@@ -154,12 +156,12 @@ Router = Backbone.Router.extend({
           if (asocial.state.invite.integrate) {
 
             asocial.invite.integrate(function () {
-              Router.renderDynamicTemplate(template);
+              Router.renderDynamicTemplate(template, specific_binders);
             });
 
           } else if (asocial.state.invite.update) {
             asocial.invite.update(function () {
-              Router.renderDynamicTemplate(template);
+              Router.renderDynamicTemplate(template, specific_binders);
             });
 
           } else {
@@ -169,7 +171,7 @@ Router = Backbone.Router.extend({
             asocial.auth.authorizeForGroup( function (authorized) {
               // User can't decrypt group keylist: error
               if(!authorized) return Router.error();
-              Router.renderDynamicTemplate(template);
+              Router.renderDynamicTemplate(template, specific_binders);
             });
 
           }
@@ -187,7 +189,7 @@ Router = Backbone.Router.extend({
 
   },
 
-  renderDynamicTemplate: function(template) {
+  renderDynamicTemplate: function(template, specific_binders) {
 
     // Get current URL
     var url = 'http://localhost:5000/' + Backbone.history.fragment;
@@ -211,7 +213,7 @@ Router = Backbone.Router.extend({
       $('#main').html(view);
 
       // Binders
-      asocial.binders.bind(template);
+      asocial.binders.bind(template, specific_binders);
 
       // Hide spinner
       $('#spinner').hide();

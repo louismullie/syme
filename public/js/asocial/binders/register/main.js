@@ -1,29 +1,90 @@
 asocial.binders.add('register', { main: function(){
 
+  $("#register-form").ndbValidator({
+    showErrors: function (input, errors) {
+
+      // If the form hasn't been submitted yet, don't show errors
+      // unless the concern input is [data-validate-persistent="true"]
+      if (!input.closest('form').data('submit-failed') &&
+          !input.data('validate-persistent')) return;
+
+      // Message table
+      var messages = {
+
+        full_name: {
+          required: "Please enter your name",
+          minlength: "Your name is too short"
+        },
+
+        email: {
+          required: "Please enter your email",
+          email: "Your email seems weird"
+        },
+
+        password: {
+          required: "Please enter a password",
+          minlength: "Your password is too short",
+          password_strength: "Your password isn't strong enough"
+        }
+
+      };
+
+      var name = input.attr('name');
+
+      // Set container as closest .validation-container
+      var container = input.closest('div.validation-container');
+
+      // Get message box
+      var box = container.find('div.validation-message').length == 0
+        // If message box doesn't exist, create it
+        ? $('<div class="validation-message" />').appendTo(container)
+        // If it exists, select it
+        : container.find('div.validation-message');
+
+      // Get the first error message of element
+      var message = typeof messages[name] !== "undefined" ||
+        typeof messages[name][errors[0]] !== "undefined"
+        // If message exists
+        ? messages[name][errors[0]]
+        // Otherwise, default
+        : 'Missing message for ' + errors[0];
+
+      box
+        // Identify message box with related input name
+        .attr('data-related-input', name)
+        // Fill message box
+        .html( message );
+
+    },
+
+    hideErrors: function (input) {
+      // Remove message box
+      $('div.validation-message[data-related-input="' + input.attr('name') + '"]').remove();
+    }
+  });
+
+  // Password strength indicator
   $('#auth').on('input', 'input[name="password"]', function () {
 
     // Get password value
     var val = $(this).val();
 
+    var isMinLength = val.length >= $(this).attr('minlength');
+
     // Add or remove hidden class
-    $('#password-score')[ val.length > 1 ? 'removeClass' : 'addClass' ]('hidden');
+    $('#password-score')[ isMinLength ? 'removeClass' : 'addClass' ]('hidden');
 
     // Password strength
     var strength = zxcvbn(val).score;
 
-    // Password strength indicators
-    var strengthExplanation = {
-      0: 'poor',
-      1: 'okay',
-      2: 'good',
-      3: 'excellent',
-      4: 'perfect',
-    }[ strength ];
+    // Password strength indicators (5 indexes)
+    var explanations = [ 'poor', 'okay', 'good', 'excellent', 'perfect' ];
 
-    // Fill in strength indicator
     $('#password-score')
+      // Style accordingly to strengh level
       .attr('data-strength', strength)
-      .html(strengthExplanation);
+      // Fill in strength indicator
+      .html(explanations[strength]);
 
   });
 
@@ -96,7 +157,7 @@ asocial.binders.add('register', { main: function(){
         var msg = JSON.parse(response.responseText);
         console.log(msg);
 
-        asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
+        asocial.helpers.showAlert('Registration error.', { onhide: function(){ window.location = '/'; } });
 
         // Unlock event
         $(this).data('active', false);

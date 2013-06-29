@@ -14,7 +14,9 @@ guard('binders', {
     $.extend($.fn.binders[route], objectExtention);
   },
 
-  bind: function(route) {
+  bind: function(route, modules) {
+
+    modules = modules || false;
 
     // Check function existence
     if(!$().binders[route]) return false;
@@ -22,10 +24,21 @@ guard('binders', {
     // Unbind everything
     this.unbind();
 
-    // Execute every binded function to route
-    var obj = $().binders[route], key;
-    for (key in obj) {
-      if (obj.hasOwnProperty(key)) obj[key]();
+    if ( modules ) {
+
+      // Execute specified functions
+      _.each(modules, function(element){
+        $().binders[route][element]();
+      })
+
+    } else {
+
+      // Execute every binded function to route
+      var obj = $().binders[route], key;
+      for (key in obj) {
+        if (obj.hasOwnProperty(key)) obj[key]();
+      }
+
     }
 
     // Start idleTimeout if logged in

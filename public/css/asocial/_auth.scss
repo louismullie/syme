@@ -47,12 +47,16 @@
       }
     }
 
+    input[type="password"] {
+      padding-right: 108px;
+    }
+
     #password-score {
-      &[data-strength="0"] { background: $danger;  }
-      &[data-strength="1"] { background: $warning; }
-      &[data-strength="2"] { background: $green;   }
-      &[data-strength="3"] { background: $green;   }
-      &[data-strength="4"] { background: $green;   }
+      &[data-strength="0"] { background: lighten($danger, 10%) }
+      &[data-strength="1"] { background: lighten($warning, 10%) }
+      &[data-strength="2"] { background: lighten($green, 10%) }
+      &[data-strength="3"] { background: lighten($green, 10%) }
+      &[data-strength="4"] { background: lighten($green, 10%) }
     }
 
     a[role="submit"] {

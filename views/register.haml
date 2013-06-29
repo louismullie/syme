@@ -11,19 +11,22 @@
             %i.icon-warning-sign
             %span
 
-          .input-text-icon
-            %i.icon-user
-            %input{type: 'text', name: 'full_name', placeholder: 'Full name', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false'}
+          .validation-container
+            .input-text-icon
+              %i.icon-user
+              %input{ type: 'text', name: 'full_name', placeholder: 'Full name', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', minlength: 5, required: '' }
 
-          .input-text-icon
-            %i.icon-envelope
-            %input{type: 'text', name: 'email', placeholder: 'Email address', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false'}
+          .validation-container
+            .input-text-icon
+              %i.icon-envelope
+              %input{ type: 'text', name: 'email', placeholder: 'Email address', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', :'data-validate-email' => 'true', required: '' }
 
-          .input-text-icon
-            %i.icon-lock
-            %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
+          .validation-container
+            .input-text-icon
+              %i.icon-lock
+              %input{ type: 'password', name: 'password', placeholder: '{{t "login.password"}}', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true' }
 
-            #password-score.hidden.validation-indicator
+              #password-score.validation-append.hidden
 
 
           %input{ type: 'submit' }
