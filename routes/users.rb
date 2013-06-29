@@ -1,6 +1,6 @@
 # Get the current user's information.
 get '/users' do
-
+  
   # Get ID and e-mail as GET parameters.
   id, email = params[:id], params[:email]
 
@@ -9,25 +9,24 @@ get '/users' do
     error 400, 'missing_params'
   end
 
-  if User.where(id: id).any? ||
-     User.where(email: email).any?
-    status 302
-  else
-    error 404, 'user_not_found'
-  end
-
-end
-
-get '/state/user', auth: [] do
-
-  content_type :json
-
-  unless @user
-    raise 'Cannot get state of undefined user.'
+  unless (User.where(id: id).any? ||
+         User.where(email: email).any?)
+   error 404, 'user_not_found'
   end
   
-  { id: @user.id.to_s,
-    keyfile: @user.keyfile.content,
+  if !@user || (id != @user.id.to_s)
+    error 403, 'Unauthorized for user.'
+  end
+
+  @user.to_json
+  
+end
+
+get '/state/session', auth: [] do
+
+  error 403, 'nauthorized' unless @user
+  
+  { user_id: @user.id.to_s,
     password_key: @user.session_id
   }.to_json
 
@@ -104,6 +103,8 @@ put '/users' do
 
   # Update keypair.
   if model.keyfile
+    
+    logger.info model.keyfile
     
     user.keyfile = Keyfile.new(
       content:  model.keyfile['content']

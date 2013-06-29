@@ -130,12 +130,11 @@ asocial.binders.add('register', { main: function(){
 
           }, {
 
-          success: function () {
+          success: function (model, response) {
 
             user.createKeyfile(password, function () {
-
+              
               asocial.auth.login(email, password, remember, function() {
-                
                 Router.navigate('', { trigger: true, replace: true });
 
               });

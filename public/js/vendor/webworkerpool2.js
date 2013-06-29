@@ -36,14 +36,14 @@ function WorkerPool2(url, size) {
           var context = _this.contexts[msg.data.id];
           var callback = _this.callbacks[msg.data.id];
           
-          callback.call(context, msg.data);
+          console.log('[Crypto API] Crypto.' +
+            msg.data.debug + ' returned: ', msg.data.result);
           
-          delete context;
-          delete callback;
-          delete msg;
+          callback.call(context, msg.data.result);
           
-          _this.active--;
-          _this.nextJob();
+          delete context; delete callback; delete msg;
+          
+          _this.active--; _this.nextJob();
 
         };
 

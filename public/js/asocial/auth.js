@@ -26,11 +26,9 @@ guard('auth', {
           if (data.status == 'ok') {
 
             $('meta[name="_csrf"]').attr('content', data.csrf);
+            CurrentSession = new Session();
 
-            asocial.state.getState('system', function () {
-              success(data);
-            }, { force: true });
-
+            
           } else if (data.status == 'error') {
 
             console.log('State ERROR', data);

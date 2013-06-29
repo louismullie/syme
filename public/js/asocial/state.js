@@ -7,30 +7,6 @@ var asocial_state = {
   feed: {
     updatedPosts: 0,
     updatedComments: 0
-  },
-
-  getState: function (type, callback, options) {
-
-    var params;
-    var _this = this;
-
-    var options = options || { force: false };
-
-    if (this[type] && options.force == false) {
-      callback(true); return;
-    }
-
-    $.getJSON('http://localhost:5000/state/' + type, $.param(options),
-
-      function (data) {
-
-        _this[type] = data;
-        callback(true);
-
-    }).fail(function () {
-      callback(false);
-    });
-
   }
 
 };

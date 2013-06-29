@@ -16,8 +16,8 @@ self.onmessage = function(event) {
   var result = Crypto[method].apply(Crypto, params);
   
   postMessage({
-    status: 'ok', id: id,
-    result: result
+    status: 'ok', id: id, result: result,
+    debug: method
   });
 
 };

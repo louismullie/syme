@@ -20,10 +20,7 @@ $.each(Handlebars.templates, function (name, template) {
 
 $(function(){
 
-  // Initialize router
-  Router = new Router;
-  Backbone.history.start({ pushState: true });
-
+  
   // Bind a[hbs] to router
   $(document).on('click', 'a[hbs]', function(e){
     e.preventDefault();
@@ -34,9 +31,18 @@ $(function(){
   // Bind global binders
   $().binders['global']['main']();
 
-  // Trigger root.
-  if (asocial.compat.inChromeExtension()) {
-    Router.navigate('/');
-  }
+  // Initialize router
+  Router = new Router;
+  
+  CurrentSession = new Session(null, function () {
 
+    Backbone.history.start({ pushState: true });
+    
+    // Trigger root.
+    if (asocial.compat.inChromeExtension()) {
+      Router.navigate('/');
+    }
+
+  }, function () { alert('Session failed!'); });
+  
 });

@@ -26,6 +26,10 @@ Crypto = {
     
   },
   
+  getSerializedKeyfile: function () {
+    return this.getKeyfile().serialize();
+  },
+  
   addKeypairs: function (keylistId, userId, keypairsJson) {
     
     var keyfile = this.getKeyfile();

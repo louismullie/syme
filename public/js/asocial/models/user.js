@@ -2,7 +2,8 @@
 var User = Backbone.RelationalModel.extend({
 
   idAttribute: "_id",
-  url: 'http://localhost:5000/users',
+  url: 'users',
+  //url: 'http://localhost:5000/users',
 
   relations: [
   {
@@ -23,31 +24,42 @@ var User = Backbone.RelationalModel.extend({
     }
   }],
 
-  createKeyfile: function (password, callback) {
+  createKeyfile: function (password, keyfileCreatedCb) {
 
-    var email = this.get('email');
-    var user = this;
+    var _this = this, email = this.get('email');
     
-    Crypto.initializeKeyfile(email, password, null, function () {
+    Crypto.initializeKeyfile(email, password, null, function (keyfile) {
       
-      Crypto.getEncryptedKeyfile(function (keyfile) {
-        
-        user.set('keyfile', new Keyfile({ content: keyfile  }));
+      var data = { keyfile: new Keyfile({ content: keyfile  }) };
 
-        user.save(null, {
-          
-          success: callback,
-          
-          error: function () {
-            alert('Error!');
-          }
-          
-        }); // save
+      _this.save(data, {
+        success: keyfileCreatedCb,
+        error: _this.userSaveError
+      });
     
-      }); // getEncryptedKeyfile
-       
-    }); // initializeKeyfile
+    });
   
+  },
+  
+  createKeylist: function (keylistId, keylistCreatedCb) {
+    
+    var _this = this;
+    
+    Crypto.createKeylist(keylistId, function (encryptedKeyfile) {
+      
+      _this.set('keyfile', new Keyfile({ content: keyfile  }));
+      
+      _this.save(null, {
+        success: keylistCreatedCb,
+        error: _this.userSaveError
+      });
+      
+    });
+    
+  },
+  
+  userSaveError: function () {
+    alert('Error while saving user!');
   }
 
 });

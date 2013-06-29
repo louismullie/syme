@@ -26,7 +26,21 @@ Crypto = function (workerUrl) {
     
   };
   
-  this.createKeylist = function (keylistId, doneCallback) {
+  // Development only!
+  this.getSerializedKeyfile = function (keyfileCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'getSerializedKeyfile'
+    
+    // Return encrypted keyfile.
+    }, keyfileCb);
+    
+  };
+  
+  this.createKeylist = function (keylistId, encryptedKeyfileCb) {
+    
+    var _this = this;
     
     // Generate keylist for group.
     Crypto.workerPool.queueJob({
@@ -35,7 +49,9 @@ Crypto = function (workerUrl) {
       params: [keylistId]
     
     // Get encrypted keyfile.
-    }, doneCallback);
+    }, function () {
+      _this.getEncryptedKeyfile(encryptedKeyfileCb);
+    });
     
   };
   
@@ -50,14 +66,18 @@ Crypto = function (workerUrl) {
     
   };
   
-  this.initializeKeyfile = function (userId, password, encKeyfile, doneCallback) {
+  this.initializeKeyfile = function (userId, password, encKeyfile, encryptedKeyfileCb) {
+    
+    var _this = this;
     
     Crypto.workerPool.queueJob({
       
       method: 'initializeKeyfile',
       params: [userId, password, encKeyfile]
       
-    }, doneCallback);
+    }, function () {
+      _this.getEncryptedKeyfile(encryptedKeyfileCb);
+    });
 
   };
   
