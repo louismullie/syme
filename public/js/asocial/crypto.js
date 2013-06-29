@@ -115,7 +115,7 @@ guard('crypto', {
   },
 
   userPublicKey: function(id) {
-    id = id || asocial.state.user.id;
+    id = id || CurrentSession.getUserId();
     return asocial_keylist()[id];
   },
 

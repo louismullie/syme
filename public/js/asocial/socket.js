@@ -51,7 +51,7 @@ guard('socket', {
       console.log(owner);
 
       // If the post owner isn't the user.
-      if (owner != asocial.state.user.id) {
+      if (owner != CurrentSession.getUserId()) {
         // Increment unread_posts variable
         asocial.helpers.newContent('post');
 
@@ -341,7 +341,7 @@ guard('socket', {
          document.eventSource.readyState != 1) {
 
         document.eventSource = new EventSource('http://localhost:5000/users/' +
-        asocial.state.user.id + '/stream');
+        CurrentSession.getUserId() + '/stream');
 
         document.eventSource.onmessage = function(e) {
 

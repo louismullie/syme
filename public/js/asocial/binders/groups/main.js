@@ -53,13 +53,18 @@ asocial.binders.add('groups', { main: function() {
 
     // Prevent form submission.
     e.preventDefault();
+    
+    /* Begin new crypto */
+    Crypto.generateKeyfile();
+    
+    /* End new crypto */
 
     // Get the group name from the form.
     var name = $(this).find('input[name="name"]').val();
 
     // Get the current user's ID from state.
-    var userId = asocial.state.user.id;
-
+    var userId = CurrentSession.getUserId();
+    
     // Get the current user's public key.
     var publicKey = asocial_public_key();
 
@@ -122,7 +127,7 @@ asocial.binders.add('groups', { main: function() {
       // Create the group, passing the encrypted key list.
       $.post('http://localhost:5000/groups', groupParams, function (group) {
 
-        var route = 'http://localhost:5000/users/' + asocial.state.user.id + '/groups';
+        var route = 'http://localhost:5000/users/' + CurrentSession.getUserId() + '/groups';
 
         Router.reload();
       });

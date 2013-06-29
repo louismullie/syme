@@ -37,7 +37,7 @@ guard('invite', {
 
       var PA = asocial.crypto.ecc.serializePublicKey(asocial_public_key());
 
-      PPA[asocial.state.user.id] = PA;
+      PPA[CurrentSession.getUserId()] = PA;
 
       var keylist_salt = asocial.crypto.generateRandomHexSalt();
       var new_sA = asocial.crypto.calculateHash(password, keylist_salt);
@@ -101,7 +101,7 @@ guard('invite', {
       $.each(new_keys, function (id, msg) {
         var msg = JSON.parse(msg);
         var content = msg.content;
-        var key = msg.keys[asocial.state.user.id];
+        var key = msg.keys[CurrentSession.getUserId()];
         var public_key = asocial.crypto.decryptMessage(content, key);
         public_keys[id] = JSON.parse(public_key);
       });

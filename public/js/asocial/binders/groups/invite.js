@@ -42,7 +42,7 @@ asocial.binders.add('groups', { invite: function() {
 
       // Build registration.
       var keys = $.param({
-        token: token, user_id: asocial.state.user.id,
+        token: token, user_id: CurrentSession.getUserId(),
         invitee_pub_key: $.base64.encode(JSON.stringify(inviteePubKey)),
         enc_invitee_priv_key: encInviteePrivKey,
         invitee_priv_key_salt: inviteePrivKeySalt,

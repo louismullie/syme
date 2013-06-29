@@ -51,7 +51,7 @@ Handlebars.registerHelper("debug", function(optionalValue) {
 });
 
 Handlebars.registerHelper("current_user_id", function() {
-  return asocial.state.user.id;
+  return CurrentSession.getUserId();
 });
 
 Handlebars.registerHelper("current_group_id", function() {

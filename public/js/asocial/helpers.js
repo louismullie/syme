@@ -216,7 +216,7 @@ guard('helpers', {
         action == 'mention_in_post') {
 
       resource =  '<a hbs href="' +
-                  '/users/'   + asocial.state.user.id +
+                  '/users/'   + CurrentSession.getUserId() +
                   '/groups/'  + notification.group_id +
                   '/posts/'   + notification.post_id +
                   '">post</a>';
@@ -226,7 +226,7 @@ guard('helpers', {
               action == 'comment_on_own_post' ) {
 
       resource =  '<a hbs href="' +
-                  '/users/'   + asocial.state.user.id +
+                  '/users/'   + CurrentSession.getUserId() +
                   '/groups/'  + notification.group_id +
                   '/posts/'   + notification.post_id +
                   '#'         + notification.comment_id +
@@ -263,7 +263,7 @@ guard('helpers', {
 
         return text = actors + ' has asked to join  ' + notification.group +
                       '<a hbs href="' +
-                      '/users/'   + asocial.state.user.id +
+                      '/users/'   + CurrentSession.getUserId() +
                       '/groups/'  + notification.group_id +
                       '">Confirm here</a>.';
 
@@ -280,7 +280,7 @@ guard('helpers', {
     }
 
     return text + ' on <a hbs href="' +
-                  '/users/'   + asocial.state.user.id +
+                  '/users/'   + CurrentSession.getUserId() +
                   '/groups/'  + notification.group_id +
                   '">' + notification.group + '</a>.';
 
