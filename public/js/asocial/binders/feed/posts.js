@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { post: function(){
+asocial.binders.add('feed', { posts: function(){
 
   // Decryption
   asocial.crypto.decrypt();
