@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { feed_form: function(){
+asocial.binders.add('feed', { form: function(){
 
   /* AJAX for feed form */
   $('#main').on('submit', '#feed-form', function(e){
