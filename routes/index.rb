@@ -14,3 +14,8 @@ get '/*' do |route|
   redirect '/'
 
 end
+
+# Catch-all for every non-GET 404
+not_found do
+  redirect '/'
+end
