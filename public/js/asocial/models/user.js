@@ -7,8 +7,8 @@ var User = Backbone.RelationalModel.extend({
   relations: [
   {
     type: Backbone.HasOne,
-    key: 'keypair',
-    relatedModel: 'Keypair',
+    key: 'keyfile',
+    relatedModel: 'Keyfile',
     reverseRelation: {
       key: 'user'
     }
@@ -23,23 +23,31 @@ var User = Backbone.RelationalModel.extend({
     }
   }],
 
-  createKeypair: function (password, callback) {
+  createKeyfile: function (password, callback) {
 
-    // Generate a random salt for the password hash.
-    var keypairSalt = asocial.crypto.generateRandomHexSalt();
+    var email = this.get('email');
+    var user = this;
+    
+    Crypto.initializeKeyfile(email, password, null, function () {
+      
+      Crypto.getEncryptedKeyfile(function (keyfile) {
+        
+        user.set('keyfile', new Keyfile({ content: keyfile  }));
 
-    // Derive key form the user's password using the hex salt.
-    var key = asocial.crypto.calculateHash(password, keypairSalt);
-
-    // Generate an ECC keypair, convert to JSON and encrypt with key.
-    var keypair = asocial.crypto.generateEncryptedKeyPair(key);
-
-    // Build a request for the server to create a keypair for the user.
-    this.set('keypair', new Keypair({ content: keypair, salt: keypairSalt }));
-
-    // Save model.
-    this.save(null, { success: callback, error: function () { alert('Error!'); }});
-
+        user.save(null, {
+          
+          success: callback,
+          
+          error: function () {
+            alert('Error!');
+          }
+          
+        }); // save
+    
+      }); // getEncryptedKeyfile
+       
+    }); // initializeKeyfile
+  
   }
 
 });

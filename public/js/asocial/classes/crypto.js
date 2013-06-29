@@ -1,7 +1,6 @@
 Crypto = function (workerUrl) {
   
   var _this = this;
-  var callbacks = 
   
   this.queueJob = function (job, successCb, errorCb) {
     

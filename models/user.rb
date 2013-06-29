@@ -12,7 +12,7 @@ class User
 
   embeds_many :notifications
 
-  embeds_one :keypair
+  embeds_one :keyfile
   embeds_one :verifier
   
   has_many :posts

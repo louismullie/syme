@@ -26,8 +26,8 @@ get '/state/user', auth: [] do
     raise 'Cannot get state of undefined user.'
   end
   
-  { id: @user.id.to_s, keypair: @user.keypair.content,
-    keypair_salt: @user.keypair.salt,
+  { id: @user.id.to_s,
+    keyfile: @user.keyfile.content,
     password_key: @user.session_id
   }.to_json
 
@@ -103,11 +103,14 @@ put '/users' do
   end
 
   # Update keypair.
-  if model.keypair
-    user.keypair = Keypair.new(
-      content: model.keypair['content'],
-      salt: model.keypair['salt']
+  if model.keyfile
+    
+    user.keyfile = Keyfile.new(
+      content:  model.keyfile['content']
     )
+
+    user.keyfile.save!
+    
   end
 
   # Update user name.

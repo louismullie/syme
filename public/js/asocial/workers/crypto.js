@@ -33,6 +33,42 @@ Crypto = {
     
   },
   
+  createInviteRequest: function(keylistId, userAlias) {
+    
+    var keyfile = this.getKeyfile();
+    return keyfile.createInviteRequest(keylistId, userAlias);
+    
+  },
+  
+  acceptInviteRequest: function (inviteRequest) {
+    
+    var keyfile = this.getKeyfile();
+    return keyfile.acceptInviteRequest(inviteRequest);
+  },
+  
+  confirmInviteRequest: function (inviteRequest) {
+    
+    var keyfile = this.getKeyfile();
+    return keyfile.confirmInviteRequest(inviteRequest);
+    
+  },
+  
+  concludeInviteRequest: function (inviteRequest) {
+    
+    var keyfile = this.getKeyfile();
+    
+    return keyfile.concludeInviteRequest(inviteRequest);
+    
+  },
+  
+  addUserRequest: function (addUserRequest) {
+    
+    var keyfile = this.getKeyfile();
+
+    return keyfile.addUserRequest(addUserRequest);
+      
+  },
+  
   getKeyfile: function () {
     
     if (!this.keyfile)
@@ -47,7 +83,7 @@ Crypto = {
   generateRandomHex: function (bytes) {
 
     // Generate some random words.
-    var randomWords = sjcl.random.randomWords(bytes / 4, 0);
+    var randomWords = sjcl.random.randomWords(bytes / 8, 0);
     
     // Convert the bytes to hexadecimal format.
     return sjcl.codec.hex.fromBits(randomWords);
@@ -67,17 +103,13 @@ Crypto = {
     
   },
   
-  diffieHellman: function (publicKeyAJson, publicKeyBJson) {
-    
-    // Build the public key objects from their serialized forms.
-    var publicKeyA = this.buildPublicKey(publicKeyAJson);
-    var publicKeyB = this.buildPublicKey(publicKeyBJson);
+  diffieHellman: function (privateKey, publicKey) {
     
     // Calculate the Diffie-Hellman shared key.
-    var symKey = publicKeyA.dh(publicKeyB);
+    return privateKey.dh(publicKey);
     
     // Strengthen the key by running through PBKDF2.
-    return this.deriveKey(symKey, salt);
+    //return this.deriveKey(symKey, salt);
     
   },
   
@@ -106,21 +138,22 @@ Crypto = {
     
     var keyfile = this.getKeyfile();
     var senderId = keyfile.userId;
+
     var keylist = keyfile.getKeylist(keylistId);
-    
+    // console.log(keylist[senderId]);
     // Get the sender's private signature key.
     var privateSignatureKey = keylist[senderId].signatureKeypair.privateKey;
-
-    _.each(keylist, function (keypairs, recipientId) {
       
-      //if (recipientId != senderId) {
+    _.each(keylist, function (keypairs, recipientId) {
+
+      if (recipientId != '_transactions') {
         
         // Get the recipient's public encryption keys.
         var publicEncryptionKey = keypairs.encryptionKeypair.publicKey;
-        
+
         // Prepend the sender name to the plaintext.
         var messageTxt = JSON.stringify({
-          recipient: recipientId, message: messageKey });
+          sender: keyfile.userId, message: messageKey });
 
         // Sign the message using the sender's private key.
         var sha256 = sjcl.hash.sha256.hash(messageTxt);
@@ -142,7 +175,7 @@ Crypto = {
 
         encryptedKeys[recipientId] = messageBase64;
         
-      //}
+      }
       
     });
     
@@ -167,50 +200,46 @@ Crypto = {
     
     var publicSignatureKey = keyfile
       .getPublicSignatureKey(keylistId, senderId);
-      
+    
     var encMessage = messageJson.message;
     
     var encSymKeyTxt64 = messageJson.keys[keyfile.userId];
-    var messageJson = JSON.parse(this.decodeBase64(encSymKeyTxt64));
+    var keyMessageJson = JSON.parse(this.decodeBase64(encSymKeyTxt64));
     
     // Decrypt the message using the recipient's private key.
-    var symKey = privateEncryptionKey.unkem(messageJson.tag);
+    var symKey = privateEncryptionKey.unkem(keyMessageJson.tag);
     
-    throw symKey;
-    
-    var contentTxt = sjcl.decrypt(symKey, messageJson.ct);
-
+    var contentTxt = sjcl.decrypt(symKey, keyMessageJson.ct);
     var contentJson = JSON.parse(contentTxt);
     
     // Verify the message signature using the signature public key.
-    var messageJson = JSON.parse(contentJson.message),
-        signatureJson = JSON.parse(contentJson.signature);
+    var keyMessageJson = JSON.parse(contentJson.message);
+    var keySignatureJson = contentJson.signature;
     
     var sha256 = sjcl.hash.sha256.hash(contentJson.message);
-    var verified = publicSignatureKey.verify(sha256, signatureJson);
+    var verified = publicSignatureKey.verify(sha256, keySignatureJson);
     
     if (!verified) throw 'Signature verification failed.'
-
-    // Verify the recipient ID is correct.
-    var message = JSON.parse(contentJson.message);
     
-    if (message.recipient != recipient)
-      throw 'Incorrect recipient for message.'
+    //if (message.sender != recipient)
+    //  throw 'Incorrect recipient for message.'
     
+    var plaintext = sjcl.decrypt(keyMessageJson.message, messageJson.message);
+ 
     // Return decrypted message if everything went fine.
-    return message.message;
+    return plaintext;
 
   },
 
 
-  decode64ThenDecrypt: function (key, message) {
+  decodeBase64ThenDecrypt: function (key, message) {
     
     // Base64-decode, then decrypt the resulting message.
     return sjcl.decrypt(key, this.decodeBase64(message));
     
   },
 
-  encryptThenEncode64: function (key, message) {
+  encryptThenEncodeBase64: function (key, message) {
     
     // Encrypt, then Base64-encode the resulting message.
     return this.encodeBase64(sjcl.encrypt(key, message));
