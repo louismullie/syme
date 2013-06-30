@@ -15,6 +15,7 @@ Crypto = function (workerUrl) {
   
   this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
     
+    console.log(1);
     Crypto.workerPool.queueJob({
       method: 'getEncryptedKeyfile'
     }, function (message) {
@@ -69,6 +70,17 @@ Crypto = function (workerUrl) {
     
   };
   
+  this.createInviteRequest = function (keylistId, userAlias, inviteRequestCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'createInviteRequest',
+      params: [keylistId, userAlias]
+      
+    }, inviteRequestCb);
+    
+  };
+  
   this.addKeypairs = function (keylistId, userId, keypairs) {
     
     Crypto.workerPool.queueJob({
@@ -90,6 +102,7 @@ Crypto = function (workerUrl) {
       params: [userId, password, encKeyfile]
       
     }, function () {
+      console.log(4);
       _this.getEncryptedKeyfile(encryptedKeyfileCb);
     });
 

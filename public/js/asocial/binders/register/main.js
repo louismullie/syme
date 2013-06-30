@@ -136,8 +136,14 @@ asocial.binders.add('register', { main: function(){
               
               asocial.auth.login(email, password, remember, function() {
                 
-                CurrentSession = new Session(model);
-                Router.navigate('', { trigger: true, replace: true });
+                console.log(8);
+                
+                CurrentSession = new Session(model, function () {
+                  
+                  Router.navigate('', { trigger: true, replace: true });
+                  
+                });
+                
 
               });
 

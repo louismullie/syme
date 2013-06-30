@@ -75,18 +75,15 @@ asocial.binders.add('feed', { panel: function(){
             $this.find('a.modal-button').addClass('spinner');
 
             // Submit invite
-            asocial.invite.inviteSubmit(email, function(data) {
+            var user = CurrentSession.getUser();
+            var groupId = CurrentSession.getGroupId();
 
-              if ( data.status == "ok") {
-                asocial.helpers.showAlert('Your invitation was sent. We\'ll keep you posted.', { title: 'Success' });
-              } else if ( data.status == "own_email" ) {
-                asocial.helpers.showAlert('Your cannot invite yourself to a group');
-              } else {
-                asocial.helpers.showAlert('An error occured when sending the invitation');
-              }
-
+            user.createInviteRequest(groupId, email, function () {
+              asocial.helpers.showAlert('Your invitation was sent. We\'ll keep you posted.', { title: 'Success' });
+            }, function () {
+              asocial.helpers.showAlert('An error occured when sending the invitation');
             });
-
+            
           }
 
         });

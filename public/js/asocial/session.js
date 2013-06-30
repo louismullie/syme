@@ -3,14 +3,14 @@ Session = function (user, callback) {
   var _this = this;
   this.initialized = false;
   this.passwordKey = null;
-
+  
   this.startSession = function (callback) {
     
     this.initialized = true;
     asocial.socket.listen();
     
     asocial.auth.getPasswordLocal(function (p) {
-
+      
       Crypto.initializeKeyfile(
         _this.user.get('_id'), p,
         _this.user.get('keyfile'),
@@ -90,6 +90,7 @@ Session = function (user, callback) {
           data: { id: data.user_id },
         
           success: function () {
+            console.log
             _this.startSession(callback);
             return null
           },
@@ -112,7 +113,7 @@ Session = function (user, callback) {
   } else {
     
     _this.user = user;
-    _this.startSession();
+    _this.startSession(callback);
     
   };
 

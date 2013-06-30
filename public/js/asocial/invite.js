@@ -147,37 +147,6 @@ guard('invite', {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
       callback();
     }, { group_id: CurrentSession.getGroupId(), force: true })
-  },
-
-  inviteSubmit: function(email, callback) {
-
-    asocial.auth.getPasswordLocal(function (password) {
-    
-      var keys = asocial.crypto.ecc.generateKeys();
-      
-      var invitePubKey = JSON.stringify(asocial.crypto.ecc.serializePublicKey(keys.pub));
-      var invitePrivKey = JSON.stringify(asocial.crypto.ecc.serializePrivateKey(keys.sec));
-      
-      var invitePrivKeySalt = asocial.crypto.generateRandomHexSalt();
-      var invitePrivKeySymKey = asocial.crypto.calculateHash(password, invitePrivKeySalt);
-    
-      var encInviterPrivKey = sjcl.encrypt(invitePrivKeySymKey, invitePrivKey);
-      
-      var invitation = $.param({
-        email: email,
-        inviter_pub_key: $.base64.encode(invitePubKey),
-        enc_inviter_priv_key: $.base64.encode(encInviterPrivKey),
-        inviter_priv_key_salt: invitePrivKeySalt
-      });
-
-      var group = CurrentSession.getGroupId();
-
-      $.post('http://localhost:5000/' + group + '/invite/send', invitation, function (data) {
-        callback(data);
-      });
-
-    });
-
   }
-
+  
 });

@@ -410,7 +410,7 @@ Keyfile = function(userId, password, encKeyfile) {
     var keylist = that.getKeylist(keylistId);
     
     var keypair = that.generateEncryptionKeypair();
-    var keypairJson = that.serializeKeypair(keypair);
+    var keypairJson = that.serializeKeypair(keypair, true);
     
     var transaction = {
       inviteeAlias: inviteeAlias,
