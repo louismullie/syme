@@ -100,7 +100,6 @@ form#feed-form {
       min-height: $avatarPostSize; max-height: 200px;
 
       @include box-sizing;
-      resize: none;
 
       margin: 0;
       padding: 10px;

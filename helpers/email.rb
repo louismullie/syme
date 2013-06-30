@@ -15,15 +15,15 @@ def send_email_to(email, subject, body)
       :authentication => :plain,
       :domain         => "localhost.localdomain"
     }
-  })
-  
+  }) unless settings.environment == :development
+
 end
 
 def send_invite(email, token)
-  
+
   subject = "Join #{@user.full_name} on Asocial"
 
-  message = 
+  message =
 
 "Hey,
 
@@ -35,19 +35,19 @@ Asocial"
 
   # email
   send_email_to(email, subject, message)
-  
+
 end
 
 def request_confirm(invite)
-  
+
   invitee, inviter = invite.invitee, invite.inviter
-  
+
   subject = "Accept #{invitee.full_name} in #{invite.group.name}"
 
   message =
 
 "Hey #{inviter.full_name},
-     
+
 #{invitee.full_name} has joined your group on Asocial.
 Login to your group at http://asocial.io to approve him.
 
@@ -61,15 +61,15 @@ end
 
 
 def notify_confirmed(invite)
-  
+
   invitee, inviter = invite.invitee, invite.inviter
-  
+
   subject = "Your request to join #{invite.group.name} was approved"
 
   message =
 
 "Hey #{invitee.full_name},
-     
+
 #{inviter.full_name} has approved your registration.
 Login to your group at http://asocial.io to start sharing.
 

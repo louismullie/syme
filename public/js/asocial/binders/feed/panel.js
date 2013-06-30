@@ -63,6 +63,9 @@ asocial.binders.add('feed', { panel: function(){
 
       onshow: function() {
 
+        // Initial textarea autosizing
+        $('textarea.autogrow').autogrow().removeClass('autogrow');
+
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal form').submit(function(e){
 
@@ -70,34 +73,63 @@ asocial.binders.add('feed', { panel: function(){
 
           var $this = $(this);
 
-          // Escape if form is locked
+          // Return if event is locked
           if($this.data('active')) return false;
 
-          var email = $this.find('input[name="email"]').val();
+          var emails = $this.find('textarea[name="emails"]').val();
 
-          // If email isn't blank
-          if( !!email ) {
+          // Return if textarea is blank
+          if(!emails) return false;
 
-            // Lock form
-            $this.data('active', true);
+          // Lock form
+          $this.data('active', true);
 
-            // Show spinner
-            $this.find('a.modal-button').addClass('spinner');
+          // Show spinner
+          $this.find('a.modal-button').addClass('spinner');
 
-            // Submit invite
-            asocial.invite.inviteSubmit(email, function(data) {
+          var inviteEmailsFromTextarea = function(emails, callback) {
 
-              if ( data.status == "ok") {
-                asocial.helpers.showAlert('Your invitation was sent. We\'ll keep you posted.', { title: 'Success' });
-              } else if ( data.status == "own_email" ) {
-                asocial.helpers.showAlert('Your cannot invite yourself to a group');
-              } else {
-                asocial.helpers.showAlert('An error occured when sending the invitation');
-              }
+            // Validate emails and eliminate duplicates
+            var validatedEmails = [];
+            _emails.split("\n").each(function(email){
+              if( $.ndbValidator.regexps.email.test(email) )
+                validatedEmails.push(email);
+            });
+            validatedEmails = _validatedEmails.uniq();
 
+            var inviteQueue = _validatedEmails.clone(),
+                succeededInvitations = [],
+                failedInvitations = {};
+
+            // Send invitations to validate emails
+            _validatedEmails.each(function(validatedEmail){
+              asocial.invite.inviteSubmit(validatedEmail, function(data) {
+
+                // Log success/failures
+                if (data.status == "ok") {
+                  succeededInvitations.push(validatedEmail);
+                } else {
+                  failedInvitations[validatedEmail] = data.status;
+                }
+
+                // Remove concerned email from queue
+                inviteQueue = _inviteQueue.without(validatedEmail);
+
+                // If queue is empty, callback with
+                // { succeeded: [*emails], failed: {*email: reason} }
+                if(inviteQueue.length == 0) callback({
+                  succeeded: succeededInvitations, failed: failedInvitations
+                });
+
+              });
             });
 
-          }
+          };
+
+          inviteEmailsFromTextarea(emails, function(log){
+            console.log(log);
+          });
+
 
         });
 
@@ -111,19 +143,19 @@ asocial.binders.add('feed', { panel: function(){
     window.location = 'http://www.porn.com';
   });
 
-  //$('#main').on('click', '.user-icon', function(e){
-  //  var input = $(this).parent().find('.user-form input[type="file"]');
-  //  var recipient_id = $(this).parent().attr('id');
+  // $('#main').on('click', '.user-icon', function(e){
+  //   var input = $(this).parent().find('.user-form input[type="file"]');
+  //   var recipient_id = $(this).parent().attr('id');
 
-  //  input.change(function (e) {
-  //    $.post('http://localhost:5000/send/file', $.param({
-  //      file: input.val(),
-  //      // e.target.files[0]
-  //      recipient_id: recipient_id,
-  //      group: asocial.state.group.id
-  //    }));
-  //  }).trigger('click');
+  //   input.change(function (e) {
+  //     $.post('http://localhost:5000/send/file', $.param({
+  //       file: input.val(),
+  //       // e.target.files[0]
+  //       recipient_id: recipient_id,
+  //       group: asocial.state.group.id
+  //     }));
+  //   }).trigger('click');
 
-  //});
+  // });
 
 } }); // asocial.binders.add();

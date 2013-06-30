@@ -125,7 +125,10 @@ end
 
 get '/users/:user_id', auth: [] do |user_id|
 
-  empty_response
+  user = User.find(user_id) if @user.id.to_s == user_id
+
+  content_type :json
+  user.to_json
 
 end
 

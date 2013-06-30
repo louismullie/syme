@@ -61,6 +61,10 @@ a {
   }
 }
 
+textarea {
+  resize: none;
+}
+
 code, .code {
   font-family: $codeFontFamily;
 }
