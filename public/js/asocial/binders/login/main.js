@@ -26,9 +26,10 @@ asocial.binders.add('login', { main: function(){
       // Login
       asocial.auth.login(email, password, remember, function(data) {
 
-        // Redirect to root
-        Router.navigate('/users/' + data.user_id + '/groups',
-          { trigger: true, replace: true });
+        CurrentSession = new Session(null, function () {
+          Router.navigate('/users/' + CurrentSession.getUserId() +
+          '/groups', { trigger: true, replace: true });
+        });
 
       }, function(reason) {
 
