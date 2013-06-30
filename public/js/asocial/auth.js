@@ -48,6 +48,7 @@ guard('auth', {
 
         storage.email = email;
         var password_key = data.B.toString();
+        CurrentSession.setPasswordKey(password_key);
 
         storage.password =
         sjcl.encrypt(password_key, password);

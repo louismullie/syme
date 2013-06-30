@@ -80,6 +80,8 @@ put '/users' do
 
   model = get_model(request)
 
+  logger.info model
+  
   # Find the user with the supplied ID.
   user = begin
     User.find(model._id)
@@ -103,15 +105,8 @@ put '/users' do
 
   # Update keypair.
   if model.keyfile
-    
-    logger.info model.keyfile
-    
-    user.keyfile = Keyfile.new(
-      content:  model.keyfile['content']
-    )
-
-    user.keyfile.save!
-    
+    user.keyfile = model.keyfile
+    user.save!
   end
 
   # Update user name.

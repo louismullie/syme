@@ -51,24 +51,37 @@ asocial.binders.add('groups', { main: function() {
 
   $('#main').on('submit', '#create_group, #create_first_group', function(e) {
 
-    // Prevent form submission.
     e.preventDefault();
     
-    /* End new crypto */
-
-    // Get the group name from the form.
     var name = $(this).find('input[name="name"]').val();
-
-    // Create the group, passing the encrypted key list.
-    $.post('http://localhost:5000/groups', groupParams, function (group) {
-
-      var route = 'http://localhost:5000/users/' +
-        CurrentSession.getUserId() + '/groups';
-      
-      Crypto.generateKeyfile(group.id);
+    
+    var group = {  name: name };
+    
+    $.ajax('http://localhost:5000/groups', 
+    
+      {
         
-      Router.reload();
+        type: 'POST', 
+        
+        data: group,
+        
+        success: function (group) {
+
+          var route = 'http://localhost:5000/users/' + CurrentSession.getUserId() + '/groups';
       
+          Crypto.createKeylist(
+            group.id, function (encryptedKeyfile) {
+              alert(encryptedKeyfile);
+          });
+      
+          Router.reload();
+      
+        },
+        
+        error: function (error) {
+          alert('Error on group creation!');
+        }
+    
     });
 
   });

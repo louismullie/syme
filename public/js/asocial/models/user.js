@@ -8,15 +8,6 @@ var User = Backbone.RelationalModel.extend({
   relations: [
   {
     type: Backbone.HasOne,
-    key: 'keyfile',
-    relatedModel: 'Keyfile',
-    reverseRelation: {
-      key: 'user'
-    }
-  },
-
-  {
-    type: Backbone.HasOne,
     key: 'verifier',
     relatedModel: 'Verifier',
     reverseRelation: {
@@ -30,8 +21,8 @@ var User = Backbone.RelationalModel.extend({
     
     Crypto.initializeKeyfile(email, password, null, function (keyfile) {
       
-      var data = { keyfile: new Keyfile({ content: keyfile  }) };
-
+      var data = { keyfile: keyfile };
+      
       _this.save(data, {
         success: keyfileCreatedCb,
         error: _this.userSaveError

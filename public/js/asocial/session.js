@@ -3,7 +3,51 @@ Session = function (user, callback) {
   var _this = this;
   this.initialized = false;
   this.passwordKey = null;
+
+  this.startSession = function () {
+    
+    this.initialized = true;
+    asocial.socket.listen();
+    
+    asocial.auth.getPasswordLocal(function (p) {
+
+      Crypto.initializeKeyfile(
+        _this.user.get('_id'), p,
+        _this.user.get('keyfile'));
+    });
+    
+    
+  };
   
+  this.endSession = function () {
+    this.initialized = false;
+  };
+  
+  this.getPasswordKey = function () {
+    
+    if (!this.passwordKey)
+      throw 'Password key not initialized.'
+    
+    return this.passwordKey;
+    
+  };
+  
+  this.setPasswordKey = function (passwordKey) {
+    this.passwordKey = passwordKey;
+  };
+  
+  this.getUser = function () {
+    if (!this.initialized) {
+      throw 'Session not initialized.';
+    } else {
+      return this.user;
+    }
+  };
+  
+  this.getUserId = function () {
+    return this.getUser().get('_id');
+  };
+
   if (!user) {
     
     $.ajax('http://localhost:5000/state/session', {
@@ -48,44 +92,9 @@ Session = function (user, callback) {
     
   } else {
     
-    this.user = user;
-    asocial.socket.listen();
-    this.initialized = true;
+    _this.user = user;
+    _this.startSession();
     
-  }
-  
-  this.startSession = function () {
-    this.initialized = true;
-    asocial.socket.listen();
-  };
-  
-  this.endSession = function () {
-    this.initialized = false;
-  };
-  
-  this.getPasswordKey = function () {
-    
-    if (!this.passwordKey)
-      throw 'Password key not initialized.'
-    
-    return this.passwordKey;
-    
-  };
-  
-  this.setPasswordKey = function (passwordKey) {
-    this.passwordKey = passwordKey;
-  };
-  
-  this.getUser = function () {
-    if (!this.initialized) {
-      throw 'Session not initialized.';
-    } else {
-      return this.user;
-    }
-  };
-  
-  this.getUserId = function () {
-    return this.getUser().get('_id');
   };
 
 };

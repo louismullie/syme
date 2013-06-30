@@ -3,8 +3,8 @@ class InviteGenerator
   def self.generate(invite)
     {
       state: invite.state,
-      inviter_name: invite.inviter.get_name,
-      invitee_full_name: invite.invitee ? invite.invitee.get_name : nil,
+      inviter_name: invite.inviter.full_name,
+      invitee_full_name: invite.invitee ? invite.invitee.full_name : nil,
       group_name: invite.group.name,
       token: invite.token,
       question: invite.group.question,

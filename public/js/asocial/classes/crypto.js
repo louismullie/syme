@@ -21,7 +21,7 @@ Crypto = function (workerUrl) {
     
     // Return encrypted keyfile.
     }, function (message) {
-      encryptedKeyfileCb(message.result);
+      encryptedKeyfileCb(message);
     });
     
   };

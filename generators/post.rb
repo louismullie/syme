@@ -76,7 +76,7 @@ class PostGenerator
     {
       id: post.owner.id.to_s,
       user: post.owner,
-      name: post.owner.get_name,
+      name: post.owner.full_name,
       avatar: AvatarGenerator.generate(
         membership, current_user)
     }
