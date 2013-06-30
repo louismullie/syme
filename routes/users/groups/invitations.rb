@@ -34,6 +34,37 @@ post '/invitations', auth: [] do
 
 end
 
+put '/invitations', auth: [] do
+  
+  params = get_model(request)
+  
+  logger.info params
+  
+  error 400, 'missing_params' if !params._id
+  
+  invitation = begin
+    Invitation.find(params._id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 400, 'invalid_id'
+  end
+
+  if params.accept && invitation.state == 1
+    
+    invitation.invitee_id = @user.id.to_s
+    invitation.accept = params.accept
+    invitation.state = 2
+    invitation.save!
+    
+    request_confirm(invitation)
+    
+  end
+  
+  track @user, 'Accepted a group invitation'
+  
+  empty_response
+  
+end
+
 =begin
 post '/:group_id/invite/send', auth: [] do |group_id|
 

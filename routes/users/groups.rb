@@ -4,13 +4,13 @@ get '/users/:id/groups', auth: [] do
     GroupGenerator.generate(group, @user)
   end
 
-  user_invites = Invite.where(
+  user_invites = Invitation.where(
     email: @user.email, state: { '$in' => [1, 2]})
 
   invites = user_invites.empty? ? false :
 
     user_invites.map do |invite|
-      InviteGenerator.generate(invite)
+      InvitationGenerator.generate(invite)
     end
 
   content_type :json

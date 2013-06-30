@@ -1,13 +1,16 @@
 class InvitationGenerator
   
-  def self.generate(invite)
+  def self.generate(invitation)
     {
+      
+      id: invitation.id.to_s,
       state: invitation.state,
       
       inviter_name: invitation.inviter.full_name,
       invitee_full_name: invitation.invitee ?
         invitation.invitee.full_name : nil,
       
+      group_id: invitation.group.id.to_s,
       group_name: invitation.group.name,
       token: invitation.token,
       

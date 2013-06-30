@@ -58,6 +58,7 @@ Crypto = {
     
     var keyfile = this.getKeyfile();
     return keyfile.acceptInviteRequest(inviteRequest);
+    
   },
   
   confirmInviteRequest: function (inviteRequest) {
