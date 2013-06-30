@@ -19,14 +19,14 @@ form#feed-form {
 
     border-radius: 50%;
 
-    &:hover span, &[data-active] span {
+    &:hover span, &.active span {
       opacity: 1;
       background: rgba(black, 0.2);
     }
 
     // Spinner when active
     i.icon-spinner { display: none; }
-    &[data-active] {
+    &.active {
       i.icon-picture { display: none; }
       i.icon-spinner { display: inline-block; }
     }

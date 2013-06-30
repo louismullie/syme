@@ -66,14 +66,15 @@
 
     margin-bottom: 1em;
 
-    &:hover span.cover, &[data-active] span.cover {
+    &:hover span.cover, &.active span.cover {
       opacity: 1;
       background: rgba(black, 0.2);
     }
 
     // Spinner when active
     i.icon-spinner { display: none; }
-    &[data-active] {
+
+    &.active {
       i.icon-picture { display: none; }
       i.icon-spinner { display: inline-block; }
     }

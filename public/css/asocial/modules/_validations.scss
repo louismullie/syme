@@ -22,7 +22,7 @@
   }
 
   .validation-message {
-    $validationBackgroundColor: lighten($green, 10%);
+    $validationBackgroundColor: $concrete;
 
     position: relative;
     display: block;

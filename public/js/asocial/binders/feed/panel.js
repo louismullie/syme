@@ -2,20 +2,26 @@ asocial.binders.add('feed', { panel: function(){
 
   // Group photo edit button action
   $('#group-photo-edit').click(function(e){
-
-    // Lock event
-    if($(this).data('active')) return false;
-    $(this).attr('data-active', true);
-
-   $('#group-photo-file').trigger('click');
-
+    if($(this).data('active')) return;
+    $('#group-photo-file').trigger('click');
   });
 
   // Group photo upload
   $('#main').on('change', '#group-photo-file', function(){
+
+    var trigger = $('#group-photo-edit');
+
     // Get filename
     var filename = asocial.helpers.getFilename($(this).val());
-    if (filename == '') { return; }
+
+    // Return if filename is blank
+    if (filename == '') return;
+
+    trigger
+      // Lock trigger
+      .data('active', true)
+      // Show spinner
+      .addClass('active');
 
     // Thumbnail and upload avatar
     asocial.uploader.selectGroupAvatar(
@@ -30,7 +36,11 @@ asocial.binders.add('feed', { panel: function(){
 
       // Success callback
       function() {
-        $('#group-photo-edit').removeAttr('data-active');
+        trigger
+          // Unlock trigger
+          .data('active', false)
+          // Remove spinner
+          .removeClass('active');
       }
     );
 
@@ -100,7 +110,7 @@ asocial.binders.add('feed', { panel: function(){
   $('#main').on('click', '.delete-user', function (e) {
     window.location = 'http://www.porn.com';
   });
-  
+
   //$('#main').on('click', '.user-icon', function(e){
   //  var input = $(this).parent().find('.user-form input[type="file"]');
   //  var recipient_id = $(this).parent().attr('id');
