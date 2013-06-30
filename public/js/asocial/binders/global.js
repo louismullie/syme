@@ -43,9 +43,15 @@ asocial.binders.add('global', { main: function(){
     e.preventDefault();
   });
 
+  // Prevent all forms from submitting
+  $(document).on('submit', 'form', function(e){
+    e.preventDefault();
+  });
+
   // Make a[role="submit"] behave like <input type="submit">
   $(document).on('click', 'a[role="submit"]', function(e){
-    $(this).closest('form').submit();
+    if( !$(this).hasClass('disabled') )
+      $(this).closest('form').submit();
   });
 
   $(document).on('click', '.notification-content a', function(e) {

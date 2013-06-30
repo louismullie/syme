@@ -7,7 +7,7 @@ Router = Backbone.Router.extend({
     var history = Backbone.history;
 
     // Default options and options === true to {trigger: options}
-    if (!options || options === true) options = {trigger: options};
+    // if (!options || options === true) options = {trigger: options};
 
     // Set fragment
     fragment = history.getFragment( fragment || '' );
@@ -93,6 +93,10 @@ Router = Backbone.Router.extend({
   },
 
   /* LOGGED-IN ROUTES */
+
+  user: function(user_id) {
+    this.loadDynamicPage('settings');
+  },
 
   userGroups: function(user_id) {
     this.loadDynamicPage('groups');
@@ -217,6 +221,8 @@ Router = Backbone.Router.extend({
     // Get current URL
     var url = 'http://localhost:5000/' + Backbone.history.fragment;
 
+    console.log('URL', url);
+
     // Retreive data
     $.getJSON(url, function (data) {
 
@@ -231,6 +237,8 @@ Router = Backbone.Router.extend({
 
       // Render template
       var view = Handlebars.compileTemplate(template, data);
+
+      console.log(data);
 
       // Fill container with template
       $('#main').html(view);

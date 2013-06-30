@@ -27,7 +27,7 @@
         .pull-right
           .hide-for-small
             %li
-              %a.btn.hint--bottom{ href: 'settings', hbs: '', :'data-hint' => 'Settings' }
+              %a.btn.hint--bottom{ href: 'users/{{current_user_id}}', hbs: '', :'data-hint' => 'Settings' }
                 %i.icon-cog
 
             %li

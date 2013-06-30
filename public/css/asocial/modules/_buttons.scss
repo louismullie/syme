@@ -45,11 +45,6 @@
     box-shadow: none;
   }
 
-  &.disabled, &[disabled] {
-    background-color: $gray;
-    color: $inverse;
-  }
-
   // Sizes
 
   &.btn-large {
@@ -85,6 +80,20 @@
       color: darken($gray, 40%);
       text-decoration: none;
     }
+  }
+
+  // Disabled (must be put at the end to override others)
+
+  &.disabled, &[disabled] {
+    cursor: default;
+
+    background-color: $gray;
+    color: $inverse;
+
+    &:hover, &:focus, &:active, {
+      background-color: $gray;
+      color: $inverse;
+    };
   }
 
 }

@@ -1,5 +1,5 @@
 #groups.row
-  .small-24.large-16.large-centered.columns
+  .base-centered-column
     {{#if invites}}
 
     %ul
@@ -22,7 +22,7 @@
 
       // Group Loop
       {{#each groups}} {{> groups-group.hbs}} {{/each}}
- 
+
     {{else}}
 
     // First group creation

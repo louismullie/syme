@@ -123,6 +123,12 @@ put '/users' do
 
 end
 
+get '/users/:user_id', auth: [] do |user_id|
+
+  empty_response
+
+end
+
 # Delete a user permanently.
 delete '/users/:user_id', auth: [] do |user_id|
 

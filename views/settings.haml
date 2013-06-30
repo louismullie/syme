@@ -1,18 +1,30 @@
-.row
-  .span8.offset2
-    %h2 {{t 'settings.title'}}
+#settings.row
+  .small-centered-column
+    %h1
+      Settings
+      %i.icon-cog
 
-    #error-container
+    .settings-panel
+      %h3 Your name
 
-    %p
-      %b {{t 'settings.welcome'}}, {{user.name}}!
-      {{t 'settings.explanation'}}
+      %form#change-name{ method: 'post' }
+        %input{ type: 'text', name: 'full_name', placeholder: 'Louis Mullie', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false' }
 
-    {{t 'settings.informations'}}
+        %input{ type: 'submit' }
+        %a#change-name-button.btn.btn-success.disabled{ href: '#', role: 'submit' } Save
 
-    .tab-content
-      #tab-informations.tab-pane.active
-        {{> settings-profile.hbs}}
+      %h3 Delete your account
 
-      #tab-settings.tab-pane
-        {{> settings-settings.hbs}}
+      .explanation-box
+        %p
+          <strong>Warning.</strong> Deleting your account
+          is irreversible. Doing so will delete all your data from every
+          group you have belonged to.
+
+        %p Type <strong class="warning">delete</strong> to delete your account.
+
+      %form#delete-account{ method: 'post' }
+        %input{ type: 'text', name: 'delete', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false' }
+
+        %input{ type: 'submit' }
+        %a#delete-account-button.btn.btn-danger.disabled{ href: '#', role: 'submit' } Delete account
