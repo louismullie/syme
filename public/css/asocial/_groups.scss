@@ -70,6 +70,8 @@
       text-align: left;
 
       &.group-create {
+        $buttonWidth: 100px;
+
         i.icon-chevron-down {
           float: right;
           line-height: inherit;
@@ -81,13 +83,21 @@
           display: none;
 
           form#create_group {
+            position: relative;
+
             input[type="text"] {
-              margin: 0;
+              margin: 0 $buttonWidth 0 0;
             }
 
             a[role="submit"] {
-              margin-left: 1em;
+              width: $buttonWidth;
               display: block;
+
+              position: absolute;
+              top: 0; right: 0;
+
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
 
               line-height: 40px;
               text-align: center;
