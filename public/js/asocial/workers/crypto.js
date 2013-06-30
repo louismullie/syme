@@ -19,6 +19,16 @@ Crypto = {
     
   },
   
+  deleteKeylist: function (keylistId) {
+    
+    var keyfile = this.getKeyfile();
+    
+    keyfile.deleteKeylist(keylistId);
+    
+    return null;
+    
+  },
+  
   getEncryptedKeyfile: function () {
     
     var keyfile = this.getKeyfile();

@@ -16,10 +16,7 @@ Crypto = function (workerUrl) {
   this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
     
     Crypto.workerPool.queueJob({
-      
       method: 'getEncryptedKeyfile'
-    
-    // Return encrypted keyfile.
     }, function (message) {
       encryptedKeyfileCb(message);
     });
@@ -46,6 +43,23 @@ Crypto = function (workerUrl) {
     Crypto.workerPool.queueJob({
       
       method: 'createKeylist',
+      params: [keylistId]
+    
+    // Get encrypted keyfile.
+    }, function () {
+      _this.getEncryptedKeyfile(encryptedKeyfileCb);
+    });
+    
+  };
+  
+  this.deleteKeylist = function (keylistId, encryptedKeyfileCb) {
+    
+    var _this = this;
+    
+    // Delete a keylist.
+    Crypto.workerPool.queueJob({
+      
+      method: 'deleteKeylist',
       params: [keylistId]
     
     // Get encrypted keyfile.
@@ -133,7 +147,3 @@ Crypto = function (workerUrl) {
 };
 
 Crypto = new Crypto('js/asocial/workers/asocial.js');
-
-// Crypto.initializeKeyfile('louis', 'password');
-// Crypto.createKeylist('bruncheurs');
-// Crypto.getEncryptedKeyfile('louis', alert);

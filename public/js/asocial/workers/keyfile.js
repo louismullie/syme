@@ -254,6 +254,16 @@ Keyfile = function(userId, password, encKeyfile) {
     
   };
   
+  that.deleteKeylist = function (keylistId) {
+    
+    var keylist = this.getKeylist(keylistId);
+    delete this.keyfile[keylistId];
+    
+    return null;
+    
+  };
+  
+  
   that.generateEncryptionKeypair = function () {
     
     // Generate a new keypair for ECC encryption.

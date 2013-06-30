@@ -19,32 +19,43 @@ var User = Backbone.RelationalModel.extend({
 
     var _this = this, email = this.get('email');
     
-    Crypto.initializeKeyfile(email, password, null, function (keyfile) {
-      
-      var data = { keyfile: keyfile };
-      
-      _this.save(data, {
-        success: keyfileCreatedCb,
-        error: _this.userSaveError
-      });
-    
+    Crypto.initializeKeyfile(email, password, null, function (encryptedKeyfile) {
+      _this.updateKeyfile(encryptedKeyfile, keyfileCreatedCb);
     });
   
   },
   
   createKeylist: function (keylistId, keylistCreatedCb) {
-    
+
     var _this = this;
     
     Crypto.createKeylist(keylistId, function (encryptedKeyfile) {
-      
-      _this.set('keyfile', new Keyfile({ content: keyfile  }));
-      
-      _this.save(null, {
-        success: keylistCreatedCb,
-        error: _this.userSaveError
-      });
-      
+      _this.updateKeyfile(encryptedKeyfile, keylistCreatedCb);
+    });
+    
+  },
+  
+  deleteKeylist: function (keylistId, keylistDeletedCb) {
+    
+    var _this = this;
+    
+    Crypto.deleteKeylist(keylistId, function (encryptedKeyfile) {
+      _this.updateKeyfile(encryptedKeyfile, keylistDeletedCb);
+    });
+    
+  },
+  
+  updateKeyfile: function (encryptedKeyfile, keyfileUpdatedCb) {
+    
+    var _this = this;
+    
+    this.set('keyfile', encryptedKeyfile);
+    
+    Crypto.getSerializedKeyfile(function (e) { console.log("Updated key file", e); });
+    
+    this.save(null, {
+      success: keyfileUpdatedCb,
+      error: _this.userSaveError
     });
     
   },

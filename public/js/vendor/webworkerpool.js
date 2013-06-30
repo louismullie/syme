@@ -40,8 +40,6 @@ function WorkerPool(url, size, callback) {
 
     this.createWorkers();
 
-    console.log(this.workers);
-
     this.queueJob = function(job, context) {
 
       this.jobs.push(job);

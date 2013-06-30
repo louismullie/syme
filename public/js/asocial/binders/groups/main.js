@@ -27,28 +27,6 @@ asocial.binders.add('groups', { main: function() {
     }
   });
 
-  $('.delete-group').click(function (e) {
-
-    e.preventDefault();
-
-    var groupId = $(this).data('group-id');
-
-    var message = 'Are you sure? Type "yes" to confirm.';
-
-    if (prompt(message) == 'yes') {
-      $.ajax('http://localhost:5000/groups/' + groupId, {
-        type: 'DELETE',
-        success: function (resp) {
-          Router.reload();
-        },
-        error: function (resp) {
-          asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
-        }
-      });
-    }
-
-  });
-
   $('#main').on('submit', '#create_group, #create_first_group', function(e) {
 
     e.preventDefault();
@@ -67,15 +45,17 @@ asocial.binders.add('groups', { main: function() {
         
         success: function (group) {
 
-          var route = 'http://localhost:5000/users/' + CurrentSession.getUserId() + '/groups';
+          var route = 'http://localhost:5000/users/' +
+            CurrentSession.getUserId() + '/groups';
       
-          Crypto.createKeylist(
-            group.id, function (encryptedKeyfile) {
-              alert(encryptedKeyfile);
+          Crypto.createKeylist(group.id, function (encryptedKeyfile) {
+            
+            CurrentSession.getUser().updateKeyfile(
+              encryptedKeyfile,
+              function () { Router.reload(); }
+            );
+            
           });
-      
-          Router.reload();
-      
         },
         
         error: function (error) {
@@ -83,6 +63,40 @@ asocial.binders.add('groups', { main: function() {
         }
     
     });
+
+  });
+
+  $('.delete-group').click(function (e) {
+
+    e.preventDefault();
+
+    var groupId = $(this).data('group-id');
+
+    var message = 'Are you sure? Type "yes" to confirm.';
+
+    if (prompt(message) == 'yes') {
+      
+      $.ajax('http://localhost:5000/groups/' + groupId, {
+        
+        type: 'DELETE',
+        
+        success: function (resp) {
+          
+          var user = CurrentSession.getUser();
+          
+          user.deleteKeylist(groupId, function () {
+             Router.reload();
+          });
+          
+        },
+        
+        error: function (resp) {
+          asocial.helpers.showAlert(
+            'Could not delete group',
+          { onhide: location.reload });
+        }
+      });
+    }
 
   });
 

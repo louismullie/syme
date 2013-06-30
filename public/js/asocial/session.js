@@ -4,7 +4,7 @@ Session = function (user, callback) {
   this.initialized = false;
   this.passwordKey = null;
 
-  this.startSession = function () {
+  this.startSession = function (callback) {
     
     this.initialized = true;
     asocial.socket.listen();
@@ -13,9 +13,10 @@ Session = function (user, callback) {
 
       Crypto.initializeKeyfile(
         _this.user.get('_id'), p,
-        _this.user.get('keyfile'));
+        _this.user.get('keyfile'),
+        callback
+      );
     });
-    
     
   };
   
@@ -89,8 +90,8 @@ Session = function (user, callback) {
           data: { id: data.user_id },
         
           success: function () {
-            _this.startSession();
-            callback(); return null
+            _this.startSession(callback);
+            return null
           },
         
           failure: function () {
