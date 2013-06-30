@@ -6,6 +6,9 @@ asocial.binders.add('groups', { main: function() {
   // Timeago
   $('time.timeago').timeago();
 
+  // Focus on first #create_first_group input[type="text"]
+  $('#create_first_group').find('input[type="text"]').first().focus();
+
   // Group delete button toggling
   $("div.group-banner").on({
     mouseenter: function(){

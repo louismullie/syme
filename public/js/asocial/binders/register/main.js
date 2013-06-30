@@ -1,5 +1,8 @@
 asocial.binders.add('register', { main: function(){
 
+  // Focus on first input[type="text"]
+  $(document).find('input[type="text"]').first().focus();
+
   $("#register-form").ndbValidator({
     showErrors: function (input, errors) {
 
