@@ -60,7 +60,7 @@ asocial.binders.add('feed', { invite: function() {
 
     function sendKeys(PA, key, public_keys, answer, inviteId, id_A, k) {
 
-      var group_id = asocial.state.group.id;
+      var group_id = CurrentSession.getGroupId();
 
       // Encrypt the public key list.
       var keylist = asocial.crypto.encryptKeyList(key, public_keys);
@@ -99,7 +99,7 @@ asocial.binders.add('feed', { invite: function() {
 
            var broadcast = $.param({
              public_key: PA_msg, invitee_id: id_A,
-             group_id: asocial.state.group.id
+             group_id: CurrentSession.getGroupId()
            });
 
            broadcastKeys(broadcast);

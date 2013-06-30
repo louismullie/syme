@@ -49,7 +49,7 @@ guard('invite', {
         answer: encodedAnswer,
         answer_salt: answerSalt,
         invite_id: asocial.state.invite.id,
-        group_id: asocial.state.group.id
+        group_id: CurrentSession.getGroupId()
       });
 
       $.post('http://localhost:5000/invite/integrate', integration, function (data) {
@@ -58,7 +58,7 @@ guard('invite', {
 
           var ack = $.param({
             type: 'integrate',
-            group_id: asocial.state.group.id,
+            group_id: CurrentSession.getGroupId(),
             invite_id: asocial.state.invite.id
           });
 
@@ -108,7 +108,7 @@ guard('invite', {
 
       var keylist = asocial.crypto.encryptKeyList(sB, public_keys);
 
-      var group_id = asocial.state.group.id;
+      var group_id = CurrentSession.getGroupId();
 
       var update = $.param({
         keylist: keylist,
@@ -146,7 +146,7 @@ guard('invite', {
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
       callback();
-    }, { group_id: asocial.state.group.id, force: true })
+    }, { group_id: CurrentSession.getGroupId(), force: true })
   },
 
   inviteSubmit: function(email, callback) {
@@ -170,7 +170,7 @@ guard('invite', {
         inviter_priv_key_salt: invitePrivKeySalt
       });
 
-      var group = asocial.state.group.id;
+      var group = CurrentSession.getGroupId();
 
       $.post('http://localhost:5000/' + group + '/invite/send', invitation, function (data) {
         callback(data);

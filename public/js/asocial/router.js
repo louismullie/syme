@@ -150,7 +150,9 @@ Router = Backbone.Router.extend({
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
       if(!group_id) return Router.renderDynamicTemplate(template);
-
+      
+      CurrentSession.setGroupId(group_id);
+      
       /*if (asocial.state.invite.integrate) {
 
         asocial.invite.integrate(function () {
@@ -164,7 +166,7 @@ Router = Backbone.Router.extend({
 
       } else {*/
 
-        Router.renderDynamicTemplate(template, specific_binders);
+      Router.renderDynamicTemplate(template, specific_binders);
 
       //}
 

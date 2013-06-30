@@ -110,7 +110,7 @@ asocial.binders.add('feed', { panel: function(){
   //      file: input.val(),
   //      // e.target.files[0]
   //      recipient_id: recipient_id,
-  //      group: asocial.state.group.id
+  //      group: CurrentSession.getGroupId()
   //    }));
   //  }).trigger('click');
 

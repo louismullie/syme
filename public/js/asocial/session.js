@@ -47,6 +47,24 @@ Session = function (user, callback) {
   this.getUserId = function () {
     return this.getUser().get('_id');
   };
+  
+  this.setGroupId = function (groupId) {
+    
+    if (!groupId)
+      throw 'Missing required parameter.'
+    
+    this.groupId = groupId;
+    
+  };
+  
+  this.getGroupId = function () {
+    
+    if (!this.groupId)
+      throw 'No group ID initialized.'
+    
+    return this.groupId;
+    
+  };
 
   if (!user) {
     

@@ -179,7 +179,7 @@ guard('socket', {
       // If post is on the page yet
       if($('#' + data.target).length > 0){
 
-        var group = asocial.state.group.id;
+        var group = CurrentSession.getGroupId();
         var url = 'http://localhost:5000/' + group + '/post/lastof/';
 
         $.get(url + $('#feed').data('pagesloaded'),
@@ -255,7 +255,7 @@ guard('socket', {
     file: function (data) {
 
       // var buffers = {};
-      var group = asocial.state.group.id;
+      var group = CurrentSession.getGroupId();
 
       if (data.action == 'request') {
 

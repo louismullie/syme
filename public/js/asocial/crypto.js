@@ -384,7 +384,7 @@ guard('crypto', {
 
     var download = function (id, key, group) {
 
-      var group = group || asocial.state.group.id;
+      var group = group || CurrentSession.getGroupId();
 
       var baseUrl = 'http://localhost:5000/' + group + '/file/';
 
