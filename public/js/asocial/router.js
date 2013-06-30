@@ -151,7 +151,7 @@ Router = Backbone.Router.extend({
       // all authentications and authorizations have been done.
       if(!group_id) return Router.renderDynamicTemplate(template);
 
-      if (asocial.state.invite.integrate) {
+      /*if (asocial.state.invite.integrate) {
 
         asocial.invite.integrate(function () {
           Router.renderDynamicTemplate(template, specific_binders);
@@ -162,11 +162,11 @@ Router = Backbone.Router.extend({
           Router.renderDynamicTemplate(template, specific_binders);
         });
 
-      } else {
+      } else {*/
 
         Router.renderDynamicTemplate(template, specific_binders);
 
-      }
+      //}
 
     }, function() {
 
