@@ -245,12 +245,11 @@ guard('crypto', {
           var formattedMessage = asocial.helpers
             .replaceUserMentions(marked(decryptedMessage));
 
-          // Hide the "This post is encrypted notice."
-          post.find('.encrypted-notice').remove();
-
           // Markdown the message and insert in place.
           post.find('.encrypted').replaceWith(decryptedMessage);
-
+          
+          post.removeClass('hidden');
+          
           asocial.helpers.formatPostsAndComments();
           
         });

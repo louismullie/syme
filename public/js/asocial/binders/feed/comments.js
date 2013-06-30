@@ -24,7 +24,7 @@ asocial.binders.add('feed', { comments: function(){
       
       var groupId = CurrentSession.getGroupId();
       
-      Crypto.encryptMessage(groupId, function (encryptedMessage) {
+      Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
         
         // Get the users who were mentioned in the message.
         var mentions = JSON.stringify(/*asocial.helpers.findUserMentions(message)*/ {});
