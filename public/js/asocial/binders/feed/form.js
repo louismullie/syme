@@ -4,7 +4,7 @@ asocial.binders.add('feed', { form: function(){
   $('#main').on('submit', '#feed-form', function(e){
 
     e.preventDefault();
-    
+
     if($(this).data('active')) return false;
     $(this).data('active', true);
 
@@ -34,7 +34,7 @@ asocial.binders.add('feed', { form: function(){
     }).fail(function(){
 
       alert('Posting failed');
-      
+
       // Implement error if posting failed
 
     });
@@ -71,8 +71,6 @@ asocial.binders.add('feed', { form: function(){
 
     // Lock event
     if($(this).data('active')) return false;
-    $(this).attr('data-active', true);
-
     $('#upload_avatar').click();
 
   });
@@ -82,6 +80,17 @@ asocial.binders.add('feed', { form: function(){
 
     // Get filename
     var filename = asocial.helpers.getFilename($(this).val());
+
+    // Return if filename is blank
+    if (filename == "") return;
+
+    var trigger = $('#feed-form-avatar');
+
+    trigger
+      // Lock trigger
+      .data('active', true)
+      // Show spinner
+      .addClass('active');
 
     // Thumbnail and upload avatar
     asocial.uploader.selectAvatar(
@@ -97,7 +106,11 @@ asocial.binders.add('feed', { form: function(){
 
       // Success callback
       function() {
-        $('#feed-form-avatar').removeAttr('data-active');
+        trigger
+          // Unlock trigger
+          .data('active', false)
+          // Remove spinner
+          .removeClass('active');
       }
     );
 
