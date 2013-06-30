@@ -410,7 +410,7 @@ Keyfile = function(userId, password, encKeyfile) {
     var keylist = that.getKeylist(keylistId);
     
     var keypair = that.generateEncryptionKeypair();
-    var keypairJson = that.serializeKeypair(keypair, true);
+    var keypairJson = that.serializeKeypair(keypair);
     
     var transaction = {
       inviteeAlias: inviteeAlias,
@@ -521,7 +521,7 @@ Keyfile = function(userId, password, encKeyfile) {
     if (inviteRequest.inviterId != that.userId )
       throw 'User not authorized for invite request.'
     
-    var transaction = that.getAndDeleteTransaction(keylistId,
+    var transaction = that.getTransaction(keylistId,
       'createInviteRequest', inviteRequest.inviteeAlias);
     
     var inviterPrivateKey = that.buildPrivateKey(
@@ -582,7 +582,7 @@ Keyfile = function(userId, password, encKeyfile) {
         !inviteRequest.keylistId || !inviteRequest.encKeylist)
       throw 'Missing required parameters.';
     
-    var transaction = that.getAndDeleteTransaction(keylistId, 
+    var transaction = that.getTransaction(keylistId, 
       'acceptInviteRequest', inviteRequest.inviterId);
     
     if (!transaction)

@@ -83,7 +83,31 @@ var User = Backbone.RelationalModel.extend({
           {
             success: function () {
               Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-                _this.updateKeyfile(encryptedKeyfile, inviteCreatedCb);
+                _this.updateKeyfile(encryptedKeyfile, inviteAcceptedCb);
+              });
+            },
+            error: errorCb
+        });
+      
+    });
+
+  },
+  
+  confirmInviteRequest: function (invitationId, accept, inviteConfirmedCb, errorCb) {
+    
+    var _this = this;
+    
+    var invitation = new Invitation();
+    invitation.set('_id', invitationId);
+
+    Crypto.confirmInviteRequest(accept, function (inviteRequest) {
+      
+        invitation.save(
+          { confirm: inviteRequest },
+          {
+            success: function () {
+              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                _this.updateKeyfile(encryptedKeyfile, inviteConfirmedCb);
               });
             },
             error: errorCb

@@ -77,7 +77,7 @@ Crypto = function (workerUrl) {
       method: 'createInviteRequest',
       params: [keylistId, userAlias]
       
-    }, inviteRequestCb);
+    }, inviteCreatedCb);
     
   };
  
@@ -86,6 +86,17 @@ Crypto = function (workerUrl) {
     Crypto.workerPool.queueJob({
       
       method: 'acceptInviteRequest',
+      params: [inviteRequest]
+      
+    }, inviteAcceptedCb);
+    
+  };
+  
+  this.confirmInviteRequest = function (inviteRequest, inviteAcceptedCb) {
+
+    Crypto.workerPool.queueJob({
+      
+      method: 'confirmInviteRequest',
       params: [inviteRequest]
       
     }, inviteAcceptedCb);

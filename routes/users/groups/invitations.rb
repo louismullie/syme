@@ -57,6 +57,14 @@ put '/invitations', auth: [] do
     
     request_confirm(invitation)
     
+  elsif params.confirm && invitation.state == 2
+  
+    invitation.confirm = params.confirm
+    invitation.state = 3
+    invitation.save!
+    
+    notify_confirmed(invitation)
+    
   end
   
   track @user, 'Accepted a group invitation'

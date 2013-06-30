@@ -118,72 +118,17 @@ asocial.binders.add('feed', { invite: function() {
 
     e.preventDefault();
 
-    var $that = $(this);
+    //sendKeys(PA, key, public_keys, answer, inviteId, id_A, k);
+    
+    var invitationId = $(this).data('invite-id');
+    var accept = $(this).data('invite-accept');
 
-    asocial.auth.getPasswordLocal(function (password) {
-
-      // 3A.
-      console.log("3A");
-
-      var inviteId = $that.data('invite-id');
-      var id_A = $that.data('invite-invitee_id');
-
-      var encInviterPrivKey = $that.data('invite-enc_inviter_priv_key');
-      var inviterPrivKeySalt = $that.data('invite-inviter_priv_key_salt');
-      var inviteePublicKey = $that.data('invite-invitee_pub_key');
-
-      var a_k = $.base64.decode($that.data('invite-a_k'));
-      var PA_k = $.base64.decode($that.data('invite-pa_k'));
-
-      var inviterPrivKeySymKey = asocial.crypto.calculateHash(password, inviterPrivKeySalt);
-      var inviterPrivKeyJson = sjcl.decrypt(inviterPrivKeySymKey, $.base64.decode(encInviterPrivKey));
-      var inviterPrivKey = asocial.crypto.ecc.buildPrivateKey(JSON.parse(inviterPrivKeyJson));
-
-      var inviteePublicKey = asocial.crypto.ecc.buildPublicKey(JSON.parse($.base64.decode(inviteePublicKey)));
-
-      var k = inviterPrivKey.dh(inviteePublicKey);
-
-      var a = sjcl.decrypt(k, a_k);
-      var PA = JSON.parse($.base64.decode(sjcl.decrypt(k, PA_k)));
-
-      // Get serialized key list.
-      var public_keys = asocial.crypto.serializeKeyList();
-
-      // Add new user to key list.
-      public_keys[id_A] = PA;
-
-      // Generate a new keylist salt.
-      var keylist_salt = asocial.crypto.generateRandomHexSalt();
-
-      // Generate a hash from the keylist salt.
-      var key = asocial.crypto.calculateHash(password, keylist_salt);
-
-      // Verification
-      console.log('Verification');
-
-      // Generate answer key.
-      var decryptAnswerKey = asocial.crypto.calculateHash(password, asocial.state.group.answer_salt);
-      var answer = sjcl.decrypt(decryptAnswerKey, $.base64.decode(asocial.state.group.answer));
-
-      asocial.helpers.showConfirm(
-        'User provided the wrong answer. ' +
-        'The answer was: ' + a + '. ' +
-        'Do you want to confirm this user anyway?',
-
-        {
-          closable: false,
-          title: 'Wrong answer',
-          submit: 'Yes',
-          cancel: 'No',
-
-          onsubmit: function(){
-            sendKeys(PA, key, public_keys, answer, inviteId, id_A, k);
-          }
-        }
-      );
-
+    var user = CurrentSession.getUser();
+    
+    user.confirmInviteRequest(invitationId, accept, function () {
+      alert('Confirmed!');
     });
-
+    
   });
 
 } }); // asocial.binders.add();

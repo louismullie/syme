@@ -23,7 +23,7 @@ class InvitationGenerator
 
     select = { inviter_id: user.id.to_s, state: 2 }
 
-    group.invitations.where(select).map do |invite|
+    group.invitations.where(select).map do |invitation|
       {
         id: invitation.id.to_s,
         token: invitation.token,
@@ -31,7 +31,7 @@ class InvitationGenerator
         invitee_id: invitation.invitee_id,
         invitee_full_name: invitation.invitee.full_name,
 
-        request: invitation.request
+        accept: invitation.accept
         
       }
     end
