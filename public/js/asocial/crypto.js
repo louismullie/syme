@@ -230,60 +230,32 @@ guard('crypto', {
 
   decryptPostsAndComments: function() {
 
-    try {
-      
       var _this = this;
-      
-      var callback = function (response) {
-        
-        var message = response.data.data;
-        var id = response.data.id;
-
-        var decrypted = marked(message);
-
-        // Show the user tags.
-        decrypted = asocial.helpers.replaceUserMentions(decrypted);
-
-        // Hide the "This post is encrypted notice."
-        $('#' + id).find('.encrypted-notice').remove();
-
-        // Markdown the message and insert in place.
-        $('#' + id).find('.encrypted').replaceWith(decrypted);
-        
-        asocial.helpers.formatPostsAndComments();
-        
-      };
-      
-      var workerPool = new WorkerPool(
-        'js/asocial/workers/decrypt2.js', 4, callback
-      );
-      
-      var privKeyJson = this.ecc.serializePrivateKey(asocial_private_key());
       
       // Decrypt each encrypted post on the page.
       $.each($('.encrypted'), function (i, element) {
 
-        var message = $.parseJSON(element.innerText);
-        message.content = JSON.stringify(message.content);
-        
         var post = $(element).closest('.post');
         
-        workerPool.queueJob({
-          id: post.attr('id'),
-          msg: message.content,
-          key: message.key,
-          privKey: privKeyJson
+        var groupId = CurrentSession.getGroupId();
+        
+        Crypto.decryptMessage(groupId, element.innerText, function (decryptedMessage) {
+          
+          // Show the user tags.
+          var formattedMessage = asocial.helpers
+            .replaceUserMentions(marked(decryptedMessage));
+
+          // Hide the "This post is encrypted notice."
+          post.find('.encrypted-notice').remove();
+
+          // Markdown the message and insert in place.
+          post.find('.encrypted').replaceWith(decryptedMessage);
+
+          asocial.helpers.formatPostsAndComments();
+          
         });
         
       });
-
-    } catch (e) {
-      
-     console.log(e);
-      
-     asocial.helpers.showAlert('Could not decrypt resource.');
-
-    }
     
   },
 

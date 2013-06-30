@@ -102,9 +102,7 @@ Crypto = function (workerUrl) {
       method: 'encryptMessage',
       params: [keylistId, message]
       
-    }, function (response) {
-      encryptedMessageCb(response.result);
-    });
+    }, encryptedMessageCb);
     
   };
   
@@ -115,9 +113,7 @@ Crypto = function (workerUrl) {
       method: 'decryptMessage',
       params: [keylistId, message]
       
-    }, function (response) {
-      decryptedMessageCb(response.result);
-    });
+    }, decryptedMessageCb);
     
   };
   

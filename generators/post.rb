@@ -10,14 +10,21 @@ class PostGenerator
 
     current_key = post.key_for_user(current_user)
     deletable = post.deletable_by?(current_user)
-
+    
+    content = Base64.strict_encode64({
+      message: post.content,
+      keys: {
+        current_user.id => current_key
+      }
+    }.to_json)
+    
     attachment = AttachmentGenerator.generate(post, current_user)
 
     {
       # General post information.
       id: post.id.to_s,
       owner: owner,
-      content: post.content,
+      content: content,
       key: current_key,
       deletable: deletable,
 

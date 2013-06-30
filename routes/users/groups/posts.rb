@@ -3,8 +3,12 @@ post '/:group_id/post/create', auth: [] do |group_id|
   @group = @user.groups.find(group_id)
 
   @group.touch
-
-  message = JSON.parse(params[:encrypted_content])
+  
+  logger.info params
+  
+  message = JSON.parse(Base64.strict_decode64(
+    params[:encrypted_content]))
+  
   mentions = JSON.parse(params[:mentioned_users])
 
   attachment = if !(upload_id = params[:upload_id]).blank?
@@ -13,7 +17,7 @@ post '/:group_id/post/create', auth: [] do |group_id|
   
   post = @group.posts.create(
     owner_id: @user.id,
-    content: message['content'],
+    content: message['message'],
     keys: message['keys'],
     mentions: mentions
   )

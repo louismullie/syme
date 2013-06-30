@@ -132,13 +132,13 @@ guard('helpers', {
   },
 
   replaceUserMentions: function (string)  {
-    var full_names = this.findUserMentions(string);
+    /*var full_names = this.findUserMentions(string);
     $.each(full_names, function (i, full_name) {
       var mention = '@' + full_name;
       string = string.replace(mention,
       "<a href='#' class='userTag'>" +
         mention + "</a>");
-    });
+    });*/
     return string;
   },
 

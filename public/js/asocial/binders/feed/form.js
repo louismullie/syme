@@ -14,28 +14,38 @@ asocial.binders.add('feed', { form: function(){
     if(!message.trim() && !$('#upload_id').val()) return;
 
     // Encrypt the message and write the content to the file.
-    var encrypted = asocial.crypto.encryptMessage(message);
-    $('#encrypted_content').val(JSON.stringify(encrypted));
-
-    // Get the users who were mentioned in the message.
-    var mentions = asocial.helpers.findUserMentions(message);
-    $('#mentioned_users').val(JSON.stringify(mentions));
-
-    // Build request
-    var request = $(this).serialize();
-
-    var group = CurrentSession.getGroupId();
-    var url = 'http://localhost:5000/' + group + '/post/create';
-
-    $.post(url, request, function(data){
-
-      asocial.helpers.resetFeedForm();
-
-    }).fail(function(){
-
-      alert('Posting failed');
+    var groupId = CurrentSession.getGroupId();
+    var $form = $(this);
+    
+    Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
       
-      // Implement error if posting failed
+      alert(encryptedMessage);
+      
+      $('#encrypted_content').val(encryptedMessage);
+      
+      // Get the users who were mentioned in the message.
+      var mentions = {}; //asocial.helpers.findUserMentions(message);
+      $('#mentioned_users').val(JSON.stringify(mentions));
+
+      // Build request
+      var request = $form.serialize();
+
+      var group = CurrentSession.getGroupId();
+      var url = 'http://localhost:5000/' + group + '/post/create';
+
+      alert(request);
+      
+      $.post(url, request, function(data){
+
+        asocial.helpers.resetFeedForm();
+
+      }).fail(function(){
+
+        alert('Posting failed');
+
+        // Implement error if posting failed
+
+      });
 
     });
 
