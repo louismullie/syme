@@ -49,6 +49,16 @@
       a.btn {
         display: block;
         text-align: center;
+
+        i {
+          margin-left: .5em;
+        }
+
+        span.active { display: none; }
+        &.active {
+          span.default { display: none; }
+          span.active { display: inline; }
+        }
       }
     }
 

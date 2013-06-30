@@ -11,7 +11,11 @@
         %input{ type: 'text', name: 'full_name', placeholder: 'Louis Mullie', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false' }
 
         %input{ type: 'submit' }
-        %a#change-name-button.btn.btn-success.disabled{ href: '#', role: 'submit' } Save
+        %a#change-name-button.btn.btn-success.disabled{ href: '#', role: 'submit' }
+          %span.default Save
+          %span.active
+            Saving
+            %i.icon-spinner.icon-spin
 
       %h3 Delete your account
 
@@ -27,4 +31,5 @@
         %input{ type: 'text', name: 'delete', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false' }
 
         %input{ type: 'submit' }
-        %a#delete-account-button.btn.btn-danger.disabled{ href: '#', role: 'submit' } Delete account
+        %a#delete-account-button.btn.btn-danger.disabled{ href: '#', role: 'submit' }
+          Delete account

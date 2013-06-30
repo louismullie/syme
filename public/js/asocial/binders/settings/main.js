@@ -13,14 +13,36 @@ asocial.binders.add('settings', { main: function(){
   // 'Change name' form
   $('#change-name').submit(function(e){
 
-    var val = $(this).find('input').val();
-    var placeholder = $(this).find('input').attr('placeholder');
+    var $this = $(this),
+        input = $this.find('input');
+
+    var val = input.val(),
+        placeholder = input.attr('placeholder');
 
     // If input watcher < 5 or equal to placeholder, return
     if ( val.length < 5 || val == placeholder)
       return false;
 
-    alert('Changing name');
+    // Lock form
+    if(!!$this.data('active')) return false;
+    $this.data('active', true);
+
+    $('#change-name-button').addClass('active');
+
+    var callback = function(){
+      // Reset form and button
+      $this.data('active', false);
+      $('#change-name-button').removeClass('active');
+
+      // Swap placeholder for value
+      input
+        .attr('placeholder', 'New name return by ajax')
+        .val('');
+    };
+
+    // Replace this by AJAX call
+    setTimeout(callback, 1 * 1000);
+
   });
 
   // 'Change name' input watcher
@@ -38,7 +60,15 @@ asocial.binders.add('settings', { main: function(){
     if ( $(this).find('input').val() != "delete")
       return false;
 
-    alert('Deleting account');
+    // Lock form
+    if(!!$(this).data('active')) return false;
+    $(this).data('active', true);
+
+    // Place AJAX call to deletion here
+
+    // Disconnect
+    asocial.auth.disconnect();
+
   });
 
   // 'Delete' input watcher
