@@ -1,8 +1,10 @@
 asocial.binders.add('feed', { comments: function(){
 
   // Open comment box
-  $('#main').on('click', 'a.post-comments', function(){
-    $(this).closest('.post-content').find('textarea').focus();
+  $('#main').on('click', 'a.comment-action', function(){
+
+    $(this).closest('.post').find('textarea')
+      .removeClass('hidden').focus();
   });
 
   // Create comment

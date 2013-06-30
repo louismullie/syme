@@ -10,4 +10,4 @@
 
 // Comment box
 .comment-form
-  %textarea.autogrow{ name: 'content', maxlength: 1500, placeholder: '{{t "feed.comment_post"}}' }
+  %textarea{ name: 'content', class: 'autogrow {{#unless has_comments}}hidden{{/unless}}', maxlength: 1500, placeholder: '{{t "feed.comment_post"}}' }
