@@ -206,8 +206,12 @@
         }
 
         a.group-link {
-          font: 200 1.5em/1.4em $opensans;
+          font: 200 1.6em/1.4em $opensans;
           color: $black;
+        }
+
+        .group-updated-at {
+          font-size: .9em;
         }
       }
     }

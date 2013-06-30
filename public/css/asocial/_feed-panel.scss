@@ -60,6 +60,17 @@
 /* ----------------------------------------- */
 
 #feed-panel {
+  position: fixed;
+  top: 110px; bottom: $bodyPadding;
+
+  #userlist {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    overflow: auto;
+
+    @include scroll-shadow();
+  }
+
   a#group-photo-edit {
     position: relative;
     display: block;

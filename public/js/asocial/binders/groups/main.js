@@ -52,6 +52,12 @@ asocial.binders.add('groups', { main: function() {
 
   });
 
+  $('#create_group input[name="name"], #create_first_group input[name="name"]').keyup(function(){
+    $(this).parent().find('a.btn')[
+      $(this).val().length > 0 ? 'removeClass' : 'addClass'
+    ]('disabled');
+  });
+
   $('#main').on('submit', '#create_group, #create_first_group', function(e) {
 
     // Prevent form submission.
@@ -59,6 +65,8 @@ asocial.binders.add('groups', { main: function() {
 
     // Get the group name from the form.
     var name = $(this).find('input[name="name"]').val();
+
+    if ( name.length == 0 ) return;
 
     // Get the current user's ID from state.
     var userId = asocial.state.user.id;

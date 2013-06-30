@@ -25,9 +25,10 @@
 
 // Open comments by default in single-post view
 #feed[data-single-post="true"] {
-  a.post-delete   { display: none !important;   }
-  .show-more      { display: none !important;   }
-  .comment-hidden { display: block !important;  }
+  a.post-delete   { display: none !important;  }
+  .show-more      { display: none !important;  }
+  .comment-hidden { display: block !important; }
+  textarea        { display: block !important; }
 }
 
 // Notice when no posts on feed
