@@ -2,6 +2,7 @@ Session = function (user, callback) {
 
   var _this = this;
   this.initialized = false;
+  this.passwordKey = null;
   
   if (!user) {
     
@@ -13,6 +14,9 @@ Session = function (user, callback) {
       
         var data = JSON.parse(response);
       
+        var password_key = data.password_key;
+        _this.setPasswordKey(data.password_key);
+        
         if (!data.user_id)
           return callback();
       
@@ -57,6 +61,19 @@ Session = function (user, callback) {
   
   this.endSession = function () {
     this.initialized = false;
+  };
+  
+  this.getPasswordKey = function () {
+    
+    if (!this.passwordKey)
+      throw 'Password key not initialized.'
+    
+    return this.passwordKey;
+    
+  };
+  
+  this.setPasswordKey = function (passwordKey) {
+    this.passwordKey = passwordKey;
   };
   
   this.getUser = function () {
