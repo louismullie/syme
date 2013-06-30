@@ -148,8 +148,8 @@ guard('uploader', {
     var container = $('#upload-box'),
         box       = container.find('.upload-row');
 
-    // Show upload box
-    container.show();
+    // Show upload box and mark it as active
+    container.show().addClass('active');
 
     // Reset box (as long as upload is single-file)
     box.css('background-size', '0%').removeClass('done');
@@ -189,6 +189,9 @@ guard('uploader', {
 
       // Set upload id
       $('#upload_id').val(upload_id);
+
+      // Remove active state from container
+      container.removeClass('active');
     };
 
     // Hide attachments

@@ -11,13 +11,11 @@ asocial.binders.add('login', { main: function(){
     var $this = $(this);
 
     // Lock event
-    if(!!$this.data('active')) { return false; } else { $this.data('active', true); }
+    if(!!$this.data('active')) return false;
+    $this.data('active', true);
 
     // Spinner
     $('a[role="submit"]').addClass('loading');
-
-    // Exit if form is in registering mode
-    if( $(this).data('registering') ) return true;
 
     var email    = $this.find('input[name="email"]').val(),
         password = $this.find('input[name="password"]').val(),

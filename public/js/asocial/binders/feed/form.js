@@ -5,13 +5,46 @@ asocial.binders.add('feed', { form: function(){
 
     e.preventDefault();
 
-    if($(this).data('active')) return false;
-    $(this).data('active', true);
+    var $this = $(this);
 
     // Get the message from the textarea.
-    var message = $(this).find('textarea').val();
+    var message = $this.find('textarea').val();
+
+    // If a file is uploading, indicate to wait
+    if( $('#upload-box').hasClass('active') ) {
+
+      // If indication already exists, return
+      if( $this.find('.validation-container').length ) return;
+
+      $this.find('#textarea-holder').after(
+        '<div class="validation-container">' +
+          '<div class="validation-message no-arrow">' +
+            'Please wait for your files to finish uploading ' +
+            'before posting' +
+          '</div>' +
+        '</div>'
+      );
+
+      // Auto hide indication
+      setTimeout(function(){
+
+        var container = $this.find('.validation-container');
+
+        // Hide indication
+        container.transition({ opacity: 0 }, 200);
+        // Then remove it
+        setTimeout(function(){ container.remove(); }, 200);
+
+      }, 3 * 1000);
+
+    }
+
     // If there isn't a post or uploaded file, don't submit the form
     if(!message.trim() && !$('#upload_id').val()) return;
+
+    // Lock event
+    if($this.data('active')) return false;
+    $this.data('active', true);
 
     // Encrypt the message and write the content to the file.
     var encrypted = asocial.crypto.encryptMessage(message);
@@ -22,7 +55,7 @@ asocial.binders.add('feed', { form: function(){
     $('#mentioned_users').val(JSON.stringify(mentions));
 
     // Build request
-    var request = $(this).serialize();
+    var request = $this.serialize();
 
     var group = asocial.state.group.id;
     var url = 'http://localhost:5000/' + group + '/post/create';
