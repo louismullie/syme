@@ -8,7 +8,7 @@
           %a{ href: 'users/{{current_user_id}}/groups', hbs: '' }
             Asocial
 
-        %li
+        %li#notification-li{ :'data-count' => 0 }
           %a#notifications.btn.hint--bottom{ href: '#', :'data-hint' => 'Notifications', 'data-popover' => 'notifications-container' }
             %i.icon-bell-alt
 

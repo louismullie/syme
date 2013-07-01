@@ -113,7 +113,7 @@ Notifications = (function(){
 
       _this = this;
 
-      // Compile data from models ( to refactor )
+      // Compile data from models ( to refactor server-side )
       var notifications = _.map(this.collection.models, function(element){
         return element.attributes;
       });
@@ -130,9 +130,14 @@ Notifications = (function(){
           message: generateMessage(notification)
         });
 
-        _this.$el.prepend( asocial.helpers.render('notification', notification) );
+        // Prepend (to-do: only changed) notifications
+        _this.$el.html( asocial.helpers.render('notification', notification) );
 
       });
+
+      // Update count
+      var count = this.collection.models.length;
+      $('#notification-li').attr('data-badge', count);
 
     },
 

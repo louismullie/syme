@@ -75,6 +75,95 @@
         @media #{$breakpointSmall} { display: none; }
       }
 
+      &#notification-li {
+        position: relative;
+
+        &[data-badge]:not([data-badge="0"])::after {
+          $notificationBadgeSize: 18px;
+
+          content: attr(data-badge);
+
+          height: $notificationBadgeSize; width: $notificationBadgeSize;
+
+          position: absolute;
+          top: -3px; right: -3px;
+
+          background: $danger;
+
+          line-height: $notificationBadgeSize;
+          border-radius: 3px;
+
+          color: white;
+          font-size: 0.7em;
+          text-align: center;
+        }
+
+        #notifications-container {
+          padding-right: 7px;
+          z-index: 3;
+
+          #notifications-content {
+            max-height: 350px;
+
+            margin-bottom: .5em;
+            padding: 5px;
+            overflow-y: auto;
+
+            font-size: 90%;
+
+            .notification {
+              margin-bottom: 7px;
+              padding: 0 0 7px 7px;
+
+              border-bottom: $baseBorderStyle;
+
+              font-size: 0.9em;
+
+              &:last-child{
+                margin-bottom: 0;
+                border-bottom: none;
+              }
+
+              p {
+                margin: 0;
+              }
+
+              p.empty-notification {
+                color: $gray;
+                text-align: center;
+              }
+
+              p.notification-content {
+                a.notification-unread {
+                  display: inline-block;
+                  float: right;
+
+                  padding-top: 1px; // lol
+                  margin-left: 1em;
+
+                  font-size: 0.9em;
+                  color: $linkColor;
+                  text-shadow: 0 1px 6px rgba($linkColor, 0.5);
+
+                  @include transition(color 0.2s ease);
+
+                  &:hover {
+                    text-decoration: none;
+                    color: lighten($linkColor, 15%);
+                  }
+                }
+              }
+
+              p.notification-infos {
+                text-align: left;
+                font-size: 0.8em;
+                color: $darkgray;
+              }
+            }
+          }
+        }
+      }
+
       &#navbar-breadcrumbs {
         padding-left: 1em;
         border-left: $baseBorderStyle;
@@ -186,92 +275,6 @@
           }
         }
       }
-
-      #notifications {
-        span.notification-badge {
-          $notificationBadgeSize: 18px;
-
-          height: $notificationBadgeSize; width: $notificationBadgeSize;
-
-          position: absolute;
-          top: -3px; right: -3px;
-
-          background: $danger;
-
-          line-height: $notificationBadgeSize;
-          border-radius: 3px;
-
-          color: white;
-          font-size: 0.7em;
-          text-align: center;
-        }
-      }
-
-      #notifications-container {
-        padding-right: 7px;
-        z-index: 3;
-
-        #notifications-content {
-          max-height: 350px;
-
-          padding: 5px;
-          overflow-y: auto;
-
-          font-size: 90%;
-
-          .notification {
-            margin-bottom: 7px;
-            padding: 0 0 7px 7px;
-
-            border-bottom: $baseBorderStyle;
-
-            font-size: 0.9em;
-
-            &:last-child{
-              margin-bottom: 0;
-              border-bottom: none;
-            }
-
-            p {
-              margin: 0;
-            }
-
-            p.empty-notification {
-              color: $gray;
-              text-align: center;
-            }
-
-            p.notification-content {
-              a.notification-unread {
-                display: inline-block;
-                float: right;
-
-                padding-top: 1px; // lol
-                margin-left: 1em;
-
-                font-size: 0.9em;
-                color: $linkColor;
-                text-shadow: 0 1px 6px rgba($linkColor, 0.5);
-
-                @include transition(color 0.2s ease);
-
-                &:hover {
-                  text-decoration: none;
-                  color: lighten($linkColor, 15%);
-                }
-              }
-            }
-
-            p.notification-infos {
-              text-align: left;
-              font-size: 0.8em;
-              color: $darkgray;
-            }
-          }
-        }
-      }
-
-
     }
   }
 }
