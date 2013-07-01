@@ -12,6 +12,8 @@ class Upload < Resource
 
   # Relations
   belongs_to :group
+  
+  field :thumbnail_id, type: String
 
   #  General fields (read-only)  #
 
@@ -41,10 +43,13 @@ class Upload < Resource
   
   # Whether the upload has finished or not.
   field :finished, type: Boolean
+  
+  attr_accessible :key, :keys, :store, :filename,
+  :size, :image_size, :finished, :thumbnail_id, :type, :encrypted
 
-  attr_accessible :type, :encrypted,
-  :key, :keys, :filename, :size, :image_size
 
-  has_one :thumbnail
-
+  def thumbnail
+    group.thumbnails.find(thumbnail_id) if thumbnail_id
+  end
+  
 end

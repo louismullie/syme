@@ -19,7 +19,7 @@ module Asocial
     
     # Model observers.
     Mongoid.observers = PostObserver, CommentObserver,
-    LikeObserver, NotificationObserver, InviteObserver,
+    LikeObserver, NotificationObserver, InvitationObserver,
     UserObserver
 
     Mongoid.instantiate_observers

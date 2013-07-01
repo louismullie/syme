@@ -18,16 +18,14 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
 
   upload = if params[:mode] == 'thumbnail'
     
+    original = @group.attachments.find(params[:upload_id])
+  
     thumbnail = @group.thumbnails.create(selector)
     
-    original = @group.attachments.find(params[:upload_id])
+    original.thumbnail_id = thumbnail.id.to_s
     
-    original.thumbnail = thumbnail
-    
-    thumbnail.keys = original.keys
-    
-    thumbnail.save!; original.save!
-    
+    original.save!
+
     thumbnail
     
   elsif params[:mode] == 'avatar'
@@ -159,7 +157,7 @@ get '/:group_id/file/download/:id/:chunk', auth: [] do |group_id, id, chunk|
   upload = @group.uploads.find(id)
 
   # Set the request headers.
-  unless upload.type.length == 0
+  if upload.type
     content_type(upload.type)
   end
 

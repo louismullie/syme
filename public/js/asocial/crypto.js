@@ -329,7 +329,7 @@ guard('crypto', {
 
   },
 
-  getFile: function (id, keys, callback, group) {;
+  getFile: function (id, keys, callback, group) {
     
     var display = function(id, blob, save) {
 
@@ -358,12 +358,8 @@ guard('crypto', {
       var group = group || CurrentSession.getGroupId();
       var baseUrl = 'http://localhost:5000/' + group + '/file/';
 
-      var downloader = new Downloader(id, keys,
-        { baseUrl: baseUrl }
-      );
+      var downloader = new Downloader(id, keys, { baseUrl: baseUrl });
 
-      gc = downloader
-      
       downloader.start(
         function() {},
         function(blob) {

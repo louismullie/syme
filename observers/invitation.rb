@@ -1,4 +1,4 @@
-class InviteObserver < Mongoid::Observer
+class InvitationObserver < Mongoid::Observer
 
   # require_relative 'invite/publisher'
   # include InviteObserver::Publisher
