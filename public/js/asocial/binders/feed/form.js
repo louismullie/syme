@@ -52,8 +52,6 @@ asocial.binders.add('feed', { form: function(){
     
     Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
       
-      alert(encryptedMessage);
-      
       $('#encrypted_content').val(encryptedMessage);
       
       // Get the users who were mentioned in the message.

@@ -242,11 +242,11 @@ guard('crypto', {
         Crypto.decryptMessage(groupId, element.innerText, function (decryptedMessage) {
           
           // Show the user tags.
-          var formattedMessage = asocial.helpers
-            .replaceUserMentions(marked(decryptedMessage));
-
+          //var formattedMessage = asocial.helpers.replaceUserMentions(marked(decryptedMessage));
+          var formattedMessage = marked(decryptedMessage);
+          
           // Markdown the message and insert in place.
-          post.find('.encrypted').replaceWith(decryptedMessage);
+          post.find('.encrypted').replaceWith(formattedMessage);
           
           post.removeClass('hidden');
           
