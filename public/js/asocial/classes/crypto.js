@@ -175,6 +175,17 @@ Crypto = function (workerUrl) {
     
   };
   
+  this.generateRandomKeys = function(generatedKeysCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'generateRandomHex',
+      params: [256]
+      
+    }, generatedKeysCb);
+    
+  }
+  
   this.seedRandom = function () {
     
     var array = new Uint32Array(32);

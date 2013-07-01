@@ -2,15 +2,12 @@ guard('uploader', {
 
   upload: function(file, data, progress, success) {
 
-    var key = asocial.crypto.generateRandomKey();
-    var keys = asocial.crypto.generateMessageKeys(key);
-
     progress = progress || function () {};
     success = success || function () {};
 
     var group = CurrentSession.getGroupId();
 
-    uploader = new Uploader(file, key, keys, {
+    uploader = new Uploader(file, {
       data: data, baseUrl: 'http://localhost:5000/' + group + '/file/'
     });
 

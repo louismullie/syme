@@ -17,10 +17,16 @@ class Upload < Resource
 
   # Type of upload (:post or :avatar).
   field :type, type: Symbol
+  
   # Whether the upload is encrypted or not.
   field :encrypted, type: Boolean
-  # The keys for encryption.
+  
+  # The encryption key
+  field :key, type: String
+  
+  # The decryption keys
   field :keys, type: Hash
+  
   # The storage type for the file.
   field :store, type: Symbol
 

@@ -1,5 +1,4 @@
 importScripts('keyfile.js');
-importScripts('formData.js');
 
 Crypto = {
   

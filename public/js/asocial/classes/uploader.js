@@ -1,18 +1,15 @@
-function Uploader(file, key, keys, options) {
+function Uploader(file, options) {
 
   var _this = this;
 
-  if (!file || !key ||!keys) {
-    asocial.helpers.showAlert('Error: empty file, key or keys.')
+  if (!file) {
+    alert('Error: empty file, key or keys.')
   } else {
     this.file = file;
-    this.key = key;
-    this.keys = keys;
   }
 
   this.options = {}; options = options || {};
 
-  this.options.key        = options.key;
   this.options.data       = options.data       || {};
   this.options.baseUrl    = options.baseUrl    || '/file/';
   this.options.workerPath = options.workerPath || 'js/asocial/workers/';
@@ -143,7 +140,6 @@ function Uploader(file, key, keys, options) {
 
     this.workerPool = window.uploadWorkerPool;
 
-
     var url = this.options.baseUrl + 'upload/create';
     var xhr = new XMLHttpRequest();
 
@@ -164,27 +160,36 @@ function Uploader(file, key, keys, options) {
 
     });
 
-    var fd = new FormData();
+    Crypto.generateRandomKeys(function (key) {
+      
+      _this.key = key;
+      
+      var keylistId = CurrentSession.getGroupId(); // unsafe!
+      
+      
+      Crypto.encryptMessage(keylistId, key, function (encryptedMessage) {
+        
+        var fd = new FormData();
 
-    fd.append('type', this.file.type);
-    fd.append('size', this.file.size);
-    fd.append('filename', this.file.name);
-    fd.append('keys', JSON.stringify(this.keys));
+        fd.append('type', _this.file.type);
+        fd.append('size', _this.file.size);
+        fd.append('filename', _this.file.name);
+        fd.append('keys', encryptedMessage);
+        
+        var data = _this.options.data;
 
-    var data = this.options.data;
+        var csrf = document.querySelector('meta[name="_csrf"]');
+        var token = csrf ? csrf.content : '';
 
-    for (key in data) {
-      fd.append(key, data[key].toString());
-    }
+        xhr.open('POST', _this.options.baseUrl + 'upload/create');
+        xhr.setRequestHeader('X_CSRF_TOKEN', token);
 
-    var csrf = document.querySelector('meta[name="_csrf"]');
-    var token = csrf ? csrf.content : '';
+        xhr.send(fd);
+        
+      });
 
-    xhr.open('POST', this.options.baseUrl + 'upload/create');
-    xhr.setRequestHeader('X_CSRF_TOKEN', token);
-
-    xhr.send(fd);
-
+    });
+    
   };
 
   this.firstPass = function() {
