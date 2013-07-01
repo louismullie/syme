@@ -136,9 +136,14 @@ end
 # Delete a user permanently.
 delete '/users/:user_id', auth: [] do |user_id|
 
-  # Destroy user in DB.
-  @user.destroy!
+  @user.groups.each do |group|
+    group.destroy
+  end
+  
+  @user.destroy
 
+  session.clear
+  
   # Return empty JSON.
   empty_response
 

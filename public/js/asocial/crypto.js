@@ -244,6 +244,7 @@ guard('crypto', {
         Crypto.decryptMessage(groupId, $this.text(), function (decryptedMessage) {
 
           // Show the user tags.
+          
           //var formattedMessage = asocial.helpers.replaceUserMentions(marked(decryptedMessage));
 
           // Markdown the message

@@ -47,9 +47,6 @@ asocial.binders.add('settings', { main: function(){
       } }
     );
 
-    // Replace this by AJAX call
-    setTimeout(callback, 1 * 1000);
-
   });
 
   // 'Change name' input watcher
@@ -71,17 +68,25 @@ asocial.binders.add('settings', { main: function(){
     if(!!$(this).data('active')) return false;
     $(this).data('active', true);
 
-    // Place AJAX call to deletion here
+    $.ajax('/users/' + CurrentSession.getUserId(), {
 
-    // Disconnect
-    asocial.auth.disconnect();
+      type: 'DELETE',
+
+      success: function () {
+        asocial.auth.disconnect();
+      },
+
+      error: function () {
+        alert('Could not delete user!');
+    }});
 
   });
 
   // 'Delete' input watcher
   $('#delete-account input').keyup(function(e){
     $('#delete-account-button')[
-      $(this).val() == "delete" ? 'removeClass' : 'addClass'
+      $(this).val() == "delete" ?
+      'removeClass' : 'addClass'
     ]('disabled');
   });
 
