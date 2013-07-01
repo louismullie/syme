@@ -34,9 +34,8 @@ class Post < Resource
   # Each post may embed comments.
   embeds_many :comments
 
-  # Attribute protection.
-  attr_readonly :content, :keys, :upload_id
-  attr_accessible :content, :keys, :upload_id
+  attr_accessible :content, :keys,
+          :upload_id, :attachment
   
   def delete
     attachment.destroy if attachment

@@ -19,13 +19,14 @@ post '/:group_id/post/create', auth: [] do |group_id|
     owner_id: @user.id,
     content: message['message'],
     keys: message['keys'],
-    mentions: mentions
+    mentions: mentions,
+    attachment: attachment
   )
-
-  post.attachment = attachment if attachment
-
-  post.save!
-
+  
+  attachment.post = post
+  
+  post.save!; attachment.save!
+  
   track @user, 'Created a new post'
 
   content_type :json
