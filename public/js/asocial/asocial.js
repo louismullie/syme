@@ -13,7 +13,7 @@ guard('asocial', {
 
 });
 
-SERVER_URL = 'http://localhost:5000';
+SERVER_URL = window.location.origin;
 
 // Register all Handlebars templates.
 $.each(Handlebars.templates, function (name, template) {
