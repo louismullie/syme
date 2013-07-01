@@ -6,7 +6,7 @@ set :application, 'asocial'
 # Server login configuration.
 set :user, 'web'
 set :port, 1023
-set :domain, '192.155.91.89'
+set :domain, '184.107.183.10'
 set :use_sudo, true
 default_run_options[:pty] = true
 
@@ -18,7 +18,7 @@ set :repository, 'git@github.com:louismullie/asocial-clean.git'
 set :branch, 'foundation'
 
 # Deployment configuration.
-set :deploy_to, '/var/www/asocial.cc'
+set :deploy_to, '/var/www/syme.io'
 set :deploy_via, :remote_cache
 
 set :ssh_options, { forward_agent: true }
