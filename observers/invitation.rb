@@ -26,7 +26,7 @@ class InvitationObserver < Mongoid::Observer
       group.users.each do |user|
         
         next if user.id.to_s == invitee.id.to_s
-        warn 'NOTIFUYINF OTHER USER'
+        
         user.notify({
           action: :confirm_invite,
           create: {
@@ -35,8 +35,6 @@ class InvitationObserver < Mongoid::Observer
         }, group)
 
       end
-      
-      warn 'NOTIFIYING INVITEE'
       
       invitee.notify({
         action: :confirm_join_request,
