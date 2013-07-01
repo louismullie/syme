@@ -163,6 +163,18 @@ Crypto = function (workerUrl) {
     
   };
   
+  this.uploadChunk = function (chunkInfo, uploadedChunkCb) {
+    
+    Crypto.workerPool.queueJob(chunkInfo, uploadedChunkCb);
+    
+  };
+
+  this.downloadChunk = function (chunkInfo, downloadedChunkCb) {
+    
+    Crypto.workerPool.queueJob(chunkInfo, downloadedChunkCb);
+    
+  };
+  
   this.seedRandom = function () {
     
     var array = new Uint32Array(32);

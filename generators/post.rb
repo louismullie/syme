@@ -15,7 +15,8 @@ class PostGenerator
       message: post.content,
       keys: {
         current_user.id => current_key
-      }
+      },
+      senderId: post.owner.id.to_s
     }.to_json)
     
     attachment = AttachmentGenerator.generate(post, current_user)

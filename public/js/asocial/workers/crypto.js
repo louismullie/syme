@@ -205,9 +205,12 @@ Crypto = {
     
     // Base-64 decode and JSON-parse the received message.
     var messageTxt = Crypto.decodeBase64(messageTxt64);
+    
     var messageJson = JSON.parse(messageTxt);
-
+    
     var senderId = messageJson.senderId;
+    
+    if (!senderId) throw 'Sender ID is missing.';
   
     // Get the encryption and signature keys.
     var privateEncryptionKey = keyfile
@@ -218,20 +221,28 @@ Crypto = {
     
     var encMessage = messageJson.message;
     
+    if (!encMessage) throw 'Message is missing.';
+    
     var encSymKeyTxt64 = messageJson.keys[keyfile.userId];
+    
+    if (!encSymKeyTxt64) throw 'Key is missing.'
+    
     var keyMessageJson = JSON.parse(this.decodeBase64(encSymKeyTxt64));
     
     // Decrypt the message using the recipient's private key.
     var symKey = privateEncryptionKey.unkem(keyMessageJson.tag);
-    
+  
     var contentTxt = sjcl.decrypt(symKey, keyMessageJson.ct);
-    var contentJson = JSON.parse(contentTxt);
+    var contentJson = JSON.parse(contentTxt); 
+    
+    //throw JSON.stringify(contentJson);
     
     // Verify the message signature using the signature public key.
     var keyMessageJson = JSON.parse(contentJson.message);
     var keySignatureJson = contentJson.signature;
     
     var sha256 = sjcl.hash.sha256.hash(contentJson.message);
+
     var verified = publicSignatureKey.verify(sha256, keySignatureJson);
     
     if (!verified) throw 'Signature verification failed.'
@@ -279,132 +290,6 @@ Crypto = {
  
  seedRandom: function (randomValues) {
    return sjcl.random.addEntropy(randomValues);
- },
- 
- file: {
-   
-   upload: function (data, pass, worker, id, csrf, url) {
-     
-     var data = event.data['data'];
-     var pass = event.data['pass'];
-     var worker = event.data['worker'];
-     var id = event.data['id'];
-     var csrf = event.data['csrf'];
-     var url = event.data['url'];
-
-     var key = data.key;
-     var chunk = data.chunk;
-
-     var reader = new FileReader();
-
-     reader.onload = function(event) {
-
-       var chunk = event.target.result;
-
-       var encrypted = sjcl.encrypt(key, chunk);
-       var data = new Blob([encrypted]);
-
-       var fd = new FormData();
-
-       fd.append("id", id);
-       fd.append("chunk", pass * 4 + worker);
-       fd.append("data", data);
-
-       var xhr = new XMLHttpRequest();
-
-       xhr.addEventListener("error", function(evt) {
-         throw "Client error on upload.";
-       }, false);
-
-       xhr.addEventListener("abort", function(evt) {
-         throw "Upload aborted.";
-       }, false);
-
-       xhr.addEventListener("load", function(evt) {
-
-         postMessage({
-           status: 'ok', id: id,
-           pass: pass, worker: worker
-         });
-
-       });
-
-       xhr.open('POST', url);
-
-       xhr.setRequestHeader('X_CSRF_TOKEN', csrf);
-       xhr.send(fd);
-
-     };
-
-     reader.readAsDataURL(chunk);
-
-   },
-   
-
-   download: function () {
-     
-     var id = event.data['id'];
-     var chunk = event.data['chunk'];
-
-     var worker = event.data['worker'];
-     var url = event.data['url'];
-
-     var encKey = event.data['key'];
-
-     if (!privateKey) {
-       var privKeyJson = event.data['privKey'];
-       var privKey = buildPrivateKey(privKeyJson);
-     }
-
-     var key = decrypt(privKey, encKey);
-
-     var xhr = new XMLHttpRequest();
-
-     xhr.addEventListener('load', function(event) {
-
-       if (event.target.status != 200) {
-
-         throw 'Server error (' + event.target.status + ')';
-
-       } else {
-
-         var cryptChunk = event.target.responseText;
-         var plainChunk = sjcl.decrypt(key, cryptChunk);
-
-         var byteString = decodeBase64(decodeBase64(
-           plainChunk.split(',')[1]));
-
-         var ab = new ArrayBuffer(byteString.length);
-         var ia = new Uint8Array(ab);
-
-         for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-         }
-
-         postMessage({
-           id: id,
-           data: ia,
-           worker: worker,
-           chunk: chunk,
-           status: 'ok'
-         });
-
-       }
-
-     });
-
-     xhr.addEventListener(
-       "error", function () { throw "Error!"; }, false);
-
-     xhr.addEventListener(
-       "abort", function () { throw "Abort!"; }, false);
-
-     xhr.open('GET', url + '/' + chunk);
-     xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
-     xhr.send('');
-     
-   }
-   
  }
 
 };

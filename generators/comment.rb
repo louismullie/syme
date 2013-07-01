@@ -8,7 +8,8 @@ class CommentGenerator
       message: comment.content,
       keys: {
         current_user.id => current_key
-      }
+      },
+      senderId: comment.owner.id.to_s
     }.to_json)
     
     {
