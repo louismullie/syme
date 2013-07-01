@@ -377,7 +377,8 @@ guard('helpers', {
     });
 
     // Submit on clicking a[role="submit-modal"]
-    $('#responsive-modal a[role="submit"]').click(function(){
+    $('#responsive-modal a[role="submit"]').click(function(e){
+      e.preventDefault();
       $('#responsive-modal form').submit();
     });
 

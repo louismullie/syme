@@ -69,8 +69,6 @@ asocial.binders.add('feed', { panel: function(){
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal form').submit(function(e){
 
-          e.preventDefault();
-
           var $this = $(this);
 
           // Return if event is locked
