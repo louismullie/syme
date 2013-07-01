@@ -104,12 +104,12 @@ guard('uploader', {
     img.onload = function () {
 
       var callback = function (image) {
-
+        
         var data = {
           mode: 'thumbnail',
           upload_id: uploadId
         };
-
+        
         _this.upload(image, data);
 
       };

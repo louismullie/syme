@@ -163,7 +163,7 @@ function Uploader(file, options) {
     Crypto.generateRandomKeys(function (key) {
       
       _this.key = key;
-      
+
       var keylistId = CurrentSession.getGroupId(); // unsafe!
       
       
@@ -178,6 +178,10 @@ function Uploader(file, options) {
         
         var data = _this.options.data;
 
+        for (key in data) {
+          fd.append(key, data[key].toString());
+        }
+        
         var csrf = document.querySelector('meta[name="_csrf"]');
         var token = csrf ? csrf.content : '';
 

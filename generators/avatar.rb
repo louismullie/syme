@@ -16,10 +16,20 @@ class AvatarGenerator
     
     if avatar
       
+      current_key = avatar.key_for_user(current_user)
+
+      content = Base64.strict_encode64({
+        message: avatar.key,
+        keys: {
+          current_user.id.to_s => current_key
+        },
+        senderId: avatar.owner.id.to_s
+      }.to_json)
+
       {
         placeholder: false,
         id: avatar.id.to_s,
-        key: avatar.key_for_user(current_user),
+        keys: content,
         group_id: group.id.to_s
       }
       

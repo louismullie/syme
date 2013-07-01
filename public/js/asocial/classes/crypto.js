@@ -184,7 +184,7 @@ Crypto = function (workerUrl) {
       
     }, generatedKeysCb);
     
-  }
+  };
   
   this.seedRandom = function () {
     

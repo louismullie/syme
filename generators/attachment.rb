@@ -6,14 +6,25 @@ class AttachmentGenerator
     
     upload = post.attachment
     
+    current_key = upload.key_for_user(user)
     thumbnail = generate_thumbnail(upload, user)
+  
+    content = Base64.strict_encode64({
+      message: post.attachment.key,
+      keys: {
+        user.id.to_s => current_key
+      },
+      senderId: post.owner.id.to_s
+    }.to_json)
+    
+    warn content
     
     {
       # General file information.
       id: upload.id.to_s,
       filename: upload.filename,
       size: upload.size,
-      key: upload.key_for_user(user),
+      keys: content,
       type: upload.type,
       
       # MIME type information.
@@ -36,11 +47,21 @@ class AttachmentGenerator
     
     thumbnail = upload.thumbnail 
     
+    current_key = thumbnail.key_for_user(user)
+    
+    content = Base64.strict_encode64({
+      message: thumbnail.key,
+      keys: {
+        user.id.to_s => current_key
+      },
+      senderId: thumbnail.owner.id.to_s
+    }.to_json)
+    
     {
       id: thumbnail.id.to_s,
       filename: thumbnail.filename,
       size: thumbnail.size,
-      key: thumbnail.key_for_user(user),
+      keys: content,
       type: thumbnail.type
     }
   

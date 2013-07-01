@@ -23,7 +23,10 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
     original = @group.attachments.find(params[:upload_id])
     
     original.thumbnail = thumbnail
-    thumbnail.save!
+    
+    thumbnail.keys = original.keys
+    
+    thumbnail.save!; original.save!
     
     thumbnail
     

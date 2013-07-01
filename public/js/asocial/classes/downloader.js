@@ -1,16 +1,17 @@
-function Downloader(id, key, options) {
+function Downloader(id, keys, options) {
 
   var _this = this;
 
   if (typeof(id) == 'undefined' ||
-      typeof(key) == 'undefined') {
+      typeof(keys) == 'undefined') {
 
     asocial.helpers.showAlert('Error: empty ID or key.')
     return;
 
   } else {
-
-    this.key = key;
+    
+    this.keys = keys;
+    this.key = null;
     this.fileId = id;
 
   }
@@ -110,9 +111,18 @@ function Downloader(id, key, options) {
 
     });
 
-    xhr.open("GET", fileUrl);
-    xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
-    xhr.send();
+
+    var groupId = CurrentSession.getGroupId();
+    
+    Crypto.decryptMessage(groupId, this.keys, function (key) {
+      
+      _this.key = key;
+      
+      xhr.open("GET", fileUrl);
+      xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
+      xhr.send();
+      
+    });
 
   };
 
@@ -142,7 +152,7 @@ function Downloader(id, key, options) {
     this.workerPool.queueJob({
       id: this.fileId, chunk: chunk,
       worker: worker, key: this.key,
-      url: fileUrl, privKey: this.options.privKey
+      url: fileUrl
     }, this);
 
   };

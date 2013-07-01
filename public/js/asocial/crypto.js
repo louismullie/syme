@@ -268,11 +268,11 @@ guard('crypto', {
       var image = $(image);
 
       var id = image.data('attachment-id');
-          key = image.data('attachment-key'),
+          keys = image.data('attachment-keys'),
           type = image.data('attachment-type'),
           group = image.data('attachment-group');
 
-      _this.getFile(id, key, function (url) {
+      _this.getFile(id, keys, function (url) {
 
         if (type == 'image') {
           image.attr('src', url);
@@ -294,10 +294,10 @@ guard('crypto', {
       var $this = $(this);
 
       var id = $this.data('attachment-id'),
-          key = $this.data('attachment-key'),
+          keys = $this.data('attachment-keys'),
           group = $this.data('attachment-group');
 
-      _this.getFile(id, key, function (url) {
+      _this.getFile(id, keys, function (url) {
 
         $this.css("background-image", "url('" + url + "')");
 
@@ -318,9 +318,9 @@ guard('crypto', {
       var id = element.data('id');
       if (id == '') { return; }
 
-      var key = element.data('key');
+      var keys = element.data('keys');
       
-      _this.getFile(id, key, function (url) {
+      _this.getFile(id, keys, function (url) {
         var avatars = $('.encrypted-avatar[data-user-id="' + user_id + '"]');
         $.each(avatars, function (index, element) { element.src = url; });
       });
@@ -329,8 +329,8 @@ guard('crypto', {
 
   },
 
-  getFile: function (id, key, callback, group) {
-
+  getFile: function (id, keys, callback, group) {;
+    
     var display = function(id, blob, save) {
 
       if (save) {
@@ -353,19 +353,17 @@ guard('crypto', {
 
     };
 
-    var download = function (id, key, group) {
+    var download = function (id, keys, group) {
 
       var group = group || CurrentSession.getGroupId();
-
       var baseUrl = 'http://localhost:5000/' + group + '/file/';
 
-      var downloader = new Downloader(id, key,
-        {
-            baseUrl: baseUrl,
-            privKey: asocial.crypto.ecc.serializePrivateKey(asocial_private_key())
-        }
+      var downloader = new Downloader(id, keys,
+        { baseUrl: baseUrl }
       );
 
+      gc = downloader
+      
       downloader.start(
         function() {},
         function(blob) {
@@ -387,8 +385,8 @@ guard('crypto', {
         store.get(id, function(me) {
 
           if (typeof(me) == "undefined") {
-
-            download(id, key, group);
+            
+            download(id, keys, group);
 
           } else {
 

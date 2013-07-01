@@ -4,7 +4,7 @@
   {{#if avatar}}
   .user-avatar{'data-id' => '{{avatar.id}}',
               'data-size' => '{{avatar.size}}',
-              'data-key' => '{{avatar.key}}'}
+              'data-keys' => '{{avatar.keys}}'}
   {{/if}}
 
   %a{ href: '#', 'data-tip' => '{{full_name}}', 'class' => '{{#if is_current_user}}current{{/if}}'}
