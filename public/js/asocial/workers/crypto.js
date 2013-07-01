@@ -104,12 +104,14 @@ Crypto = {
     var signerId = keyfile.userId;
     var _this = this;
     
-    _.each(arr, function (ind, elem) {
+    _.each(arr, function (elem, ind) {
       
       var decryptedKey = _this.decryptMessageKey(keylistId, elem.key);
       
       var key = _this.encryptMessageKey(
         keylistId, newUserId, decryptedKey);
+        
+      //throw JSON.stringify([elem, decryptedKey, key]);
       
       result.push({ id: elem.id, key: key });
       
@@ -127,7 +129,7 @@ Crypto = {
     var signerId = keyfile.userId;
 
     var _this = this;
-      
+
     _.each(posts, function (post, index) {
       
       var decryptedKey = _this.decryptMessageKey(keylistId, post.key);
@@ -324,9 +326,9 @@ Crypto = {
 
       // Check sender in keylist...
     if (!contentJson.signerId) throw 'Signer ID is missing.';
-      
+    
     var sha256 = sjcl.hash.sha256.hash(contentJson.message);
-
+    
     var verified = publicSignatureKey.verify(sha256, keySignatureJson);
     
     if (!verified) throw 'Signature verification failed.'

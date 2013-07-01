@@ -154,9 +154,9 @@ var User = Backbone.RelationalModel.extend({
     
     $.getJSON(url, function (keys) {
       
-      Crypto.transferKeysRequest(groupId, inviteeId, keys, function () {
+      Crypto.transferKeysRequest(groupId, inviteeId, keys, function (recryptedKeys) {
         invitation.save(
-          { transfer: keys },
+          { transfer: recryptedKeys },
           {
             success: transferredKeysCb,
             error: errorCb

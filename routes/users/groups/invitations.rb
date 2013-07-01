@@ -129,7 +129,8 @@ put '/invitations', auth: [] do
     
     logger.info params.transfer
     
-    keys = params.transfer
+    keys = JSON.parse(Base64.
+      strict_decode64(params.transfer))
 
     invitee_id = invitation.invitee.id.to_s
     group = invitation.group
