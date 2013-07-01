@@ -287,8 +287,6 @@ Crypto = {
     
     if (!encMessage) throw 'Message is missing.';
     
-    throw messageTxt;
-    
     var encSymKeyTxt64 = messageJson.keys[keyfile.userId];
     
     if (!encSymKeyTxt64) throw 'Key is missing.'
