@@ -74,7 +74,9 @@ require 'rack/csrf'
 
 # use Rack::Protection, except: :http_origin
 
-use Rack::Protection::HttpOrigin, origin_whitelist: ['chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa', '184.107.183.10']
+use Rack::Protection::HttpOrigin, origin_whitelist: [
+  'chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa',
+  'http://184.107.183.10']
 
 # Enable protection against remote referrers.
 use Rack::Protection::RemoteReferrer
