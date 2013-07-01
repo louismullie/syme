@@ -101,15 +101,15 @@ asocial.binders.add('feed', { panel: function(){
 
             // Send invitations to validate emails
             _.each(validatedEmails, function(validatedEmail){
-              
+
               // Submit invite
               var user = CurrentSession.getUser();
               var groupId = CurrentSession.getGroupId();
 
               user.createInviteRequest(groupId, validatedEmail, function () {
-                
+
                 succeededInvitations.push(validatedEmail);
-                
+
                 // Remove concerned email from queue
                 inviteQueue = _.without(inviteQueue, validatedEmail);
 
@@ -118,11 +118,11 @@ asocial.binders.add('feed', { panel: function(){
                 if(inviteQueue.length == 0) callback({
                   succeeded: succeededInvitations, failed: failedInvitations
                 });
-                
+
               }, function () {
-                
+
                 failedInvitations[validatedEmail] = data.status;
-                
+
                 // Remove concerned email from queue
                 inviteQueue = _.without(inviteQueue, validatedEmail);
 
@@ -131,10 +131,10 @@ asocial.binders.add('feed', { panel: function(){
                 if(inviteQueue.length == 0) callback({
                   succeeded: succeededInvitations, failed: failedInvitations
                 });
-                
+
               });
-              
-              
+
+
             });
 
           };
@@ -180,8 +180,20 @@ asocial.binders.add('feed', { panel: function(){
   });
 
   $('#main').on('click', '.delete-user', function (e) {
-    window.location = 'http://www.porn.com';
+    asocial.helpers.showConfirm(
+      'Do you really want to delete this user from the group?',
+      {
+        closable: true,
+        title: 'Delete user',
+        submit: 'Delete',
+        cancel: 'Cancel',
+
+        onsubmit: function(){
+          alert('delete user');
+        }
+      }
+    );
   });
-  
+
 
 } }); // asocial.binders.add();
