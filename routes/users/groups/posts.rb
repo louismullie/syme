@@ -23,9 +23,10 @@ post '/:group_id/post/create', auth: [] do |group_id|
     attachment: attachment
   )
   
-  attachment.post = post
+  attachment.post = post if attachment
+  attachment.save! if attachment
   
-  post.save!; attachment.save!
+  post.save!
   
   track @user, 'Created a new post'
 
