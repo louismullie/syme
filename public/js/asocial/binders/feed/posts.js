@@ -96,9 +96,9 @@ asocial.binders.add('feed', { posts: function(){
 
     var id       = $(this).data('attachment-id');
     var filename = $(this).data('attachment-filename');
-    var key      = $(this).data('attachment-key');
+    var keys      = $(this).data('attachment-keys');
 
-    asocial.crypto.getFile(id, key, function (url) {
+    asocial.crypto.getFile(id, keys, function (url) {
       // Hide mofo spinner
       clearTimeout(spinner); $('#spinner').hide();
 
