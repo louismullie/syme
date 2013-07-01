@@ -20,7 +20,7 @@ function WorkerPool2(url, size) {
 
       var _this = this;
       
-      for (var n = 0; n < this.size; n += 1) {
+      for (var n = 0; n <= this.size; n += 1) {
 
         var worker = new Worker(this.url);
         
@@ -42,7 +42,7 @@ function WorkerPool2(url, size) {
           callback.call(context, msg.data.result);
           
           delete context; delete callback; delete msg;
-          
+         
           _this.active--; _this.nextJob();
 
         };
@@ -86,20 +86,13 @@ function WorkerPool2(url, size) {
     this.nextJob = function() {
 
       var minValue = 0, minIndex = 0;
-
-      // Find worker with smallest queue.
-      for (var i = 0; i < this.size; i++) {
-
-        if (this.pending[i] <= minValue) {
-          minValue = this.pending[i];
-          minIndex = i;
-        }
-
-      }
-
+      
       var job = this.jobs.pop();
 
+      var minIndex = Math.floor(Math.random() * (this.size + 1));
+
       if (job) {
+        this.pending[minIndex]++;
         this.active++;
         this.workers[minIndex].postMessage(job);
         //  job, this.channels[minIndex]);

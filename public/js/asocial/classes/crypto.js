@@ -202,7 +202,7 @@ Crypto = function (workerUrl) {
     window.crypto.getRandomValues(array);
     array = _.map(array, function (i) { return i });
     
-    _this.workerPool.queueJob({
+    _this.workerPool.broadcastJob({
       method: 'seedRandom', params: [array] });
     
   };
@@ -211,7 +211,7 @@ Crypto = function (workerUrl) {
     alert(result);
   };
   
-  this.workerPool = new WorkerPool2(workerUrl, 4);
+  this.workerPool = new WorkerPool2(workerUrl, 8);
  
   // Add some initial entropy to the PRNG.
   this.seedRandom();
