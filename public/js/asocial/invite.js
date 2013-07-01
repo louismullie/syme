@@ -52,7 +52,7 @@ guard('invite', {
         group_id: CurrentSession.getGroupId()
       });
 
-      $.post('http://localhost:5000/invite/integrate', integration, function (data) {
+      $.post(SERVER_URL + '/invite/integrate', integration, function (data) {
 
         if (data.status == 'ok') {
 
@@ -62,7 +62,7 @@ guard('invite', {
             invite_id: asocial.state.invite.id
           });
 
-          $.post('http://localhost:5000/invite/acknowledge', ack, function () {
+          $.post(SERVER_URL + '/invite/acknowledge', ack, function () {
             // asocial.helpers.showAlert('Integrated the group successfully!');
             _this.refreshKeys(callback);
           });
@@ -116,7 +116,7 @@ guard('invite', {
         group_id: group_id
       });
 
-      $.post('http://localhost:5000/invite/update', update, function (data) {
+      $.post(SERVER_URL + '/invite/update', update, function (data) {
 
         if (data.status == 'ok') {
 
@@ -126,7 +126,7 @@ guard('invite', {
             new_keys: Object.keys(new_keys)
           });
 
-          $.post('http://localhost:5000/invite/acknowledge', ack, function () {
+          $.post(SERVER_URL + '/invite/acknowledge', ack, function () {
             // asocial.helpers.showAlert('Added a new group member to your keys!');
             _this.refreshKeys(callback);
           });

@@ -8,7 +8,7 @@ guard('uploader', {
     var group = CurrentSession.getGroupId();
 
     uploader = new Uploader(file, {
-      data: data, baseUrl: 'http://localhost:5000/' + group + '/file/'
+      data: data, baseUrl: SERVER_URL + '/' + group + '/file/'
     });
 
     uploader.start(progress, success);
@@ -29,7 +29,7 @@ guard('uploader', {
           group_id: CurrentSession.getGroupId()
         });
 
-        $.post('http://localhost:5000/send/file/start', params);
+        $.post(SERVER_URL + '/send/file/start', params);
       }
 
     );

@@ -25,7 +25,7 @@ asocial.binders.add('feed', { posts: function(){
 
       var post_id    = $(this).closest('.post').attr('id'),
           group      = CurrentSession.getGroupId(),
-          route      = 'http://localhost:5000/' + group + '/post/delete';
+          route      = SERVER_URL + '/' + group + '/post/delete';
 
       asocial.helpers.showConfirm(
         'Do you really want to delete this post?',
@@ -115,7 +115,7 @@ asocial.binders.add('feed', { posts: function(){
         type        = comment_id ? 'comment' : 'post',
         op          = $(this).hasClass('active') ? 'delete' : 'create',
         group       = CurrentSession.getGroupId(),
-        route       = 'http://localhost:5000/' + group + '/' + type + '/like/' + op;
+        route       = SERVER_URL + '/' + group + '/' + type + '/like/' + op;
 
     $.post(route, { post_id: post_id, comment_id: comment_id });
 

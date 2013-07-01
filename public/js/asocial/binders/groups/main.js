@@ -56,7 +56,7 @@ asocial.binders.add('groups', { main: function() {
 
     var group = {  name: name };
     
-    $.ajax('http://localhost:5000/groups', 
+    $.ajax(SERVER_URL + '/groups', 
     
       {
         
@@ -66,7 +66,7 @@ asocial.binders.add('groups', { main: function() {
         
         success: function (group) {
 
-          var route = 'http://localhost:5000/users/' +
+          var route = SERVER_URL + '/users/' +
             CurrentSession.getUserId() + '/groups';
       
           Crypto.createKeylist(group.id, function (encryptedKeyfile) {
@@ -100,7 +100,7 @@ asocial.binders.add('groups', { main: function() {
 
     if (prompt(message) == 'yes') {
       
-      $.ajax('http://localhost:5000/groups/' + groupId, {
+      $.ajax(SERVER_URL + '/groups/' + groupId, {
         
         type: 'DELETE',
         

@@ -8,7 +8,7 @@ asocial.binders.add('feed', { shared: function(){
         type        = comment_id ? 'comment' : 'post',
         op          = $(this).hasClass('active') ? 'delete' : 'create',
         group       = CurrentSession.getGroupId(),
-        route       = 'http://localhost:5000/' + group + '/' + type + '/like/' + op;
+        route       = SERVER_URL + '/' + group + '/' + type + '/like/' + op;
 
     $.post(route, { post_id: post_id, comment_id: comment_id });
 

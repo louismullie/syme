@@ -9,7 +9,7 @@ guard('auth', {
 
     var params = $.param({ email: email, A: A.toString(16) });
 
-    $.post('http://localhost:5000/login/1', params, function (data) {
+    $.post(SERVER_URL + '/login/1', params, function (data) {
 
       if (data.B && data.salt) {
 
@@ -21,7 +21,7 @@ guard('auth', {
 
         var params = $.param({ M: M.toString(16) });
 
-        $.post('http://localhost:5000/login/2', params, function (data) {
+        $.post(SERVER_URL + '/login/2', params, function (data) {
 
           if (data.status == 'ok') {
 
@@ -87,7 +87,7 @@ guard('auth', {
 
     asocial_state = {};
 
-    $.ajax('http://localhost:5000/sessions/xyz', {
+    $.ajax(SERVER_URL + '/sessions/xyz', {
       type: 'delete',
       success: callback
     });

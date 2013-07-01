@@ -204,7 +204,7 @@ Router = Backbone.Router.extend({
   renderDynamicTemplate: function(template, specific_binders) {
 
     // Get current URL
-    var url = 'http://localhost:5000/' + Backbone.history.fragment;
+    var url = SERVER_URL + '/' + Backbone.history.fragment;
 
     // Retreive data
     $.getJSON(url, function (data) {

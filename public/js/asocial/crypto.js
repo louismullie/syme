@@ -146,7 +146,7 @@ guard('crypto', {
     var download = function (id, keys, group) {
 
       var group = group || CurrentSession.getGroupId();
-      var baseUrl = 'http://localhost:5000/' + group + '/file/';
+      var baseUrl = SERVER_URL + '/' + group + '/file/';
 
       var downloader = new Downloader(id, keys, {
         baseUrl: baseUrl, group: group });

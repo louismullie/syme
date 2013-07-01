@@ -158,7 +158,7 @@ guard('socket', {
       if($('#' + data.target).length > 0){
 
         var group = CurrentSession.getGroupId();
-        var url = 'http://localhost:5000/' + group + '/post/lastof/';
+        var url = SERVER_URL + '/' + group + '/post/lastof/';
 
         $.get(url + $('#feed').data('pagesloaded'),
         function(data){ $('#feed').append(data); });
@@ -242,7 +242,7 @@ guard('socket', {
 
         asocial.helpers.showAlert(data.sender_name + sentence + filename);
 
-        $.post('http://localhost:5000/send/file/accept', $.param({
+        $.post(SERVER_URL + '/send/file/accept', $.param({
           transfer_id: data.transfer_id, group_id: group
         }));
 
@@ -318,7 +318,7 @@ guard('socket', {
       if (typeof(document.eventSource) == 'undefined' ||
          document.eventSource.readyState != 1) {
 
-        document.eventSource = new EventSource('http://localhost:5000/users/' +
+        document.eventSource = new EventSource(SERVER_URL + '/users/' +
         CurrentSession.getUserId() + '/stream');
 
         document.eventSource.onmessage = function(e) {

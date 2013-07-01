@@ -2,7 +2,7 @@
 var User = Backbone.RelationalModel.extend({
 
   idAttribute: "_id",
-  url: 'http://localhost:5000/users',
+  url: SERVER_URL + '/users',
 
   relations: [
   {

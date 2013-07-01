@@ -77,7 +77,7 @@ Session = function (user, callback) {
 
   if (!user) {
 
-    $.ajax('http://localhost:5000/state/session', {
+    $.ajax(SERVER_URL + '/state/session', {
 
       type: 'GET',
 

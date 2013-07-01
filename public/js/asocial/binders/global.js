@@ -58,8 +58,7 @@ asocial.binders.add('global', { main: function(){
 
     var id = $(this).closest('.notification').attr('id');
 
-    $.ajax('http://localhost:5000/users/' +
-          CurrentSession.getUserId() + '/notifications/' + id, {
+    $.ajax(SERVER_URL + '/' + CurrentSession.getUserId() + '/notifications/' + id, {
 
       type: 'delete',
 
