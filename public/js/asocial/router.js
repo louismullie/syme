@@ -161,7 +161,7 @@ Router = Backbone.Router.extend({
 
     // Binders
     asocial.binders.bind(template);
-    
+
 
   },
 
@@ -176,7 +176,7 @@ Router = Backbone.Router.extend({
     var _this = this;
 
     this.authenticate(function(){
-      
+
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
       if(!groupId) return Router.renderDynamicTemplate(template);
@@ -209,11 +209,16 @@ Router = Backbone.Router.extend({
     // Retreive data
     $.getJSON(url, function (data) {
 
-      // If container doesn't exist
+      // First pageload: container doesn't exist
       if( !$('#main').length ) {
+
         // Render it
         $('body').html( Handlebars.templates['container.hbs']() );
-        Router.renderNotifications();
+
+        // Initiate notifications
+        Notifications.setElement( $('#notifications-content') );
+        Notifications.collection.fetch();
+
       }
 
       // Render template
@@ -221,7 +226,7 @@ Router = Backbone.Router.extend({
 
       // Fill container with template
       $('#main').html(view);
-      
+
       // Binders
       asocial.binders.bind(template, specific_binders);
 
@@ -274,7 +279,7 @@ Router = Backbone.Router.extend({
 
         $('#notifications-content').html(
           asocial.helpers.render('feed-notifications-empty'));
-        
+
       } else {
 
         $('#notifications')
