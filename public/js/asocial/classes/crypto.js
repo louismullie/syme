@@ -124,6 +124,17 @@ Crypto = function (workerUrl) {
     }, transferKeysCb);
     
   };
+
+  this.addUserRequest = function(addUserRequest, addedUserCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'addUserRequest',
+      params: [addUserRequest]
+      
+    }, addedUserCb);
+    
+  };
   
   this.addKeypairs = function (keylistId, userId, keypairs) {
     

@@ -75,12 +75,12 @@ Crypto = {
     
   },
   
-  addUserRequest: function (addUserRequest) {
+  addUserRequest: function (addUserRequest, addedUserCb) {
     
     var keyfile = this.getKeyfile();
+    
+    return keyfile.addUserRequest(addUserRequest, addedUserCb);
 
-    return keyfile.addUserRequest(addUserRequest);
-      
   },
   
   transferKeysRequest: function (keylistId, newUserId, keysJson) {
@@ -286,6 +286,8 @@ Crypto = {
     var encMessage = messageJson.message;
     
     if (!encMessage) throw 'Message is missing.';
+    
+    throw messageTxt;
     
     var encSymKeyTxt64 = messageJson.keys[keyfile.userId];
     

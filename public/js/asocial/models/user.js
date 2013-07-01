@@ -167,6 +167,16 @@ var User = Backbone.RelationalModel.extend({
     
   },
   
+  addUserRequest: function (addUserRequest, addedUserCb) {
+    
+    Crypto.addUserRequest(addUserRequest, function () {
+      Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+        _this.updateKeyfile(encryptedKeyfile, addedUserCb);
+      });
+    });
+    
+  },
+  
   getGroupUpdates: function (groupId, updatedGroupsCb) {
     
     var url = '/users/' + this.get('_id') + 
@@ -181,16 +191,24 @@ var User = Backbone.RelationalModel.extend({
           var invitationId = groupUpdates.integrate.id;
           var request = groupUpdates.integrate.request;
           
-          _this.completeInviteRequest(invitationId,
-            request, updatedGroupsCb);
+          if (groupUpdates.distribute) {
+            
+            _this.completeInviteRequest(invitationId,
+              request, function () {
+                _this.addUserRequest(groupUpdates.distribute, updatedGroupsCb);
+            });
+            
+          } else {
+            
+            _this.completeInviteRequest(
+              invitationId, request, updatedGroupsCb);
+            
+          }
           
         } else if (groupUpdates.distribute) {
           
-          alert('Fail safe here');
-          
-          _this.addUserRequest(groupId, 
-            groupUpdates.distribute, updatedGroupsCb);
-          
+          _this.addUserRequest(groupUpdates.distribute, updatedGroupsCb);
+            
         } else {
           
           updatedGroupsCb();

@@ -615,21 +615,27 @@ Keyfile = function(userId, password, encKeyfile) {
     
   };
   
-  that.addUserRequest = function (addUserRequestBase64) {
+  that.addUserRequest = function (addUserRequests) {
     
-    var addUserRequestTxt = Crypto.decodeBase64(addUserRequestBase64);
-    var addUserRequest = JSON.parse(addUserRequestTxt);
+    var _this = this;
     
-    var keylistId           = addUserRequest.keylistId,
-        inviteeId           = addUserRequest.inviteeId,
-        inviteeKeypairsJson = addUserRequest.inviteeKeypairs;
-        
-    if (!keylistId || !inviteeId || !inviteeKeypairsJson)
-      throw 'Missing required parameters.'
-    
-    var inviteeKeypairsTxt = Crypto.decryptMessage(keylistId, inviteeKeypairsJson);
-    
-    that.addKeypairs(keylistId, inviteeId, JSON.parse(inviteeKeypairsTxt));
+    _.each(addUserRequests, function (addUserRequestBase64, index) {
+      
+      var addUserRequestTxt = Crypto.decodeBase64(addUserRequestBase64);
+      var addUserRequest = JSON.parse(addUserRequestTxt);
+
+      var keylistId           = addUserRequest.keylistId,
+          inviteeId           = addUserRequest.inviteeId,
+          inviteeKeypairs     = addUserRequest.inviteeKeypairs;
+
+      if (!keylistId || !inviteeId || !inviteeKeypairs)
+        throw 'Missing required parameters.'
+      
+      var inviteeKeypairsTxt = Crypto.decryptMessage(keylistId, inviteeKeypairs);
+
+      that.addKeypairs(keylistId, inviteeId, JSON.parse(inviteeKeypairsTxt));
+
+    });
     
     return null;
     
