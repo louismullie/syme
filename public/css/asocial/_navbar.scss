@@ -3,14 +3,14 @@
   left: 0; right: 0;
   z-index: 3;
 
-  padding: 0 $bodyPadding / 2;
+  padding: 0 $bodyPadding;
 
   background: $bodyBackgroundColor2;
   border-bottom: $baseBorderStyle;
 
   #stripe-bar {
     height: 8px;
-    margin: 0 #{-($bodyPadding / 2)};
+    margin: 0 #{-$bodyPadding};
 
     opacity: .9;
 
