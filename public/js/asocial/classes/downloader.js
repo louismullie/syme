@@ -95,7 +95,7 @@ function Downloader(id, keys, options) {
     var _this = this;
 
     xhr.addEventListener("load", function(event) {
-
+      
       var data = JSON.parse(event.target.responseText);
       _this.numChunks = data.chunks;
       _this.fileType = data.type;
@@ -111,13 +111,11 @@ function Downloader(id, keys, options) {
 
     });
 
-
     var groupId = CurrentSession.getGroupId();
     
     Crypto.decryptMessage(groupId, this.keys, function (key) {
       
       _this.key = key;
-      
       xhr.open("GET", fileUrl);
       xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
       xhr.send();
@@ -148,7 +146,7 @@ function Downloader(id, keys, options) {
 
     var fileUrl = this.options.baseUrl +
                   'download/' + this.fileId;
-
+                  
     this.workerPool.queueJob({
       id: this.fileId, chunk: chunk,
       worker: worker, key: this.key,

@@ -199,12 +199,17 @@ Crypto = {
 
   decryptMessage: function (keylistId, messageTxt64) {
     
+    if (typeof(counter) == 'undefined') counter = 0
+    
     // Get the keyfile.
     var keyfile = this.getKeyfile();
     
     // Base-64 decode and JSON-parse the received message.
     var messageTxt = Crypto.decodeBase64(messageTxt64);
     
+    //if (counter == 1)
+      //throw messageTxt64;
+      
     var messageJson = JSON.parse(messageTxt);
     
     var senderId = messageJson.senderId;
@@ -212,11 +217,11 @@ Crypto = {
     if (!senderId) throw 'Sender ID is missing.';
   
     // Get the encryption and signature keys.
-    var privateEncryptionKey = keyfile
-      .getPrivateEncryptionKey(keylistId, keyfile.userId);
+    var privateEncryptionKey = keyfile.
+      getPrivateEncryptionKey(keylistId, keyfile.userId);
     
-    var publicSignatureKey = keyfile
-      .getPublicSignatureKey(keylistId, senderId);
+    var publicSignatureKey = keyfile.
+      getPublicSignatureKey(keylistId, senderId);
     
     var encMessage = messageJson.message;
     
@@ -250,12 +255,13 @@ Crypto = {
     //  throw 'Incorrect recipient for message.'
     
     var plaintext = sjcl.decrypt(keyMessageJson.message, messageJson.message);
+    
+    counter++;
  
     // Return decrypted message if everything went fine.
     return plaintext;
 
   },
-
 
   decodeBase64ThenDecrypt: function (key, message) {
     

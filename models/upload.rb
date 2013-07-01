@@ -12,6 +12,8 @@ class Upload < Resource
 
   # Relations
   belongs_to :group
+  
+  field :thumbnail_id, type: String
 
   #  General fields (read-only)  #
 
@@ -32,23 +34,22 @@ class Upload < Resource
 
   # Original filename of the file.
   field :filename, type: String
+  
   # Size of upload in bytes.
   field :size, type: Integer
 
-  # Whether the upload has finished or not.
-  field :finished, type: Boolean
-
-  # Attribute protection.
-  attr_readonly :type, :encrypted,
-  :keys, :filename
-
-  attr_accessible :type, :encrypted,
-  :keys, :filename, :size
-
-  has_one :thumbnail
-
   # Image size as a string, e.g. 20x20
   field :image_size, type: String
+  
+  # Whether the upload has finished or not.
+  field :finished, type: Boolean
+  
+  attr_accessible :key, :keys, :store, :filename,
+  :size, :image_size, :finished, :thumbnail_id, :type, :encrypted
 
 
+  def thumbnail
+    group.thumbnails.find(thumbnail_id) if thumbnail_id
+  end
+  
 end

@@ -14,7 +14,7 @@
     {{#if placeholder}}
     %img{ src: '/img/groupavatar.jpg' }
     {{else}}
-    %img.encrypted-image{src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-key' => '{{key}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
+    %img.encrypted-image{src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-keys' => '{{keys}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
     {{/if}}
 
   {{/with}}

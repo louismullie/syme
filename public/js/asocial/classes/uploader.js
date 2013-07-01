@@ -166,7 +166,6 @@ function Uploader(file, options) {
 
       var keylistId = CurrentSession.getGroupId(); // unsafe!
       
-      
       Crypto.encryptMessage(keylistId, key, function (encryptedMessage) {
         
         var fd = new FormData();
