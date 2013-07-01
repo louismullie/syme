@@ -351,6 +351,19 @@ Keyfile = function(userId, password, encKeyfile) {
     
   };
   
+  that.getPrivateSignatureKey = function(groupId) {
+    
+    var keylist = this.getKeylist(groupId);
+    
+    if (!keylist[that.userId] ||
+        !keylist[that.userId].signatureKeypair ||
+        !keylist[that.userId].signatureKeypair.privateKey)
+      throw 'Private key not initialized.'
+  
+    return keylist[that.userId].signatureKeypair.privateKey;
+    
+  };
+  
   that.createTransaction = function (keylistId, transaction, type, key) {
     
     var transactions = that.getTransactions(keylistId);
