@@ -54,7 +54,7 @@ guard('socket', {
         // Increment unread_posts variable
         asocial.helpers.newContent('post');
 
-        postHtml.addClass('hidden');
+        postHtml.addClass('new-post');
       }
 
       // Append hidden new post

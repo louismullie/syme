@@ -55,7 +55,7 @@ guard('helpers', {
   showUnreadPosts: function(data){
 
     // Show hidden posts
-    $('.post.hidden').removeClass('hidden');
+    $('.post').removeClass('new-post');
 
     asocial.state.feed.updatedPosts = 0;
 

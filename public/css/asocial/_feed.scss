@@ -74,6 +74,8 @@
     border-bottom: none;
   }
 
+  &.new-post { display: none; }
+
   img.avatar {
     width: $avatarPostSize; height: auto;
     display: inline-block;
