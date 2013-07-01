@@ -103,6 +103,17 @@ Crypto = function (workerUrl) {
     
   };
   
+  this.completeInviteRequest = function (completeRequest, inviteCompletedCb) {
+
+    Crypto.workerPool.queueJob({
+      
+      method: 'completeInviteRequest',
+      params: [completeRequest]
+      
+    }, inviteCompletedCb);
+    
+  };
+  
   this.addKeypairs = function (keylistId, userId, keypairs) {
     
     Crypto.workerPool.queueJob({

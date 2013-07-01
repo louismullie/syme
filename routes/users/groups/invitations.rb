@@ -1,5 +1,41 @@
 require "base64"
 
+get '/users/:user_id/groups/:group_id/invitations', auth: [] do |_, group_id|
+
+  group = @user.groups.find(group_id)
+  
+  invitations = {}
+  
+  group.invitations.each do |invitation|
+    
+    # Current user is the invitee
+    if invitation.state == 3 &&
+       invitation.invitee_id == @user.id.to_s
+    
+      invitations[:integrate] = {
+        id: invitation.id.to_s,
+        request: invitation.integrate
+      }
+      
+    # Invite has been accepted
+    elsif invitation.state > 2  &&  
+      # Current user is not inviter
+      invitation.inviter_id != @user.id.to_s &&  
+      # Current user is 
+      invitation.invitee_id != @user.id.to_s     
+
+      invitations[:distribute] ||= {}
+      invitations[:distribute][invitation.id.to_s] =
+        invitation.distribute
+        
+    end
+    
+  end
+  
+  invitations.to_json
+  
+end
+
 post '/invitations', auth: [] do
 
   invitation = get_model(request)
@@ -38,8 +74,6 @@ put '/invitations', auth: [] do
   
   params = get_model(request)
   
-  logger.info params
-  
   error 400, 'missing_params' if !params._id
   
   invitation = begin
@@ -57,13 +91,43 @@ put '/invitations', auth: [] do
     
     request_confirm(invitation)
     
-  elsif params.confirm && invitation.state == 2
+  elsif params.integrate && params.distribute &&
+        invitation.state == 2
   
-    invitation.confirm = params.confirm
+    invitation.integrate = params.integrate
+    invitation.distribute = params.distribute
+    
     invitation.state = 3
     invitation.save!
     
+    group   = invitation.group
+    invitee = invitation.invitee
+    inviter = invitation.inviter
+
     notify_confirmed(invitation)
+
+    membership = Membership.create
+
+    group.memberships << membership
+    group.users << invitee
+    group.save!
+
+    invitee.memberships << membership
+
+    invitee.save!
+
+    track @user, 'Confirmed a new group member'
+    
+    notify_confirmed(invitation)
+    
+  elsif params.completed
+    
+    invitation.state = 4
+    invitation.save!
+  
+  else
+    
+    error 400, 'empty_request'
     
   end
   

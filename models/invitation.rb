@@ -22,10 +22,12 @@ class Invitation
   # State of invitation (1-4).
   field :state, type: Integer, default: 1
   
+  # Invitation transactions.
   field :request, type: String
   field :accept, type: String
   field :confirm, type: String
-  field :conclude, type: String
+  field :integrate, type: String
+  field :distribute, type: String
   
   def inviter
     User.find(inviter_id)

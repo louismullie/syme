@@ -100,10 +100,11 @@ var User = Backbone.RelationalModel.extend({
     var invitation = new Invitation();
     invitation.set('_id', invitationId);
 
-    Crypto.confirmInviteRequest(accept, function (inviteRequest) {
-      
+    Crypto.confirmInviteRequest(accept, function (inviteRequestJson) {
+        
         invitation.save(
-          { confirm: inviteRequest },
+          { integrate: inviteRequestJson.inviteConfirmation,
+            distribute: inviteRequestJson.addUserRequest },
           {
             success: function () {
               Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
@@ -115,6 +116,64 @@ var User = Backbone.RelationalModel.extend({
       
     });
 
+  },
+  
+  completeInviteRequest: function (invitationId, completeRequest, inviteCompletedCb, errorCb) {
+    
+    var _this = this;
+
+    var invitation = new Invitation();
+    invitation.set('_id', invitationId);
+
+    Crypto.completeInviteRequest(completeRequest, function () {
+        
+        invitation.save(
+          { completed: true },
+          {
+            success: function () {
+              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                _this.updateKeyfile(encryptedKeyfile, inviteCompletedCb);
+              });
+            },
+            error: errorCb
+        });
+      
+    });
+
+  },
+  
+  getGroupUpdates: function (groupId, updatedGroupsCb) {
+    
+    var url = '/users/' + this.get('_id') + 
+      '/groups/' + groupId + '/invitations';
+    
+    var _this = this;
+    
+    $.getJSON(url, function (groupUpdates) {
+      
+        if (groupUpdates.integrate) {
+          
+          var invitationId = groupUpdates.integrate.id;
+          var request = groupUpdates.integrate.request;
+          
+          _this.completeInviteRequest(invitationId,
+            request, updatedGroupsCb);
+          
+        } else if (groupUpdates.distribute) {
+          
+          alert('Fail safe here');
+          
+          _this.addUserRequest(groupId, 
+            groupUpdates.distribute, updatedGroupsCb);
+          
+        } else {
+          
+          updatedGroupsCb();
+          
+        }
+        
+    });
+    
   },
   
   updateKeyfile: function (encryptedKeyfile, keyfileUpdatedCb) {

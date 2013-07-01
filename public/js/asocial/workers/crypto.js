@@ -68,11 +68,11 @@ Crypto = {
     
   },
   
-  concludeInviteRequest: function (inviteRequest) {
+  completeInviteRequest: function (inviteRequest) {
     
     var keyfile = this.getKeyfile();
     
-    return keyfile.concludeInviteRequest(inviteRequest);
+    return keyfile.completeInviteRequest(inviteRequest);
     
   },
   

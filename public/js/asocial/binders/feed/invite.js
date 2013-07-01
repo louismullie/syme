@@ -125,8 +125,8 @@ asocial.binders.add('feed', { invite: function() {
 
     var user = CurrentSession.getUser();
     
-    user.confirmInviteRequest(invitationId, accept, function () {
-      alert('Confirmed!');
+    user.confirmInviteRequest(invitationId, accept, function (confirmation) {
+        alert('Confirmed!');
     });
     
   });

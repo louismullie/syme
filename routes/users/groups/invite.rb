@@ -239,7 +239,9 @@ post '/invite/acknowledge', auth: [] do
 
   if params[:type] == 'update'
 
-    membership = @group.memberships.where(user_id: @user.id).first
+    membership = @group.memberships
+      .where(user_id: @user.id).first
+    
     new_keys = membership.new_keys
 
     params[:new_keys].each do |id|

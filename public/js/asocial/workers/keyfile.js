@@ -572,7 +572,7 @@ Keyfile = function(userId, password, encKeyfile) {
 
   };
   
-  that.concludeInviteRequest = function (inviteRequestBase64) {
+  that.completeInviteRequest = function (inviteRequestBase64) {
     
     var inviteRequestTxt = Crypto.decodeBase64(inviteRequestBase64);
     var inviteRequest = JSON.parse(inviteRequestTxt);

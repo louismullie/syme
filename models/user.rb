@@ -22,8 +22,6 @@ class User
 
   field :full_name, type: String, default: 'Anonymous'
 
-  field :new_keys, type: Hash, default: {}
-
   field :activated, type: Boolean
   field :session_id, type: String
   field :keyfile, type: String

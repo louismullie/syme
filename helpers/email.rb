@@ -15,7 +15,7 @@ def send_email_to(email, subject, body)
       :authentication => :plain,
       :domain         => "localhost.localdomain"
     }
-  })
+  }) unless settings.environment == :development
   
 end
 
