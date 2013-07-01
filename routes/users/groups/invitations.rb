@@ -125,6 +125,46 @@ put '/invitations', auth: [] do
     invitation.state = 4
     invitation.save!
   
+  elsif params.transfer
+    
+    logger.info params.transfer
+    
+    keys = params.transfer
+
+    invitee_id = invitation.invitee.id.to_s
+    group = invitation.group
+    
+    keys['posts'].each do |post_info|
+
+      post = group.posts.find(post_info['id'])
+      post.keys[invitee_id] = post_info['key']
+
+      post_info['comments'].each do |comment_info|
+
+        comment = post.comments.find(comment_info['id'])
+        comment.keys[invitee_id] = comment_info['key']
+
+        comment.save!
+        
+      end
+
+      post.save!
+
+    end
+
+    # Transfer the upload keys to new user.
+    keys['uploads'].each do |upload_info|
+
+      upload = group.uploads.find(upload_info['id'])
+      
+      upload.keys[invitee_id] = upload_info['key']
+      
+      upload.save!
+
+    end
+    
+    invitation.save!
+    
   else
     
     error 400, 'empty_request'
@@ -135,6 +175,39 @@ put '/invitations', auth: [] do
   
   empty_response
   
+end
+
+get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
+
+  content_type :json
+
+  group = @user.groups.find(group_id)
+
+  posts = group.posts.map do |post|
+    {
+      id: post.id.to_s,
+      key: post.key_for_user(@user),
+      sender_id: post.owner.id.to_s,
+      comments: post.comments.map do |comment|
+        {
+          id: comment.id.to_s,
+          key: comment.key_for_user(@user),
+          sender_id: comment.owner.id.to_s
+        }
+      end
+    }
+  end
+
+  uploads = group.uploads.map do |upload|
+    {
+      id: upload.id.to_s,
+      key: upload.key_for_user(@user),
+      sender_id: upload.owner.id.to_s
+    }
+  end
+
+  { posts: posts, uploads: uploads }.to_json
+
 end
 
 =begin

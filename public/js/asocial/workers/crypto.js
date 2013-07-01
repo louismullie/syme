@@ -83,6 +83,65 @@ Crypto = {
       
   },
   
+  transferKeysRequest: function (keylistId, newUserId, keysJson) {
+    
+    var keyfile = this.getKeyfile(keylistId);
+    
+    var recryptedKeys = this.encodeBase64(JSON.stringify({
+      posts: this.recryptPosts(keylistId, newUserId, keysJson.posts),
+      uploads: this.recryptResource(keylistId, newUserId, keysJson.uploads)
+    }));
+    
+    return recryptedKeys;
+    
+  },
+  
+  recryptResource: function (keylistId, newUserId, arr) {
+
+    var result = [];
+
+    _.each(arr, function (ind, elem) {
+      
+      var senderId = elem.sender_id;
+      
+      var decryptedKey = this.decryptMessageKey(
+        keylistId, senderId, elem.key);
+      
+      var key = this.encryptMessageKey(
+        keylistId, newUserId, decryptedKey);
+      
+      result.push({id: elem.id, key: key});
+      
+    });
+
+    return result;
+
+  },
+
+  recryptPosts: function (keylistId, newUserId, posts) {
+
+    var result = [];
+    var _this = this;
+      
+    _.each(posts, function (post, index) {
+      
+      var decryptedKey = _this.decryptMessageKey(
+        keylistId, post.sender_id, post.key);
+      
+      var key = _this.encryptMessageKey(
+        keylistId, newUserId, decryptedKey);
+      
+      var comments = _this.recryptResource(
+        keylistId, newUserId, post.comments);
+      
+      result.push({ id: post.id, key: key, comments: comments });
+      
+    });
+
+    return result;
+
+  },
+  
   getKeyfile: function () {
     
     if (!this.keyfile)
@@ -148,47 +207,18 @@ Crypto = {
   
   encryptMessageKeys: function (keylistId, message, messageKey) {
     
+    var keyfile = this.getKeyfile();
+    var keylist = keyfile.getKeylist(keylistId);
+    var _this = this;
+    
     var encryptedKeys =  {};
     
-    var keyfile = this.getKeyfile();
-    var senderId = keyfile.userId;
-
-    var keylist = keyfile.getKeylist(keylistId);
-    // console.log(keylist[senderId]);
-    // Get the sender's private signature key.
-    var privateSignatureKey = keylist[senderId].signatureKeypair.privateKey;
-      
     _.each(keylist, function (keypairs, recipientId) {
 
       if (recipientId != '_transactions') {
         
-        // Get the recipient's public encryption keys.
-        var publicEncryptionKey = keypairs.encryptionKeypair.publicKey;
-
-        // Prepend the sender name to the plaintext.
-        var messageTxt = JSON.stringify({
-          sender: keyfile.userId, message: messageKey });
-
-        // Sign the message using the sender's private key.
-        var sha256 = sjcl.hash.sha256.hash(messageTxt);
-        var signature = privateSignatureKey.sign(sha256);
-        var signatureTxt = JSON.stringify(signature);
-
-        // Append the sender's signature to the message.
-        var contentTxt = JSON.stringify({
-          message: messageTxt, signature: signature});
-
-        // Encrypt the message using the recipient public key.
-        var symKey = publicEncryptionKey.kem(0);
-        var cipherTxt = sjcl.encrypt(symKey.key, contentTxt);
-
-        // Build the final message and convert it to a string.
-        var messageJson = { 'ct': cipherTxt, 'tag': symKey.tag };
-        var messageTxt = JSON.stringify(messageJson);
-        var messageBase64 = Crypto.encodeBase64(messageTxt);
-
-        encryptedKeys[recipientId] = messageBase64;
-        
+        encryptedKeys[recipientId] = _this
+        .encryptMessageKey(keylistId, recipientId, messageKey)
       }
       
     });
@@ -196,33 +226,62 @@ Crypto = {
     return encryptedKeys;
     
   },
+  
+  encryptMessageKey: function (keylistId, recipientId, messageKey) {
+    
+    var keyfile = this.getKeyfile();
+    
+    var senderId = keyfile.userId;
+    var keylist = keyfile.getKeylist(keylistId);
+    
+    var privateSignatureKey = keylist[senderId].signatureKeypair.privateKey;
+    
+    // Get the recipient's public encryption keys.
+    var publicEncryptionKey = keyfile.getPublicEncryptionKey(keylistId, recipientId);
+
+    // Prepend the sender name to the plaintext.
+    var messageTxt = JSON.stringify({
+      sender: keyfile.userId, message: messageKey });
+
+    // Sign the message using the sender's private key.
+    var sha256 = sjcl.hash.sha256.hash(messageTxt);
+    var signature = privateSignatureKey.sign(sha256);
+    var signatureTxt = JSON.stringify(signature);
+
+    // Append the sender's signature to the message.
+    var contentTxt = JSON.stringify({
+      message: messageTxt, signature: signature});
+
+    // Encrypt the message using the recipient public key.
+    var symKey = publicEncryptionKey.kem(0);
+    var cipherTxt = sjcl.encrypt(symKey.key, contentTxt);
+
+    // Build the final message and convert it to a string.
+    var messageJson = { 'ct': cipherTxt, 'tag': symKey.tag };
+    var messageTxt = JSON.stringify(messageJson);
+    var messageBase64 = Crypto.encodeBase64(messageTxt);
+
+     return messageBase64;
+    
+  },
 
   decryptMessage: function (keylistId, messageTxt64) {
     
-    if (typeof(counter) == 'undefined') counter = 0
-    
     // Get the keyfile.
     var keyfile = this.getKeyfile();
+    var keylist = keyfile.getKeylist(keylistId);
     
     // Base-64 decode and JSON-parse the received message.
     var messageTxt = Crypto.decodeBase64(messageTxt64);
     
-    //if (counter == 1)
-      //throw messageTxt64;
-      
     var messageJson = JSON.parse(messageTxt);
     
     var senderId = messageJson.senderId;
     
+    // Check sender in keylist...
     if (!senderId) throw 'Sender ID is missing.';
+    if (!keylist[senderId]) throw 'Sender is not in keylist.';
   
-    // Get the encryption and signature keys.
-    var privateEncryptionKey = keyfile.
-      getPrivateEncryptionKey(keylistId, keyfile.userId);
-    
-    var publicSignatureKey = keyfile.
-      getPublicSignatureKey(keylistId, senderId);
-    
     var encMessage = messageJson.message;
     
     if (!encMessage) throw 'Message is missing.';
@@ -231,6 +290,28 @@ Crypto = {
     
     if (!encSymKeyTxt64) throw 'Key is missing.'
     
+    var decryptedSymKey = this.decryptMessageKey(
+      keylistId, senderId, encSymKeyTxt64);
+    
+    var plaintext = sjcl.decrypt(
+      decryptedSymKey, messageJson.message);
+ 
+    return plaintext;
+
+  },
+  
+  decryptMessageKey: function (keylistId, senderId, encSymKeyTxt64) {
+    
+    // Get the keyfile.
+    var keyfile = this.getKeyfile();
+    
+    // Get the encryption and signature keys.
+    var privateEncryptionKey = keyfile.
+      getPrivateEncryptionKey(keylistId, keyfile.userId);
+
+    var publicSignatureKey = keyfile.
+      getPublicSignatureKey(keylistId, senderId);
+
     var keyMessageJson = JSON.parse(this.decodeBase64(encSymKeyTxt64));
     
     // Decrypt the message using the recipient's private key.
@@ -251,16 +332,8 @@ Crypto = {
     
     if (!verified) throw 'Signature verification failed.'
     
-    //if (message.sender != recipient)
-    //  throw 'Incorrect recipient for message.'
+    return keyMessageJson.message;
     
-    var plaintext = sjcl.decrypt(keyMessageJson.message, messageJson.message);
-    
-    counter++;
- 
-    // Return decrypted message if everything went fine.
-    return plaintext;
-
   },
 
   decodeBase64ThenDecrypt: function (key, message) {

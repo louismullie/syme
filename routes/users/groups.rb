@@ -96,6 +96,11 @@ end
 delete '/groups/:id', auth: [] do |id|
 
   group = Group.find(id)
+  
+  group.invitations.each do |invitation|
+    invitation.destroy
+  end
+  
   group.destroy
 
   track @user, 'Deleted a group'

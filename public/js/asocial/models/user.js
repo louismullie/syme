@@ -142,6 +142,31 @@ var User = Backbone.RelationalModel.extend({
 
   },
   
+  transferKeysRequest: function (invitationId, inviteeId, transferredKeysCb, errorCb) {
+    
+    var invitation = new Invitation();
+    invitation.set('_id', invitationId);
+    
+    var groupId = CurrentSession.getGroupId();
+    
+    var url = '/users/' + CurrentSession.getUserId() +
+    '/groups/' + groupId + '/keys';
+    
+    $.getJSON(url, function (keys) {
+      
+      Crypto.transferKeysRequest(groupId, inviteeId, keys, function () {
+        invitation.save(
+          { transfer: keys },
+          {
+            success: transferredKeysCb,
+            error: errorCb
+        });
+      });
+      
+    });
+    
+  },
+  
   getGroupUpdates: function (groupId, updatedGroupsCb) {
     
     var url = '/users/' + this.get('_id') + 

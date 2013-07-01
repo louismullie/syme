@@ -17,6 +17,7 @@
       
       // Replace by GET request with only invite ID, which returns the rest.
       %a.invite-confirm{href: '#',  'data-invite-id'         => '{{id}}',
+                                    'data-invite-invitee_id' => '{{invitee_id}}',
                                     'data-invite-accept'     => '{{accept}}'}
       
         %img.placeholder-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" }

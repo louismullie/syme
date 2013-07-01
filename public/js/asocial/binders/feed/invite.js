@@ -1,63 +1,5 @@
 asocial.binders.add('feed', { invite: function() {
 
-
-    function broadcastKeys(broadcast) {
-
-      $.post('http://localhost:5000/invite/broadcast', broadcast, function (data) {
-
-       if (data.status == 'ok') {
-         //asocial.helpers.showAlert('Go back to groups panel and click on the group.');
-         //$that.append('Invite confirmed!');
-         alert('Invite confirmed!');
-
-       } else {
-         asocial.helpers.showAlert('An error has occured with broadcasting.');
-        }
-
-       });
-
-    }
-
-    function recrypt(publicKey, arr) {
-
-      var result = [];
-
-      $.each(arr, function (ind, elem) {
-        var key = asocial.crypto.ecc.encrypt(publicKey,
-          asocial.crypto.ecc.decrypt(asocial_private_key(), elem.key));
-
-        result.push({id: elem.id, key: key});
-      });
-
-      return result;
-
-    }
-
-    function recryptPosts(publicKey, posts) {
-
-      var result = [];
-
-      $.each(posts, function (ind, post) {
-        var key = asocial.crypto.ecc.encrypt(publicKey,
-          asocial.crypto.ecc.decrypt(asocial_private_key(), post.key));
-
-        result.push({id: post.id, key: key,
-          comments: recrypt(publicKey, post.comments)});
-      });
-
-      return result;
-
-    }
-
-    function recryptKeys(rsa, keys) {
-
-      return $.base64.encode (JSON.stringify({
-        posts: recryptPosts(rsa, keys.posts),
-        uploads: recrypt(rsa, keys.uploads)
-      }) );
-
-    }
-
     function sendKeys(PA, key, public_keys, answer, inviteId, id_A, k) {
 
       var group_id = CurrentSession.getGroupId();
@@ -121,12 +63,18 @@ asocial.binders.add('feed', { invite: function() {
     //sendKeys(PA, key, public_keys, answer, inviteId, id_A, k);
     
     var invitationId = $(this).data('invite-id');
+    var inviteeId = $(this).data('invite-invitee_id');
+    
     var accept = $(this).data('invite-accept');
 
     var user = CurrentSession.getUser();
     
+    var keylistId = CurrentSession.getGroupId();
+    
     user.confirmInviteRequest(invitationId, accept, function (confirmation) {
-        alert('Confirmed!');
+        user.transferKeysRequest(invitationId, inviteeId, function (transferedKeys) {
+          alert('Confirmed!');
+        });
     });
     
   });

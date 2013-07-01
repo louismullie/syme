@@ -114,6 +114,17 @@ Crypto = function (workerUrl) {
     
   };
   
+  this.transferKeysRequest = function(keylistId, userId, keys, transferKeysCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'transferKeysRequest',
+      params: [keylistId, userId, keys]
+      
+    }, transferKeysCb);
+    
+  };
+  
   this.addKeypairs = function (keylistId, userId, keypairs) {
     
     Crypto.workerPool.queueJob({
@@ -135,8 +146,9 @@ Crypto = function (workerUrl) {
       params: [userId, password, encKeyfile]
       
     }, function () {
-      console.log(4);
+      
       _this.getEncryptedKeyfile(encryptedKeyfileCb);
+      
     });
     
     Crypto.workerPool.broadcastJob({
