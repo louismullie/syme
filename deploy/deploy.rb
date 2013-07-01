@@ -24,7 +24,7 @@ set :deploy_via, :remote_cache
 set :ssh_options, { forward_agent: true }
 
 # Set location for apps.
-set :location, '192.155.91.89'
+set :location, '184.107.183.10'
 
 role :web, location
 role :app, location
