@@ -11,10 +11,10 @@ module Asocial
     def self.require_directory(dir)
       Dir['./' + dir + '/*.rb'].each { |file| require file }
     end
-    
+
     # Set global session ID check.
     set(:auth) do |*roles|
-      condition { halt 403 unless session[:user_id] }
+      condition { halt 401 unless session[:user_id] }
     end
 
   end

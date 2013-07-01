@@ -130,32 +130,32 @@ Router = Backbone.Router.extend({
     // By default, static pages can be accessed while logged in
     var logged_off_only = logged_off_only || false;
     var _this = this;
-    
+
     // If route is logged_off only
     if (logged_off_only) {
-    
+
       this.authenticate(
         function () {
           Router.notfound();
         }, function () {
           _this.renderStaticPage(template)
       });
-    
+
     // Otherwise, render
     } else {
       this.renderStaticPage();
     }
-    
+
     return null;
 
   },
 
   renderStaticPage: function (template) {
-    
+
     // Render template
     var view = Handlebars.templates[template + '.hbs']();
 
-    
+
     // Fill body
     $('body').html(view);
 
@@ -163,7 +163,7 @@ Router = Backbone.Router.extend({
     asocial.binders.bind(template);
 
   },
-  
+
   loadDynamicPage: function (template, groupId, specific_binders) {
 
     // Optional group id for routes that require group authentication
@@ -173,21 +173,21 @@ Router = Backbone.Router.extend({
     $('#spinner').show();
 
     var _this = this;
-    
+
     this.authenticate(function(){
 
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
       if(!groupId) return Router.renderDynamicTemplate(template);
-      
+
       CurrentSession.setGroupId(groupId);
-      
+
       var user = CurrentSession.getUser();
-      
+
       user.getGroupUpdates(groupId, function () {
-        
+
         Router.renderDynamicTemplate(template, specific_binders);
-        
+
       });
 
     }, function() {
@@ -221,7 +221,7 @@ Router = Backbone.Router.extend({
 
       // Render template
       var view = Handlebars.compileTemplate(template, data);
-      
+
       // Fill container with template
       $('#main').html(view);
 
@@ -231,7 +231,14 @@ Router = Backbone.Router.extend({
       // Hide spinner
       $('#spinner').hide();
 
-    }).fail(Router.error);
+    }).fail(function(jqXHR){
+      if(jqXHR.status == 401) {
+        // User has been logged off.
+        asocial.auth.disconnect();
+      } else {
+        Router.error();
+      }
+    });
 
   },
 
@@ -264,7 +271,7 @@ Router = Backbone.Router.extend({
       });
 
       var notificationCount = $('#notifications-content').children().length;
-      
+
       if (notificationCount == 0) {
 
         $('#notifications-content').html(
