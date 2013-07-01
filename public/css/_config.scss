@@ -50,6 +50,11 @@ $l:                       20px; // large
 $bodyPadding:             30px;
 $baseBorderRadius:        3px;
 
+$navbarLineHeight: 40px;
+$navbarPadding: 20px;
+$navbarStripeHeight: 8px;
+$navbarHeight: $navbarStripeHeight + $navbarPadding*2 + $navbarLineHeight;
+
 $avatarFormSize:          80px;
 $avatarPostSize:          70px;
 $avatarNotificationSize:  40px;

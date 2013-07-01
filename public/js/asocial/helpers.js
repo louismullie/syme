@@ -302,6 +302,14 @@ guard('helpers', {
 
   },
 
+  navbarBreadcrumbs: function(json) {
+    // json should be formatted like this
+    // { brand_only: false, elements: [ *{ href: '', title: '' } ] }
+
+    var template = this.render('navbar-breadcrumbs', json);
+    $('#navbar-breadcrumbs').html(template);
+  },
+
   showModal: function(html, options) {
 
     var options  = typeof(options)          === "undefined" ? {} : options;

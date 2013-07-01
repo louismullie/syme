@@ -104,8 +104,10 @@ input[type="submit"] {
 }
 
 #main {
-  padding-top: $bodyPadding + 93px;
+  padding-top: $navbarHeight + $bodyPadding;
   padding-bottom: $bodyPadding;
+  padding-left: $bodyPadding/2;
+  padding-right: $bodyPadding/2;
 }
 
 .hidden {

@@ -1,5 +1,15 @@
 asocial.binders.add('groups', { main: function() {
 
+  // Breadcrumbs
+  asocial.helpers.navbarBreadcrumbs({
+    brand_only: true,
+
+    elements: [
+      { title: 'Groups',
+        href: 'users/' + asocial.state.user.id + '/groups' }
+    ]
+  });
+
   // Decrypt group avatars.
   asocial.crypto.decryptMedia();
 

@@ -26,22 +26,25 @@
   }
 
   ul {
-    @extend .mvl;
+    margin: $navbarPadding 0;
 
     list-style-type: none;
 
     li {
+      height: $navbarLineHeight;
+
       position: relative;
 
       display: inline-block;
       vertical-align: middle;
 
+      line-height: $navbarLineHeight;
+
       margin-right: 1em; &:last-child{ margin-right: 0; }
 
       & > a {
-        line-height: 40px;
-
         color: $gray;
+        line-height: $navbarLineHeight;
 
         @include transition(color .25s);
 
@@ -66,17 +69,28 @@
         a {
           font: 600 1.5em $opensans;
           color: $black;
+          line-height: $navbarLineHeight;
         }
 
         @media #{$breakpointSmall} { display: none; }
       }
 
-      &#group-selector {
-        display: none; // will be dynamically shown
-        width: 55%;
+      &#navbar-breadcrumbs {
+        padding-left: 1em;
+        border-left: $baseBorderStyle;
 
-        overflow-x: hidden;
+        overflow: hidden;
 
+        @media #{$breakpointLarge} {
+          width: 75%;
+        }
+
+        @media #{$breakpointMedium} {
+          width: 55%;
+        }
+
+        // Center and display only last element
+        // on $breakpointSmall
         @media #{$breakpointSmall} {
           width: 60%;
 
@@ -85,12 +99,10 @@
           @include transform(translateX(-50%));
 
           margin: 0;
+          padding-left: 0;
+          border-left: none;
 
           text-align: center;
-        }
-
-        @media #{$breakpointLarge} {
-          width: 75%;
         }
 
         font: 200 1.2em $opensans;
@@ -100,31 +112,57 @@
           list-style-type: none;
           margin: 0;
 
-          line-height: 40px;
+          line-height: $navbarLineHeight;
+
+          &.brand-only li {
+            @media #{$breakpointSmall} {
+              display: none;
+
+              &:last-child { display: none; }
+              &::after { content: none; }
+            }
+
+            &.brand {
+              display: none;
+              @media #{$breakpointSmall} { display: inline-block; }
+
+              a {
+                font: 600 1.2em $opensans;
+                color: $black;
+                line-height: $navbarLineHeight;
+
+                &:hover { text-decoration: none; }
+              }
+            }
+          }
 
           li {
             margin: 0;
 
+            @media #{$breakpointSmall} { display: none }
+
             a {
+              color: $gray;
               line-height: inherit;
 
-              &:hover { color: inherit; }
+              &:hover {
+                text-decoration: underline;
+                color: inherit;
+              }
             }
 
-            // Grayed out title
-            &.title {
-              color: $gray;
-
-              a:hover { text-decoration: underline; }
-
-              @media #{$breakpointSmall} { display: none; }
-            }
-
-            &.group {
+            // Text-overflow for last-child
+            &:last-child {
               overflow-x: hidden;
               text-overflow: ellipsis;
               max-width: 76%; // I know
-              @media #{$breakpointSmall} { max-width: 100%; }
+
+              // Compensation for out-of-box serifs
+              padding: 0 5px;
+
+              a { color: $black; }
+
+              @media #{$breakpointSmall} { max-width: 100%; display: inline-block; }
             }
 
             // Separators
@@ -138,9 +176,9 @@
 
               color: $gray;
             }
-            &:last-child::after {
-              display: none;
-            }
+
+            // No separator for last <li>
+            &:last-child::after { display: none; }
           }
         }
       }

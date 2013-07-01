@@ -1,14 +1,14 @@
 asocial.binders.add('settings', { main: function(){
 
-  // Navbar group selector
-  var navbar_breadcrumbs = $('#group-selector');
+  // Breadcrumbs
+  asocial.helpers.navbarBreadcrumbs({
+    brand_only: true,
 
-  // Set title
-  navbar_breadcrumbs.find('li.title a')
-    .attr('href', '/users/' + asocial.state.user.id)
-    .html('Settings')
-
-  navbar_breadcrumbs.find('li.group').remove();
+    elements: [
+      { title: 'Settings',
+        href: 'users/' + asocial.state.user.id }
+    ]
+  });
 
   // 'Change name' form
   $('#change-name').submit(function(e){

@@ -1,0 +1,10 @@
+%ul{ class: '{{#if brand_only}}brand-only{{/if}}' }<
+  {{#if brand_only}}
+  %li.brand>
+    %a{ href: '', hbs: '' } Asocial
+  {{/if}}
+
+  {{#each elements}}
+  %li>
+    %a{ href: '{{href}}', hbs: '', title: '{{title}}' } {{title}}
+  {{/each}}

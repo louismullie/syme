@@ -10,7 +10,7 @@
 
     #feed-panel {
       position: fixed;
-      top: 110px; bottom: $bodyPadding;
+      top: $navbarHeight + $bodyPadding; bottom: $bodyPadding;
       width: $panelSize !important;
 
       #userlist {
@@ -35,7 +35,7 @@
 
     #feed-panel {
       position: fixed;
-      top: 110px; bottom: $bodyPadding;
+      top: $navbarHeight + $bodyPadding; bottom: $bodyPadding;
       width: $panelSize !important;
 
       #userlist {
@@ -53,7 +53,8 @@
 // Small (collapse)
 @media #{$breakpointSmall} {
   #feed-panel-column {
-    @include grid-column(24, true, false, 1);
+    // @include grid-column(24, true, false, 1);
+    display: none;
   }
 }
 
