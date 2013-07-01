@@ -1,7 +1,6 @@
 Crypto = function (workerUrl) {
   
   var _this = this;
-  var callbacks = 
   
   this.queueJob = function (job, successCb, errorCb) {
     
@@ -16,18 +15,30 @@ Crypto = function (workerUrl) {
   
   this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
     
+    console.log(1);
     Crypto.workerPool.queueJob({
-      
       method: 'getEncryptedKeyfile'
-    
-    // Return encrypted keyfile.
     }, function (message) {
-      encryptedKeyfileCb(message.result);
+      encryptedKeyfileCb(message);
     });
     
   };
   
-  this.createKeylist = function (keylistId, doneCallback) {
+  // Development only!
+  this.getSerializedKeyfile = function (keyfileCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'getSerializedKeyfile'
+    
+    // Return encrypted keyfile.
+    }, keyfileCb);
+    
+  };
+  
+  this.createKeylist = function (keylistId, encryptedKeyfileCb) {
+    
+    var _this = this;
     
     // Generate keylist for group.
     Crypto.workerPool.queueJob({
@@ -36,7 +47,70 @@ Crypto = function (workerUrl) {
       params: [keylistId]
     
     // Get encrypted keyfile.
-    }, doneCallback);
+    }, function () {
+      _this.getEncryptedKeyfile(encryptedKeyfileCb);
+    });
+    
+  };
+  
+  this.deleteKeylist = function (keylistId, encryptedKeyfileCb) {
+    
+    var _this = this;
+    
+    // Delete a keylist.
+    Crypto.workerPool.queueJob({
+      
+      method: 'deleteKeylist',
+      params: [keylistId]
+    
+    // Get encrypted keyfile.
+    }, function () {
+      _this.getEncryptedKeyfile(encryptedKeyfileCb);
+    });
+    
+  };
+  
+  this.createInviteRequest = function (keylistId, userAlias, inviteCreatedCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'createInviteRequest',
+      params: [keylistId, userAlias]
+      
+    }, inviteCreatedCb);
+    
+  };
+ 
+  this.acceptInviteRequest = function (inviteRequest, inviteAcceptedCb) {
+
+    Crypto.workerPool.queueJob({
+      
+      method: 'acceptInviteRequest',
+      params: [inviteRequest]
+      
+    }, inviteAcceptedCb);
+    
+  };
+  
+  this.confirmInviteRequest = function (inviteRequest, inviteAcceptedCb) {
+
+    Crypto.workerPool.queueJob({
+      
+      method: 'confirmInviteRequest',
+      params: [inviteRequest]
+      
+    }, inviteAcceptedCb);
+    
+  };
+  
+  this.completeInviteRequest = function (completeRequest, inviteCompletedCb) {
+
+    Crypto.workerPool.queueJob({
+      
+      method: 'completeInviteRequest',
+      params: [completeRequest]
+      
+    }, inviteCompletedCb);
     
   };
   
@@ -51,14 +125,19 @@ Crypto = function (workerUrl) {
     
   };
   
-  this.initializeKeyfile = function (userId, password, encKeyfile, doneCallback) {
+  this.initializeKeyfile = function (userId, password, encKeyfile, encryptedKeyfileCb) {
+    
+    var _this = this;
     
     Crypto.workerPool.queueJob({
       
       method: 'initializeKeyfile',
       params: [userId, password, encKeyfile]
       
-    }, doneCallback);
+    }, function () {
+      console.log(4);
+      _this.getEncryptedKeyfile(encryptedKeyfileCb);
+    });
 
   };
   
@@ -69,9 +148,7 @@ Crypto = function (workerUrl) {
       method: 'encryptMessage',
       params: [keylistId, message]
       
-    }, function (response) {
-      encryptedMessageCb(response.result);
-    });
+    }, encryptedMessageCb);
     
   };
   
@@ -82,9 +159,30 @@ Crypto = function (workerUrl) {
       method: 'decryptMessage',
       params: [keylistId, message]
       
-    }, function (response) {
-      decryptedMessageCb(response.result);
-    });
+    }, decryptedMessageCb);
+    
+  };
+  
+  this.uploadChunk = function (chunkInfo, uploadedChunkCb) {
+    
+    Crypto.workerPool.queueJob(chunkInfo, uploadedChunkCb);
+    
+  };
+
+  this.downloadChunk = function (chunkInfo, downloadedChunkCb) {
+    
+    Crypto.workerPool.queueJob(chunkInfo, downloadedChunkCb);
+    
+  };
+  
+  this.generateRandomKeys = function(generatedKeysCb) {
+    
+    Crypto.workerPool.queueJob({
+      
+      method: 'generateRandomHex',
+      params: [256]
+      
+    }, generatedKeysCb);
     
   };
   
@@ -114,7 +212,3 @@ Crypto = function (workerUrl) {
 };
 
 Crypto = new Crypto('js/asocial/workers/asocial.js');
-
-// Crypto.initializeKeyfile('louis', 'password');
-// Crypto.createKeylist('bruncheurs');
-// Crypto.getEncryptedKeyfile('louis', alert);

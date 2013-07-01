@@ -7,15 +7,6 @@ var User = Backbone.RelationalModel.extend({
   relations: [
   {
     type: Backbone.HasOne,
-    key: 'keypair',
-    relatedModel: 'Keypair',
-    reverseRelation: {
-      key: 'user'
-    }
-  },
-
-  {
-    type: Backbone.HasOne,
     key: 'verifier',
     relatedModel: 'Verifier',
     reverseRelation: {
@@ -23,23 +14,188 @@ var User = Backbone.RelationalModel.extend({
     }
   }],
 
-  createKeypair: function (password, callback) {
+  createKeyfile: function (password, keyfileCreatedCb) {
 
-    // Generate a random salt for the password hash.
-    var keypairSalt = asocial.crypto.generateRandomHexSalt();
+    var _this = this, email = this.get('email');
+    console.log(6);
+    Crypto.initializeKeyfile(email, password, null, function (encryptedKeyfile) {
+      _this.updateKeyfile(encryptedKeyfile, keyfileCreatedCb);
+    });
+  
+  },
+  
+  createKeylist: function (keylistId, keylistCreatedCb) {
 
-    // Derive key form the user's password using the hex salt.
-    var key = asocial.crypto.calculateHash(password, keypairSalt);
+    var _this = this;
+    
+    Crypto.createKeylist(keylistId, function (encryptedKeyfile) {
+      _this.updateKeyfile(encryptedKeyfile, keylistCreatedCb);
+    });
+    
+  },
+  
+  deleteKeylist: function (keylistId, keylistDeletedCb) {
+    
+    var _this = this;
+    
+    Crypto.deleteKeylist(keylistId, function (encryptedKeyfile) {
+      _this.updateKeyfile(encryptedKeyfile, keylistDeletedCb);
+    });
+    
+  },
+  
+  createInviteRequest: function (keylistId, email, inviteCreatedCb, errorCb) {
+    
+    var _this = this;
+    var invitation = new Invitation();
+    
+    Crypto.createInviteRequest(keylistId, email, function (inviteRequest) {
+      
+        invitation.save(
+          {
+            group_id: keylistId,
+            email: email,
+            request: inviteRequest
+          },
+          {
+            success: function () {
+              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                _this.updateKeyfile(encryptedKeyfile, inviteCreatedCb);
+              });
+            },
+            error: errorCb
+        });
+      
+    });
 
-    // Generate an ECC keypair, convert to JSON and encrypt with key.
-    var keypair = asocial.crypto.generateEncryptedKeyPair(key);
+  },
+  
+  acceptInviteRequest: function (invitationId, request, inviteAcceptedCb, errorCb) {
+    
+    var _this = this;
+    var invitation = new Invitation();
+    invitation.set('_id', invitationId);
 
-    // Build a request for the server to create a keypair for the user.
-    this.set('keypair', new Keypair({ content: keypair, salt: keypairSalt }));
+    Crypto.acceptInviteRequest(request, function (inviteRequest) {
+      
+        invitation.save(
+          { accept: inviteRequest },
+          {
+            success: function () {
+              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                _this.updateKeyfile(encryptedKeyfile, inviteAcceptedCb);
+              });
+            },
+            error: errorCb
+        });
+      
+    });
 
-    // Save model.
-    this.save(null, { success: callback, error: function () { alert('Error!'); }});
+  },
+  
+  confirmInviteRequest: function (invitationId, accept, inviteConfirmedCb, errorCb) {
+    
+    var _this = this;
+    
+    var invitation = new Invitation();
+    invitation.set('_id', invitationId);
 
+    Crypto.confirmInviteRequest(accept, function (inviteRequestJson) {
+        
+        invitation.save(
+          { integrate: inviteRequestJson.inviteConfirmation,
+            distribute: inviteRequestJson.addUserRequest },
+          {
+            success: function () {
+              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                _this.updateKeyfile(encryptedKeyfile, inviteConfirmedCb);
+              });
+            },
+            error: errorCb
+        });
+      
+    });
+
+  },
+  
+  completeInviteRequest: function (invitationId, completeRequest, inviteCompletedCb, errorCb) {
+    
+    var _this = this;
+
+    var invitation = new Invitation();
+    invitation.set('_id', invitationId);
+
+    Crypto.completeInviteRequest(completeRequest, function () {
+        
+        invitation.save(
+          { completed: true },
+          {
+            success: function () {
+              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                _this.updateKeyfile(encryptedKeyfile, inviteCompletedCb);
+              });
+            },
+            error: errorCb
+        });
+      
+    });
+
+  },
+  
+  getGroupUpdates: function (groupId, updatedGroupsCb) {
+    
+    var url = '/users/' + this.get('_id') + 
+      '/groups/' + groupId + '/invitations';
+    
+    var _this = this;
+    
+    $.getJSON(url, function (groupUpdates) {
+      
+        if (groupUpdates.integrate) {
+          
+          var invitationId = groupUpdates.integrate.id;
+          var request = groupUpdates.integrate.request;
+          
+          _this.completeInviteRequest(invitationId,
+            request, updatedGroupsCb);
+          
+        } else if (groupUpdates.distribute) {
+          
+          alert('Fail safe here');
+          
+          _this.addUserRequest(groupId, 
+            groupUpdates.distribute, updatedGroupsCb);
+          
+        } else {
+          
+          updatedGroupsCb();
+          
+        }
+        
+    });
+    
+  },
+  
+  updateKeyfile: function (encryptedKeyfile, keyfileUpdatedCb) {
+    
+    var _this = this;
+    
+    console.log(_this);
+    this.set('keyfile', encryptedKeyfile);
+    
+    Crypto.getSerializedKeyfile(function (e) {
+      console.log("[Backbone] Updated key file", e);
+    });
+    
+    this.save(null, {
+      success: keyfileUpdatedCb,
+      error: _this.userSaveError
+    });
+    
+  },
+  
+  userSaveError: function () {
+    alert('Error while saving user!');
   }
 
 });

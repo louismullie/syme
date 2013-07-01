@@ -3,11 +3,10 @@
 
 %li.group-card.group-invite
   .group-banner
-    %a.group-banner-link.invite-link{ href: '#',
-                                      'data-invite-token' => '{{token}}',
-                                      'data-invite-inviter_pub_key' => '{{inviter_pub_key}}',
-                                      'data-invite-question' => '{{question}}',
-                                      'data-invite-state' => '{{state}}' }
+    %a.group-banner-link.invite-link{ href: '#', 'data-invite-id' => '{{id}}',
+                                                 'data-invite-group_id' => '{{group_id}}',
+                                                 'data-invite-request' => '{{request}}',
+                                                 'data-invite-state' => '{{state}}' }
       %span.cover
         {{#compare state 1}} Accept invitation {{/compare}}
         {{#compare state 2}} Pending confirmation {{/compare}}

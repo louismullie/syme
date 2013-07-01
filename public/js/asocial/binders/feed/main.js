@@ -5,7 +5,7 @@ asocial.binders.add('feed', { main: function(){
 
     elements: [
       { title: 'Groups',
-        href: 'users/' + asocial.state.user.id + '/groups' },
+        href: 'users/' + CurrentSession.getUserId() + '/groups' },
 
       { title: $('#feed').data('group-name'),
         href: Backbone.history.fragment }

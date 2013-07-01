@@ -6,7 +6,7 @@ asocial.binders.add('groups', { main: function() {
 
     elements: [
       { title: 'Groups',
-        href: 'users/' + asocial.state.user.id + '/groups' }
+        href: 'users/' + CurrentSession.getUserId() + '/groups' }
     ]
   });
 
@@ -40,6 +40,53 @@ asocial.binders.add('groups', { main: function() {
     }
   });
 
+  $('#create_group input[name="name"], #create_first_group input[name="name"]').keyup(function(){
+    $(this).parent().find('a.btn')[
+      $(this).val().length > 0 ? 'removeClass' : 'addClass'
+    ]('disabled');
+  });
+
+  $('#main').on('submit', '#create_group, #create_first_group', function(e) {
+
+    e.preventDefault();
+    
+    var name = $(this).find('input[name="name"]').val();
+    
+    if ( name.length == 0 ) return;
+
+    var group = {  name: name };
+    
+    $.ajax('http://localhost:5000/groups', 
+    
+      {
+        
+        type: 'POST', 
+        
+        data: group,
+        
+        success: function (group) {
+
+          var route = 'http://localhost:5000/users/' +
+            CurrentSession.getUserId() + '/groups';
+      
+          Crypto.createKeylist(group.id, function (encryptedKeyfile) {
+            
+            CurrentSession.getUser().updateKeyfile(
+              encryptedKeyfile,
+              function () { Router.reload(); }
+            );
+            
+          });
+        },
+        
+        error: function (error) {
+          alert('Error on group creation!');
+        }
+    
+    });
+
+  });
+
   $('.delete-group').click(function (e) {
 
     e.preventDefault();
@@ -49,106 +96,28 @@ asocial.binders.add('groups', { main: function() {
     var message = 'Are you sure? Type "yes" to confirm.';
 
     if (prompt(message) == 'yes') {
+      
       $.ajax('http://localhost:5000/groups/' + groupId, {
+        
         type: 'DELETE',
+        
         success: function (resp) {
-          Router.reload();
+          
+          var user = CurrentSession.getUser();
+          
+          user.deleteKeylist(groupId, function () {
+             Router.reload();
+          });
+          
         },
+        
         error: function (resp) {
-          asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
+          asocial.helpers.showAlert(
+            'Could not delete group',
+          { onhide: location.reload });
         }
       });
     }
-
-  });
-
-  $('#create_group input[name="name"], #create_first_group input[name="name"]').keyup(function(){
-    $(this).parent().find('a.btn')[
-      $(this).val().length > 0 ? 'removeClass' : 'addClass'
-    ]('disabled');
-  });
-
-  $('#main').on('submit', '#create_group, #create_first_group', function(e) {
-
-    // Prevent form submission.
-    e.preventDefault();
-
-    // Get the group name from the form.
-    var name = $(this).find('input[name="name"]').val();
-
-    if ( name.length == 0 ) return;
-
-    // Get the current user's ID from state.
-    var userId = asocial.state.user.id;
-
-    // Get the current user's public key.
-    var publicKey = asocial_public_key();
-
-    // Serialize public key to JSON format.
-    var pKeyJson = asocial.crypto.ecc.serializePublicKey(publicKey);
-
-    // Build a keylist with user's public key.
-    var keylist =  {}; keylist[userId] = pKeyJson;
-    var keylist = JSON.stringify(keylist);
-
-    // Generate a random salt for keylist encryption.
-    var salt = asocial.crypto.generateRandomHexSalt();
-
-    // Retrieve the password from session storage.
-    asocial.auth.getPasswordLocal(function (password) {
-
-      // Derive a key from the user's password for encryption.
-      var key = asocial.crypto.calculateHash(password, salt);
-
-      // Encrypt the keylist using the key.
-      var encryptedKeylist = sjcl.encrypt(key, keylist);
-
-      // Base64 encode the encrypted keylist.
-      var encryptedKeylist64 = $.base64.encode(encryptedKeylist);
-
-      // Get a security questions and answer for the user
-      var question = prompt('Please enter a security question:');
-      var securityAnswer = prompt('Please enter the answer to the question:');
-      // CHRIS - modify this code to take input from the form.
-
-      // Verify question and answer are present.
-      if (!question || !securityAnswer) {
-        alert('You must enter a question and an answer.');
-        return;
-      }
-
-      // Generate a random key salt.
-      var answerSalt = asocial.crypto.generateRandomHexSalt();
-      var answerKey = asocial.crypto.calculateHash(password, answerSalt);
-
-      // Encrypt the security key with the current user's secret key.
-      var encryptedAnswer = sjcl.encrypt(answerKey, securityAnswer);
-
-      // Encode the security key with base 64.
-      var encodedAnswer = $.base64.encode(encryptedAnswer);
-
-      // Build the params to send to the server.
-      var groupParams = $.param({
-
-        name: name,
-        keylist: encryptedKeylist64,
-        keylist_salt: salt,
-
-        question: question,
-        answer: encodedAnswer,
-        answer_salt: answerSalt
-
-      });
-
-      // Create the group, passing the encrypted key list.
-      $.post('http://localhost:5000/groups', groupParams, function (group) {
-
-        var route = 'http://localhost:5000/users/' + asocial.state.user.id + '/groups';
-
-        Router.reload();
-      });
-
-    });
 
   });
 

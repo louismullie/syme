@@ -16,7 +16,7 @@ def send_email_to(email, subject, body)
       :domain         => "localhost.localdomain"
     }
   }) unless settings.environment == :development
-
+  
 end
 
 def send_invite(email, token)

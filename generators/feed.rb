@@ -5,7 +5,7 @@ class FeedGenerator
     posts = generate_posts(posts, current_user, current_group)
     user = generate_user(current_user, current_group)
     users = generate_user_list(current_group, current_user)
-    invite = InviteGenerator.generate_pending_invites(current_group, current_user)
+    invite = InvitationGenerator.generate_pending_invites(current_group, current_user)
     group = GroupGenerator.generate(current_group, current_user)
 
     {

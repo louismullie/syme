@@ -1,33 +1,34 @@
 # Get the current user's information.
 get '/users' do
-
+  
   # Get ID and e-mail as GET parameters.
   id, email = params[:id], params[:email]
 
   # Make sure either ID or e-mail was provided.
-  if id.blank? || email.blank?
+  if id.blank? && email.blank?
     error 400, 'missing_params'
   end
 
-  if User.where(id: id).any? ||
-    User.where(email: email).any?
-    status 302
-  else
-    error 404, 'user_not_found'
+  unless (User.where(id: id).any? ||
+         User.where(email: email).any?)
+   error 404, 'user_not_found'
+  end
+  
+  if !@user || (id != @user.id.to_s)
+    error 403, 'unauthorized'
   end
 
+  @user.to_json
+  
 end
 
-get '/state/user', auth: [] do
-
+get '/state/session', auth: [] do
+  
   content_type :json
 
-  unless @user
-    raise 'Cannot get state of undefined user.'
-  end
-
-  { id: @user.id.to_s, keypair: @user.keypair.content,
-    keypair_salt: @user.keypair.salt,
+  error 403, 'unauthorized' unless @user
+  
+  { user_id: @user.id.to_s,
     password_key: @user.session_id
   }.to_json
 
@@ -81,6 +82,8 @@ put '/users' do
 
   model = get_model(request)
 
+  logger.info model
+  
   # Find the user with the supplied ID.
   user = begin
     User.find(model._id)
@@ -103,11 +106,9 @@ put '/users' do
   end
 
   # Update keypair.
-  if model.keypair
-    user.keypair = Keypair.new(
-      content: model.keypair['content'],
-      salt: model.keypair['salt']
-    )
+  if model.keyfile
+    user.keyfile = model.keyfile
+    user.save!
   end
 
   # Update user name.

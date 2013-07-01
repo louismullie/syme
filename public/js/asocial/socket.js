@@ -51,7 +51,7 @@ guard('socket', {
       console.log(owner);
 
       // If the post owner isn't the user.
-      if (owner != asocial.state.user.id) {
+      if (owner != CurrentSession.getUserId()) {
         // Increment unread_posts variable
         asocial.helpers.newContent('post');
 
@@ -179,7 +179,7 @@ guard('socket', {
       // If post is on the page yet
       if($('#' + data.target).length > 0){
 
-        var group = asocial.state.group.id;
+        var group = CurrentSession.getGroupId();
         var url = 'http://localhost:5000/' + group + '/post/lastof/';
 
         $.get(url + $('#feed').data('pagesloaded'),
@@ -255,7 +255,7 @@ guard('socket', {
     file: function (data) {
 
       // var buffers = {};
-      var group = asocial.state.group.id;
+      var group = CurrentSession.getGroupId();
 
       if (data.action == 'request') {
 
@@ -341,7 +341,7 @@ guard('socket', {
          document.eventSource.readyState != 1) {
 
         document.eventSource = new EventSource('http://localhost:5000/users/' +
-        asocial.state.user.id + '/stream');
+        CurrentSession.getUserId() + '/stream');
 
         document.eventSource.onmessage = function(e) {
 

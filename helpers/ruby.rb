@@ -60,7 +60,7 @@ end
 class ::Hash
 
   def to_struct
-    Struct.new(*keys.map(&:intern)).new(*values)
+    OpenStruct.new(self)
   end
 
 end

@@ -47,28 +47,35 @@ asocial.binders.add('feed', { form: function(){
     $this.data('active', true);
 
     // Encrypt the message and write the content to the file.
-    var encrypted = asocial.crypto.encryptMessage(message);
-    $('#encrypted_content').val(JSON.stringify(encrypted));
+    var groupId = CurrentSession.getGroupId();
+    var $form = $(this);
+    
+    Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+      
+      alert(encryptedMessage);
+      
+      $('#encrypted_content').val(encryptedMessage);
+      
+      // Get the users who were mentioned in the message.
+      var mentions = {}; //asocial.helpers.findUserMentions(message);
+      $('#mentioned_users').val(JSON.stringify(mentions));
 
-    // Get the users who were mentioned in the message.
-    var mentions = asocial.helpers.findUserMentions(message);
-    $('#mentioned_users').val(JSON.stringify(mentions));
+      // Build request
+      var request = $form.serialize();
 
-    // Build request
-    var request = $this.serialize();
+      var group = CurrentSession.getGroupId();
+      var url = 'http://localhost:5000/' + group + '/post/create';
+      
+      
+      $.post(url, request, function(data){
 
-    var group = asocial.state.group.id;
-    var url = 'http://localhost:5000/' + group + '/post/create';
+        asocial.helpers.resetFeedForm();
 
-    $.post(url, request, function(data){
+      }).fail(function(){
 
-      asocial.helpers.resetFeedForm();
+        alert('Posting failed');
 
-    }).fail(function(){
-
-      alert('Posting failed');
-
-      // Implement error if posting failed
+      });
 
     });
 
@@ -133,7 +140,7 @@ asocial.binders.add('feed', { form: function(){
       // Thumnail callback
       function(url) {
         // Replace thumbnail in DOM
-        $('#feed-form-avatar img, img[data-user-id="' + asocial.state.user.id + '"]')
+        $('#feed-form-avatar img, img[data-user-id="' + CurrentSession.getUserId() + '"]')
           .attr('src', url);
       },
 

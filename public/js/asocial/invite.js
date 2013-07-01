@@ -37,7 +37,7 @@ guard('invite', {
 
       var PA = asocial.crypto.ecc.serializePublicKey(asocial_public_key());
 
-      PPA[asocial.state.user.id] = PA;
+      PPA[CurrentSession.getUserId()] = PA;
 
       var keylist_salt = asocial.crypto.generateRandomHexSalt();
       var new_sA = asocial.crypto.calculateHash(password, keylist_salt);
@@ -49,7 +49,7 @@ guard('invite', {
         answer: encodedAnswer,
         answer_salt: answerSalt,
         invite_id: asocial.state.invite.id,
-        group_id: asocial.state.group.id
+        group_id: CurrentSession.getGroupId()
       });
 
       $.post('http://localhost:5000/invite/integrate', integration, function (data) {
@@ -58,7 +58,7 @@ guard('invite', {
 
           var ack = $.param({
             type: 'integrate',
-            group_id: asocial.state.group.id,
+            group_id: CurrentSession.getGroupId(),
             invite_id: asocial.state.invite.id
           });
 
@@ -101,14 +101,14 @@ guard('invite', {
       $.each(new_keys, function (id, msg) {
         var msg = JSON.parse(msg);
         var content = msg.content;
-        var key = msg.keys[asocial.state.user.id];
+        var key = msg.keys[CurrentSession.getUserId()];
         var public_key = asocial.crypto.decryptMessage(content, key);
         public_keys[id] = JSON.parse(public_key);
       });
 
       var keylist = asocial.crypto.encryptKeyList(sB, public_keys);
 
-      var group_id = asocial.state.group.id;
+      var group_id = CurrentSession.getGroupId();
 
       var update = $.param({
         keylist: keylist,
@@ -146,38 +146,7 @@ guard('invite', {
     asocial.state.getState('group', function () {
       asocial.auth.getPasswordLocal(asocial.crypto.decryptKeylist);
       callback();
-    }, { group_id: asocial.state.group.id, force: true })
-  },
-
-  inviteSubmit: function(email, callback) {
-
-    asocial.auth.getPasswordLocal(function (password) {
-    
-      var keys = asocial.crypto.ecc.generateKeys();
-      
-      var invitePubKey = JSON.stringify(asocial.crypto.ecc.serializePublicKey(keys.pub));
-      var invitePrivKey = JSON.stringify(asocial.crypto.ecc.serializePrivateKey(keys.sec));
-      
-      var invitePrivKeySalt = asocial.crypto.generateRandomHexSalt();
-      var invitePrivKeySymKey = asocial.crypto.calculateHash(password, invitePrivKeySalt);
-    
-      var encInviterPrivKey = sjcl.encrypt(invitePrivKeySymKey, invitePrivKey);
-      
-      var invitation = $.param({
-        email: email,
-        inviter_pub_key: $.base64.encode(invitePubKey),
-        enc_inviter_priv_key: $.base64.encode(encInviterPrivKey),
-        inviter_priv_key_salt: invitePrivKeySalt
-      });
-
-      var group = asocial.state.group.id;
-
-      $.post('http://localhost:5000/' + group + '/invite/send', invitation, function (data) {
-        callback(data);
-      });
-
-    });
-
+    }, { group_id: CurrentSession.getGroupId(), force: true })
   }
-
+  
 });

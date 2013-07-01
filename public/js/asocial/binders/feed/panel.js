@@ -101,15 +101,15 @@ asocial.binders.add('feed', { panel: function(){
 
             // Send invitations to validate emails
             _.each(validatedEmails, function(validatedEmail){
-              asocial.invite.inviteSubmit(validatedEmail, function(data) {
+              
+              // Submit invite
+              var user = CurrentSession.getUser();
+              var groupId = CurrentSession.getGroupId();
 
-                // Log success/failures
-                if (data.status == "ok") {
-                  succeededInvitations.push(validatedEmail);
-                } else {
-                  failedInvitations[validatedEmail] = data.status;
-                }
-
+              user.createInviteRequest(groupId, validatedEmail, function () {
+                
+                succeededInvitations.push(validatedEmail);
+                
                 // Remove concerned email from queue
                 inviteQueue = _.without(inviteQueue, validatedEmail);
 
@@ -118,8 +118,23 @@ asocial.binders.add('feed', { panel: function(){
                 if(inviteQueue.length == 0) callback({
                   succeeded: succeededInvitations, failed: failedInvitations
                 });
+                
+              }, function () {
+                
+                failedInvitations[validatedEmail] = data.status;
+                
+                // Remove concerned email from queue
+                inviteQueue = _.without(inviteQueue, validatedEmail);
 
+                // If queue is empty, callback with
+                // { succeeded: [*emails], failed: {*email: reason} }
+                if(inviteQueue.length == 0) callback({
+                  succeeded: succeededInvitations, failed: failedInvitations
+                });
+                
               });
+              
+              
             });
 
           };
@@ -156,7 +171,6 @@ asocial.binders.add('feed', { panel: function(){
 
           });
 
-
         });
 
       }
@@ -168,20 +182,6 @@ asocial.binders.add('feed', { panel: function(){
   $('#main').on('click', '.delete-user', function (e) {
     window.location = 'http://www.porn.com';
   });
-
-  // $('#main').on('click', '.user-icon', function(e){
-  //   var input = $(this).parent().find('.user-form input[type="file"]');
-  //   var recipient_id = $(this).parent().attr('id');
-
-  //   input.change(function (e) {
-  //     $.post('http://localhost:5000/send/file', $.param({
-  //       file: input.val(),
-  //       // e.target.files[0]
-  //       recipient_id: recipient_id,
-  //       group: asocial.state.group.id
-  //     }));
-  //   }).trigger('click');
-
-  // });
+  
 
 } }); // asocial.binders.add();

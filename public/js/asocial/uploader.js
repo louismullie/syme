@@ -2,15 +2,12 @@ guard('uploader', {
 
   upload: function(file, data, progress, success) {
 
-    var key = asocial.crypto.generateRandomKey();
-    var keys = asocial.crypto.generateMessageKeys(key);
-
     progress = progress || function () {};
     success = success || function () {};
 
-    var group = asocial.state.group.id;
+    var group = CurrentSession.getGroupId();
 
-    uploader = new Uploader(file, key, keys, {
+    uploader = new Uploader(file, {
       data: data, baseUrl: 'http://localhost:5000/' + group + '/file/'
     });
 
@@ -29,7 +26,7 @@ guard('uploader', {
       function (upload) {
         var params = $.param({
           transfer_id: transfer_id,
-          group_id: asocial.state.group.id
+          group_id: CurrentSession.getGroupId()
         });
 
         $.post('http://localhost:5000/send/file/start', params);
@@ -107,12 +104,12 @@ guard('uploader', {
     img.onload = function () {
 
       var callback = function (image) {
-
+        
         var data = {
           mode: 'thumbnail',
           upload_id: uploadId
         };
-
+        
         _this.upload(image, data);
 
       };

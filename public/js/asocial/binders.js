@@ -46,7 +46,7 @@ guard('binders', {
     }
 
     // Start idleTimeout if logged in
-    if(asocial.state.system && asocial.state.system.logged_in) this.idleTimeout();
+    if(CurrentSession.initialized) this.idleTimeout();
 
   },
 

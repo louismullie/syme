@@ -1,5 +1,143 @@
 require "base64"
 
+get '/users/:user_id/groups/:group_id/invitations', auth: [] do |_, group_id|
+
+  group = @user.groups.find(group_id)
+  
+  invitations = {}
+  
+  group.invitations.each do |invitation|
+    
+    # Current user is the invitee
+    if invitation.state == 3 &&
+       invitation.invitee_id == @user.id.to_s
+    
+      invitations[:integrate] = {
+        id: invitation.id.to_s,
+        request: invitation.integrate
+      }
+      
+    # Invite has been accepted
+    elsif invitation.state > 2  &&  
+      # Current user is not inviter
+      invitation.inviter_id != @user.id.to_s &&  
+      # Current user is 
+      invitation.invitee_id != @user.id.to_s     
+
+      invitations[:distribute] ||= {}
+      invitations[:distribute][invitation.id.to_s] =
+        invitation.distribute
+        
+    end
+    
+  end
+  
+  invitations.to_json
+  
+end
+
+post '/invitations', auth: [] do
+
+  invitation = get_model(request)
+  
+  if !invitation.group_id || 
+     !invitation.email ||
+     !invitation.request
+    error 400, 'missing_params'
+  end
+  
+  @group = @user.groups.find(invitation.group_id)
+
+  return { status: 'own_email' }.to_json if
+    params['email'] == @user.email
+
+  token = SecureRandom.uuid
+
+  invitation = @group.invitations.create!(
+    inviter_id: @user.id.to_s,
+    privileges: :none, token: token,
+    request: invitation.request,
+    email: invitation.email
+  )
+
+  invitation.save!
+
+  track @user, 'Invited a new group member'
+  
+  send_invite(invitation.email, token)
+
+  { status: 'ok', token: token }.to_json
+
+end
+
+put '/invitations', auth: [] do
+  
+  params = get_model(request)
+  
+  error 400, 'missing_params' if !params._id
+  
+  invitation = begin
+    Invitation.find(params._id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 400, 'invalid_id'
+  end
+
+  if params.accept && invitation.state == 1
+    
+    invitation.invitee_id = @user.id.to_s
+    invitation.accept = params.accept
+    invitation.state = 2
+    invitation.save!
+    
+    request_confirm(invitation)
+    
+  elsif params.integrate && params.distribute &&
+        invitation.state == 2
+  
+    invitation.integrate = params.integrate
+    invitation.distribute = params.distribute
+    
+    invitation.state = 3
+    invitation.save!
+    
+    group   = invitation.group
+    invitee = invitation.invitee
+    inviter = invitation.inviter
+
+    notify_confirmed(invitation)
+
+    membership = Membership.create
+
+    group.memberships << membership
+    group.users << invitee
+    group.save!
+
+    invitee.memberships << membership
+
+    invitee.save!
+
+    track @user, 'Confirmed a new group member'
+    
+    notify_confirmed(invitation)
+    
+  elsif params.completed
+    
+    invitation.state = 4
+    invitation.save!
+  
+  else
+    
+    error 400, 'empty_request'
+    
+  end
+  
+  track @user, 'Accepted a group invitation'
+  
+  empty_response
+  
+end
+
+=begin
 post '/:group_id/invite/send', auth: [] do |group_id|
 
   content_type :json
@@ -239,9 +377,7 @@ post '/invite/acknowledge', auth: [] do
 
   if params[:type] == 'update'
 
-    membership = @group.memberships
-      .where(user_id: @user.id).first
-    
+    membership = @group.memberships.where(user_id: @user.id).first
     new_keys = membership.new_keys
 
     params[:new_keys].each do |id|
@@ -314,3 +450,4 @@ get '/state/invite', auth: [] do
   state.to_json
 
 end
+=end

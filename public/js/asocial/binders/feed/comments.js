@@ -23,21 +23,26 @@ asocial.binders.add('feed', { comments: function(){
       if(!textarea.val().trim()) return;
 
       var message = textarea.val();
-      var comment = JSON.stringify(asocial.crypto.encryptMessage(message));
+      
+      var groupId = CurrentSession.getGroupId();
+      
+      Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+        
+        // Get the users who were mentioned in the message.
+        var mentions = JSON.stringify(/*asocial.helpers.findUserMentions(message)*/ {});
 
-      // Get the users who were mentioned in the message.
-      var mentions = JSON.stringify(asocial.helpers.findUserMentions(message));
+        // Post the comment
+        $.post('http://localhost:5000/' + groupId + '/comment/create', $.param({
+          post_id: related_post_id,
+          content: encryptedMessage,
+          mentioned_users: mentions
+        }));
 
-      // Post the comment
-      $.post('http://localhost:5000/' + asocial.state.group.id + '/comment/create', $.param({
-        post_id: related_post_id,
-        content: comment,
-        mentioned_users: mentions
-      }));
-
-      // Clear textarea and resize it
-      textarea.val('').css('height', textarea.css('line-height'));
-
+        // Clear textarea and resize it
+        textarea.val('').css('height', textarea.css('line-height'));
+        
+      });
+      
     }
   });
 
@@ -46,7 +51,7 @@ asocial.binders.add('feed', { comments: function(){
 
       var post_id    = $(this).closest('.post').attr('id'),
           comment_id = $(this).closest('.comment-box').attr('id'),
-          group      = asocial.state.group.id,
+          group      = CurrentSession.getGroupId(),
           route      = 'http://localhost:5000/' + group + '/comment/delete';
 
       asocial.helpers.showConfirm(

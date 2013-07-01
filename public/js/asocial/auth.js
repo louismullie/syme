@@ -26,11 +26,9 @@ guard('auth', {
           if (data.status == 'ok') {
 
             $('meta[name="_csrf"]').attr('content', data.csrf);
+            success();
 
-            asocial.state.getState('system', function () {
-              success(data);
-            }, { force: true });
-
+            
           } else if (data.status == 'error') {
 
             console.log('State ERROR', data);
@@ -50,6 +48,7 @@ guard('auth', {
 
         storage.email = email;
         var password_key = data.B.toString();
+        CurrentSession.setPasswordKey(password_key);
 
         storage.password =
         sjcl.encrypt(password_key, password);
@@ -110,54 +109,9 @@ guard('auth', {
     });
 
   },
-
-  authorize: function (fn, callback, password) {
-
-    var _this = this;
-    var authorized;
-
-    if (password) {
-      callback(fn(password));
-    } else {
-      _this.getPasswordLocal(function (password) {
-        callback(fn(password));
-      });
-    }
-
-  },
-
-  authorizeForUser: function (callback, password) {
-
-    if (this.isAuthorizedForUser()) {
-      callback(true);
-    } else {
-      var fn = asocial.crypto.decryptKeypair;
-      this.authorize(fn, callback, password);
-    }
-
-  },
-
-  authorizeForGroup: function (callback, password) {
-
-    if (this.isAuthorizedForGroup()) {
-      callback(true);
-    } else {
-      var fn = asocial.crypto.decryptKeylist;
-      this.authorize(fn, callback, password);
-    }
-
-  },
-
+  
   passwordStoredIn: function (storage) {
     return typeof(storage.password) != 'undefined';
-  },
-
-  isAuthorizedForUser: function () {
-    return typeof(asocial_private_key) !== "undefined";
-  },
-
-  isAuthorizedForGroup: function () {
-    return typeof(asocial_keylist) !== "undefined";
   },
 
   getPasswordLocal: function (callback) {
@@ -172,7 +126,7 @@ guard('auth', {
       encryptedPassword = sessionStorage.password;
     }
     
-    var passwordKey = asocial.state.user.password_key;
+    var passwordKey = CurrentSession.getPasswordKey();
     
     if (!encryptedPassword) {
       if (asocial.compat.inChromeExtension()) {

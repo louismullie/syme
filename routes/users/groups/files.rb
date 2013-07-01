@@ -4,9 +4,12 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
 
   @group.touch
 
+  enc_key = JSON.parse(Base64.strict_decode64(params[:keys]))
+  
   selector = {
     filename: params[:filename].slug,
-    keys: JSON.parse(params[:keys]),
+    key: enc_key['message'],
+    keys: enc_key['keys'],
     owner_id: @user.id.to_s,
     type: params[:type],
     size: params[:size],
@@ -20,7 +23,10 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
     original = @group.attachments.find(params[:upload_id])
     
     original.thumbnail = thumbnail
-    thumbnail.save!
+    
+    thumbnail.keys = original.keys
+    
+    thumbnail.save!; original.save!
     
     thumbnail
     

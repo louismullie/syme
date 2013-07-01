@@ -1,18 +1,15 @@
-function Uploader(file, key, keys, options) {
+function Uploader(file, options) {
 
   var _this = this;
 
-  if (!file || !key ||!keys) {
-    asocial.helpers.showAlert('Error: empty file, key or keys.')
+  if (!file) {
+    alert('Error: empty file, key or keys.')
   } else {
     this.file = file;
-    this.key = key;
-    this.keys = keys;
   }
 
   this.options = {}; options = options || {};
 
-  this.options.key        = options.key;
   this.options.data       = options.data       || {};
   this.options.baseUrl    = options.baseUrl    || '/file/';
   this.options.workerPath = options.workerPath || 'js/asocial/workers/';
@@ -143,7 +140,6 @@ function Uploader(file, key, keys, options) {
 
     this.workerPool = window.uploadWorkerPool;
 
-
     var url = this.options.baseUrl + 'upload/create';
     var xhr = new XMLHttpRequest();
 
@@ -164,27 +160,40 @@ function Uploader(file, key, keys, options) {
 
     });
 
-    var fd = new FormData();
+    Crypto.generateRandomKeys(function (key) {
+      
+      _this.key = key;
 
-    fd.append('type', this.file.type);
-    fd.append('size', this.file.size);
-    fd.append('filename', this.file.name);
-    fd.append('keys', JSON.stringify(this.keys));
+      var keylistId = CurrentSession.getGroupId(); // unsafe!
+      
+      
+      Crypto.encryptMessage(keylistId, key, function (encryptedMessage) {
+        
+        var fd = new FormData();
 
-    var data = this.options.data;
+        fd.append('type', _this.file.type);
+        fd.append('size', _this.file.size);
+        fd.append('filename', _this.file.name);
+        fd.append('keys', encryptedMessage);
+        
+        var data = _this.options.data;
 
-    for (key in data) {
-      fd.append(key, data[key].toString());
-    }
+        for (key in data) {
+          fd.append(key, data[key].toString());
+        }
+        
+        var csrf = document.querySelector('meta[name="_csrf"]');
+        var token = csrf ? csrf.content : '';
 
-    var csrf = document.querySelector('meta[name="_csrf"]');
-    var token = csrf ? csrf.content : '';
+        xhr.open('POST', _this.options.baseUrl + 'upload/create');
+        xhr.setRequestHeader('X_CSRF_TOKEN', token);
 
-    xhr.open('POST', this.options.baseUrl + 'upload/create');
-    xhr.setRequestHeader('X_CSRF_TOKEN', token);
+        xhr.send(fd);
+        
+      });
 
-    xhr.send(fd);
-
+    });
+    
   };
 
   this.firstPass = function() {
@@ -243,157 +252,6 @@ function Uploader(file, key, keys, options) {
     }
 
     return buf;
-
-  };
-
-};
-
-function Downloader(id, key, options) {
-
-  var _this = this;
-
-  if (typeof(id) == 'undefined' ||
-      typeof(key) == 'undefined') {
-
-    asocial.helpers.showAlert('Error: empty ID or key.')
-    return;
-
-  } else {
-
-    this.key = key;
-    this.fileId = id;
-
-  }
-
-  this.options = {}; options = options || {};
-  this.options.numWorkers = options.numWorkers || 4;
-  this.options.baseUrl = options.baseUrl || '/file/';
-  this.options.privKey = options.privKey;
-  this.options.workerPath = options.workerPath ||
-                          'js/asocial/workers/';
-  //////////
-
-  this.mimeType = null;
-  this.success = null;
-  this.numChunks = null;
-  this.downloadedChunks = 0;
-  _this.finished = false;
-
-  this.currentChunk = -1;
-
-  this.blobDict = {};
-  this.workers = [];
-
-  this.callback = function (msg) {
-
-    var _this = this;
-
-      if (msg.data['status'] == 'ok') {
-
-        _this.downloadedChunks += 1;
-
-        console.log("Downloaded " + _this.downloadedChunks +
-                    "/" + _this.numChunks + " chunks");
-
-        var data = msg.data['data'];
-
-        var worker = msg.data['worker'];
-        var chunk = msg.data['chunk'];
-
-        _this.blobDict[chunk] = data;
-
-        if (_this.downloadedChunks == _this.numChunks) {
-          console.log("SUCCESS");
-          _this.success(_this.getAsBlob());
-          return;
-        } else if (_this.currentChunk >= _this.numChunks - 1) {
-          console.log("RETURNING");
-          return;
-        } else {
-          console.log("NEXT CHUNK");
-          _this.currentChunk += 1;
-          _this.nextChunk(worker, _this.currentChunk);
-        }
-
-      } else {
-
-        asocial.helpers.showAlert('Bungee error.');
-
-      }
-
-  };
-
-  this.start = function (progress, success) {
-
-    this.progress = progress;
-    this.success = success;
-
-    if (!window.downloadWorkerPool) {
-      window.downloadWorkerPool = new WorkerPool(
-        this.options.workerPath + 'decrypt.js',
-        this.options.numWorkers, this.callback
-      );
-    }
-
-    this.workerPool = window.downloadWorkerPool;
-
-    var xhr     = new XMLHttpRequest();
-    var fileUrl = this.options.baseUrl +
-                  'download/' + this.fileId;
-
-    var _this = this;
-
-    xhr.addEventListener("load", function(event) {
-
-      var data = JSON.parse(event.target.responseText);
-      _this.numChunks = data.chunks;
-      _this.fileType = data.type;
-
-      if (_this.numChunks < _this.options.numWorkers) {
-        _this.options.numWorkers = _this.numChunks;
-      }
-
-      for (var n = 0; n < _this.options.numWorkers; n++) {
-        _this.currentChunk += 1;
-        _this.nextChunk(n, _this.currentChunk);
-      }
-
-    });
-
-    xhr.open("GET", fileUrl);
-    xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
-    xhr.send();
-
-  };
-
-  this.getAsBlob = function () {
-
-    var blobBuffer = [];
-
-    for (i = 0; i < this.numChunks; i++) {
-      blobBuffer.push(this.blobDict[i]);
-    }
-
-    var mime = { type: this.fileType };
-    var blob = new Blob(blobBuffer, mime);
-
-    return blob;
-
-  };
-
-  this.nextChunk = function (worker, chunk) {
-
-    console.log("Downloading chunk #" +
-      chunk + " with worker " + worker);
-
-    var fileUrl = this.options.baseUrl +
-                  'download/' + this.fileId;
-
-    this.workerPool.queueJob({
-      id: this.fileId, chunk: chunk,
-      worker: worker, key: this.key,
-      url: fileUrl, privKey: this.options.privKey
-    }, this);
 
   };
 

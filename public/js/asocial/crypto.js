@@ -115,7 +115,7 @@ guard('crypto', {
   },
 
   userPublicKey: function(id) {
-    id = id || asocial.state.user.id;
+    id = id || CurrentSession.getUserId();
     return asocial_keylist()[id];
   },
 
@@ -230,60 +230,31 @@ guard('crypto', {
 
   decryptPostsAndComments: function() {
 
-    try {
-      
       var _this = this;
-      
-      var callback = function (response) {
-        
-        var message = response.data.data;
-        var id = response.data.id;
-
-        var decrypted = marked(message);
-
-        // Show the user tags.
-        decrypted = asocial.helpers.replaceUserMentions(decrypted);
-
-        // Hide the "This post is encrypted notice."
-        $('#' + id).find('.encrypted-notice').remove();
-
-        // Markdown the message and insert in place.
-        $('#' + id).find('.encrypted').replaceWith(decrypted);
-        
-        asocial.helpers.formatPostsAndComments();
-        
-      };
-      
-      var workerPool = new WorkerPool(
-        'js/asocial/workers/decrypt2.js', 4, callback
-      );
-      
-      var privKeyJson = this.ecc.serializePrivateKey(asocial_private_key());
       
       // Decrypt each encrypted post on the page.
       $.each($('.encrypted'), function (i, element) {
 
-        var message = $.parseJSON(element.innerText);
-        message.content = JSON.stringify(message.content);
-        
         var post = $(element).closest('.post');
         
-        workerPool.queueJob({
-          id: post.attr('id'),
-          msg: message.content,
-          key: message.key,
-          privKey: privKeyJson
+        var groupId = CurrentSession.getGroupId();
+        
+        Crypto.decryptMessage(groupId, element.innerText, function (decryptedMessage) {
+          
+          // Show the user tags.
+          var formattedMessage = asocial.helpers
+            .replaceUserMentions(marked(decryptedMessage));
+
+          // Markdown the message and insert in place.
+          post.find('.encrypted').replaceWith(decryptedMessage);
+          
+          post.removeClass('hidden');
+          
+          asocial.helpers.formatPostsAndComments();
+          
         });
         
       });
-
-    } catch (e) {
-      
-     console.log(e);
-      
-     asocial.helpers.showAlert('Could not decrypt resource.');
-
-    }
     
   },
 
@@ -297,11 +268,11 @@ guard('crypto', {
       var image = $(image);
 
       var id = image.data('attachment-id');
-          key = image.data('attachment-key'),
+          keys = image.data('attachment-keys'),
           type = image.data('attachment-type'),
           group = image.data('attachment-group');
 
-      _this.getFile(id, key, function (url) {
+      _this.getFile(id, keys, function (url) {
 
         if (type == 'image') {
           image.attr('src', url);
@@ -323,10 +294,10 @@ guard('crypto', {
       var $this = $(this);
 
       var id = $this.data('attachment-id'),
-          key = $this.data('attachment-key'),
+          keys = $this.data('attachment-keys'),
           group = $this.data('attachment-group');
 
-      _this.getFile(id, key, function (url) {
+      _this.getFile(id, keys, function (url) {
 
         $this.css("background-image", "url('" + url + "')");
 
@@ -347,9 +318,9 @@ guard('crypto', {
       var id = element.data('id');
       if (id == '') { return; }
 
-      var key = element.data('key');
+      var keys = element.data('keys');
       
-      _this.getFile(id, key, function (url) {
+      _this.getFile(id, keys, function (url) {
         var avatars = $('.encrypted-avatar[data-user-id="' + user_id + '"]');
         $.each(avatars, function (index, element) { element.src = url; });
       });
@@ -358,8 +329,8 @@ guard('crypto', {
 
   },
 
-  getFile: function (id, key, callback, group) {
-
+  getFile: function (id, keys, callback, group) {;
+    
     var display = function(id, blob, save) {
 
       if (save) {
@@ -382,19 +353,17 @@ guard('crypto', {
 
     };
 
-    var download = function (id, key, group) {
+    var download = function (id, keys, group) {
 
-      var group = group || asocial.state.group.id;
-
+      var group = group || CurrentSession.getGroupId();
       var baseUrl = 'http://localhost:5000/' + group + '/file/';
 
-      var downloader = new Downloader(id, key,
-        {
-            baseUrl: baseUrl,
-            privKey: asocial.crypto.ecc.serializePrivateKey(asocial_private_key())
-        }
+      var downloader = new Downloader(id, keys,
+        { baseUrl: baseUrl }
       );
 
+      gc = downloader
+      
       downloader.start(
         function() {},
         function(blob) {
@@ -416,8 +385,8 @@ guard('crypto', {
         store.get(id, function(me) {
 
           if (typeof(me) == "undefined") {
-
-            download(id, key, group);
+            
+            download(id, keys, group);
 
           } else {
 
