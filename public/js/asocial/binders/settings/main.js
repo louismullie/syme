@@ -6,7 +6,7 @@ asocial.binders.add('settings', { main: function(){
 
     elements: [
       { title: 'Settings',
-        href: 'users/' + asocial.state.user.id }
+        href: 'users/' + CurrentSession.getUserId() }
     ]
   });
 
