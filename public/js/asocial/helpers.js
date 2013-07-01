@@ -383,8 +383,8 @@ guard('helpers', {
     // Show modal
     $('#responsive-modal').transition({ opacity: 1 }, 200);
 
-    // Focus on first input[type="text"]
-    $('#responsive-modal').find('input[type="text"]').first().focus();
+    // Focus on first input[type="text"] or textarea
+    $('#responsive-modal').find('input[type="text"], textarea').first().focus();
   },
 
   hideModal: function( submitted ) {

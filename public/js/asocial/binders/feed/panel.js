@@ -91,18 +91,18 @@ asocial.binders.add('feed', { panel: function(){
 
             // Validate emails and eliminate duplicates
             var validatedEmails = [];
-            _emails.split("\n").each(function(email){
+            _.each(emails.split("\n"), function(email){
               if( $.ndbValidator.regexps.email.test(email) )
                 validatedEmails.push(email);
             });
-            validatedEmails = _validatedEmails.uniq();
+            validatedEmails = _.uniq(validatedEmails);
 
-            var inviteQueue = _validatedEmails.clone(),
+            var inviteQueue = _.clone(validatedEmails),
                 succeededInvitations = [],
                 failedInvitations = {};
 
             // Send invitations to validate emails
-            _validatedEmails.each(function(validatedEmail){
+            _.each(validatedEmails, function(validatedEmail){
               asocial.invite.inviteSubmit(validatedEmail, function(data) {
 
                 // Log success/failures
@@ -113,7 +113,7 @@ asocial.binders.add('feed', { panel: function(){
                 }
 
                 // Remove concerned email from queue
-                inviteQueue = _inviteQueue.without(validatedEmail);
+                inviteQueue = _.without(inviteQueue, validatedEmail);
 
                 // If queue is empty, callback with
                 // { succeeded: [*emails], failed: {*email: reason} }
@@ -127,7 +127,35 @@ asocial.binders.add('feed', { panel: function(){
           };
 
           inviteEmailsFromTextarea(emails, function(log){
-            console.log(log);
+
+            // Remove own_email errors
+            _.each(log.failed, function(value, key){
+              if ( value == "own_email" ) log.failed = _.omit(log.failed, key);
+            });
+
+            // If all trys failed, throw system error
+            if ( log.failed.length == emails.length)
+              return asocial.helpers.showAlert(
+                'There has been an error in the invite process.'
+              );
+
+            if ( _.size(log.failed) == 0 ) {
+              // If failed is empty, remove it from log
+              // for templating purposes
+              log = _.omit(log, 'failed');
+            } else {
+              // Discard reasons by converting to array of values
+              log.failed = _.keys(log.failed);
+            }
+
+            // Compile success template with log
+            template = asocial.helpers.render('feed-modals-invite-success', log);
+
+            // Show modal
+            asocial.helpers.showAlert(template, {
+              classes: 'modal-invite', title: 'Success'
+            });
+
           });
 
 

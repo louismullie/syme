@@ -1,0 +1,15 @@
+%p Your invitations have successfully been sent.
+
+{{#if failed}}
+
+%p
+  <strong>However</strong>, we were not able to send
+  invitations to those emails:
+
+{{#each failed}}
+
+%p {{this}}
+
+{{/each}}
+
+{{/if}}
