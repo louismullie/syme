@@ -211,6 +211,8 @@ guard('helpers', {
 
   notificationText: function (notification) {
 
+    console.log(notification);
+    
     var actors = '<b class="actor">' + notification.actors + '</b>';
     var action = notification.action;
 
@@ -265,21 +267,23 @@ guard('helpers', {
 
     } else {
 
-      if (action == 'request_invite_confirm') {
+      if (action == 'request_invite') {
 
-        return text = actors + ' has asked to join  ' + notification.group +
-                      '<a hbs href="' +
-                      '/users/'   + CurrentSession.getUserId() +
-                      '/groups/'  + notification.group_id +
-                      '">Confirm here</a>.';
-
+        return actors + ' has invited you to join  ' + notification.group + '.';
+                      
       } else if (action == 'confirm_invite') {
 
         return text = actors + ' has joined the group ' + notification.group + '.';
 
+      } else if (action == 'confirm_join_request') {
+        
+         return text = actors + ' has confirmed you to <a href="/users/' + 
+         CurrentSession.getUserId() + '/groups/' + notification.group_id + 
+         '">' + notification.group + '</a>';
+        
       } else {
 
-        asocial.helpers.showAlert('Invalid action.', { onhide: location.reload });
+        alert('Invalid socket action' + action);
 
       }
 

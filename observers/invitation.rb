@@ -5,33 +5,28 @@ class InvitationObserver < Mongoid::Observer
 
   def after_save(invite)
 
-    return unless invite.state > 1
-
     inviter, invitee = invite.inviter, invite.invitee
 
     group = invite.group
 
-    if invite.state == 2
-
-      inviter.notify({
-        action: :request_invite_confirm,
+    if invite.state == 1
+      
+      user = User.where(email: invite.email).first
+      
+      user.notify({
+        action: :request_invite,
         create: {
         actor_ids: [
-          invitee.id.to_s
+          inviter.id.to_s
         ]
-      }}, group)
-
-      MagicBus::Publisher.broadcast(
-        group, :request, :invite, {
-          group: group.name
-      })
-
+      }}, group) if user
+      
     elsif invite.state == 3
 
       group.users.each do |user|
-
+        
         next if user.id.to_s == invitee.id.to_s
-
+        warn 'NOTIFUYINF OTHER USER'
         user.notify({
           action: :confirm_invite,
           create: {
@@ -40,7 +35,16 @@ class InvitationObserver < Mongoid::Observer
         }, group)
 
       end
-
+      
+      warn 'NOTIFIYING INVITEE'
+      
+      invitee.notify({
+        action: :confirm_join_request,
+        create: {
+          actor_ids: [inviter.id.to_s]
+        }
+      }, group)
+      
       MagicBus::Publisher.broadcast(
         group, :confirm, :invite, {
           group: group.name,

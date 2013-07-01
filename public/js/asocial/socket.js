@@ -4,28 +4,9 @@ guard('socket', {
   updatedPosts: 0,
   updatedComments: 0,
 
-  request: {
-
-    invite: function(data) {
-
-     // Nothing for now
-
-    }
-
-  },
-
   confirm: {
 
     invite: function(data) {
-
-      asocial.state.getState('invite', function (authorized) {
-
-        //asocial.helpers.showAlert('UPDATING KEYS');
-
-        if (!authorized) { asocial.helpers.showAlert('Not authorized for invite!'); }
-        asocial.invite.update();
-
-      }, { group_id: data.group_id });
 
     }
 
@@ -108,6 +89,7 @@ guard('socket', {
 
       if ($('#notifications-content').children().length == 0 ||
           $('.empty-notification').first().attr('class') == 'empty-notification') {
+            
         $('#notifications-content').html('');
         $('#notifications').prepend('<span class="notification-badge">1</a>');
       } else {

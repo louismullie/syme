@@ -1,5 +1,5 @@
 asocial.binders.add('global', { main: function(){
-
+  
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
     e.stopPropagation();
