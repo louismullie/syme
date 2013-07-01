@@ -54,6 +54,19 @@ function WorkerPool2(url, size) {
     };
 
     this.createWorkers();
+    
+    this.broadcastJob = function (job) {
+      
+      if (!job.id)
+        job.id = Math.random()*Math.exp(40).toString();
+
+      for (var i = 0; i < this.workers.length; i++ ) {
+        this.workers[i].postMessage(job);
+      }
+      
+      this.callbacks[job.id] = function () {};
+      
+    };
 
     this.queueJob = function(job, callback, context) {
 

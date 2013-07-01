@@ -138,6 +138,16 @@ Crypto = function (workerUrl) {
       console.log(4);
       _this.getEncryptedKeyfile(encryptedKeyfileCb);
     });
+    
+    Crypto.workerPool.broadcastJob({
+      
+      method: 'initializeKeyfile',
+      params: [userId, password, encKeyfile]
+      
+    }, function () {
+      console.log(4);
+      _this.getEncryptedKeyfile(encryptedKeyfileCb);
+    });
 
   };
   
@@ -201,8 +211,8 @@ Crypto = function (workerUrl) {
     alert(result);
   };
   
-  this.workerPool = new WorkerPool2(workerUrl, 1);
-  
+  this.workerPool = new WorkerPool2(workerUrl, 4);
+ 
   // Add some initial entropy to the PRNG.
   this.seedRandom();
   

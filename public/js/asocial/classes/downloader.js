@@ -111,7 +111,7 @@ function Downloader(id, keys, options) {
 
     });
 
-    var groupId = CurrentSession.getGroupId();
+    var groupId = this.options.group || CurrentSession.getGroupId();
     
     Crypto.decryptMessage(groupId, this.keys, function (key) {
       

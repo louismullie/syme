@@ -7,6 +7,7 @@ Session = function (user, callback) {
   this.startSession = function (callback) {
     
     this.initialized = true;
+    
     asocial.socket.listen();
     
     asocial.auth.getPasswordLocal(function (p) {
@@ -16,6 +17,7 @@ Session = function (user, callback) {
         _this.user.get('keyfile'),
         callback
       );
+      
     });
     
   };

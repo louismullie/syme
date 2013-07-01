@@ -73,7 +73,10 @@ asocial.binders.add('groups', { main: function() {
             
             CurrentSession.getUser().updateKeyfile(
               encryptedKeyfile,
-              function () { Router.reload(); }
+              function () {
+                Router.reload();
+                asocial.socket.listen();
+              }
             );
             
           });
