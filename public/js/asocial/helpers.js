@@ -10,13 +10,11 @@ guard('helpers', {
     // Put commenter name and comment tools in first paragraph of comment
     $('.comment-box > a.commenter-name').each(function(){
 
+      // debugger;
+
       var destination = $(this).parent().find('.collapsable p:first-child');
-      gbc = destination;
-      debugger;
-
-      console.log('formatPostsAndComments destination', destination);
-
       $(this).prependTo(destination);
+
     });
 
     // Collapse long text

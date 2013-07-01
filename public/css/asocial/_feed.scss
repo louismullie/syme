@@ -63,11 +63,6 @@
   i { padding-left: .5em; }
 }
 
-// Hide encrypted content (to be replaced by [data-encrypted])
-.encrypted {
-  display: none;
-}
-
 .post {
   padding-bottom: $bodyPadding / 2;
   margin-bottom: $bodyPadding / 2;
@@ -90,6 +85,8 @@
   .post-indent {
     margin-left: emCalc($avatarPostSize) + 1em;
 
+    .encrypted { display: none; }
+
     .collapsable {
       position: relative;
       overflow: hidden;
@@ -97,8 +94,6 @@
       // Css-only text expander
       margin-bottom: .5em; /* child <p> margin-bottom */
       line-height: 1.2em; /* child <p> line-height */
-
-      .encrypted { display: none; }
 
       p {
         margin-bottom: inherit;
@@ -290,10 +285,7 @@
           }
 
           // During decryption
-          & > a.commenter-name {
-            font-size: .9em;
-            font-weight: normal;
-          }
+          & > a.commenter-name { display: none; }
 
           .collapsable {
             margin-bottom: .5em;

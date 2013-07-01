@@ -48,7 +48,6 @@ guard('socket', {
       var postHtml = $(asocial.helpers.render('feed-post', post.view));
 
       var owner = post.view.owner.id;
-      console.log(owner);
 
       // If the post owner isn't the user.
       if (owner != CurrentSession.getUserId()) {
@@ -95,9 +94,6 @@ guard('socket', {
         // Reset comment count counter
         post.find('[partial="feed-comment-count"]')
           .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
-
-        // Decrypt new comment
-        asocial.crypto.decryptPostsAndComments();
 
       } else {
 
