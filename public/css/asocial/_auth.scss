@@ -54,9 +54,9 @@
     #password-score {
       &[data-strength="0"] { background: lighten($danger, 10%) }
       &[data-strength="1"] { background: lighten($warning, 10%) }
-      &[data-strength="2"] { background: lighten($green, 10%) }
+      &[data-strength="2"] { background: lighten($sunflower, 10%) }
       &[data-strength="3"] { background: lighten($green, 10%) }
-      &[data-strength="4"] { background: lighten($green, 10%) }
+      &[data-strength="4"] { background: $success }
     }
 
     a[role="submit"] {

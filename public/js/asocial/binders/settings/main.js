@@ -29,16 +29,23 @@ asocial.binders.add('settings', { main: function(){
 
     $('#change-name-button').addClass('active');
 
-    var callback = function(){
+    var callback = function(full_name){
       // Reset form and button
       $this.data('active', false);
       $('#change-name-button').removeClass('active');
 
       // Swap placeholder for value
       input
-        .attr('placeholder', 'New name return by ajax')
+        .attr('placeholder', full_name)
         .val('');
     };
+
+    CurrentSession.getUser().save(
+      { full_name: val },
+      { success: function(model, response, options){
+        callback( model.attributes.full_name )
+      } }
+    );
 
     // Replace this by AJAX call
     setTimeout(callback, 1 * 1000);

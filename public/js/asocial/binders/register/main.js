@@ -81,7 +81,7 @@ asocial.binders.add('register', { main: function(){
     var strength = zxcvbn(val).score;
 
     // Password strength indicators (5 indexes)
-    var explanations = [ 'poor', 'okay', 'good', 'excellent', 'perfect' ];
+    var explanations = [ 'poor', 'okay', 'good', 'great', 'perfect' ];
 
     $('#password-score')
       // Style accordingly to strengh level
@@ -133,19 +133,19 @@ asocial.binders.add('register', { main: function(){
           }, {
 
           success: function (model, response) {
-          
+
             user.createKeyfile(password, function () {
-              
+
               asocial.auth.login(email, password, remember, function() {
-                
+
                 console.log(8);
-                
+
                 CurrentSession = new Session(model, function () {
-                  
+
                   Router.navigate('', { trigger: true, replace: true });
-                  
+
                 });
-                
+
 
               });
 
