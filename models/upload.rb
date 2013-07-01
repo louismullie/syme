@@ -32,23 +32,19 @@ class Upload < Resource
 
   # Original filename of the file.
   field :filename, type: String
+  
   # Size of upload in bytes.
   field :size, type: Integer
 
+  # Image size as a string, e.g. 20x20
+  field :image_size, type: String
+  
   # Whether the upload has finished or not.
   field :finished, type: Boolean
 
-  # Attribute protection.
-  attr_readonly :type, :encrypted,
-  :keys, :filename
-
   attr_accessible :type, :encrypted,
-  :keys, :filename, :size
+  :key, :keys, :filename, :size, :image_size
 
   has_one :thumbnail
-
-  # Image size as a string, e.g. 20x20
-  field :image_size, type: String
-
 
 end
