@@ -252,6 +252,8 @@
           font-weight: 200;
           line-height: 1.4em;
 
+          @include clearfix;
+
           &:last-child {
             border: none;
             margin-bottom: 0;
@@ -296,6 +298,7 @@
               a.commenter-name {
                 padding-right: .4em;
                 font-weight: normal;
+                white-space: nowrap;
               }
 
               .expand-link-container {
