@@ -39,7 +39,7 @@ asocial.binders.add('settings', { main: function(){
         .attr('placeholder', 'New name return by ajax')
         .val('');
     };
-
+    
     // Replace this by AJAX call
     setTimeout(callback, 1 * 1000);
 
@@ -64,17 +64,25 @@ asocial.binders.add('settings', { main: function(){
     if(!!$(this).data('active')) return false;
     $(this).data('active', true);
 
-    // Place AJAX call to deletion here
-
-    // Disconnect
-    asocial.auth.disconnect();
+    $.ajax('/users/' + CurrentSession.getUserId(), {
+      
+      type: 'DELETE',
+      
+      success: function () {
+        asocial.auth.disconnect();
+      },
+      
+      error: function () {
+        alert('Could not delete user!');
+    }});
 
   });
 
   // 'Delete' input watcher
   $('#delete-account input').keyup(function(e){
     $('#delete-account-button')[
-      $(this).val() == "delete" ? 'removeClass' : 'addClass'
+      $(this).val() == "delete" ?
+      'removeClass' : 'addClass'
     ]('disabled');
   });
 

@@ -221,9 +221,7 @@ Router = Backbone.Router.extend({
 
       // Render template
       var view = Handlebars.compileTemplate(template, data);
-
-      console.log(data);
-
+      
       // Fill container with template
       $('#main').html(view);
 
