@@ -23,11 +23,11 @@ asocial.binders.add('feed', { comments: function(){
       if(!textarea.val().trim()) return;
 
       var message = textarea.val();
-      
+
       var groupId = CurrentSession.getGroupId();
-      
+
       Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
-        
+
         // Get the users who were mentioned in the message.
         var mentions = JSON.stringify(/*asocial.helpers.findUserMentions(message)*/ {});
 
@@ -39,10 +39,10 @@ asocial.binders.add('feed', { comments: function(){
         }));
 
         // Clear textarea and resize it
-        textarea.val('').css('height', textarea.css('line-height'));
-        
+        textarea.val('').change();
+
       });
-      
+
     }
   });
 

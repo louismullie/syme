@@ -98,6 +98,8 @@
       margin-bottom: .5em; /* child <p> margin-bottom */
       line-height: 1.2em; /* child <p> line-height */
 
+      .encrypted { display: none; }
+
       p {
         margin-bottom: inherit;
         line-height: inherit;
@@ -251,6 +253,10 @@
           padding-bottom: .5em;
           margin-bottom: .5em;
 
+          font-size: .9em;
+          font-weight: 200;
+          line-height: 1.4em;
+
           &:last-child {
             border: none;
             margin-bottom: 0;
@@ -260,7 +266,6 @@
             display: none;
           }
 
-          // For now
           a.comment-delete {
             display: none;
             opacity: 0;
@@ -284,14 +289,16 @@
             border-radius: $baseBorderRadius;
           }
 
+          // During decryption
+          & > a.commenter-name {
+            font-size: .9em;
+            font-weight: normal;
+          }
+
           .collapsable {
             margin-bottom: .5em;
 
             p {
-              font-size: .8em;
-              font-weight: 200;
-              line-height: 1.4em;
-
               word-break: break-word;
 
               a.commenter-name {

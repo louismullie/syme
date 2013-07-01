@@ -9,7 +9,14 @@ guard('helpers', {
 
     // Put commenter name and comment tools in first paragraph of comment
     $('.comment-box > a.commenter-name').each(function(){
-      $(this).prependTo( $(this).parent().find('.collapsable p:first-child') );
+
+      var destination = $(this).parent().find('.collapsable p:first-child');
+      gbc = destination;
+      debugger;
+
+      console.log('formatPostsAndComments destination', destination);
+
+      $(this).prependTo(destination);
     });
 
     // Collapse long text
@@ -18,6 +25,7 @@ guard('helpers', {
     // Parse oEmbed links. Use fill mode to strip links.
     $('.post-content').oembed();
 
+    // Timeago
     $('time.timeago').timeago();
 
   },

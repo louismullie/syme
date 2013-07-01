@@ -2,24 +2,18 @@
   -# Avatar
   {{#with commenter}} {{> feed-avatar.hbs}} {{/with}}
 
-  -# Commenter name (will dynamically be put in .collapsable's first <p>)
-  %a.commenter-name{href: '#'} {{commenter.name}}
-
   -# Delete button
   {{#if deletable}}
   %a.comment-delete.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Delete' }
     %i.icon-remove
   {{/if}}
 
-  -# Content
-  .collapsable
-    -# Encrypted content. Will be replaced entirely by decrypted content
-    .encrypted
-      {{content}}
+  -# Commenter name (will dynamically be put in .collapsable's first <p>)
+  %a.commenter-name{href: '#'} {{commenter.name}}
 
-    -# Encrypted notice. Will be removed on decryption
-    .encrypted-notice
-      //%i.icon-spinner.icon-spin
+  -# Will transform into collapsable
+  .encrypted
+    {{content}}
 
   -# Footer
   .comment-footer

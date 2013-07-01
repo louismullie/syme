@@ -1,13 +1,13 @@
 guard('crypto', {
 
   decryptKeypair: function(password) {
-    
+
     var _this = asocial.crypto;
-    
+
     if (typeof(asocial_private_key) !== 'undefined' &&
         typeof(asocial_public_key)  !== 'undefined')
       return true;
-      
+
     try {
       return _this.doDecryptKeypair(password);
     } catch(e) {
@@ -15,16 +15,16 @@ guard('crypto', {
     }
 
   },
-  
+
   doDecryptKeypair: function (password) {
-    
+
     var _this = asocial.crypto;
-    
+
     var keypairSalt  = asocial.state.user.keypair_salt;
     var keypairKey = _this.calculateHash(password, keypairSalt);
 
     var encKeypairTxt64 = asocial.state.user.keypair;
-    
+
     var decKeypairJson = _this.decode64Decrypt(keypairKey, encKeypairTxt64);
 
     var keypairJson = $.parseJSON(decKeypairJson);
@@ -35,40 +35,40 @@ guard('crypto', {
 
     guard('private_key', function () { return privateKey; });
     guard('public_key', function () { return publicKey; });
-    
+
     return true;
 
   },
 
   encryptKeyList: function (keylistKey, keylistJson) {
-    
+
     var keylistTxt = JSON.stringify(keylistJson);
     return asocial.crypto.encryptEncode64(keylistKey, keylistTxt);
 
   },
-  
+
   decryptKeylist: function (password) {
 
    var _this = asocial.crypto;
-    
+
    try {
       return _this.doDecryptKeylist(password);
    }  catch(e) {
       asocial.error.fatalError();
       return false;
    }
-    
+
   },
-  
+
   doDecryptKeylist: function (password) {
-    
+
     var _this = asocial.crypto;
-    
+
     var encKeylistTxt64 = asocial.state.group.keylist;
-    
+
     var encKeylistSalt  = asocial.state.group.keylist_salt;
     var encKeylistKey = _this.calculateHash(password, encKeylistSalt);
-    
+
     var decKeylist = _this.decode64Decrypt(encKeylistKey, encKeylistTxt64);
 
     var keylistJson = $.parseJSON(decKeylist);
@@ -76,23 +76,23 @@ guard('crypto', {
     var keylist = _this.buildKeylistFromJson(keylistJson)
 
     window.asocial_keylist = function() { return keylist; }
-    
+
     return true;
-    
+
   },
-  
+
   buildKeylistFromJson: function (keylistJson) {
-    
+
     var keylist = {}, _this = asocial.crypto;
-    
+
     $.each(keylistJson, function (userId, publicKeyJson) {
       keylist[userId] = _this.ecc.buildPublicKey(publicKeyJson);
     });
-    
+
     return keylist;
-  
+
   },
-  
+
   decode64Decrypt: function (key, message) {
     return sjcl.decrypt(key, $.base64.decode(message));
   },
@@ -100,7 +100,7 @@ guard('crypto', {
   encryptEncode64: function (key, message) {
     return $.base64.encode(sjcl.encrypt(key, message));
   },
-  
+
   serializeKeyList: function () {
 
     var public_keys = {};
@@ -126,7 +126,7 @@ guard('crypto', {
     this.decryptAvatars();
     this.decryptPostsAndComments();
     this.decryptMedia();
-    
+
   },
 
   calculateHash: function (pass, salt) {
@@ -154,10 +154,10 @@ guard('crypto', {
 
     var randWords = sjcl.random.randomWords(2, 0);
     var randHex = sjcl.codec.hex.fromBits(randWords);
-    
+
     var randHexHash = new sjcl.hash.sha256.hash(randHex);
     var randKey = sjcl.codec.hex.fromBits(randHexHash);
-    
+
     return randKey;
 
   },
@@ -176,19 +176,19 @@ guard('crypto', {
   },
 
   generateEncryptedKeyPair: function (hash) {
-    
+
     return this.encryptKeyPair(hash, this.generateKeypair());
-    
+
   },
 
   generateKeypair: function () {
 
     var key = this.ecc.generateKeys();
     var _this = asocial.crypto;
-    
+
     var privateKeyJsonTxt = _this.ecc.serializePrivateKey(key.sec);
     var publicKeyJsonTxt = _this.ecc.serializePublicKey(key.pub);
-    
+
     return {
       private_key: privateKeyJsonTxt,
       public_key: publicKeyJsonTxt
@@ -209,10 +209,10 @@ guard('crypto', {
     var publicKeys = {};
 
     $.each(public_key_infos, function(userId, publicKeyJson) {
-      
+
         var publicKey = _this.ecc.buildPublicKey(publicKeyJson);
         publicKeys[userId] = publicKey;
-        
+
     });
 
     return publicKeys;
@@ -220,42 +220,51 @@ guard('crypto', {
   },
 
   decryptMessage: function(encMsg, encMsgKey) {
-    
+
      var privateKey = asocial_private_key();
      var decMsgKey = this.ecc.decrypt(privateKey, encMsgKey);
-     
+
      return sjcl.decrypt(decMsgKey, encMsg);
-     
+
   },
 
   decryptPostsAndComments: function() {
 
       var _this = this;
-      
-      // Decrypt each encrypted post on the page.
-      $.each($('.encrypted'), function (i, element) {
 
-        var post = $(element).closest('.post');
-        
-        var groupId = CurrentSession.getGroupId();
-        
-        Crypto.decryptMessage(groupId, element.innerText, function (decryptedMessage) {
-          
+      // Decrypt each encrypted post on the page.
+
+      $('.encrypted').each(function() {
+
+        var $this = $(this);
+
+        var post    = $this.closest('.post'),
+            groupId = CurrentSession.getGroupId();
+
+        Crypto.decryptMessage(groupId, $this.text(), function (decryptedMessage) {
+
           // Show the user tags.
           //var formattedMessage = asocial.helpers.replaceUserMentions(marked(decryptedMessage));
+
+          // Markdown the message
           var formattedMessage = marked(decryptedMessage);
-          
-          // Markdown the message and insert in place.
-          post.find('.encrypted').replaceWith(formattedMessage);
-          
+
+          $this
+            // Transform the .encrypted into .collapsable
+            .removeClass('encrypted')
+            .addClass('collapsable')
+
+            // Insert the markdown'd decrypted message
+            .html(formattedMessage);
+
           post.removeClass('hidden');
-          
+
           asocial.helpers.formatPostsAndComments();
-          
+
         });
-        
+
       });
-    
+
   },
 
   // Rename to decryptmedia.
@@ -319,7 +328,7 @@ guard('crypto', {
       if (id == '') { return; }
 
       var keys = element.data('keys');
-      
+
       _this.getFile(id, keys, function (url) {
         var avatars = $('.encrypted-avatar[data-user-id="' + user_id + '"]');
         $.each(avatars, function (index, element) { element.src = url; });
@@ -330,7 +339,7 @@ guard('crypto', {
   },
 
   getFile: function (id, keys, callback, group) {;
-    
+
     var display = function(id, blob, save) {
 
       if (save) {
@@ -363,7 +372,7 @@ guard('crypto', {
       );
 
       gc = downloader
-      
+
       downloader.start(
         function() {},
         function(blob) {
@@ -385,14 +394,14 @@ guard('crypto', {
         store.get(id, function(me) {
 
           if (typeof(me) == "undefined") {
-            
+
             download(id, keys, group);
 
           } else {
 
             // Replace this eventually
             var blob = ThumbPick.prototype.dataURItoBlob(me.value);
-            
+
             display(id, blob, false);
 
           }
