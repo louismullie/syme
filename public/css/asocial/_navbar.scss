@@ -134,6 +134,10 @@
                 &:hover { text-decoration: none; }
               }
             }
+
+            & + li {
+              padding-left: 0;
+            }
           }
 
           li {
