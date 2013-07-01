@@ -265,7 +265,9 @@ Router = Backbone.Router.extend({
 
       });
 
-      if ($('#notifications-content').children().length == 0) {
+      var notificationCount = $('#notifications-content').children().length;
+      
+      if (notificationCount == 0) {
 
         $('#notifications-content').html(
           asocial.helpers.render('feed-notifications-empty'));
@@ -274,7 +276,7 @@ Router = Backbone.Router.extend({
 
         $('#notifications')
           .prepend('<span class="notification-badge">' +
-            asocial.state.notifications.length + '</a>');
+            notificationCount + '</a>');
 
       }
 

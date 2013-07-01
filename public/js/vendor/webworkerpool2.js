@@ -89,12 +89,14 @@ function WorkerPool2(url, size) {
       
       var job = this.jobs.pop();
 
-      var minIndex = Math.floor(Math.random() * (this.size + 1));
-
+      //var minIndex = Math.floor(Math.random() * (this.size + 1));
+      
+      //alert(minIndex);
+      
       if (job) {
-        this.pending[minIndex]++;
+        //this.pending[0]++;
         this.active++;
-        this.workers[minIndex].postMessage(job);
+        this.workers[0].postMessage(job);
         //  job, this.channels[minIndex]);
       }
 
