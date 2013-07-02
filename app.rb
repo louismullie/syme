@@ -3,8 +3,6 @@ module Asocial
   require './base'
 
   class Application < Base
-
-    disable :protection
     
     Bundler.require :default, settings.environment
 
