@@ -4,8 +4,22 @@ guard('socket', {
   updatedPosts: 0,
   updatedComments: 0,
   
-  create: {
+  invitation: {
+    
+    distribute: function () {
+      
+      var user = CurrentSession.getUser();
+      var groupId = CurrentSession.getGroupId();
+      var callback = function () {};
+      
+      user.getGroupUpdates(groupId, callback);
+      
+    }
 
+  },
+  
+  create: {
+    
     error: function(data) {
       $('#feed').prepend('<div class="alert alert-error">' +
       '<button type="button" class="close" data-dismiss="alert">' +
@@ -121,16 +135,6 @@ guard('socket', {
         .find('#' + data.id)
         .replaceWith(html);
 
-    },
-    
-    group: function () {
-      
-      var user = CurrentSession.getUser();
-      var groupId = CurrentSession.getGroupId();
-      var callback = function () {};
-      
-      user.getGroupUpdates(groupId, callback);
-      
     }
     
   },

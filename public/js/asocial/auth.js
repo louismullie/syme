@@ -21,13 +21,15 @@ guard('auth', {
 
         var params = $.param({ M: M.toString(16) });
 
+        $('meta[name="_csrf"]').attr('content', data.csrf);
+        
         $.post(SERVER_URL + '/login/2', params, function (data) {
 
           if (data.status == 'ok') {
 
             $('meta[name="_csrf"]').attr('content', data.csrf);
-            success();
 
+            success();
             
           } else if (data.status == 'error') {
 

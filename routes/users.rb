@@ -69,9 +69,10 @@ post '/users' do
   end
 
   user.save!
-
+  
   # Return the user ID and salt on success.
-  user.to_json
+  JSON.parse(user.to_json).merge(
+    { csrf: csrf_token }).to_json
 
 end
 

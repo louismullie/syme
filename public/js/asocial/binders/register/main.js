@@ -122,7 +122,8 @@ asocial.binders.add('register', { main: function(){
 
         var verifierBn = srp.calculateV(verifierSalt);
         var verifierHex = verifierBn.toString(16);
-
+         $('meta[name="_csrf"]').attr('content', response.csrf);
+         
         model.save({
 
           verifier: new Verifier({

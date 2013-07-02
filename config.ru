@@ -70,13 +70,13 @@ Rack::Mime::MIME_TYPES.merge!({
 
 # Enable token protection against CSRF.
 require 'rack/csrf'
-# use Rack::Csrf
+use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
 
+# Customize Rack
 # use Rack::Protection, except: :http_origin
-
-use Rack::Protection::HttpOrigin, origin_whitelist: [
-  'chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa',
-  'http://184.107.183.10']
+#use Rack::Protection::HttpOrigin, origin_whitelist: [
+#  'chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa',
+#  'localhost:5000', 'http://184.107.183.10']
 
 # Enable protection against remote referrers.
 use Rack::Protection::RemoteReferrer

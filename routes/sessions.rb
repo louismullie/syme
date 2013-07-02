@@ -44,7 +44,7 @@ post '/login/1' do
     
     track user, 'User started login'
     
-    srp[:challenge].to_json
+    srp[:challenge].merge({ csrf: csrf_token }).to_json
 
   end
 
