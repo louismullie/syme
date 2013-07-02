@@ -26,8 +26,12 @@ class Invitation
   field :request, type: String
   field :accept, type: String
   field :confirm, type: String
+  
   field :integrate, type: String
+  field :ack_integrate, type: Boolean
+  
   field :distribute, type: String
+  field :ack_distribute, type: []
   
   def inviter
     User.find(inviter_id)

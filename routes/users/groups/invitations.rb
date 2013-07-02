@@ -10,7 +10,8 @@ get '/users/:user_id/groups/:group_id/invitations', auth: [] do |_, group_id|
     
     # Current user is the invitee
     if invitation.state == 3 &&
-       invitation.invitee_id == @user.id.to_s
+       invitation.invitee_id == @user.id.to_s &&
+       !invitation.ack_integrate
     
       invitations[:integrate] = {
         id: invitation.id.to_s,
@@ -18,15 +19,22 @@ get '/users/:user_id/groups/:group_id/invitations', auth: [] do |_, group_id|
       }
       
     # Invite has been accepted
-    elsif invitation.state > 2  &&  
+    elsif invitation.state > 2  &&
+      
       # Current user is not inviter
       invitation.inviter_id != @user.id.to_s &&  
-      # Current user is 
-      invitation.invitee_id != @user.id.to_s     
+      # Current user is not invitee
+      invitation.invitee_id != @user.id.to_s && 
+      # Key distribution is needed, i.e. > 2 users
+      invitation.distribute && 
+      !invitation.ack_distribute.include?(@user.id.to_s)
 
-      invitations[:distribute] ||= {}
-      invitations[:distribute][invitation.id.to_s] =
-        invitation.distribute
+      invitations[:distribute] ||= []
+      
+      invitations[:distribute] << {
+        id: invitation.id.to_s,
+        request: invitation.distribute
+      }
         
     end
     
@@ -95,7 +103,10 @@ put '/invitations', auth: [] do
         invitation.state == 2
   
     invitation.integrate = params.integrate
-    invitation.distribute = params.distribute
+    
+    unless params.distribute == 'e30='
+      invitation.distribute = params.distribute
+    end
     
     invitation.state = 3
     invitation.save!
@@ -209,6 +220,48 @@ get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
 
   { posts: posts, uploads: uploads }.to_json
 
+end
+
+post '/users/:user_id/groups/:group_id/invitations/acknowledge' do |user_id, group_id|
+  
+  ack_integrate = params[:integrate]
+  ack_distribute = params[:distribute]
+  
+  group = @user.groups.find(group_id)
+  
+  if ack_distribute
+
+    previous = invitation.ack_distribute
+    
+    params.ack_distribute.each do |invitation_id|
+    
+      invitation = group.invitations.find(invitation_id)
+    
+       previous << @user.id.to_s
+    
+    end
+    
+    invitation.ack_distribute = previous
+    
+    invitation.save!
+    
+  elsif ack_integrate
+    
+    invitation = group.invitations.find(
+      ack_integrate[:invitation_id])
+    
+    invitation.ack_integrate = true
+    
+    invitation.save!
+    
+  else
+    
+    error 400, 'missing_parameters'
+    
+  end
+  
+  empty_response
+  
 end
 
 =begin

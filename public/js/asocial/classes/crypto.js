@@ -125,14 +125,14 @@ Crypto = function (workerUrl) {
     
   };
 
-  this.addUserRequest = function(addUserRequest, addedUserCb) {
+  this.addUsersRequest = function(addUsersRequest, addedUsersCb) {
     
     Crypto.workerPool.queueJob({
       
-      method: 'addUserRequest',
-      params: [addUserRequest]
+      method: 'addUsersRequest',
+      params: [addUsersRequest]
       
-    }, addedUserCb);
+    }, addedUsersCb);
     
   };
   

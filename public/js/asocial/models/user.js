@@ -127,12 +127,17 @@ var User = Backbone.RelationalModel.extend({
 
     Crypto.completeInviteRequest(completeRequest, function () {
         
+        var acknowledgement = { invitation_id: invitationId };
+        
         invitation.save(
           { completed: true },
           {
             success: function () {
+              
               Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-                _this.updateKeyfile(encryptedKeyfile, inviteCompletedCb);
+                _this.updateKeyfile(encryptedKeyfile, function () {
+                  _this.acknowledge('integrate', acknowledgement, inviteCompletedCb);
+                });
               });
             },
             error: errorCb
@@ -154,25 +159,53 @@ var User = Backbone.RelationalModel.extend({
     
     $.getJSON(url, function (keys) {
       
-      Crypto.transferKeysRequest(groupId, inviteeId, keys, function (recryptedKeys) {
-        invitation.save(
-          { transfer: recryptedKeys },
-          {
-            success: transferredKeysCb,
-            error: errorCb
-        });
+      Crypto.transferKeysRequest(groupId, inviteeId, keys,
+      
+        function (recryptedKeys) {
+          
+          invitation.save(
+            { transfer: recryptedKeys },
+            {
+              success: transferredKeysCb,
+              error: errorCb
+          });
+          
       });
       
     });
     
   },
   
-  addUserRequest: function (addUserRequest, addedUserCb) {
+  addUsersRequest: function (addUsersRequest, addedUsersCb) {
     
-    Crypto.addUserRequest(addUserRequest, function () {
+    var _this = this;
+    
+    Crypto.addUsersRequest(addUsersRequest, function (acknowledgements) {
+      
       Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-        _this.updateKeyfile(encryptedKeyfile, addedUserCb);
+        
+        _this.updateKeyfile(encryptedKeyfile, function () {
+          _this.acknowledge('distribute', acknowledgements, addedUsersCb);
+        });
+        
       });
+      
+    });
+    
+  },
+  
+  acknowledge: function(type, acknowledgement, acknowledgedCb) {
+    
+    var url = '/users/' + CurrentSession.getUserId() + '/groups/' +
+              CurrentSession.getGroupId() + '/invitations/acknowledge';
+    
+    var data = {}; data[type] = acknowledgement;
+    
+    $.ajax(url, { type: 'POST', data: data,
+      
+      success: acknowledgedCb,
+      error: function () { alert('error!'); }
+      
     });
     
   },
@@ -195,7 +228,8 @@ var User = Backbone.RelationalModel.extend({
             
             _this.completeInviteRequest(invitationId,
               request, function () {
-                _this.addUserRequest(groupUpdates.distribute, updatedGroupsCb);
+                _this.addUserRequest(invitationId,
+                  groupUpdates.distribute, updatedGroupsCb);
             });
             
           } else {
@@ -207,8 +241,9 @@ var User = Backbone.RelationalModel.extend({
           
         } else if (groupUpdates.distribute) {
           
-          _this.addUserRequest(groupUpdates.distribute, updatedGroupsCb);
-            
+          _this.addUsersRequest(
+            distribute.requests, updatedGroupsCb);
+          
         } else {
           
           updatedGroupsCb();

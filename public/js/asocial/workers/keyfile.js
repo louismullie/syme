@@ -573,7 +573,7 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var addUserRequest;
     
-    if (_.size(keylist) > 2) {
+    if (_.size(keylist) > 3) { // +1 for _transactions
       addUserRequest = Crypto.encodeBase64(
         JSON.stringify({
           keylistId: keylistId,
@@ -621,28 +621,22 @@ Keyfile = function(userId, password, encKeyfile) {
     
   };
   
-  that.addUserRequest = function (addUserRequests) {
+  that.addUserRequest = function (addUserRequestBase64) {
     
-    var _this = this;
+    var addUserRequestTxt = Crypto.decodeBase64(addUserRequestBase64);
+    var addUserRequest = JSON.parse(addUserRequestTxt);
+
+    var keylistId           = addUserRequest.keylistId,
+        inviteeId           = addUserRequest.inviteeId,
+        inviteeKeypairs     = addUserRequest.inviteeKeypairs;
+
+    if (!keylistId || !inviteeId || !inviteeKeypairs)
+      throw 'Missing required parameters.'
     
-    _.each(addUserRequests, function (addUserRequestBase64, index) {
-      
-      var addUserRequestTxt = Crypto.decodeBase64(addUserRequestBase64);
-      var addUserRequest = JSON.parse(addUserRequestTxt);
+    var inviteeKeypairsTxt = Crypto.decryptMessage(keylistId, inviteeKeypairs);
 
-      var keylistId           = addUserRequest.keylistId,
-          inviteeId           = addUserRequest.inviteeId,
-          inviteeKeypairs     = addUserRequest.inviteeKeypairs;
+    that.addKeypairs(keylistId, inviteeId, JSON.parse(inviteeKeypairsTxt));
 
-      if (!keylistId || !inviteeId || !inviteeKeypairs)
-        throw 'Missing required parameters.'
-      
-      var inviteeKeypairsTxt = Crypto.decryptMessage(keylistId, inviteeKeypairs);
-
-      that.addKeypairs(keylistId, inviteeId, JSON.parse(inviteeKeypairsTxt));
-
-    });
-    
     return null;
     
   };

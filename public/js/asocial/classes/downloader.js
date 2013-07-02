@@ -16,7 +16,7 @@ function Downloader(id, keys, options) {
 
   }
 
-  this.options = {}; options = options || {};
+  this.options = options || {};
   this.options.numWorkers = options.numWorkers || 4;
   this.options.baseUrl = options.baseUrl || '/file/';
   this.options.privKey = options.privKey;

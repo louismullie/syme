@@ -75,11 +75,23 @@ Crypto = {
     
   },
   
-  addUserRequest: function (addUserRequest, addedUserCb) {
+  addUsersRequest: function (addUsersRequest) {
     
     var keyfile = this.getKeyfile();
     
-    return keyfile.addUserRequest(addUserRequest, addedUserCb);
+    var acknowledgements = [];
+    
+    _.each(addUsersRequest, function (addUserRequest) {
+      
+      var invitationId = addUserRequest.id;
+      var request = addUserRequest.request;
+      
+      keyfile.addUserRequest(request);
+      acknowledgements.push(invitationId);
+      
+    });
+    
+    return acknowledgements;
 
   },
   
