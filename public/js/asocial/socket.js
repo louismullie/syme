@@ -3,15 +3,7 @@ guard('socket', {
   // BEGIN CUD OPERATIONS
   updatedPosts: 0,
   updatedComments: 0,
-
-  confirm: {
-
-    invite: function(data) {
-
-    }
-
-  },
-
+  
   create: {
 
     error: function(data) {
@@ -206,6 +198,16 @@ guard('socket', {
         $('#notifications-content').html(
           asocial.helpers.render('feed-notifications-empty'));
       }
+    },
+    
+    group: function () {
+      
+      var user = CurrentSession.getUser();
+      var groupId = CurrentSession.getGroupId();
+      var callback = function () {};
+      
+      user.getGroupUpdates(groupId, callback);
+      
     }
 
   },

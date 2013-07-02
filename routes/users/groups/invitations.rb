@@ -231,19 +231,20 @@ post '/users/:user_id/groups/:group_id/invitations/acknowledge' do |user_id, gro
   
   if ack_distribute
 
-    previous = invitation.ack_distribute
-    
-    params.ack_distribute.each do |invitation_id|
+    ack_distribute.each do |invitation_id|
     
       invitation = group.invitations.find(invitation_id)
     
-       previous << @user.id.to_s
+      previous = invitation.ack_distribute
+
+      previous << @user.id.to_s
     
+      invitation.ack_distribute = previous
+       
+      invitation.save!
+       
     end
-    
-    invitation.ack_distribute = previous
-    
-    invitation.save!
+   
     
   elsif ack_integrate
     

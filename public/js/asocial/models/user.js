@@ -183,7 +183,7 @@ var User = Backbone.RelationalModel.extend({
     Crypto.addUsersRequest(addUsersRequest, function (acknowledgements) {
       
       Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-        
+
         _this.updateKeyfile(encryptedKeyfile, function () {
           _this.acknowledge('distribute', acknowledgements, addedUsersCb);
         });
@@ -228,8 +228,7 @@ var User = Backbone.RelationalModel.extend({
             
             _this.completeInviteRequest(invitationId,
               request, function () {
-                _this.addUserRequest(invitationId,
-                  groupUpdates.distribute, updatedGroupsCb);
+                _this.addUsersRequest(groupUpdates.distribute, updatedGroupsCb);
             });
             
           } else {
@@ -241,8 +240,7 @@ var User = Backbone.RelationalModel.extend({
           
         } else if (groupUpdates.distribute) {
           
-          _this.addUsersRequest(
-            distribute.requests, updatedGroupsCb);
+          _this.addUsersRequest(groupUpdates.distribute, updatedGroupsCb);
           
         } else {
           

@@ -31,7 +31,7 @@ class Invitation
   field :ack_integrate, type: Boolean
   
   field :distribute, type: String
-  field :ack_distribute, type: []
+  field :ack_distribute, type: Array, default: []
   
   def inviter
     User.find(inviter_id)
