@@ -121,7 +121,18 @@ guard('socket', {
         .find('#' + data.id)
         .replaceWith(html);
 
+    },
+    
+    group: function () {
+      
+      var user = CurrentSession.getUser();
+      var groupId = CurrentSession.getGroupId();
+      var callback = function () {};
+      
+      user.getGroupUpdates(groupId, callback);
+      
     }
+    
   },
 
   delete: {
@@ -198,18 +209,7 @@ guard('socket', {
         $('#notifications-content').html(
           asocial.helpers.render('feed-notifications-empty'));
       }
-    },
-    
-    group: function () {
-      
-      var user = CurrentSession.getUser();
-      var groupId = CurrentSession.getGroupId();
-      var callback = function () {};
-      
-      user.getGroupUpdates(groupId, callback);
-      
     }
-
   },
 
   send: {
