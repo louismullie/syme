@@ -77,7 +77,7 @@ use Rack::Protection, except: [:http_origin, :remote_token, :frame_options]
 
 use Rack::Protection::HttpOrigin, origin_whitelist: [
  'chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa',
- 'localhost:5000', 'http://184.107.183.10', 'syme.io']
+ 'localhost:5000', 'http://184.107.183.10', 'http://syme.io', 'syme.io', 'www.syme.io']
 
 require './app'
 
