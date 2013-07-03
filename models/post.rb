@@ -1,6 +1,6 @@
-class Post < Resource
+require_relative 'resource'
 
-  require_relative 'resource'
+class Post < Resource
 
   include Resource::Likeable
   include Resource::Keyable
