@@ -1,4 +1,4 @@
-server: bundle exec thin start -p 3070
+server: bundle exec thin start -p 5000
 database: mongod
 sessions: memcached -l localhost -u root
 rabbitmq: rabbitmq-server
