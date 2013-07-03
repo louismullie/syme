@@ -51,12 +51,12 @@ use ContentSecurityPolicy, directives: {
 require 'securerandom'
 
 # Setup server-side sessions.
-use Rack::Session::Cookie,
-  key: SecureRandom.hex(16),
+use Rack::Session::Memcache,
+  key: 'session',
   expire_after: 3600,
   secure: $secure,
   sidbits: 256,
-  secure_random: SecureRandom,
+  path: '/',
   secret: '8dg236rgd31238fb13vd65'
 
 # Additional mime types
@@ -70,7 +70,7 @@ Rack::Mime::MIME_TYPES.merge!({
 
 # Enable token protection against CSRF.
 require 'rack/csrf'
-use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
+# use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
 
 require './app'
 

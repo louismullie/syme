@@ -19,6 +19,7 @@ gem 'mongo'
 gem 'bson_ext'
 gem 'mongoid'
 gem 'magicbus'
+gem 'memcache-client'
 
 # * Extensions * #
 gem 'pony'

@@ -75,6 +75,7 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    memcache-client (1.8.5)
     method_source (0.8.1)
     mime-types (1.23)
     mongo (1.9.0)
@@ -170,6 +171,7 @@ DEPENDENCIES
   guard-steering
   i18n
   magicbus
+  memcache-client
   mongo
   mongoid
   pony
