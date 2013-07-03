@@ -1,14 +1,28 @@
 {{#each notifications}}
 
-.notification{ id: '{{id}}' }
+.notification{ id: '{{id}}', :'data-read' => '{{{read}}}' }
 
   %p.notification-content
+    // If notification hasn't been read, show unread button
+    {{#unless read}}
     %a.notification-unread{ href: '#', 'title' => '' }
       %i.icon-circle
+    {{/unless}}
 
+    // Display message
     {{{message}}}
 
   %p.notification-infos
+    // Created at
     {{created_at}}
 
 {{/each}}
+
+{{#unless notifications}}
+
+// No notifications
+.notification{ id: 'empty' }
+  %p.empty-notification
+    No new notifications.
+
+{{/unless}}

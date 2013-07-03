@@ -114,8 +114,6 @@ Notifications = (function(){
 
       _this = this;
 
-      globalthis = this;
-
       // Generate an array of unread notifications
       var notifications = _.map(this.collection.where({ read: false }),
         function(notification){
@@ -124,6 +122,9 @@ Notifications = (function(){
           });
         }
       );
+
+      // Show no notifications notice if there are none;
+      if(notifications.length == 0) notifications = false;
 
       // Render notifications into element
       _this.$el.html( asocial.helpers.render('notification',
