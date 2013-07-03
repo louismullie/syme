@@ -70,8 +70,6 @@ end
 put '/users' do
 
   model = get_model(request)
-
-  logger.info model
   
   # Find the user with the supplied ID.
   user = begin

@@ -4,8 +4,6 @@ post '/:group_id/post/create', auth: [] do |group_id|
 
   @group.touch
   
-  logger.info params
-  
   message = JSON.parse(Base64.strict_decode64(
     params[:encrypted_content]))
   

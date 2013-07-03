@@ -17,8 +17,6 @@ class AttachmentGenerator
       senderId: post.owner.id.to_s
     }.to_json)
     
-    warn content
-    
     {
       # General file information.
       id: upload.id.to_s,
