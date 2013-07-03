@@ -6,17 +6,8 @@ $.ajaxSetup({
     var token = $('meta[name="_csrf"]').attr('content');
     xhr.setRequestHeader('X_CSRF_TOKEN', token);
     
-  },
-  
-  complete: function (jqXHR) {
-
-    if(jqXHR.status == 403) {
-      // User has been logged off.
-      asocial.auth.disconnect();
-    }
-      
   }
-  
+
 });
 
 // Creating custom :external selector

@@ -226,6 +226,13 @@ Router = Backbone.Router.extend({
       // Hide spinner
       $('#spinner').hide();
 
+    }).fail(function(jqXHR){
+      if(jqXHR.status == 401) {
+        // User has been logged off.
+        asocial.auth.disconnect();
+      } else {
+        Router.error();
+      }
     });
 
   },
