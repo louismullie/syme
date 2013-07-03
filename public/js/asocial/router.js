@@ -170,6 +170,8 @@ Router = Backbone.Router.extend({
     // Optional group id for routes that require group authentication
     var groupId = groupId || false;
 
+    // Clear breadcrumbs
+    $('#navbar-breadcrumbs').html('');
     // Show spinner
     $('#spinner').show();
 
@@ -209,17 +211,8 @@ Router = Backbone.Router.extend({
     // Retreive data
     $.getJSON(url, function (data) {
 
-      // First pageload: container doesn't exist
-      if( !$('#main').length ) {
-
-        // Render it
-        $('body').html( Handlebars.templates['container.hbs']() );
-
-        // Initiate notifications
-        Notifications.setElement( $('#notifications-content') );
-        Notifications.collection.fetch();
-
-      }
+      // First pageload: initiate logged in template
+      if( !$('#main').length ) Router.renderLoggedInTemplate();
 
       // Render template
       var view = Handlebars.compileTemplate(template, data);
@@ -244,6 +237,14 @@ Router = Backbone.Router.extend({
 
   },
 
+  renderLoggedInTemplate: function() {
+    // Render it
+    $('body').html( Handlebars.templates['container.hbs']() );
+
+    // Initiate notifications
+    Notifications.start();
+  },
+
   authenticate: function(success, failure) {
 
     // If there is already a session, success
@@ -252,43 +253,6 @@ Router = Backbone.Router.extend({
     } else {
       return failure();
     }
-
-  },
-
-  // Move that out of here
-  renderNotifications: function() {
-
-    $.getJSON('/state/notifications', function (data) {
-
-      $.each(data, function (index, notification) {
-
-        $('#notifications-content').append(
-          asocial.helpers.render('feed-notification', {
-            html: asocial.helpers.notificationText(notification),
-            id: notification.id,
-            created_at: notification.created_at,
-            owner: notification.owner
-          })
-        );
-
-      });
-
-      var notificationCount = $('#notifications-content').children().length;
-
-      if (notificationCount == 0) {
-
-        $('#notifications-content').html(
-          asocial.helpers.render('feed-notifications-empty'));
-
-      } else {
-
-        $('#notifications')
-          .prepend('<span class="notification-badge">' +
-            notificationCount + '</a>');
-
-      }
-
-    });
 
   },
 

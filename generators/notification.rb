@@ -16,6 +16,7 @@ class NotificationGenerator
       post_id:    notification.post_id.to_s,
       comment_id: notification.comment_id.to_s,
       action:     notification.action.to_s,
+      read:       notification.read,
       group:      group.name,
       group_id:   group.id.to_s,
       actors:     actors,

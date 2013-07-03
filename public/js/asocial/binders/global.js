@@ -1,5 +1,5 @@
 asocial.binders.add('global', { main: function(){
-  
+
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
     e.stopPropagation();
@@ -52,48 +52,6 @@ asocial.binders.add('global', { main: function(){
   $(document).on('click', 'a[role="submit"]', function(e){
     if( !$(this).hasClass('disabled') )
       $(this).closest('form').submit();
-  });
-
-  $(document).on('click', '.notification-content a', function(e) {
-
-    var id = $(this).closest('.notification').attr('id');
-
-    $.ajax(SERVER_URL + '/' + CurrentSession.getUserId() + '/notifications/' + id, {
-
-      type: 'delete',
-
-      success: function () {
-
-        // For now
-        $('#' + id).remove();
-
-        var count = parseInt($('.notification-badge').html()) - 1;
-
-        if (count == 0) {
-          $('.notification-badge').remove();
-        } else {
-          $('.notification-badge').html(count);
-        }
-
-      },
-
-      error: function () {
-        asocial.helpers.showAlert('Notification clearing failed', {
-          onhide: function(){ location.reload(); }
-        });
-      }
-
-    });
-
-    // If click isn't the delete badge, kill tooltip
-    if ( $(this).attr('href') != '#' ) {
-      // Reset possible hidden tooltips
-      $('a[data-popover]').removeClass('hint--hidden');
-
-      // Hide popover
-      $('.popover').hide();
-    }
-
   });
 
 } }); // asocial.binders.add();

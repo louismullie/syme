@@ -34,16 +34,16 @@ $(function(){
 
   // Initialize router
   Router = new Router;
-  
+
   CurrentSession = new Session(null, function () {
 
     Backbone.history.start({ pushState: true });
-    
+
     // Trigger root.
     if (asocial.compat.inChromeExtension()) {
       Router.navigate('/');
     }
 
   }, function () { alert('Session failed!'); });
-  
+
 });

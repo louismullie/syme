@@ -1,32 +1,37 @@
-get '/state/notifications', auth: [] do
+get '/users/:user_id/notifications', auth: [] do
 
   content_type :json
-  
-  @user.unread_notifications.map do |notification|
+
+  @user.notifications.map do |notification|
     NotificationGenerator.generate(notification, @user)
   end.to_json
 
 end
 
-# Notifications.
-post '/notifications/:id/:action', auth: [] do |id, action|
-  
-  read = action == 'read' ? true : false
-  
-  notification = @user.notifications.find(id)
-  
-  notification.update_attributes(read: read)
-  
+patch '/users/:user_id/notifications/:notification_id',
+  auth: [] do |_, notification_id|
+
+  model = get_model(request)
+
+  return empty_response unless model
+
+  notification = @user.notifications.find(notification_id)
+
+  notification.update_attributes(read: model.read) if model.read
+
   status 204
-  
+
 end
 
-delete '/users/:user_id/notifications/:notification_id',
-  auth: [] do |user_id, notification_id|
-  
-  notification = @user.notifications.find(notification_id)
-  notification.destroy
-  
+patch '/users/:user_id/notifications', auth: [] do |_|
+
+  model = get_model(request)
+
+  if model.read
+    @user.notifications.update_all(:read, true)
+    @user.save!
+  end
+
   status 204
-  
+
 end

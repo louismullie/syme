@@ -1,3 +1,5 @@
+{{#each notifications}}
+
 .notification{ id: '{{id}}' }
 
   %p.notification-content
@@ -8,3 +10,5 @@
 
   %p.notification-infos
     {{created_at}}
+
+{{/each}}

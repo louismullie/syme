@@ -70,11 +70,6 @@ $avatarSmall:             35px;
 @include font-face(OpenSans, '/fonts/OpenSans/OpenSans-Semibold-webfont', 600);
 @include font-face(OpenSans, '/fonts/OpenSans/OpenSans-Bold-webfont', bold);
 
-@include font-face(ProximaNova, '/fonts/ProximaNova/proximanova-regular-webfont', normal);
-@include font-face(ProximaNova, '/fonts/ProximaNova/proximanova-regularitalic-webfont', normal, italic);
-@include font-face(ProximaNova, '/fonts/ProximaNova/proximanova-semibold-webfont', bold, normal);
-@include font-face(ProximaNova, '/fonts/ProximaNova/proximanova-semibolditalic-webfont', bold, italic);
-
 // Font families
 
 $opensans:                OpenSans, Helvetica, Arial, Geneva, sans-serif;

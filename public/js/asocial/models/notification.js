@@ -1,6 +1,6 @@
 Notifications = (function(){
 
-  var generateMessage = function(data) {
+  var generateNotificationText = function(data) {
 
     var types = {
 
@@ -73,7 +73,8 @@ Notifications = (function(){
     }
 
     // If action doesn't exist, return false
-    if ( !_.has(types, data.action) ) return false;
+    if ( !_.has(types, data.action) )
+      throw 'Undefined message for ' + data.action;
 
     var type = types[data.action];
 
@@ -113,40 +114,38 @@ Notifications = (function(){
 
       _this = this;
 
-      // Compile data from models ( to refactor server-side )
-      var notifications = _.map(this.collection.models, function(element){
-        return element.attributes;
-      });
+      globalthis = this;
 
-      // Compile and prepend each
-      _.each(notifications, function(notification){
+      // Generate an array of unread notifications
+      var notifications = _.map(this.collection.where({ read: false }),
+        function(notification){
+          return _.extend(notification.attributes, {
+            message: generateNotificationText(notification.attributes)
+          });
+        }
+      );
 
-        var message = generateMessage(notification);
-
-        // Message doesn't exist in list
-        if (!message) return;
-
-        notification = _.extend(notification, {
-          message: generateMessage(notification)
-        });
-
-        // Prepend (to-do: only changed) notifications
-        _this.$el.html( asocial.helpers.render('notification', notification) );
-
-      });
+      // Render notifications into element
+      _this.$el.html( asocial.helpers.render('notification',
+        { notifications: notifications }) );
 
       // Update count
-      var count = this.collection.models.length;
+      var count = notifications.length;
       $('#notification-li').attr('data-badge', count);
 
     },
 
     events: {
-      "click a.read-notification": "markAsRead"
+      "click a.notification-unread": "markAsRead"
     },
 
     markAsRead: function(e){
-      console.log('markAsRead with event', e);
+      var id = $(e.currentTarget).closest('.notification').attr('id');
+      var notification = this.collection.findWhere({ id: id });
+
+      notification.save({ read: true }, {patch: true});
+
+      e.stopPropagation();
     }
 
   });
@@ -154,16 +153,31 @@ Notifications = (function(){
   // * Model * //
 
   var Model = Backbone.Model.extend({
-    idAttribute: "_id"
+    initialize: function(){
+      this.on('change', this.collection.view.render, this.collection.view);
+    }
   });
 
   // * Collection * //
 
   var Collection = Backbone.Collection.extend({
     model: Model,
-    url: "/state/notifications"
+
+    // Call this when the DOM is loaded and CurrentSession is available
+    start: function(){
+      this.url = "users/" + CurrentSession.getUserId() + "/notifications";
+      this.view.setElement( $('#notifications-content') );
+
+      // Fetch notifications
+      this.fetch();
+    }
   });
 
-  return new View({ collection: new Collection() });
+  // Build self-referring MVC
+  Collection      = new Collection();
+  View            = new View({ collection: Collection });
+  Collection.view = View;
+
+  return Collection;
 
 })();
