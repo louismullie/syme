@@ -1,5 +1,7 @@
 module Asocial
 
+  set :protection, except: [:http_origin, :remote_token, :frame_options], origin_whitelist: ['chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa', 'localhost:5000', 'http://184.107.183.10', 'http://syme.io', 'syme.io', 'www.syme.io']
+  
   require './base'
 
   class Application < Base
