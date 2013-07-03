@@ -40,8 +40,7 @@ gem 'guard'
 gem 'guard-haml'
 gem 'guard-steering'
 
-gem 'yajl-ruby',
-  require: 'yajl/json_gem'
+gem 'json'
 
 gem 'closure-compiler'
 
