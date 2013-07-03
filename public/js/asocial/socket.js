@@ -3,23 +3,23 @@ guard('socket', {
   // BEGIN CUD OPERATIONS
   updatedPosts: 0,
   updatedComments: 0,
-  
+
   invitation: {
-    
+
     distribute: function () {
-      
+
       var user = CurrentSession.getUser();
       var groupId = CurrentSession.getGroupId();
       var callback = function () {};
-      
+
       user.getGroupUpdates(groupId, callback);
-      
+
     }
 
   },
-  
+
   create: {
-    
+
     error: function(data) {
       $('#feed').prepend('<div class="alert alert-error">' +
       '<button type="button" class="close" data-dismiss="alert">' +
@@ -93,7 +93,7 @@ guard('socket', {
 
     notification: function(data){
 
-      Notifications.collection.add(data);
+      Notifications.add(data);
 
     },
 
@@ -136,7 +136,7 @@ guard('socket', {
         .replaceWith(html);
 
     }
-    
+
   },
 
   delete: {

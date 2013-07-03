@@ -114,14 +114,14 @@ Notifications = (function(){
 
       _this = this;
 
+      var selector = this.collection.where({ read: false });
+
       // Generate an array of unread notifications
-      var notifications = _.map(this.collection.where({ read: false }),
-        function(notification){
-          return _.extend(notification.attributes, {
-            message: generateNotificationText(notification.attributes)
-          });
-        }
-      );
+      var notifications = _.map(selector, function(notification){
+        return _.extend(notification.attributes, {
+          message: generateNotificationText(notification.attributes)
+        });
+      });
 
       // Show no notifications notice if there are none;
       if(notifications.length == 0) notifications = false;
@@ -131,8 +131,7 @@ Notifications = (function(){
         { notifications: notifications }) );
 
       // Update count
-      var count = notifications.length;
-      $('#notification-li').attr('data-badge', count);
+      $('#notification-li').attr('data-badge', selector.length);
 
     },
 
@@ -153,11 +152,7 @@ Notifications = (function(){
 
   // * Model * //
 
-  var Model = Backbone.Model.extend({
-    initialize: function(){
-      this.on('change', this.collection.view.render, this.collection.view);
-    }
-  });
+  var Model = Backbone.Model.extend({});
 
   // * Collection * //
 

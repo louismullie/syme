@@ -72,8 +72,6 @@ guard('binders', {
       // After x minutes
       if (idleTime > 20) {
         clearInterval(idleInterval);
-        alert('Disconnect has been called');
-        debugger;
         asocial.auth.disconnect();
       }
 
