@@ -10,7 +10,7 @@ $.ajaxSetup({
   
   complete: function (jqXHR) {
 
-    if(jqXHR.status == 401) {
+    if(jqXHR.status == 403) {
       // User has been logged off.
       asocial.auth.disconnect();
     }
