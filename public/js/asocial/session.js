@@ -90,9 +90,9 @@ Session = function (user, callback) {
 
         if (!data.user_id)
           return callback();
-    
+
         $('meta[name="_csrf"]').attr('content', response.csrf);
-        
+
         _this.user = new User();
 
         _this.user.fetch({

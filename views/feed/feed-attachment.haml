@@ -1,9 +1,59 @@
-{{#if is_media}}
+// Image
+{{#if is_image}}
+%a.image-download{href: '#', 'data-attachment-id' => '{{id}}',
+                             'data-attachment-filename' => '{{filename}}',
+                             'data-attachment-size' => '{{size}}',
+                             'data-attachment-keys' => '{{keys}}' }
 
-{{> feed-attachment-media.hbs}}
-
-{{else}}
-
-{{> feed-attachment-other.hbs}}
+  %img.attached-image.encrypted-image{src: "/img/placeholder-680x500.gif",
+                                      'data-attachment-id' => '{{thumbnail.id}}',
+                                      'data-attachment-filename' => '{{thumbnail.filename}}',
+                                      'data-attachment-size' => '{{thumbnail.size}}',
+                                      'data-attachment-keys' => '{{thumbnail.keys}}',
+                                      'data-attachment-type' => 'image'}
 
 {{/if}}
+
+// Video
+{{#if is_video}}
+
+%video.encrypted-video{src: '', 'data-attachment-id' => '{{id}}',
+                                'data-attachment-filename' => '{{filename}}',
+                                'data-attachment-size' => '{{size}}',
+                                'data-attachment-keys' => '{{keys}}',
+                                'data-attachment-type' => 'video' }
+
+{{/if}}
+
+// Audio
+{{#if is_audio}}
+
+%audio.encrypted-audio{ src: '',
+                        'data-attachment-id' => '{{id}}',
+                        'data-attachment-filename' => '{{filename}}',
+                        'data-attachment-size' => '{{size}}',
+                        'data-attachment-keys' => '{{keys}}',
+                        'data-attachment-type' => 'audio' }
+
+{{/if}}
+
+// File
+{{#unless is_media}}
+
+%p
+  %b {{t 'upload.attachment'}}:
+
+  {{filename}} ({{to_readable_size size}})
+
+  &sdot;
+
+  %a.encrypted-file{href: '#',
+                    'data-attachment-id'       => '{{id}}',
+                    'data-attachment-filename' => '{{filename}}',
+                    'data-attachment-size'     => '{{size}}',
+                    'data-attachment-key'      => '{{keys}}'}
+    Download
+
+    %span.hidden.progress_container
+
+{{/unless}}
