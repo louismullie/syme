@@ -6,7 +6,7 @@ set :application, 'asocial'
 # Server login configuration.
 set :user, 'web'
 set :port, 1023
-set :domain, '184.107.183.10'
+set :domain, '198.27.65.229'
 set :use_sudo, true
 default_run_options[:pty] = true
 
@@ -24,7 +24,7 @@ set :deploy_via, :remote_cache
 set :ssh_options, { forward_agent: true }
 
 # Set location for apps.
-set :location, '184.107.183.10'
+set :location, '198.27.65.229'
 
 role :web, location
 role :app, location
