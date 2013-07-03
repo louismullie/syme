@@ -76,8 +76,8 @@ use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
 use Rack::Protection, except: :http_origin
 
 use Rack::Protection::HttpOrigin, origin_whitelist: [
-  'chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa',
-  'localhost:5000', 'http://184.107.183.10']
+ 'chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa',
+ 'localhost:5000', 'http://184.107.183.10']
 
 # Enable protection against remote referrers.
 use Rack::Protection::RemoteReferrer
