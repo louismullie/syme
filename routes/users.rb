@@ -22,18 +22,6 @@ get '/users' do
   
 end
 
-get '/state/session', auth: [] do
-  
-  content_type :json
-
-  error 403, 'unauthorized' unless @user
-  
-  { user_id: @user.id.to_s,
-    password_key: @user.session_id
-  }.to_json
-
-end
-
 # A client submits a email. If the email is
 # available, we generate a salt, store it,
 # and return the salt to the client for SRP.

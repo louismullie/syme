@@ -1,3 +1,16 @@
+get '/state/session', auth: [] do
+  
+  content_type :json
+
+  error 403, 'unauthorized' unless @user
+  
+  { user_id: @user.id.to_s,
+    password_key: @user.session_id,
+    csrf: csrf_token
+  }.to_json
+
+end
+
 get '/state/system' do
 
   content_type :json
