@@ -106,27 +106,38 @@ Notifications = (function(){
   var View = Backbone.View.extend({
 
     initialize: function(){
-      // Render when collection gets updated
-      this.collection.on('sync', this.render, this);
+      // Called on modifications
+      this.collection.on('sync change', this.render, this);
+
+      // Called on first pageload
+      this.collection.on('reset', function(){
+        // First render
+        this.render()
+
+        // Bind add events for new items
+        this.collection.on('add', this.render, this);
+      }, this);
     },
 
     render: function(){
 
       _this = this;
 
+      // Generate an array of unread notifications
       var selector = this.collection.where({ read: false });
 
-      // Generate an array of unread notifications
+      // Iterate on each
       var notifications = _.map(selector, function(notification){
+        // Return notification.attributes with an added message
         return _.extend(notification.attributes, {
           message: generateNotificationText(notification.attributes)
         });
       });
 
-      // Show no notifications notice if there are none;
+      // Show no notifications notice if there are no notifications;
       if(notifications.length == 0) notifications = false;
 
-      // Render notifications into element
+      // Render all notifications into element
       _this.$el.html( asocial.helpers.render('notification',
         { notifications: notifications }) );
 
@@ -165,7 +176,7 @@ Notifications = (function(){
       this.view.setElement( $('#notifications-content') );
 
       // Fetch notifications
-      this.fetch();
+      this.fetch({ reset: true });
     }
   });
 
