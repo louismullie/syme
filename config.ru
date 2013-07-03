@@ -73,7 +73,7 @@ require 'rack/csrf'
 use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
 
 # Customize Rack
-use Rack::Protection, except: :http_origin
+use Rack::Protection, except: [:http_origin, :remote_token, :frame_options]
 
 use Rack::Protection::HttpOrigin, origin_whitelist: [
  'chrome-extension://diifaedmnfmmdmfgbjmdnggodliffefa',
