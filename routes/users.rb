@@ -98,8 +98,8 @@ put '/users' do
 
     # Build the verifier with the salt.
     user.verifier = Verifier.new(
-      salt:  model.verifier['salt'],
-      content:  model.verifier['content']
+      salt:  model.verifier.salt,
+      content:  model.verifier.content
     )
 
     user.verifier.save!
