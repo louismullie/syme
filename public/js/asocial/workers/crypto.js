@@ -310,7 +310,7 @@ Crypto = {
     if (!encMessage) throw 'Message is missing.';
     
     var encSymKeyTxt64 = messageJson.keys[keyfile.userId];
-    
+
     if (!encSymKeyTxt64) throw 'Key is missing.'
     
     var decryptedSymKey = this.decryptMessageKey(

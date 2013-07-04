@@ -50,6 +50,7 @@ guard('auth', {
 
         storage.email = email;
         var password_key = data.B.toString();
+
         CurrentSession.setPasswordKey(password_key);
 
         storage.password =
@@ -118,7 +119,7 @@ guard('auth', {
 
   getPasswordLocal: function (callback) {
 
-    try {
+    //try {
 
       var encryptedPassword;
 
@@ -152,9 +153,9 @@ guard('auth', {
         callback(password);
       }
 
-    } catch (e) {
-      asocial.auth.disconnect();
-    }
+    //} catch (e) {
+    //  asocial.auth.disconnect();
+    //}
 
   }
 

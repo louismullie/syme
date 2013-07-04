@@ -1,4 +1,4 @@
-module Asocial
+module Syme
 
   class Base < Sinatra::Base
 

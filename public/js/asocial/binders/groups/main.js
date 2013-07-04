@@ -80,8 +80,6 @@ asocial.binders.add('groups', { main: function() {
                 data: { ack_create: true }
               });
 
-              asocial.socket.listen();
-
           });
 
         });

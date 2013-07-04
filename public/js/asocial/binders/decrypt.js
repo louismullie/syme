@@ -7,7 +7,7 @@ asocial.binders.add('global', { decrypt: function() {
         done  = done || function(){};
 
     var post    = $this.closest('.post'),
-        text    = $this.text(),
+        text    = $this.text().replace(/^\s+|\s+$/g, ''),
         groupId = CurrentSession.getGroupId();
 
     var formatDecryptedText = function(decryptedText) {
@@ -37,6 +37,9 @@ asocial.binders.add('global', { decrypt: function() {
       done();
 
     };
+    
+    if (JSON.parse($.base64.decode(text)).keys[CurrentSession.getUserId()] == undefined)
+      console.log($.base64.decode(text));
 
     // Decrypt, then format element
     Crypto.decryptMessage(groupId, text, formatDecryptedText);

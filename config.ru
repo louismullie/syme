@@ -91,5 +91,5 @@ map '/assets' do
 end
 
 map '/' do
-  run Asocial::Application
+  run Syme::Application
 end

@@ -3,7 +3,7 @@ require 'base64'
 enable :logging
 
 # Application-wide config.
-set app_title: 'Asocial'
+set app_title: 'Syme'
 set :haml, layout: false
 
 set store: $store

@@ -21,7 +21,7 @@ end
 
 def send_invite(email, token)
 
-  subject = "Join #{@user.full_name} on Asocial"
+  subject = "Join #{@user.full_name} on Syme"
 
   message =
 
@@ -31,7 +31,7 @@ def send_invite(email, token)
 Follow this link to register and accept his invitation: http://asocial.io
 
 Best,
-Asocial"
+Syme"
 
   # email
   send_email_to(email, subject, message)
@@ -48,11 +48,11 @@ def request_confirm(invite)
 
 "Hey #{inviter.full_name},
 
-#{invitee.full_name} has joined your group on Asocial.
+#{invitee.full_name} has joined your group on Syme.
 Login to your group at http://asocial.io to approve him.
 
 Best,
-Asocial"
+Syme"
 
   # inviter.email
   send_email_to(inviter.email, subject, message)
@@ -74,7 +74,7 @@ def notify_confirmed(invite)
 Login to your group at http://asocial.io to start sharing.
 
 Best,
-Asocial"
+Syme"
 
   # invitee.email
   send_email_to(invitee.email, subject, message)

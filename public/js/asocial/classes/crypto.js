@@ -345,7 +345,7 @@ Crypto = function (workerUrl) {
 
   };
 
-  this.workerPool = new WorkerPool2(workerUrl, 1);
+  this.workerPool = new WorkerPool2(workerUrl, 4);
 
   // Add some initial entropy to the PRNG.
   this.seedRandom();
