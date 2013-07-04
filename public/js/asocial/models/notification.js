@@ -172,7 +172,7 @@ Notifications = (function(){
 
     // Call this when the DOM is loaded and CurrentSession is available
     start: function(){
-      this.url = "users/" + CurrentSession.getUserId() + "/notifications";
+      this.url = SERVER_URL + "/users/" + CurrentSession.getUserId() + "/notifications";
       this.view.setElement( $('#notifications-content') );
 
       // Fetch notifications

@@ -68,7 +68,7 @@ asocial.binders.add('settings', { main: function(){
     if(!!$(this).data('active')) return false;
     $(this).data('active', true);
 
-    $.ajax('/users/' + CurrentSession.getUserId(), {
+    $.ajax(SERVER_URL + '/users/' + CurrentSession.getUserId(), {
 
       type: 'DELETE',
 

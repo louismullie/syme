@@ -154,7 +154,7 @@ var User = Backbone.RelationalModel.extend({
     
     var groupId = CurrentSession.getGroupId();
     
-    var url = '/users/' + CurrentSession.getUserId() +
+    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() +
     '/groups/' + groupId + '/keys';
     
     $.getJSON(url, function (keys) {
@@ -196,7 +196,7 @@ var User = Backbone.RelationalModel.extend({
   
   acknowledge: function(type, acknowledgement, acknowledgedCb) {
     
-    var url = '/users/' + CurrentSession.getUserId() + '/groups/' +
+    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' +
               CurrentSession.getGroupId() + '/invitations/acknowledge';
     
     var data = {}; data[type] = acknowledgement;
@@ -212,7 +212,7 @@ var User = Backbone.RelationalModel.extend({
   
   getGroupUpdates: function (groupId, updatedGroupsCb) {
     
-    var url = '/users/' + this.get('_id') + 
+    var url = SERVER_URL + '/users/' + this.get('_id') + 
       '/groups/' + groupId + '/invitations';
     
     var _this = this;
@@ -271,7 +271,7 @@ var User = Backbone.RelationalModel.extend({
   
   refreshKeyfile: function (refreshedKeyfileCb) {
     
-    $.ajax('/users/' + this.get('_id'), { type: 'GET',
+    $.ajax(SERVER_URL + '/users/' + this.get('_id'), { type: 'GET',
       success: function (user) {
         asocial.auth.getPasswordLocal(function (p) {
           Crypto.initializeKeyfile(
