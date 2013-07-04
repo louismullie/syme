@@ -147,7 +147,11 @@ h1.enormous {
 }
 
 // Placeholder for loading images
-img.encrypted-image, img.slave-avatar, img.user-avatar, img.placeholder-avatar {
+img.encrypted-image,
+img.encrypted-background-image,
+img.slave-avatar,
+img.user-avatar,
+img.placeholder-avatar {
   @include inclined-stripes(transparent, 25px, rgba(0, 0, 0, .2));
 }
 
