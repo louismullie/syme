@@ -329,9 +329,11 @@ Crypto = function (workerUrl) {
 
   };
 
+  var _this = this;
+  
   this.seedRandom = function () {
 
-    this.workerPool.scatterJob({
+    _this.workerPool.scatterJob({
       method: 'seedRandom', fn: function () {
 
         var array = new Uint32Array(32);
@@ -343,7 +345,7 @@ Crypto = function (workerUrl) {
 
   };
 
-  this.workerPool = new WorkerPool2(workerUrl, 4);
+  this.workerPool = new WorkerPool2(workerUrl, 1);
 
   // Add some initial entropy to the PRNG.
   this.seedRandom();
