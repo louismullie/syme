@@ -241,8 +241,11 @@ Router = Backbone.Router.extend({
     // Render it
     $('body').html( Handlebars.templates['container.hbs']() );
 
-    // Initiate notifications
+    // Fetch notifications.
     Notifications.start();
+    
+    // Initialize socket.
+    asocial.socket.listen();
   },
 
   authenticate: function(success, failure) {

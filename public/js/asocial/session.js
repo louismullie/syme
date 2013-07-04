@@ -8,8 +8,6 @@ Session = function (user, callback) {
 
     this.initialized = true;
 
-    asocial.socket.listen();
-
     asocial.auth.getPasswordLocal(function (p) {
 
       // Disconnect if there is no more password
