@@ -22,12 +22,12 @@ asocial.binders.add('groups', { main: function() {
   // Group delete button toggling
   $("div.group-banner").on({
     mouseenter: function(){
-      $(this).find('a.delete-group')
+      $(this).find('a.delete-group, a.leave-group')
         .css({ display: 'block' })
         .transition({ opacity: 1}, 100);
     },
     mouseleave: function(){
-      $(this).find('a.delete-group')
+      $(this).find('a.delete-group, a.leave-group')
         .transition({ opacity: 0}, 100)
         .css({ display: 'none' });
     }
@@ -92,6 +92,7 @@ asocial.binders.add('groups', { main: function() {
 
   });
 
+  // Delete group
   $('.delete-group').click(function (e) {
 
     e.preventDefault();
@@ -120,6 +121,41 @@ asocial.binders.add('groups', { main: function() {
       });
     }
 
+  });
+
+  // Leave group
+  $('#main').on('click', '.leave-group', function (e) {
+
+    var userId = $(this).parent().attr('id');
+
+    asocial.helpers.showConfirm(
+      'Do you really want to leave this group?',
+      {
+        closable: true,
+        title: 'Leave group',
+        submit: 'Leave',
+        cancel: 'Cancel',
+
+        onsubmit: function(){
+
+          var route = SERVER_URL + '/users/' + CurrentSession.getUserId() +
+          '/groups/' + CurrentSession.getGroupId() + '/memberships/' + userId;
+
+          $.ajax(route, { type: 'DELETE',
+
+            success: function () {
+              Router.reload();
+            },
+
+            error: function () {
+              asocial.helpers.showAlert('Could not leave group.');
+            }
+
+          });
+
+        }
+      }
+    );
   });
 
 } }); // asocial.binders.add();

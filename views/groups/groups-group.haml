@@ -1,8 +1,17 @@
 %li.group-card
   .group-banner
     {{#if deletable}}
-    %a.delete-group.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Delete' }
+
+    // Delete group
+    %a.delete-group.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Delete group' }
       %i.icon-remove
+
+    {{else}}
+
+    // Leave group
+    %a.leave-group.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Leave group' }
+      %i.icon-signout
+
     {{/if}}
 
     %a.group-banner-link{ href: '/users/{{current_user_id}}/groups/{{id}}', hbs: '' }
