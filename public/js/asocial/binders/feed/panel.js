@@ -178,11 +178,7 @@ asocial.binders.add('feed', { panel: function(){
     });
 
   });
-
-  $('#main').on('click', '.delete-user', function (e) {
-    
-    var userId = $(this).parent().attr('id');
-    
+  
   // Delete user button toggling
   $('#main').on({
     mouseenter: function(){
@@ -199,6 +195,8 @@ asocial.binders.add('feed', { panel: function(){
 
   // Delete user
   $('#main').on('click', '.user-delete', function (e) {
+    
+    var userId = $(this).parent().attr('id');
 
     asocial.helpers.showConfirm(
       'Do you really want to delete this user from the group?',
