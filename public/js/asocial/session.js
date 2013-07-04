@@ -51,6 +51,14 @@ Session = function (user, callback) {
     }
   };
 
+  this.getGroups = function () {
+    if (!this.initialized) {
+      throw 'Session not initialized.';
+    } else {
+      return this.groups || [];
+    }
+  };
+  
   this.getUserId = function () {
     return this.getUser().get('_id');
   };
@@ -90,7 +98,9 @@ Session = function (user, callback) {
           return callback();
 
         $('meta[name="_csrf"]').attr('content', response.csrf);
-
+        
+        _this.groups = response.groups;
+        
         _this.user = new User();
 
         _this.user.fetch({

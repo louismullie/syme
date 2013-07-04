@@ -6,10 +6,10 @@ guard('socket', {
 
   invitation: {
 
-    distribute: function () {
+    distribute: function (data) {
 
       var user = CurrentSession.getUser();
-      var groupId = CurrentSession.getGroupId();
+      var groupId = data.group_id;
       var callback = function () {};
 
       user.getGroupUpdates(groupId, callback);

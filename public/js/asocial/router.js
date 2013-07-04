@@ -178,20 +178,26 @@ Router = Backbone.Router.extend({
     var _this = this;
 
     this.authenticate(function(){
-
+      
+      var user = CurrentSession.getUser();
+      
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
-      if(!groupId) return Router.renderDynamicTemplate(template);
+      if(!groupId) {
+        
+        user.getAllGroupUpdates(groupId, function () {
+          Router.renderDynamicTemplate(template, specific_binders);
+        });
+        
+      } else {
+        
+        CurrentSession.setGroupId(groupId);
 
-      CurrentSession.setGroupId(groupId);
+        user.getGroupUpdates(groupId, function () {
+          Router.renderDynamicTemplate(template, specific_binders);
+        });
 
-      var user = CurrentSession.getUser();
-
-      user.getGroupUpdates(groupId, function () {
-
-        Router.renderDynamicTemplate(template, specific_binders);
-
-      });
+      }
 
     }, function() {
 

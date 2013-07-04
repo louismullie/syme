@@ -118,13 +118,13 @@ var User = Backbone.RelationalModel.extend({
 
   },
   
-  completeInviteRequest: function (invitationId, completeRequest, inviteCompletedCb, errorCb) {
+  completeInviteRequest: function (groupId, invitationId, completeRequest, inviteCompletedCb, errorCb) {
     
     var _this = this;
 
     var invitation = new Invitation();
     invitation.set('_id', invitationId);
-
+    
     Crypto.completeInviteRequest(completeRequest, function () {
         
         var acknowledgement = { invitation_id: invitationId };
@@ -136,7 +136,7 @@ var User = Backbone.RelationalModel.extend({
               
               Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
                 _this.updateKeyfile(encryptedKeyfile, function () {
-                  _this.acknowledge('integrate', acknowledgement, inviteCompletedCb);
+                  _this.acknowledgeIntegrate(groupId, acknowledgement, inviteCompletedCb);
                 });
               });
             },
@@ -185,7 +185,9 @@ var User = Backbone.RelationalModel.extend({
       Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
 
         _this.updateKeyfile(encryptedKeyfile, function () {
-          _this.acknowledge('distribute', acknowledgements, addedUsersCb);
+          
+          _this.acknowledgeDistribute(acknowledgements, addedUsersCb);
+          
         });
         
       });
@@ -194,18 +196,55 @@ var User = Backbone.RelationalModel.extend({
     
   },
   
-  acknowledge: function(type, acknowledgement, acknowledgedCb) {
+  acknowledgeIntegrate: function(groupId, acknowledgement, acknowledgedCb) {
     
     var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' +
-              CurrentSession.getGroupId() + '/invitations/acknowledge';
-    
-    var data = {}; data[type] = acknowledgement;
+              groupId + '/invitations/acknowledge';
+
+    var data = { integrate: acknowledgement };
     
     $.ajax(url, { type: 'POST', data: data,
       
       success: acknowledgedCb,
-      error: function () { alert('error!'); }
+      error: function () { alert('Integrate error!'); }
       
+    });
+    
+  },
+  
+  acknowledgeDistribute: function (acknowledgements, acknowledgedCb) {
+    
+    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + 
+              '/invitations/acknowledge';
+    
+    var data = { distribute: acknowledgements };
+
+    $.ajax(url, { type: 'POST', data: data,
+
+      success: acknowledgedCb,
+      error: function () { alert('Distribute error!'); }
+
+    });
+    
+  },
+  
+  getAllGroupUpdates: function (groupId, updatedGroupsCb) {
+    
+    var groups = CurrentSession.getGroups();
+    
+    var counter = groups.length;
+    var _this = this;
+    
+    if (counter == 0) updatedGroupsCb();
+    
+    _.each(groups, function (groupId) {
+      
+      counter--;
+      
+      _this.getGroupUpdates(groupId, function () {
+        if (counter == 0) updatedGroupsCb();
+      });
+
     });
     
   },
@@ -222,19 +261,18 @@ var User = Backbone.RelationalModel.extend({
         if (groupUpdates.integrate) {
           
           var invitationId = groupUpdates.integrate.id;
+          var groupId = groupUpdates.integrate.group_id;
           var request = groupUpdates.integrate.request;
           
           if (groupUpdates.distribute) {
             
-            _this.completeInviteRequest(invitationId,
-              request, function () {
+            _this.completeInviteRequest(groupId, invitationId, request, function () {
                 _this.addUsersRequest(groupUpdates.distribute, updatedGroupsCb);
             });
             
           } else {
             
-            _this.completeInviteRequest(
-              invitationId, request, updatedGroupsCb);
+            _this.completeInviteRequest(groupId, invitationId, request, updatedGroupsCb);
             
           }
           

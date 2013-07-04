@@ -6,7 +6,8 @@ get '/state/session', auth: [] do
   
   { user_id: @user.id.to_s,
     password_key: @user.session_id,
-    csrf: csrf_token
+    csrf: csrf_token,
+    groups: @user.groups.map(&:id).map(&:to_s)
   }.to_json
 
 end

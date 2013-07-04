@@ -89,15 +89,17 @@ Crypto = {
     
     var keyfile = this.getKeyfile();
     
-    var acknowledgements = [];
+    var acknowledgements = {};
     
     _.each(addUsersRequest, function (addUserRequest) {
       
       var invitationId = addUserRequest.id;
       var request = addUserRequest.request;
       
-      keyfile.addUserRequest(request);
-      acknowledgements.push(invitationId);
+      var keylistId = keyfile.addUserRequest(request);
+      
+      acknowledgements[keylistId] = acknowledgements[keylistId] || [];
+      acknowledgements[keylistId].push(invitationId);
       
     });
     
@@ -304,14 +306,17 @@ Crypto = {
     var messageTxt = Crypto.decodeBase64(messageTxt64);
     
     var messageJson = JSON.parse(messageTxt);
-  
+    
     var encMessage = messageJson.message;
     
-    if (!encMessage) throw 'Message is missing.';
+    if (!encMessage || encMessage == '')
+      throw 'Message is missing.';
     
     var encSymKeyTxt64 = messageJson.keys[keyfile.userId];
-
-    if (!encSymKeyTxt64) throw 'Key is missing.'
+    
+    if (!encSymKeyTxt64 || encSymKeyTxt64 == '') {
+      throw 'Key is missing.'
+    }
     
     var decryptedSymKey = this.decryptMessageKey(
       keylistId, encSymKeyTxt64);
