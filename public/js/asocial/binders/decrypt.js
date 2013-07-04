@@ -1,9 +1,10 @@
 asocial.binders.add('global', { decrypt: function() {
 
   // Post and comment decryption
-  $(document).on('decrypt', '.encrypted', function(e){
+  $(document).on('decrypt', '.encrypted', function(e, done){
 
-    var $this = $(this);
+    var $this = $(this),
+        done  = done || function(){};
 
     var post    = $this.closest('.post'),
         text    = $this.text(),
@@ -33,6 +34,8 @@ asocial.binders.add('global', { decrypt: function() {
       // Show post if post was hidden (not sure about that methodology)
       post.removeClass('hidden');
 
+      done(e);
+
     };
 
     // Decrypt, then format element
@@ -41,9 +44,10 @@ asocial.binders.add('global', { decrypt: function() {
   });
 
   // Avatar decryption
-  $(document).on('decrypt', '.user-avatar', function() {
+  $(document).on('decrypt', '.user-avatar', function(e, done) {
 
-    var $this = $(this);
+    var $this = $(this),
+        done  = done || function(){};
 
     var group_id  = CurrentSession.getGroupId(),
         user_id   = $this.data('user-id'),
@@ -54,6 +58,8 @@ asocial.binders.add('global', { decrypt: function() {
       // Set new src to master and slaves
       $this.add('.slave-avatar[data-user-id="' + user_id + '"]')
         .attr('src', url);
+
+      done(e);
     };
 
     // Decrypt and place avatar
@@ -63,16 +69,22 @@ asocial.binders.add('global', { decrypt: function() {
 
   // Synchronize slaves to master avatars
   $(document).on('sync', '.slave-avatar', function(){
-    var user_id     = $(this).data('user-id'),
+
+    var $this = $(this),
+        done  = done || function(){};
+
+    var user_id     = $this.data('user-id'),
         master      = $('.user-avatar[data-user-id="' + user_id + '"]');
 
-    $(this).attr('src', master.attr('src'));
+    $this.attr('src', master.attr('src'));
+
   });
 
   // Media decryption
-  $(document).on('decrypt', '.encrypted-image, .encrypted-video, .encrypted-audio', function(){
+  $(document).on('decrypt', '.encrypted-image, .encrypted-video, .encrypted-audio', function(e, done){
 
-    var $this = $(this);
+    var $this = $(this),
+        done  = done || function(){};
 
     var media_id = $this.data('attachment-id');
         keys     = $this.data('attachment-keys'),
@@ -83,9 +95,9 @@ asocial.binders.add('global', { decrypt: function() {
       // Set src to element
       $this.attr('src', url)
         .removeClass('.encrypted-' + type);
-    };
 
-    console.log('Decrypting ' + type, 'media_id ' + media_id, 'group_id ' + group_id, 'keys', keys);
+      done(e);
+    };
 
     // Decrypt and place media
     asocial.crypto.getFile(media_id, keys, callback, group_id);
@@ -93,9 +105,10 @@ asocial.binders.add('global', { decrypt: function() {
   });
 
   // Background image decryption
-  $(document).on('decrypt', '.encrypted-background-image', function(){
+  $(document).on('decrypt', '.encrypted-background-image', function(e, done){
 
-    var $this = $(this);
+    var $this = $(this),
+        done  = done || function(){};
 
     var image_id  = $this.data('attachment-id'),
         keys      = $this.data('attachment-keys'),
@@ -103,6 +116,8 @@ asocial.binders.add('global', { decrypt: function() {
 
     var callback = function(url) {
       $this.css("background-image", "url('" + url + "')");
+
+      done(e);
     }
 
     // Decrypt and place background-image

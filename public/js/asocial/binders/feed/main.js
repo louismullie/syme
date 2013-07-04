@@ -25,6 +25,11 @@ asocial.binders.add('feed', { main: function(){
     // User avatars
     '.user-avatar'
 
-  ].join(',')).trigger('decrypt');
+  ].join(','));
+
+  asocial.crypto.decryptCollection(selectors, function(collection, elapsedTime){
+    alert('Done decrypting collection of ' + collection.length + ' ' +
+          'items in ' + elapsedTime/1000 + 's');
+  });
 
 } }); // asocial.binders.add();
