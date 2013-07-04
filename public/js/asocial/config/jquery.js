@@ -1,13 +1,11 @@
 // CSRF token
 $.ajaxSetup({
-  
   beforeSend: function(xhr) {
-    
+
     var token = $('meta[name="_csrf"]').attr('content');
     xhr.setRequestHeader('X_CSRF_TOKEN', token);
-    
-  }
 
+  }
 });
 
 // Creating custom :external selector
@@ -16,15 +14,34 @@ $.expr[':'].external = function(obj){
   (obj.hostname != location.hostname);
 };
 
-// Wrap slices of a collection
-$.fn.wrapSlices = function(slices, wrapper){
-  // Slices a collection in 'slices' and wrap 'wrapper' around it
-  // wrapper must be an html enclosing tag, like '<div/>' or '<span></span>'
+$.fn.batchDecrypt = function(callback){
 
-  for(var i = 0; i < this.length; i+=slices) {
-    // Get a slice
-    this.slice(i, i+slices)
-      // Wrap it in wrapper
-      .wrapAll(wrapper);
-  }
-};
+  // Initialize variables
+  var $this     = this,
+      callback  = callback || function(){},
+      counter   = 0,
+      startTime = new Date;
+
+  // Asynchronous callback
+  var incrementCounter = function(e){
+    // Iterate queue
+    counter++;
+
+    // Call callback if all elements are done,
+    // passing back $this and elapsed time
+    if(counter == $this.length){
+
+      var endTime     = new Date,
+          elapsedTime = endTime - startTime;
+
+      callback.call($this, elapsedTime);
+
+    }
+  };
+
+  // Trigger decrypt, then wait for callback
+  $this.trigger('decrypt', incrementCounter);
+
+  return $this;
+
+}

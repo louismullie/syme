@@ -1,30 +1,5 @@
 guard('crypto', {
 
-  decryptCollection: function(collection, callback){
-
-    var counter   = 0,
-        startTime = new Date;
-
-    var incrementCounter = function(e){
-      // Log received event to queue
-      counter++;
-
-      // Call callback if all elements are done,
-      // passing back collection and elapsed time
-      if(counter == collection.length){
-
-        var endTime     = new Date,
-            elapsedTime = endTime - startTime;
-
-        callback(collection, elapsedTime);
-
-      }
-    };
-
-    collection.trigger('decrypt', incrementCounter);
-
-  },
-
   getFile: function (id, keys, callback, group) {
 
     var display = function(id, blob, save) {

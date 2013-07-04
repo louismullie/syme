@@ -34,7 +34,7 @@ asocial.binders.add('global', { decrypt: function() {
       // Show post if post was hidden (not sure about that methodology)
       post.removeClass('hidden');
 
-      done(e);
+      done();
 
     };
 
@@ -54,12 +54,14 @@ asocial.binders.add('global', { decrypt: function() {
         avatar_id = $this.data('avatar-id'),
         keys      = $this.data('keys');
 
+    if ( !keys ) return done();
+
     var callback = function(url) {
       // Set new src to master and slaves
       $this.add('.slave-avatar[data-user-id="' + user_id + '"]')
         .attr('src', url);
 
-      done(e);
+      done();
     };
 
     // Decrypt and place avatar
@@ -91,12 +93,14 @@ asocial.binders.add('global', { decrypt: function() {
         type     = $this.data('attachment-type'),
         group_id = $this.data('attachment-group');
 
+    if ( !keys ) return done();
+
     var callback = function(url){
       // Set src to element
       $this.attr('src', url)
         .removeClass('.encrypted-' + type);
 
-      done(e);
+      done();
     };
 
     // Decrypt and place media
@@ -114,10 +118,12 @@ asocial.binders.add('global', { decrypt: function() {
         keys      = $this.data('attachment-keys'),
         group_id  = $this.data('attachment-group');
 
+    if ( !keys ) return done();
+
     var callback = function(url) {
       $this.css("background-image", "url('" + url + "')");
 
-      done(e);
+      done();
     }
 
     // Decrypt and place background-image

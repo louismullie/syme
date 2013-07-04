@@ -27,9 +27,11 @@ asocial.binders.add('feed', { main: function(){
 
   ].join(','));
 
-  asocial.crypto.decryptCollection(selectors, function(collection, elapsedTime){
-    alert('Done decrypting collection of ' + collection.length + ' ' +
-          'items in ' + elapsedTime/1000 + 's');
+  selectors.batchDecrypt(function(elapsedTime){
+
+    alert('Done decrypting collection of ' + this.length +
+          ' items in ' + elapsedTime/1000 + 's');
+
   });
 
 } }); // asocial.binders.add();
