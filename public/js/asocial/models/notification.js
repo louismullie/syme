@@ -151,12 +151,13 @@ Notifications = (function(){
     },
 
     markAsRead: function(e){
+      e.preventDefault();
+      e.stopPropagation();
+
       var id = $(e.currentTarget).closest('.notification').attr('id');
       var notification = this.collection.findWhere({ id: id });
 
       notification.save({ read: true }, {patch: true});
-
-      e.stopPropagation();
     }
 
   });

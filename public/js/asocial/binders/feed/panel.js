@@ -179,10 +179,28 @@ asocial.binders.add('feed', { panel: function(){
 
   });
 
+<<<<<<< HEAD
   $('#main').on('click', '.delete-user', function (e) {
     
     var userId = $(this).parent().attr('id');
     
+  // Delete user button toggling
+  $('#main').on({
+    mouseenter: function(){
+      $(this).find('a.user-delete').first()
+        .css({ display: 'block' })
+        .transition({ opacity: 1}, 100);
+    },
+    mouseleave: function(){
+      $(this).find('a.user-delete').first()
+        .transition({ opacity: 0}, 100)
+        .css({ display: 'none' });
+    }
+  }, 'ul#userlist > li');
+
+  // Delete user
+  $('#main').on('click', '.user-delete', function (e) {
+
     asocial.helpers.showConfirm(
       'Do you really want to delete this user from the group?',
       {

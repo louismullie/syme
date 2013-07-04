@@ -1,5 +1,12 @@
 %li{ id: '{{id}}' }
-  %a{ href: '#', 'data-tip' => '{{full_name}}', 'class' => '{{#if is_current_user}}current{{/if}}'}
+  -# Delete button
+  {{#if deletable}}
+  %a.user-delete.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Delete' }
+    %i.icon-remove
+  {{/if}}
+
+  -# User link
+  %a{ href: '#', 'data-tip' => '{{full_name}}', 'class' => 'user {{#if is_current_user}}current{{/if}}'}
 
     // userlist-avatar should disappear in favor of user-avatar
     %img.user-avatar.userlist-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
@@ -10,7 +17,3 @@
 
     %span{ title: '{{full_name}}' }
       {{full_name}}
-
-      {{#if deletable}}
-      %a.delete-user x
-      {{/if}}
