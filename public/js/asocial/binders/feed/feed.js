@@ -105,6 +105,9 @@ asocial.binders.add('feed', { feed: function(){
           // Decrypt new content
           $('.encrypted').trigger('decrypt');
 
+          // Sync avatars
+          $('.slave-avatar').trigger('sync');
+
           // Textarea autosizing
           $('textarea.autogrow').autogrow().removeClass('autogrow');
 
