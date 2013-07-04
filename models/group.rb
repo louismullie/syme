@@ -20,15 +20,9 @@ class Group
   
   field :name, type: String
   field :screen_name, type: String
-  field :question, type: String
   
-  # Keylist for this group. 
-  # Louis - move to dedicated model.
-  field :keylist, type: String
-  field :keylist_salt, type: String
+  field :ack_create, type: Boolean
   
-  # Palette default must be the palette
-  # color of the default group image
   field :palette, type: Array, default: []
 
 end

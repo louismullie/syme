@@ -68,15 +68,24 @@ asocial.binders.add('groups', { main: function() {
 
           var route = SERVER_URL + '/users/' +
             CurrentSession.getUserId() + '/groups';
-      
+          var ack = SERVER_URL + '/users/' + 
+            CurrentSession.getUserId() + '/groups/' + group.id;
           Crypto.createKeylist(group.id, function (encryptedKeyfile) {
             
             CurrentSession.getUser().updateKeyfile(
               encryptedKeyfile,
+              
               function () {
+                
                 Router.reload();
+                
+                $.ajax(ack, { type: 'PUT',
+                  data: { ack_create: true }});
+                
                 asocial.socket.listen();
+                
               }
+              
             );
             
           });

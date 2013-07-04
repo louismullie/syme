@@ -78,6 +78,20 @@ post '/groups', auth: [] do
 
 end
 
+put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
+  
+  group = @user.groups.find(group_id)
+  logger.info params
+  
+  if params[:ack_create]
+    group.ack_create = true
+    group.save!
+  end
+  
+  empty_response
+  
+end
+
 # Set group avatar.
 post '/:group_id/avatar', auth: [] do
 

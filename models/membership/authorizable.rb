@@ -8,6 +8,7 @@ module Membership::Authorizable
   end
   
   def deletable_by?(user)
+    user.id != self.user.id &&
     get_membership(user).is_at_least?(:admin)
   end
 

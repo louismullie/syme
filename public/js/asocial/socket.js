@@ -102,6 +102,10 @@ guard('socket', {
       // Force all clients to reload to get new public key
       Router.reload();
 
+    },
+    
+    group: function (data) {
+      CurrentSession.getUser().refreshKeyfile(Router.reload);
     }
 
   },

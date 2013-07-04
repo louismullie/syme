@@ -270,6 +270,21 @@ var User = Backbone.RelationalModel.extend({
     
   },
   
+  refreshKeyfile: function (refreshedKeyfileCb) {
+    
+    $.ajax('/users/' + this.get('_id'), { type: 'GET',
+      success: function (user) {
+        asocial.auth.getPasswordLocal(function (p) {
+          Crypto.initializeKeyfile(
+            user._id, p,
+            user.keyfile,
+            refreshedKeyfileCb
+          );
+        });
+    }});
+    
+  },
+  
   userSaveError: function () {
     alert('Error while saving user!');
   }

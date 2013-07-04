@@ -17,10 +17,9 @@ module Asocial
     
     require_all 'routes'
     
-    # Model observers.
-    Mongoid.observers = PostObserver, CommentObserver,
-    LikeObserver, NotificationObserver, InvitationObserver,
-    UserObserver
+    Mongoid.observers = GroupObserver, InvitationObserver, 
+    UserObserver, NotificationObserver, PostObserver,
+    CommentObserver, LikeObserver    
 
     Mongoid.instantiate_observers
     
