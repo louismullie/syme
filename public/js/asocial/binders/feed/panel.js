@@ -179,7 +179,6 @@ asocial.binders.add('feed', { panel: function(){
 
   });
 
-<<<<<<< HEAD
   $('#main').on('click', '.delete-user', function (e) {
     
     var userId = $(this).parent().attr('id');
