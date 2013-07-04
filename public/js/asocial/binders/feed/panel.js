@@ -180,6 +180,9 @@ asocial.binders.add('feed', { panel: function(){
   });
 
   $('#main').on('click', '.delete-user', function (e) {
+    
+    var userId = $(this).parent().attr('id');
+    
     asocial.helpers.showConfirm(
       'Do you really want to delete this user from the group?',
       {
@@ -189,7 +192,22 @@ asocial.binders.add('feed', { panel: function(){
         cancel: 'Cancel',
 
         onsubmit: function(){
-          alert('delete user');
+          
+          var route = SERVER_URL + '/users/' + CurrentSession.getUserId() + 
+          '/groups/' + CurrentSession.getGroupId() + '/memberships/' + userId;
+          
+          $.ajax(route, { type: 'DELETE',
+          
+            success: function () {
+              Router.reload();
+            },
+            
+            error: function () {
+              alert('Could not delete user!');
+            }
+          
+          });
+          
         }
       }
     );
