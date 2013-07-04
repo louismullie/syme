@@ -29,8 +29,8 @@ asocial.binders.add('feed', { main: function(){
 
   selectors.batchDecrypt(function(elapsedTime){
 
-    alert('Done decrypting collection of ' + this.length +
-          ' items in ' + elapsedTime/1000 + 's');
+    //alert('Done decrypting collection of ' + this.length +
+    //      ' items in ' + elapsedTime/1000 + 's');
 
   });
 
