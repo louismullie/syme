@@ -1,11 +1,8 @@
 asocial.binders.add('feed', { posts: function(){
 
-  // Decryption
-  asocial.crypto.decrypt();
-  
   // Initial textarea autosizing
   $('textarea.autogrow').autogrow().removeClass('autogrow');
-  
+
   // Delete post/comment toggling
   $('#main').on({
     mouseenter: function(){
@@ -106,7 +103,7 @@ asocial.binders.add('feed', { posts: function(){
     });
 
   });
-  
+
   // Likes
   $('#main').on('click', '.like-action', function(e){
 

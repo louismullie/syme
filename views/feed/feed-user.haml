@@ -1,24 +1,16 @@
 %li{ id: '{{id}}' }
-  // Every user avatar is pulled from this, however it is
-  // stylistically obsolete. To remove.
-  {{#if avatar}}
-  .user-avatar{'data-id' => '{{avatar.id}}',
-              'data-size' => '{{avatar.size}}',
-              'data-keys' => '{{avatar.keys}}'}
-  {{/if}}
-
   %a{ href: '#', 'data-tip' => '{{full_name}}', 'class' => '{{#if is_current_user}}current{{/if}}'}
 
-    %img.encrypted-avatar.userlist-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7", 'data-user-id' => '{{id}}'}
+    // userlist-avatar should disappear in favor of user-avatar
+    %img.user-avatar.userlist-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+                                      'data-user-id' => '{{id}}',
+                                      'data-avatar-id' => '{{avatar.id}}',
+                                      'data-size' => '{{avatar.size}}',
+                                      'data-keys' => '{{avatar.keys}}' }
 
     %span{ title: '{{full_name}}' }
-    
       {{full_name}}
-      
-      {{#unless is_current_user}}
-      {{#if deletable}} 
-    
-      %a.delete-user
-        X
-    
-      {{/if}} {{/unless}}
+
+      {{#if deletable}}
+      %a.delete-user x
+      {{/if}}

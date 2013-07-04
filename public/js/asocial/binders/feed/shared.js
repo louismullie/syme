@@ -14,5 +14,4 @@ asocial.binders.add('feed', { shared: function(){
 
   });
 
-
 } }); // asocial.binders.add();

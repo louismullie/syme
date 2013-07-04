@@ -2,49 +2,7 @@ guard('crypto', {
 
   decrypt: function () {
 
-    this.decryptAvatars();
-    this.decryptPostsAndComments();
     this.decryptMedia();
-
-  },
-
-  decryptPostsAndComments: function() {
-
-      var _this = this;
-
-      // Decrypt each encrypted post on the page.
-
-      $('.encrypted').each(function() {
-
-        var $this = $(this);
-
-        var post    = $this.closest('.post'),
-            groupId = CurrentSession.getGroupId();
-
-        Crypto.decryptMessage(groupId, $this.text(), function (decryptedMessage) {
-
-          // Show the user tags.
-
-          //var formattedMessage = asocial.helpers.replaceUserMentions(marked(decryptedMessage));
-
-          // Markdown the message
-          var formattedMessage = marked(decryptedMessage);
-
-          $this
-            // Transform the .encrypted into .collapsable
-            .removeClass('encrypted')
-            .addClass('collapsable')
-
-            // Insert the markdown'd decrypted message
-            .html(formattedMessage);
-
-          post.removeClass('hidden');
-
-          asocial.helpers.formatPostsAndComments();
-
-        });
-
-      });
 
   },
 
@@ -94,29 +52,6 @@ guard('crypto', {
       }, group);
 
     });
-  },
-
-  decryptAvatars: function() {
-
-    var _this = this;
-
-    $.each($('.user-avatar'), function (index, element) {
-
-      var element = $(element);
-      var user_id = $(this).parent().attr('id');
-
-      var id = element.data('id');
-      if (id == '') { return; }
-
-      var keys = element.data('keys');
-
-      _this.getFile(id, keys, function (url) {
-        var avatars = $('.encrypted-avatar[data-user-id="' + user_id + '"]');
-        $.each(avatars, function (index, element) { element.src = url; });
-      });
-
-    });
-
   },
 
   getFile: function (id, keys, callback, group) {

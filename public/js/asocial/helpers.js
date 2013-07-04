@@ -5,29 +5,6 @@ guard('helpers', {
     $('#error-container').html(html);
   },
 
-  formatPostsAndComments: function() {
-
-    // Put commenter name and comment tools in first paragraph of comment
-    $('.comment-box > a.commenter-name').each(function(){
-
-      // debugger;
-
-      var destination = $(this).parent().find('.collapsable p:first-child');
-      $(this).prependTo(destination);
-
-    });
-
-    // Collapse long text
-    asocial.helpers.collapseHTML(5, 'See more');
-
-    // Parse oEmbed links. Use fill mode to strip links.
-    $('.post-content').oembed();
-
-    // Timeago
-    $('time.timeago').timeago();
-
-  },
-
   // Increment unread counter when there is a new comment/post
   newContent: function (type) {
 
