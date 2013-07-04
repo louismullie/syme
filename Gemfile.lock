@@ -23,7 +23,7 @@ GEM
     bson_ext (1.9.0)
       bson (~> 1.9.0)
     builder (3.0.4)
-    capistrano (2.15.4)
+    capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -71,7 +71,7 @@ GEM
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
     lumberjack (1.0.4)
-    magicbus (0.1.0)
+    magicbus (0.1.1)
       amqp
     mail (2.5.4)
       mime-types (~> 1.16)
