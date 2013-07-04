@@ -13,6 +13,9 @@ self.onmessage = function(event) {
   if (!id || !method || !params)
     throw 'Missing required parameters.'
   
+  if (!Crypto[method])
+    throw 'Method ' + method + ' does not exist.'
+  
   var result = Crypto[method].apply(Crypto, params);
   
   postMessage({

@@ -6,7 +6,17 @@ Crypto = {
   
   initializeKeyfile: function (userId, password, encKeyfile) {
     
+    this.password = password;
+    this.userId = userId;
+    
     this.keyfile = new Keyfile(userId, password, encKeyfile);
+    return null;
+    
+  },
+  
+  reinitializeKeyfile: function (encKeyfile) {
+    
+    this.keyfile = new Keyfile(this.userId, this.password, encKeyfile);
     return null;
     
   },

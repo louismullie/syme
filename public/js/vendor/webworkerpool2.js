@@ -9,6 +9,9 @@ function WorkerPool2(url, size) {
     this.jobs = [];
     this.pending = [];
     this.workers = [];
+    this.schedule = {};
+    this.counters = {};
+    
     this.active = 0;
     //this.channels = {};
 
@@ -52,8 +55,10 @@ function WorkerPool2(url, size) {
 
     this.createWorkers();
 
-    this.broadcastJob = function (job) {
-
+    this.broadcastJob = function (job, callback) {
+      
+      var _this = this;
+      
       if (!job.id)
         job.id = Math.random()*Math.exp(40).toString();
 
@@ -61,7 +66,16 @@ function WorkerPool2(url, size) {
         this.workers[i].postMessage(job);
       }
 
-      this.callbacks[job.id] = function () {};
+      this.counters[job.id] = this.size;
+      
+      this.callbacks[job.id] = function () {
+        
+        _this.counters[job.id]--;
+        
+        if (_this.counters[job.id] == 0)
+          callback();
+          
+      };
 
     };
 
@@ -73,30 +87,56 @@ function WorkerPool2(url, size) {
       this.jobs.push(job);
       this.callbacks[job.id] = callback || function () {};
       this.contexts[job.id] = context;
-
+      
+      var workerId = Math.floor(Math.random() * (this.size));
+      
+      this.schedule[job.id] = workerId;
+      
       if (this.active < this.size) {
         this.nextJob();
       }
+      
+      return workerId;
 
     };
 
+    this.scatterJob = function(job) {
+      
+      var fn = job.fn;
+      
+      delete job.fn;
+      
+      for (var n = 0; n <= this.size; n += 1) {
+        job.params = fn();
+        this.sendJob(n, job);
+      }
+      
+    };
+    
+    this.sendJob = function (workerIndex, job, callback) {
+      
+      if (!job.id)
+        job.id = Math.random()*Math.exp(40).toString();
+      
+      this.callbacks[job.id] = callback || function () {};
+      this.contexts[job.id] = undefined;
+
+      this.workers[workerIndex].postMessage(job);
+      
+    };
+    
     this.nextJob = function() {
 
       var minValue = 0, minIndex = 0;
 
       var job = this.jobs.pop();
 
-      //var minIndex = Math.floor(Math.random() * (this.size + 1));
-
-      //alert(minIndex);
-
       if (job) {
-        //this.pending[0]++;
+        var index = this.schedule[job.id];
         this.active++;
-        this.workers[0].postMessage(job);
-        //  job, this.channels[minIndex]);
+        this.workers[index].postMessage(job);
       }
-
+    
     };
 
 }

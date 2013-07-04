@@ -2,7 +2,7 @@ Crypto = function (workerUrl) {
   
   var _this = this;
   
-  this.queueJob = function (job, successCb, errorCb) {
+  /*this.queueJob = function (job, successCb, errorCb) {
     
     if (asocial.compat.inPhoneGap()) {
       cordova.exec(successCb, errorCb, 'Crypto',
@@ -11,12 +11,143 @@ Crypto = function (workerUrl) {
       this.workerPool.queueJob(job, successCb);
     }
     
+  };*/
+  
+  this.locked = false;
+  
+  this.onLockRelease = [];
+  
+  this.executeJobWithLock = function (job, successCb) {
+    
+    //alert('Executing job with lock' + JSON.stringify(job));
+    
+    var successCb = successCb || function () {};
+    this.executeJob(true, job, successCb);
+    
+  };
+  
+  this.executeJobWithoutLock = function (job, successCb) {
+    
+    //alert('Executing job without lock ' + JSON.stringify(job));
+    var successCb = successCb || function () {};
+    
+    this.executeJob(false, job, successCb);
+    
+  };
+  
+  this.executeJob = function (needsLock, job, successCb) {
+    
+    var jobsQueued = (_this.onLockRelease.length != 0);
+    
+    if (jobsQueued) {
+      
+      if (_this.locked) {
+        
+        if (needsLock) {
+          
+          _this.onLockRelease.push({
+            lock: true, job: job,
+            success: successCb
+          });
+          
+        } else {
+          
+          _this.onLockRelease.push({
+            lock: false, job: job,
+            success: successCb
+          });
+          
+        } // needsLock
+        
+     } else { // _this.locked
+        
+        var nextJob = _this.onLockRelease.shift();
+        
+        if (needsLock) {
+          
+          _this.onLockRelease.push({
+            lock: true, job: job,
+            success: successCb
+          });
+          
+        } else {
+
+          _this.onLockRelease.push({
+            lock: false, job: job,
+            success: successCb
+          });
+          
+        } // needsLock
+        
+        _this.executeJob(nextJob.lock, nextJob.job, nextJob.success);
+        
+      } // _this.locked
+      
+    } else { // jobsQueued
+      
+      if (_this.locked) {
+        
+        if (needsLock) {
+          
+          _this.onLockRelease.push({
+            lock: true, job: job,
+            success: successCb
+          });
+          
+        } else {
+          
+          _this.onLockRelease.push({
+            lock: false, job: job,
+            success: successCb
+          });
+          
+        }
+        
+      } else {
+        
+        if (needsLock) {
+          
+          var worker = _this.workerPool.queueJob(job,
+            
+            function (data) {
+              
+              //alert('Locking for ' + JSON.stringify(job));
+              _this.lock = false;
+              
+              _this.workerPool.sendJob(worker,
+                
+                {
+                  id: Math.random()*Math.exp(40).toString(),
+                  method: 'getEncryptedKeyfile'
+                }, function (encryptedKeyfile) {
+                  //alert('Reinitializing');
+                  _this.workerPool.broadcastJob(
+                    {
+                      id: Math.random()*Math.exp(40).toString(),
+                      method: 'reinitializeKeyfile',
+                      params: [encryptedKeyfile]
+                    }, function () {
+                      successCb(data);
+                    });
+              });
+              
+          });
+          
+        } else {
+          
+          _this.workerPool.queueJob(job, successCb);
+        }
+        
+      }
+      
+    }
+    
   };
   
   this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
     
     console.log(1);
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithoutLock({
       method: 'getEncryptedKeyfile'
     }, function (message) {
       encryptedKeyfileCb(message);
@@ -27,7 +158,7 @@ Crypto = function (workerUrl) {
   // Development only!
   this.getSerializedKeyfile = function (keyfileCb) {
     
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithoutLock({
       
       method: 'getSerializedKeyfile'
     
@@ -41,7 +172,7 @@ Crypto = function (workerUrl) {
     var _this = this;
     
     // Generate keylist for group.
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithLock({
       
       method: 'createKeylist',
       params: [keylistId]
@@ -58,7 +189,7 @@ Crypto = function (workerUrl) {
     var _this = this;
     
     // Delete a keylist.
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithLock({
       
       method: 'deleteKeylist',
       params: [keylistId]
@@ -72,7 +203,7 @@ Crypto = function (workerUrl) {
   
   this.createInviteRequest = function (keylistId, userAlias, inviteCreatedCb) {
     
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithLock({
       
       method: 'createInviteRequest',
       params: [keylistId, userAlias]
@@ -83,7 +214,7 @@ Crypto = function (workerUrl) {
  
   this.acceptInviteRequest = function (inviteRequest, inviteAcceptedCb) {
 
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithLock({
       
       method: 'acceptInviteRequest',
       params: [inviteRequest]
@@ -94,7 +225,7 @@ Crypto = function (workerUrl) {
   
   this.confirmInviteRequest = function (inviteRequest, inviteAcceptedCb) {
 
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithLock({
       
       method: 'confirmInviteRequest',
       params: [inviteRequest]
@@ -105,7 +236,7 @@ Crypto = function (workerUrl) {
   
   this.completeInviteRequest = function (completeRequest, inviteCompletedCb) {
 
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithLock({
       
       method: 'completeInviteRequest',
       params: [completeRequest]
@@ -116,7 +247,7 @@ Crypto = function (workerUrl) {
   
   this.transferKeysRequest = function(keylistId, userId, keys, transferKeysCb) {
     
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithLock({
       
       method: 'transferKeysRequest',
       params: [keylistId, userId, keys]
@@ -127,7 +258,7 @@ Crypto = function (workerUrl) {
 
   this.addUsersRequest = function(addUsersRequest, addedUsersCb) {
     
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithLock({
       
       method: 'addUsersRequest',
       params: [addUsersRequest]
@@ -136,31 +267,11 @@ Crypto = function (workerUrl) {
     
   };
   
-  this.addKeypairs = function (keylistId, userId, keypairs) {
-    
-    Crypto.workerPool.queueJob({
-      
-      method: 'addKeypairs',
-      params: [keylistId, userId, keypairs]
-      
-    });
-    
-  };
-  
   this.initializeKeyfile = function (userId, password, encKeyfile, encryptedKeyfileCb) {
     
     var _this = this;
     
-    Crypto.workerPool.queueJob({
-      
-      method: 'initializeKeyfile',
-      params: [userId, password, encKeyfile]
-      
-    }, function () {
-      
-      _this.getEncryptedKeyfile(encryptedKeyfileCb);
-      
-    });
+    //alert('Initializing key file');
     
     Crypto.workerPool.broadcastJob({
       
@@ -168,15 +279,14 @@ Crypto = function (workerUrl) {
       params: [userId, password, encKeyfile]
       
     }, function () {
-      console.log(4);
       _this.getEncryptedKeyfile(encryptedKeyfileCb);
     });
-
+    
   };
   
   this.encryptMessage = function(keylistId, message, encryptedMessageCb) {
     
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithoutLock({
       
       method: 'encryptMessage',
       params: [keylistId, message]
@@ -187,7 +297,7 @@ Crypto = function (workerUrl) {
   
   this.decryptMessage = function (keylistId, message, decryptedMessageCb) {
     
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithoutLock({
       
       method: 'decryptMessage',
       params: [keylistId, message]
@@ -198,19 +308,19 @@ Crypto = function (workerUrl) {
   
   this.uploadChunk = function (chunkInfo, uploadedChunkCb) {
     
-    Crypto.workerPool.queueJob(chunkInfo, uploadedChunkCb);
+    Crypto.executeJobWithoutLock(chunkInfo, uploadedChunkCb);
     
   };
 
   this.downloadChunk = function (chunkInfo, downloadedChunkCb) {
     
-    Crypto.workerPool.queueJob(chunkInfo, downloadedChunkCb);
+    Crypto.executeJobWithoutLock(chunkInfo, downloadedChunkCb);
     
   };
   
   this.generateRandomKeys = function(generatedKeysCb) {
     
-    Crypto.workerPool.queueJob({
+    Crypto.executeJobWithoutLock({
       
       method: 'generateRandomHex',
       params: [256]
@@ -221,20 +331,19 @@ Crypto = function (workerUrl) {
   
   this.seedRandom = function () {
     
-    var array = new Uint32Array(32);
-    window.crypto.getRandomValues(array);
-    array = _.map(array, function (i) { return i });
-    
-    _this.workerPool.broadcastJob({
-      method: 'seedRandom', params: [array] });
+    this.workerPool.scatterJob({
+      method: 'seedRandom', fn: function () {
+        
+        var array = new Uint32Array(32);
+        window.crypto.getRandomValues(array);
+        array = _.map(array, function (i) { return i });
+        return [array];
+        
+      } });
     
   };
   
-  this.debug = function (result) {
-    alert(result);
-  };
-  
-  this.workerPool = new WorkerPool2(workerUrl, 1);
+  this.workerPool = new WorkerPool2(workerUrl, 8);
  
   // Add some initial entropy to the PRNG.
   this.seedRandom();
