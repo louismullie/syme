@@ -113,7 +113,8 @@ Crypto = {
     
     var recryptedKeys = this.encodeBase64(JSON.stringify({
       posts: this.recryptPosts(keylistId, newUserId, keysJson.posts),
-      uploads: this.recryptResource(keylistId, newUserId, keysJson.uploads)
+      uploads: this.recryptResource(keylistId, newUserId, keysJson.uploads),
+      distribute: this.recryptResource(keylistId, newUserId, keysJson.distribute)
     }));
     
     return recryptedKeys;

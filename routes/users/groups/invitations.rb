@@ -174,6 +174,33 @@ put '/invitations', auth: [] do
 
     end
     
+    keys['distribute'].each do |distribute_info|
+      
+      invitation_id = distribute_info['id']
+      invitation = group.invitations.find(invitation_id)
+      new_key = distribute_info['key']
+      
+      distribute = JSON.parse(Base64
+        .strict_decode64(invitation.distribute))
+      
+      invitee_keypairs = JSON.parse(Base64
+        .strict_decode64(distribute['inviteeKeypairs']))
+      
+      invitee_keypairs['keys'][invitee_id] = new_key
+      
+      new_invitee_keypairs = Base64
+        .strict_encode64(invitee_keypairs.to_json)
+      
+      distribute['inviteeKeypairs'] = new_invitee_keypairs
+      
+      new_distribute = Base64.strict_encode64(distribute.to_json)
+      
+      invitation.distribute = new_distribute
+      
+      invitation.save!
+      
+    end
+    
     invitation.save!
     
   else
@@ -214,10 +241,14 @@ get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
     }
   end
 
-  distributes = group.invitations.map do |invitation|
+  distribute = group.invitations.map do |invitation|
     
-    distribute = JSON.parse(Base64.strict_decode64(invitation.distribute))
-    invitee_keypairs = JSON.parse(Base64.strict_decode64(distribute))
+    distribute = JSON.parse(Base64
+      .strict_decode64(invitation.distribute))
+    
+    invitee_keypairs = JSON.parse(Base64
+      .strict_decode64(distribute['inviteeKeypairs']))
+    
     key_for_user = invitee_keypairs['keys'][@user.id.to_s]
     
     {
@@ -230,7 +261,7 @@ get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
   {
     posts: posts,
     uploads: uploads,
-    distributes: distributes
+    distribute: distribute
   }.to_json
 
 end

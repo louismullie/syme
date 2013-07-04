@@ -571,18 +571,12 @@ Keyfile = function(userId, password, encKeyfile) {
     var encInviteeKeypairBase64 = Crypto.encryptMessage(
       keylistId, inviteeKeypairsTxt);
     
-    var addUserRequest;
-    
-    if (_.size(keylist) > 3) { // +1 for _transactions
-      addUserRequest = Crypto.encodeBase64(
-        JSON.stringify({
-          keylistId: keylistId,
-          inviteeId: inviteRequest.inviteeId,
-          inviteeKeypairs: encInviteeKeypairBase64
-      }));
-    } else {
-      addUserRequest = Crypto.encodeBase64(JSON.stringify({}));
-    }
+    var addUserRequest = Crypto.encodeBase64(
+      JSON.stringify({
+        keylistId: keylistId,
+        inviteeId: inviteRequest.inviteeId,
+        inviteeKeypairs: encInviteeKeypairBase64
+    }));
     
     return {
       inviteConfirmation: inviteConfirmation,
