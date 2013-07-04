@@ -5,7 +5,7 @@
   %p.notification-content
     // If notification hasn't been read, show unread button
     {{#unless read}}
-    %a.notification-unread{ href: '#', 'title' => '' }
+    %a.notification-unread{ href: '#', 'title' => 'Mark as read' }
       %i.icon-circle
     {{/unless}}
 
