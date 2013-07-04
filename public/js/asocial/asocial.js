@@ -1,15 +1,14 @@
 guard('asocial', {
 
-  helpers: asocial_helpers,
-  binders: asocial_binders,
-  crypto: asocial_crypto,
-  socket: asocial_socket,
+  helpers:  asocial_helpers,
+  binders:  asocial_binders,
+  crypto:   asocial_crypto,
+  socket:   asocial_socket,
   uploader: asocial_uploader,
-  auth: asocial_auth,
-  state: asocial_state,
-  error: asocial_error,
-  invite: asocial_invite,
-  compat: asocial_compat
+  auth:     asocial_auth,
+  state:    asocial_state,
+  error:    asocial_error,
+  compat:   asocial_compat
 
 });
 
@@ -29,15 +28,15 @@ $(function(){
     Router.navigate( $(this).attr('href') );
   });
 
-  // Bind global binders
-  $().binders['global']['main']();
-
   // Initialize router
   Router = new Router;
 
   CurrentSession = new Session(null, function () {
 
     Backbone.history.start({ pushState: true });
+
+    // Bind global binders
+    asocial.binders.bind('global', false);
 
     // Trigger root.
     if (asocial.compat.inChromeExtension()) {

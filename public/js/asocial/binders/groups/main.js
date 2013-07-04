@@ -10,8 +10,8 @@ asocial.binders.add('groups', { main: function() {
     ]
   });
 
-  // Decrypt group avatars.
-  asocial.crypto.decryptMedia();
+  // Group pictures decryption
+  $('.encrypted-background-image').trigger('decrypt');
 
   // Timeago
   $('time.timeago').timeago();
@@ -49,52 +49,47 @@ asocial.binders.add('groups', { main: function() {
   $('#main').on('submit', '#create_group, #create_first_group', function(e) {
 
     e.preventDefault();
-    
+
     var name = $(this).find('input[name="name"]').val();
-    
+
     if ( name.length == 0 ) return;
 
     var group = {  name: name };
-    
-    $.ajax(SERVER_URL + '/groups', 
-    
-      {
-        
-        type: 'POST', 
-        
-        data: group,
-        
-        success: function (group) {
 
-          var route = SERVER_URL + '/users/' +
-            CurrentSession.getUserId() + '/groups';
-          var ack = SERVER_URL + '/users/' + 
-            CurrentSession.getUserId() + '/groups/' + group.id;
-          Crypto.createKeylist(group.id, function (encryptedKeyfile) {
-            
-            CurrentSession.getUser().updateKeyfile(
-              encryptedKeyfile,
-              
-              function () {
-                
-                Router.reload();
-                
-                $.ajax(ack, { type: 'PUT',
-                  data: { ack_create: true }});
-                
-                asocial.socket.listen();
-                
-              }
-              
-            );
-            
+    $.ajax(SERVER_URL + '/groups', {
+      type: 'POST',
+      data: group,
+
+      success: function (group) {
+
+        var route = SERVER_URL + '/users/' +
+          CurrentSession.getUserId() + '/groups';
+
+        var ack = SERVER_URL + '/users/' +
+          CurrentSession.getUserId() + '/groups/' + group.id;
+
+        Crypto.createKeylist(group.id, function (encryptedKeyfile) {
+
+          CurrentSession.getUser().updateKeyfile(
+            encryptedKeyfile, function () {
+
+              Router.reload();
+
+              $.ajax(ack, {
+                type: 'PUT',
+                data: { ack_create: true }
+              });
+
+              asocial.socket.listen();
+
           });
-        },
-        
-        error: function (error) {
-          alert('Error on group creation!');
-        }
-    
+
+        });
+      },
+
+      error: function (error) {
+        alert('Error on group creation!');
+      }
     });
 
   });
@@ -103,30 +98,26 @@ asocial.binders.add('groups', { main: function() {
 
     e.preventDefault();
 
-    var groupId = $(this).data('group-id');
-
-    var message = 'Are you sure? Type "yes" to confirm.';
+    var groupId = $(this).data('group-id'),
+        message = 'Are you sure? Type "yes" to confirm.';
 
     if (prompt(message) == 'yes') {
-      
+
       $.ajax(SERVER_URL + '/groups/' + groupId, {
-        
         type: 'DELETE',
-        
+
         success: function (resp) {
-          
+
           var user = CurrentSession.getUser();
-          
-          user.deleteKeylist(groupId, function () {
-             Router.reload();
-          });
-          
+
+          user.deleteKeylist(groupId, Router.reload);
+
         },
-        
+
         error: function (resp) {
-          asocial.helpers.showAlert(
-            'Could not delete group',
-          { onhide: location.reload });
+          asocial.helpers.showAlert('Could not delete group', {
+            onhide: location.reload
+          });
         }
       });
     }

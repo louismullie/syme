@@ -221,7 +221,7 @@ Router = Backbone.Router.extend({
       $('#main').html(view);
 
       // Binders
-      asocial.binders.bind(template, specific_binders);
+      asocial.binders.bind(template, true, specific_binders);
 
       // Hide spinner
       $('#spinner').hide();

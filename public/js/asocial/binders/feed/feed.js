@@ -9,7 +9,7 @@ asocial.binders.add('feed', { feed: function(){
       $(this).parent().removeClass('focused');
     }
   });
-  
+
   // Unread button
   $('#main').on('click', '#newcontent a', function(e){
 
@@ -23,7 +23,7 @@ asocial.binders.add('feed', { feed: function(){
     }
 
   });
-  
+
   // Infinite scroller
   $('#feed').data('pagesloaded', 1);
 
@@ -103,7 +103,7 @@ asocial.binders.add('feed', { feed: function(){
           }
 
           // Decrypt new content
-          asocial.crypto.decrypt();
+          $('.encrypted').trigger('decrypt');
 
           // Textarea autosizing
           $('textarea.autogrow').autogrow().removeClass('autogrow');
@@ -126,7 +126,7 @@ asocial.binders.add('feed', { feed: function(){
     }
 
   });
-  
+
   // Load more button
   $('#main').on('click', '#load-more a', function(e){
     e.preventDefault();

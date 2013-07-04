@@ -14,15 +14,16 @@ guard('binders', {
     $.extend($.fn.binders[route], objectExtention);
   },
 
-  bind: function(route, modules) {
+  bind: function(route, unbind, modules) {
 
-    modules = modules || false;
+    var unbind = unbind || true;
+    var modules = modules || false;
 
     // Check function existence
     if(!$().binders[route]) return false;
 
     // Unbind everything
-    this.unbind();
+    if( unbind ) this.unbind();
 
     if ( modules ) {
 

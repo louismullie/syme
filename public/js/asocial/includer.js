@@ -13,7 +13,6 @@
 //= require ./state
 //= require ./error
 //= require ./compat
-//= require ./invite
 //= require ./asocial
 //= require_tree ./models
 //= require_tree ./binders

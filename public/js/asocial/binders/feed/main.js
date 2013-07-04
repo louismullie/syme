@@ -1,5 +1,6 @@
 asocial.binders.add('feed', { main: function(){
 
+  // Breadcrumbs
   asocial.helpers.navbarBreadcrumbs({
     brand_only: false,
 
@@ -11,5 +12,19 @@ asocial.binders.add('feed', { main: function(){
         href: Backbone.history.fragment }
     ]
   });
+
+  // Initial decryption
+  var selectors = $([
+
+    // Feed elements
+    '.encrypted',
+    '.encrypted-image',
+    '.encrypted-audio',
+    '.encrypted-video',
+
+    // User avatars
+    '.user-avatar'
+
+  ].join(',')).trigger('decrypt');
 
 } }); // asocial.binders.add();

@@ -20,19 +20,13 @@ guard('socket', {
 
   create: {
 
-    error: function(data) {
-      $('#feed').prepend('<div class="alert alert-error">' +
-      '<button type="button" class="close" data-dismiss="alert">' +
-      '&times;</button>' + data.message + '</div>');
-    },
-
     post: function(post){
 
       // Remove empty group notice if there is one
       $('.empty-group-notice').remove();
 
       // Render post with the data
-      var postHtml = $(asocial.helpers.render('feed-post', post.view));
+      var template = $(asocial.helpers.render('feed-post', post.view));
 
       var owner = post.view.owner.id;
 
@@ -41,11 +35,17 @@ guard('socket', {
         // Increment unread_posts variable
         asocial.helpers.newContent('post');
 
-        postHtml.addClass('new-post');
+        template.addClass('new-post');
       }
 
       // Append hidden new post
-      postHtml.insertAfter($('#newcontent'));
+      template.insertAfter($('#newcontent'));
+
+      // Decrypt post
+      template.find('.encrypted').trigger('decrypt');
+
+      // Synchronize avatars
+      template.find('.slave-avatar').trigger('sync');
 
       // Autogrow comment textarea
       $('textarea.autogrow').autogrow().removeClass('autogrow')
@@ -54,40 +54,40 @@ guard('socket', {
 
     comment: function(data){
 
-      // If related post doesn't exist on page
-      if($('#' + data.target).length) {
+    // If related post doesn't exist, increment new content
+    if(!$('#' + data.target).length)
+      return asocial.helpers.newContent('comment');
 
-        var post               = $('#' + data.target),
-            container          = post.find('.comments'),
-            showmore           = container.find('.show-more'),
-            showmore_count     = showmore.find('span'),
-            displayed_comments = container.find('.comment-box').not('.comment-hidden');
+      var post               = $('#' + data.target),
+          container          = post.find('.comments'),
+          showmore           = container.find('.show-more'),
+          showmore_count     = showmore.find('span'),
+          displayed_comments = container.find('.comment-box').not('.comment-hidden');
 
-        // If comments are still collapsed and they are full
-        if( !showmore.data('expanded') && displayed_comments.length >= 3 ){
+      // If comments are still collapsed and they are full
+      if( !showmore.data('expanded') && displayed_comments.length >= 3 ){
 
-          // Hide first displayed comment
-          displayed_comments.first().addClass('comment-hidden');
+        // Hide first displayed comment
+        displayed_comments.first().addClass('comment-hidden');
 
-          // Show and increment showmore counter
-          showmore.removeClass('hidden');
-          showmore_count.html(container.find('.comment-hidden').length);
-
-        }
-
-        // Append new comment
-        container.append(asocial.helpers.render('feed-comment', data.view));
-
-        // Reset comment count counter
-        post.find('[partial="feed-comment-count"]')
-          .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
-
-      } else {
-
-        // If related post doesn't exist, increment new content
-        asocial.helpers.newContent('comment');
+        // Show and increment showmore counter
+        showmore.removeClass('hidden');
+        showmore_count.html(container.find('.comment-hidden').length);
 
       }
+
+      // Append new comment
+      container.append(asocial.helpers.render('feed-comment', data.view));
+
+      // Decrypt comment
+      container.find('.encrypted').trigger('decrypt');
+
+      // Synchronize avatars
+      container.find('.slave-avatar').trigger('sync');
+
+      // Reset comment count counter
+      post.find('[partial="feed-comment-count"]')
+        .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
 
     },
 
@@ -103,7 +103,7 @@ guard('socket', {
       Router.reload();
 
     },
-    
+
     group: function (data) {
       CurrentSession.getUser().refreshKeyfile(Router.reload);
     }
@@ -111,10 +111,6 @@ guard('socket', {
   },
 
   update: {
-
-    // This will be updated in JSON, data is of the form:
-    // { target: post_or_comment_id, view: { has_likes: bool, like_count: int,
-    //   liked_by_user: bool, liker_names: string  } }
 
     like: function(data){
 
@@ -288,10 +284,6 @@ guard('socket', {
     // Example: given operation = "delete" and model = "like", we call:
     // asocial.socket.delete.like(data.data)
     this[data.action][data.model](data.data);
-
-    // Decrypt anything new.
-    if(data.action != 'delete')
-      asocial.crypto.decrypt();
 
   },
 

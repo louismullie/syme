@@ -1,7 +1,7 @@
-asocial.binders.add('feed', { decrypt: function(){
+asocial.binders.add('global', { decrypt: function() {
 
   // Post and comment decryption
-  $('#main').on('decrypt', '.encrypted', function(e){
+  $(document).on('decrypt', '.encrypted', function(e){
 
     var $this = $(this);
 
@@ -41,7 +41,7 @@ asocial.binders.add('feed', { decrypt: function(){
   });
 
   // Avatar decryption
-  $('#main').on('decrypt', '.user-avatar', function() {
+  $(document).on('decrypt', '.user-avatar', function() {
 
     var $this = $(this);
 
@@ -61,16 +61,53 @@ asocial.binders.add('feed', { decrypt: function(){
 
   });
 
-  // Initial decryption
-  var selectors = [
-    // Feed elements
-    '.encrypted', '.encrypted-image', '.encrypted-audio',
-    '.encrypted-video', '.encrypted-background-image',
+  // Synchronize slaves to master avatars
+  $(document).on('sync', '.slave-avatar', function(){
+    var user_id     = $(this).data('user-id'),
+        master      = $('.user-avatar[data-user-id="' + user_id + '"]');
 
-    // User avatars
-    '.user-avatar'
-  ];
+    $(this).attr('src', master.attr('src'));
+  });
 
-  $(selectors.join(',')).trigger('decrypt');
+  // Media decryption
+  $(document).on('decrypt', '.encrypted-image, .encrypted-video, .encrypted-audio', function(){
+
+    var $this = $(this);
+
+    var media_id = $this.data('attachment-id');
+        keys     = $this.data('attachment-keys'),
+        type     = $this.data('attachment-type'),
+        group_id = $this.data('attachment-group');
+
+    var callback = function(url){
+      // Set src to element
+      $this.attr('src', url)
+        .removeClass('.encrypted-' + type);
+    };
+
+    console.log('Decrypting ' + type, 'media_id ' + media_id, 'group_id ' + group_id, 'keys', keys);
+
+    // Decrypt and place media
+    asocial.crypto.getFile(media_id, keys, callback, group_id);
+
+  });
+
+  // Background image decryption
+  $(document).on('decrypt', '.encrypted-background-image', function(){
+
+    var $this = $(this);
+
+    var image_id  = $this.data('attachment-id'),
+        keys      = $this.data('attachment-keys'),
+        group_id  = $this.data('attachment-group');
+
+    var callback = function(url) {
+      $this.css("background-image", "url('" + url + "')");
+    }
+
+    // Decrypt and place background-image
+    asocial.crypto.getFile(image_id, keys, callback, group_id);
+
+  });
 
 } });
