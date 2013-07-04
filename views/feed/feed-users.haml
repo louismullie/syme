@@ -6,29 +6,48 @@
       %i.icon-plus
 
 %ul#userlist.scrollable
-  // Invite confirmations
+
+  -# Invites
   {{#if invite}}
 
   #invites
+    // #invites-header Awaiting confirmation
+
     {{#each invite}}
-
     %li.invite
-      #invites-header Awaiting confirmation
-      
+      %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
+
       // Replace by GET request with only invite ID, which returns the rest.
-      %a.invite-confirm{href: '#',  'data-invite-id'         => '{{id}}',
-                                    'data-invite-invitee_id' => '{{invitee_id}}',
-                                    'data-invite-accept'     => '{{accept}}'}
-      
-        %img.placeholder-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" }
-
-        %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
-
+      %a.invite-confirm.btn.btn-white{href: '#', 'data-invite-id'         => '{{id}}',
+                                                 'data-invite-invitee_id' => '{{invitee_id}}',
+                                                 'data-invite-accept'     => '{{accept}}'}
+        Confirm
     {{/each}}
 
   {{/if}}
 
-  // User list
+  -# User list
   {{#each users}}
-  {{> feed-user.hbs}}
+
+  %li{ id: '{{id}}' }
+
+    -# Delete button
+    {{#if deletable}}
+    %a.user-delete.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Delete' }
+      %i.icon-remove
+    {{/if}}
+
+    -# User link
+    %a{ href: '#', 'data-tip' => '{{full_name}}', 'class' => 'user {{#if is_current_user}}current{{/if}}'}
+
+      // userlist-avatar should disappear in favor of user-avatar
+      %img.user-avatar.userlist-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+                                        'data-user-id' => '{{id}}',
+                                        'data-avatar-id' => '{{avatar.id}}',
+                                        'data-size' => '{{avatar.size}}',
+                                        'data-keys' => '{{avatar.keys}}' }
+
+      %span{ title: '{{full_name}}' }
+        {{full_name}}
+
   {{/each}}

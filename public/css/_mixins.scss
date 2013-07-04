@@ -125,7 +125,7 @@
 
 }
 
-@mixin scroll-shadow($background: white, $width: 5px) {
+@mixin scroll-shadow($background: white, $width: .3em) {
   $gradient1: $background 100%, transparent;
   $gradient2: rgba(0, 0, 0, 0.08) 30%, transparent;
 
@@ -136,6 +136,6 @@
   background-image: linear-gradient($gradient1), linear-gradient($gradient2);
 
   background-repeat: no-repeat;
-  background-size: 100% $width*2, 100% $width;
+  background-size: 100% $width, 100% $width;
   background-attachment: local, scroll;
 }

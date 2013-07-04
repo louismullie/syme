@@ -244,7 +244,7 @@ guard('helpers', {
     if(closable) {
 
       // Close on escape
-      $(document).one('keydown', function(e){
+      $(document).on('keydown', function(e){
         if ( e.which == 27 ) asocial.helpers.hideModal();
       });
 
@@ -260,25 +260,28 @@ guard('helpers', {
     }
 
     // Submit on enter key
-    $(document).one('keydown', function(e){
+    $(document).on('keydown', function(e){
       if ( e.which == 13 ) asocial.helpers.hideModal(true);
     });
 
     // Close on clicking a[role="close-modal"]
     $('#responsive-modal a[role="close-modal"]').click(function(e){
       e.preventDefault();
+      if ( $(this).hasClass('disabled') ) return false;
       asocial.helpers.hideModal();
     });
 
     // Submit on clicking a[role="submit-modal"]
     $('#responsive-modal a[role="submit-modal"]').click(function(e){
       e.preventDefault();
+      if ( $(this).hasClass('disabled') ) return false;
       asocial.helpers.hideModal(true);
     });
 
     // Submit on clicking a[role="submit-modal"]
     $('#responsive-modal a[role="submit"]').click(function(e){
       e.preventDefault();
+      if ( $(this).hasClass('disabled') ) return false;
       $('#responsive-modal form').submit();
     });
 
@@ -301,7 +304,7 @@ guard('helpers', {
     // Callbacks
     if ( submitted && $('#responsive-modal').data('onsubmit') ) {
       // onsubmit()
-      $('#responsive-modal').data('onsubmit')();
+      if(!$('#responsive-modal').data('onsubmit')()) return true;
     } else {
       // onhide()
       $('#responsive-modal').data('onhide')();
