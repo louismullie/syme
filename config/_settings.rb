@@ -9,12 +9,20 @@ set :haml, layout: false
 set store: $store
 set environment: $env
 set secure: $secure
-set root: $root
 
 # Environment-specific config.
 if $env == :development
   set :reload_templates, true
 end
+
+set :root, File.dirname(__FILE__)
+set :sprockets, (Sprockets::Environment.new(root) { |env| env.logger = Logger.new(STDOUT) })
+
+settings.sprockets.append_path 'public/js'
+settings.sprockets.append_path 'public/css'
+
+set :assets_prefix, 'compiled'
+set :assets_path, File.join(root, 'public', assets_prefix)
 
 set :protection,
      except: [:http_origin, :remote_token, :frame_options],

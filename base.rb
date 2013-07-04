@@ -4,12 +4,14 @@ module Syme
 
     # Recursive inline eval of Ruby files.
     def self.require_all(dir, opts={})
-      Dir["./#{dir}/**/*.rb"].each { |f| eval(File.read(f)) }
+      path = File.dirname(File.expand_path(__FILE__))
+      Dir["#{path}/#{dir}/**/*.rb"].each { |f| eval(File.read(f)) }
     end
 
     # Recursive inline require of Ruby files.
     def self.require_directory(dir)
-      Dir['./' + dir + '/*.rb'].each { |file| require file }
+      path = File.dirname(File.expand_path(__FILE__))
+      Dir["#{path}/#{dir}/*.rb"].each { |f| require f }
     end
 
     # Set global session ID check.
