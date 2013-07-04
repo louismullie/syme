@@ -1,3 +1,5 @@
+$stripeBarHeight: 8px;
+
 #navbar {
   position: fixed;
   left: 0; right: 0;
@@ -9,7 +11,7 @@
   border-bottom: $baseBorderStyle;
 
   #stripe-bar {
-    height: 8px;
+    height: $stripeBarHeight;
     margin: 0 #{-$bodyPadding};
 
     opacity: .9;
@@ -158,6 +160,47 @@
                 text-align: left;
                 font-size: 0.8em;
                 color: $darkgray;
+              }
+            }
+          }
+        }
+      }
+
+      #navbar-collapsed {
+        h3 {
+          background: $bodyBackgroundColor3;
+          border-bottom: $baseBorderStyle;
+
+          &::before {
+            border-bottom-color: $bodyBackgroundColor3;
+          }
+        }
+
+        ul {
+          list-style-type: none;
+          margin: 0;
+
+          li {
+            display: block;
+            height: auto;
+            margin-right: 0;
+
+            border-bottom: $baseBorderStyle;
+              &:last-child { border-bottom: none; }
+
+            a {
+              display: block;
+              padding: 0 1em;
+
+              color: $black;
+              font: 200 1em/3.5em $opensans;
+
+              &:hover {
+                background: $bodyBackgroundColor2;
+              }
+
+              i {
+                margin-right: .5em;
               }
             }
           }

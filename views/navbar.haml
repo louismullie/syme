@@ -9,7 +9,7 @@
             Syme
 
         %li#notification-li{ :'data-count' => 0 }
-          %a#notifications.btn.hint--bottom{ href: '#', :'data-hint' => 'Notifications', 'data-popover' => 'notifications-container' }
+          %a#notifications.btn.hint--bottom{ href: '#', :'data-hint' => 'Notifications', :'data-popover' => 'notifications-container' }
             %i.icon-bell-alt
 
           #notifications-container.popover
@@ -32,5 +32,19 @@
 
           .show-for-small
             %li#side-pane
-              %a.btn{ href: '#', hbs: '' }
+              %a.btn{ href: '#', :'data-popover' => 'navbar-collapsed' }
                 %i.icon-reorder
+
+              #navbar-collapsed.popover.popover--right
+                %h3 Menu
+                #navbar-collapsed-content
+                  %ul
+                    %li
+                      %a{ href: 'users/{{current_user_id}}', hbs: ''}
+                        %i.icon-cog
+                        Settings
+
+                    %li
+                      %a#logout{ href: 'logout', hbs: ''}
+                        %i.icon-signout
+                        Sign out

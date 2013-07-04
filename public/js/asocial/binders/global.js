@@ -9,17 +9,24 @@ asocial.binders.add('global', { main: function(){
 
     // Toggle it
     if ( container.is(':visible') ) {
+
       // Reset possible hidden tooltips
       $(this).removeClass('hint--hidden');
 
       // Hide popover
       container.hide();
+
     } else {
+
       // Hide possible tooltips
       $(this).addClass('hint--hidden');
 
+      // Hide possible popovers
+      $('.popover').hide();
+
       // Show popover
       container.fadeIn(100);
+
     }
 
   });

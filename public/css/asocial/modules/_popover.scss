@@ -31,16 +31,17 @@
     @include arrow(top, 10px, 1px, 10px, $bodyBackgroundColor, rgba(black, 0.2));
   }
 
-  &.right {
-    right: 100%;
-    margin-right: -100%;
+  &.popover--right {
+    right: 0;
 
     & > h3 {
       &::before {
-        right: 10px;
+        left: auto;
+        right: 9px;
       }
       &::after {
-        right: 11px;
+        left: auto;
+        right: 8px;
       }
     }
   }
