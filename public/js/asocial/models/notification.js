@@ -131,7 +131,7 @@ Notifications = (function(){
       _this = this;
 
       // Generate an array of unread notifications
-      var selector = this.collection.where({ read: false });
+      var selector = this.collection.where({ read: false }).reverse();
 
       // Iterate on each
       var notifications = _.map(selector, function(notification){
