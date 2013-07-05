@@ -126,7 +126,7 @@ asocial.binders.add('groups', { main: function() {
   // Leave group
   $('#main').on('click', '.leave-group', function (e) {
 
-    var userId = $(this).parent().attr('id');
+    var groupId = $(this).data('group-id');
 
     asocial.helpers.showConfirm(
       'Do you really want to leave this group?',
@@ -139,7 +139,7 @@ asocial.binders.add('groups', { main: function() {
         onsubmit: function(){
 
           var route = SERVER_URL + '/users/' + CurrentSession.getUserId() +
-          '/groups/' + CurrentSession.getGroupId() + '/memberships/' + userId;
+          '/groups/' + groupId + '/memberships/' + CurrentSession.getUserId();
 
           $.ajax(route, { type: 'DELETE',
 

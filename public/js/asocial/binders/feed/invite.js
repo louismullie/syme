@@ -26,7 +26,7 @@ asocial.binders.add('feed', { invite: function() {
 
       // Disable modal closing by enter key if button is disabled
       onsubmit: function(){
-        return !$('#responsive-modal a.modal-button').hasClass('disabled');
+        return $('#responsive-modal a.modal-button').hasClass('disabled');
       },
 
       onshow: function(){

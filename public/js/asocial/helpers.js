@@ -304,7 +304,7 @@ guard('helpers', {
     // Callbacks
     if ( submitted && $('#responsive-modal').data('onsubmit') ) {
       // onsubmit()
-      if(!$('#responsive-modal').data('onsubmit')()) return true;
+      if($('#responsive-modal').data('onsubmit')()) return true;
     } else {
       // onhide()
       $('#responsive-modal').data('onhide')();
