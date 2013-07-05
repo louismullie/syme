@@ -38,14 +38,14 @@ namespace :extensions do
     
     # Copy other files to extension directory (/. important!)
     chrome_files = Dir.glob(settings.root + '/deploy/chrome/*')
-    warn chrome_files
     FileUtils.cp_r(chrome_files, '.extension')
     
     # Edit SERVER_URL to poll remote server.
     File.open('.extension/assets/asocial.js') do |file|
       contents = file.read
       contents.sub!('SERVER_URL = window.location.origin;',
-                    'BAR')
+                    'SERVER_URL = "http://198.27.65.229";')
+      File.open('.extension/assets/asocial.js', "w+") { |f| f.write(contents) }
     end
 
   end
