@@ -3,11 +3,14 @@ post '/:group_id/post/create', auth: [] do |group_id|
   @group = @user.groups.find(group_id)
 
   @group.touch
-  
+
   message = JSON.parse(Base64.strict_decode64(
     params[:encrypted_content]))
-  
-  mentions = JSON.parse(params[:mentioned_users])
+
+  #mentions = JSON.parse(params[:mentioned_users])
+
+  # Disable temporarily mentioned users
+  mentions = []
 
   attachment = if !(upload_id = params[:upload_id]).blank?
     @group.attachments.find(upload_id)
@@ -20,12 +23,12 @@ post '/:group_id/post/create', auth: [] do |group_id|
     mentions: mentions,
     attachment: attachment
   )
-  
+
   attachment.post = post if attachment
   attachment.save! if attachment
-  
+
   post.save!
-  
+
   track @user, 'Created a new post'
 
   content_type :json

@@ -47,31 +47,26 @@ asocial.binders.add('feed', { form: function(){
     $this.data('active', true);
 
     // Encrypt the message and write the content to the file.
-    var groupId = CurrentSession.getGroupId();
-    var $form = $(this);
-    
+    var $form   = $(this),
+        groupId = CurrentSession.getGroupId();
+
     Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
-      
-      $('#encrypted_content').val(encryptedMessage);
-      
-      // Get the users who were mentioned in the message.
-      var mentions = {}; //asocial.helpers.findUserMentions(message);
-      $('#mentioned_users').val(JSON.stringify(mentions));
 
       // Build request
-      var request = $form.serialize();
+      var request = {
+        encrypted_content: encryptedMessage,
+        upload_id: $form.find('input[name="upload_id"]').val()
+      };
 
-      var group = CurrentSession.getGroupId();
-      var url = SERVER_URL + '/' + group + '/post/create';
-      
-      
+      var url = SERVER_URL + '/' + groupId + '/post/create';
+
       $.post(url, request, function(data){
 
         asocial.helpers.resetFeedForm();
 
       }).fail(function(){
 
-        alert('Posting failed');
+        asocial.helpers.showAlert('Posting failed');
 
       });
 
