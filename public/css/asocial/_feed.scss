@@ -305,8 +305,17 @@
 
               a.commenter-name {
                 padding-right: .4em;
-                font-weight: normal;
+                font-weight: bold;
                 white-space: nowrap;
+                
+                text-decoration: none;
+                
+                cursor: default;
+                color: $black; &:hover {
+                  color: inherit;
+                  text-decoration: none
+                }
+                
               }
 
               .expand-link-container {
