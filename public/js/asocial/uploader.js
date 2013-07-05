@@ -154,17 +154,6 @@ guard('uploader', {
       file = $('#upload_file')[0].files[0];
     }
 
-    var started;
-
-    // Upload file
-    if (asocial.uploader.hasImageMime(file)) {
-      started = asocial.uploader.uploadImage(file, progress, success);
-    } else {
-      started = asocial.uploader.uploadFile(file, progress, success);
-    }
-
-    if (!started) return;
-
     // Get elements
     var container = $('#upload-box'),
         box       = container.find('.upload-row');
@@ -218,6 +207,13 @@ guard('uploader', {
     // Hide attachments
     $('ul#attachments').hide();
 
+    // Upload file
+    if (asocial.uploader.hasImageMime(file)) {
+      asocial.uploader.uploadImage(file, progress, success);
+    } else {
+      asocial.uploader.uploadFile(file, progress, success);
+    }
+    
   },
 
   selectAvatar: function (file, thumbnailCallback, uploadCallback) {
