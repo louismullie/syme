@@ -125,8 +125,16 @@ asocial.binders.add('feed', { form: function(){
       // Show spinner
       .addClass('active');
 
+    var removeActive = function() {
+      trigger
+        // Unlock trigger
+        .data('active', false)
+        // Remove spinner
+        .removeClass('active');
+    };
+
     // Thumbnail and upload avatar
-    asocial.uploader.selectAvatar(
+    var started = asocial.uploader.selectAvatar(
       // Filename
       $(this)[0].files[0],
 
@@ -139,14 +147,10 @@ asocial.binders.add('feed', { form: function(){
       },
 
       // Success callback
-      function() {
-        trigger
-          // Unlock trigger
-          .data('active', false)
-          // Remove spinner
-          .removeClass('active');
-      }
+      removeActive
     );
+
+    if(!started) removeActive();
 
   });
 

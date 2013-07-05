@@ -6,14 +6,14 @@ guard('uploader', {
     success = success || function () {};
 
     var group = CurrentSession.getGroupId();
-    
+
     if (file.size / 1024 > 1024) {
-      
+
       asocial.helpers.showAlert(
         'You can only upload files of up to 1 Mb for now.');
-      
+
       return false;
-      
+
     } else {
 
       uploader = new Uploader(file, {
@@ -21,9 +21,9 @@ guard('uploader', {
       });
 
       uploader.start(progress, success);
-      
+
       return true;
-      
+
     }
 
   },
@@ -117,12 +117,12 @@ guard('uploader', {
     img.onload = function () {
 
       var callback = function (image) {
-        
+
         var data = {
           mode: 'thumbnail',
           upload_id: uploadId
         };
-        
+
         _this.upload(image, data);
 
       };
@@ -148,14 +148,14 @@ guard('uploader', {
   },
 
   selectFile: function (file, type) {
-    
+
     // What to do otherwise?
     if (!(file instanceof File)) {
       file = $('#upload_file')[0].files[0];
     }
 
     var started;
-    
+
     // Upload file
     if (asocial.uploader.hasImageMime(file)) {
       started = asocial.uploader.uploadImage(file, progress, success);
@@ -164,7 +164,7 @@ guard('uploader', {
     }
 
     if (!started) return;
-    
+
     // Get elements
     var container = $('#upload-box'),
         box       = container.find('.upload-row');
@@ -222,8 +222,10 @@ guard('uploader', {
 
   selectAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    if (!asocial.uploader.hasImageMime(file))
-      return asocial.helpers.showAlert('This is not an image!');
+    if (!asocial.uploader.hasImageMime(file)) {
+      asocial.helpers.showAlert('This is not an image!');
+      return false;
+    }
 
     this.uploadAvatar(file, function(url){
 
@@ -236,8 +238,10 @@ guard('uploader', {
 
   selectGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    if (!asocial.uploader.hasImageMime(file))
-      return asocial.helpers.showAlert('This is not an image!');
+    if (!asocial.uploader.hasImageMime(file)) {
+      asocial.helpers.showAlert('This is not an image!');
+      return false;
+    }
 
     this.uploadGroupAvatar(file, function(url){
 
