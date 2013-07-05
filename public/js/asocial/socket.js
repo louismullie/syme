@@ -133,8 +133,10 @@ guard('socket', {
 
     group_avatar: function (data) {
 
+      console.log('NEW GROUP AVATAR', data);
+
       // Change photo
-      $('#group-photo-edit[data-group-id="' +  + '"] img')
+      $('#group-photo-edit[data-group-id="' + data.group_id + '"] img')
         .attr('data-attachment-id', data.id)
         .attr('data-attachment-keys', data.keys)
         .trigger('decrypt');
@@ -142,8 +144,6 @@ guard('socket', {
     },
 
     user_avatar: function (data) {
-
-      console.log(data);
 
       // Change master
       $('.user-avatar[data-user-id="' + data.owner_id + '"]')

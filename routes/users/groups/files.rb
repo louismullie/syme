@@ -5,7 +5,7 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
   @group.touch
 
   enc_key = JSON.parse(Base64.strict_decode64(params[:keys]))
-  
+
   selector = {
     filename: params[:filename].slug,
     key: enc_key['message'],
@@ -17,57 +17,57 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
   }
 
   upload = if params[:mode] == 'thumbnail'
-    
+
     original = @group.attachments.find(params[:upload_id])
-  
+
     thumbnail = @group.thumbnails.create(selector)
-    
+
     original.thumbnail_id = thumbnail.id.to_s
-    
+
     original.save!
 
     thumbnail
-    
+
   elsif params[:mode] == 'avatar'
-    
+
     upload = @group.user_avatars.create(selector)
-    
+
     membership = @user.memberships
       .where(group_id: @group.id).first
-    
+
     if membership.user_avatar
       membership.user_avatar.destroy
     end
-    
+
     membership.user_avatar = upload
     membership.save!
-    
+
     upload
-    
+
   elsif params[:mode] == 'group_avatar'
-    
+
     upload = GroupAvatar.create(selector)
-    
+
     if @group.group_avatar
       @group.group_avatar.destroy
     end
-    
+
     @group.group_avatar = upload
-    
+
     @group.palette = [params[:dominant],
       params[:first_median], params[:second_median]]
-      
+
     @group.save!
-    
+
     upload
-    
+
   else
-    
+
     upload = @group.attachments.create(selector)
     upload.save!
-    
+
     upload
-    
+
   end
 
 =begin
@@ -78,12 +78,12 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
     transfer.save!
   end
 =end
-  
+
   dir = File.join('uploads', upload.id)
   FileUtils.mkdir(dir)
 
   track @user, 'Uploaded a new file'
-  
+
   content_type :json
 
   { status: 'ok',
@@ -104,27 +104,26 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
 
   id = params[:id]
   chunk = params[:chunk]
-  
+
   upload = @group.uploads.find(id)
-  
+
   if params[:last]
 
     if upload.is_a?(GroupAvatar)
 
-     MagicBus::Publisher.broadcast(
-        upload.group, :update, :group_avatar,
-       AvatarGenerator.generate(upload.group, @user))
-       
-    elsif upload.is_a?(UserAvatar)
-      
-      MagicBus::Publisher.broadcast(
-         upload.group, :update, :user_avatar,
-        AvatarGenerator.generate(upload, @user, true))
+      MagicBus::Publisher.scatter(upload.group, :update, :group_avatar) do |user|
+        AvatarGenerator.generate(upload.group, user)
+      end
 
+    elsif upload.is_a?(UserAvatar)
+
+      MagicBus::Publisher.scatter(upload.group, :update, :user_avatar) do |user|
+        AvatarGenerator.generate(upload, user, true)
+      end
     end
-  
+
   end
-  
+
   data = params[:data][:tempfile].read
 
   dir = File.join('uploads', id)

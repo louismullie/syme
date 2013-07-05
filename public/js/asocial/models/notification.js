@@ -47,6 +47,13 @@ Notifications = (function(){
         resource: "comment"
       },
 
+      // Picture updates
+
+      group_picture_update: {
+        message: "%(actors)s changed the group picture in %(resource)s",
+        resource: "group"
+      },
+
       // Invitation/Confirmation
 
       invite_request: {
@@ -55,13 +62,13 @@ Notifications = (function(){
       },
 
       new_group_user: {
-        message: '%(actors)s joined %(group_name)s',
+        message: '%(actors)s joined %(resource)s',
         resource: "group"
       },
-      
-      
+
+
       invite_accept: {
-        message: '%(actors)s accepted your invite to %(group_name)s.',
+        message: '%(actors)s accepted your invite to %(resource)s.',
         resource: "group"
       },
 
@@ -69,7 +76,7 @@ Notifications = (function(){
         message: '%(actors)s granted you access to %(resource)s',
         resource: "group"
       }
-      
+
     }
 
     var resources = {
@@ -94,7 +101,9 @@ Notifications = (function(){
 
     });
 
-    var resource = '<a href="' + link + '" hbs>' + [type.resource] + '</a>';
+    var resource = resource == "group"
+      ? '<a href="' + link + '" hbs>' + data.group + '</a>'
+      : '<a href="' + link + '" hbs>' + [type.resource] + '</a>';
 
     var html = sprintf(type.message, {
 

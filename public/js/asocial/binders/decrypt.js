@@ -50,9 +50,9 @@ asocial.binders.add('global', { decrypt: function() {
         done  = done || function(){};
 
     var group_id  = CurrentSession.getGroupId(),
-        user_id   = $this.data('user-id'),
-        avatar_id = $this.data('avatar-id'),
-        keys      = $this.data('keys');
+        user_id   = $this.attr('data-user-id'),
+        avatar_id = $this.attr('data-avatar-id'),
+        keys      = $this.attr('data-keys');
 
     if ( !keys ) return done();
 
@@ -75,7 +75,7 @@ asocial.binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || function(){};
 
-    var user_id     = $this.data('user-id'),
+    var user_id     = $this.attr('data-user-id'),
         master      = $('.user-avatar[data-user-id="' + user_id + '"]');
 
     $this.attr('src', master.attr('src'));
@@ -88,10 +88,10 @@ asocial.binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || function(){};
 
-    var media_id = $this.data('attachment-id');
-        keys     = $this.data('attachment-keys'),
-        type     = $this.data('attachment-type'),
-        group_id = $this.data('attachment-group');
+    var media_id = $this.attr('data-attachment-id');
+        keys     = $this.attr('data-attachment-keys'),
+        type     = $this.attr('data-attachment-type'),
+        group_id = $this.attr('data-attachment-group');
 
     if ( !keys ) return done();
 
@@ -114,9 +114,9 @@ asocial.binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || function(){};
 
-    var image_id  = $this.data('attachment-id'),
-        keys      = $this.data('attachment-keys'),
-        group_id  = $this.data('attachment-group');
+    var image_id  = $this.attr('data-attachment-id'),
+        keys      = $this.attr('data-attachment-keys'),
+        group_id  = $this.attr('data-attachment-group');
 
     if ( !keys ) return done();
 
