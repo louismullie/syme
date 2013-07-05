@@ -1,6 +1,6 @@
 {
-	"name": "Asocial",
-	"version": "0.0.0",
+	"name": "Syme",
+	"version": "0.0.1",
 	"manifest_version": 2,
 	"description": "",
 	"browser_action": {
@@ -8,8 +8,8 @@
 		"popup": "main.html"
 	},
 	"icons": {
-		"48": "/img/favicon.ico",
-		"128": "/img/favicon.ico"
+		"48": "/img/logo-48x48.png",
+		"128": "/img/logo-128x128.png"
 	},
 	"permissions": [
 		"http://198.27.65.229/",
