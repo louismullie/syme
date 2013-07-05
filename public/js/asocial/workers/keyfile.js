@@ -627,7 +627,7 @@ Keyfile = function(userId, password, encKeyfile) {
     if (!keylistId || !inviteeId || !inviteeKeypairs)
       throw 'Missing required parameters.'
     
-    var inviteeKeypairsTxt = Crypto.decryptMessage(keylistId, inviteeKeypairs); // THIS BITCH
+    var inviteeKeypairsTxt = Crypto.decryptMessage(keylistId, inviteeKeypairs);
 
     that.addKeypairs(keylistId, inviteeId, JSON.parse(inviteeKeypairsTxt));
 

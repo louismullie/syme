@@ -7,65 +7,72 @@ Notifications = (function(){
       // Posts
 
       new_post: {
-        message: '%(actors)s posted a new %(ressource)s on %(group_name)s',
-        ressource: "post"
+        message: '%(actors)s made a new %(resource)s in %(group_name)s',
+        resource: "post"
       },
 
       // Comments
 
       comment_on_own_post: {
-        message: '%(actors)s posted a new %(ressource)s on %(group_name)s',
-        ressource: "comment"
+        message: '%(actors)s commented on your %(resource)s in %(group_name)s',
+        resource: "post"
       },
 
       comment_on_same_post: {
-        message: '%(actors)s commented on the same %(ressource)s as you on %(group_name)s',
-        ressource: "post"
+        message: '%(actors)s commented on the same %(resource)s as you in %(group_name)s',
+        resource: "post"
       },
 
       // Likes
 
       like_on_post: {
-        message: '%(actors)s liked your %(ressource)s on %(group_name)s',
-        ressource: "post"
+        message: '%(actors)s liked your %(resource)s in %(group_name)s',
+        resource: "post"
       },
 
       like_on_comment: {
-        message: '%(actors)s liked your %(ressource)s on %(group_name)s',
-        ressource: "comment"
+        message: '%(actors)s liked your %(resource)s in %(group_name)s',
+        resource: "comment"
       },
 
       // Mentions
 
       mention_in_post: {
-        message: '%(actors)s mentioned you in a %(ressource)s on %(group_name)s',
-        ressource: "post"
+        message: '%(actors)s mentioned you in a %(resource)s in %(group_name)s',
+        resource: "post"
       },
 
       mention_in_comment: {
-        message: '%(actors)s mentioned you in a %(ressource)s on %(group_name)s',
-        ressource: "comment"
+        message: '%(actors)s mentioned you in a %(resource)s in %(group_name)s',
+        resource: "comment"
       },
 
       // Invitation/Confirmation
 
-      request_invite: {
-        message: '%(actors)s has invited you to join %(group_name)s',
-        ressource: "groups"
+      invite_request: {
+        message: '%(actors)s invited you to join %(group_name)s. <a href="/" hbs>Confirm</a>.',
+        resource: "groups"
       },
 
-      confirm_invite: {
-        message: '%(actors)s has joined the group %(ressource)s',
-        ressource: "group"
+      new_group_user: {
+        message: '%(actors)s joined %(group_name)s',
+        resource: "group"
+      },
+      
+      
+      invite_accept: {
+        message: '%(actors)s accepted your invite to %(group_name)s.',
+        resource: "group"
       },
 
-      confirm_join_request: {
-        message: '%(actors)s has confirmed you to %(ressource)s',
-        ressource: "group"
+      invite_confirm: {
+        message: '%(actors)s granted you access to %(resource)s',
+        resource: "group"
       }
+      
     }
 
-    var ressources = {
+    var resources = {
       groups:  'users/%(current_id)s/groups',
       group:   'users/%(current_id)s/groups/%(group_id)s',
       post:    'users/%(current_id)s/groups/%(group_id)s/posts/%(post_id)s',
@@ -78,7 +85,7 @@ Notifications = (function(){
 
     var type = types[data.action];
 
-    var link = sprintf(ressources[type.ressource], {
+    var link = sprintf(resources[type.resource], {
 
       current_id: CurrentSession.getUserId(),
       group_id: data.group_id,
@@ -87,12 +94,12 @@ Notifications = (function(){
 
     });
 
-    var ressource = '<a href="' + link + '" hbs">' + [type.ressource] + '</a>';
+    var resource = '<a href="' + link + '" hbs>' + [type.resource] + '</a>';
 
     var html = sprintf(type.message, {
 
       actors: '<b>' + data.actors + '</b>',
-      ressource: ressource,
+      resource: resource,
       group_name: '<b>' + data.group + '</b>'
 
     });
