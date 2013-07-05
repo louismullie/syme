@@ -104,12 +104,7 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
 
   id = params[:id]
   chunk = params[:chunk]
-<<<<<<< HEAD
-
-  upload = @group.uploads.find(id)
-
-=======
-
+  
   upload = group.uploads.find(id)
 
   if params[:last]
