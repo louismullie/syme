@@ -41,6 +41,13 @@ namespace :extensions do
     warn chrome_files
     FileUtils.cp_r(chrome_files, '.extension')
     
+    # Edit SERVER_URL to poll remote server.
+    File.open('.extension/assets/asocial.js') do |file|
+      contents = file.read
+      contents.sub!('SERVER_URL = window.location.origin;',
+                    'BAR')
+    end
+
   end
   
 end
