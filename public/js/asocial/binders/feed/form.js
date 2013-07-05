@@ -132,9 +132,10 @@ asocial.binders.add('feed', { form: function(){
 
       // Thumnail callback
       function(url) {
-        // Replace thumbnail in DOM
-        $('#feed-form-avatar img, img[data-user-id="' + CurrentSession.getUserId() + '"]')
+        $('img.user-avatar[data-user-id="' + CurrentSession.getUserId() + '"]')
           .attr('src', url);
+
+        $('.slave-avatar[data-user-id="' + CurrentSession.getUserId() + '"]').trigger('sync');
       },
 
       // Success callback
