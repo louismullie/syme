@@ -4,16 +4,12 @@
   {{/each}} |
 {{else}}
 
-.row.empty-group-notice
-  .span6.offset1
-    %h4
-      Welcome to your group.
-    
-    %p
-      It's lonely out here. Do you want to
-    
-      %a#add-user-first{href: '#'}
-        invite someone
-      ?
+#empty-group-notice
+  %h4
+    Welcome to your group.
+
+  %p
+    It's lonely out here. Do you want to
+    <a href="#" id="add-user-first">invite someone</a>?
 
 {{/if}}

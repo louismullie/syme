@@ -32,8 +32,17 @@
 }
 
 // Notice when no posts on feed
-.empty-group-notice {
+#empty-group-notice {
+  margin-top: 3em;
   text-align: center;
+
+  h4 {
+    font: 200 2em/1em $opensans;
+  }
+
+  p {
+    font: 200 1em/1em $opensans;
+  }
 }
 
 // Indicator for socket-added posts

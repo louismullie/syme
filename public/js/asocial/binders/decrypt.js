@@ -23,7 +23,7 @@ asocial.binders.add('global', { decrypt: function() {
         .prependTo( $this.closest('.collapsable').find('p:first-child') );
 
       // Collapse long text
-      asocial.helpers.collapseHTML(5, 'See more');
+      asocial.helpers.collapseHTML(5, 'Read more');
 
       // Parse oEmbed links. Use fill mode to strip links.
       $('.post-content').oembed();
