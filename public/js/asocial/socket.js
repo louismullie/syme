@@ -42,7 +42,8 @@ guard('socket', {
       template.insertAfter($('#newcontent'));
 
       // Decrypt post
-      template.find('.encrypted').trigger('decrypt');
+      template.find('.encrypted, .encrypted-image, .encrypted-audio, .encrypted-video')
+        .trigger('decrypt');
 
       // Synchronize avatars
       template.find('.slave-avatar').trigger('sync');
