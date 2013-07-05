@@ -129,6 +129,20 @@ guard('socket', {
         .find('#' + data.id)
         .replaceWith(html);
 
+    },
+    
+    group_avatar: function (data) {
+      
+      alert('Updated group avatar.');
+      console.log('Group avatar data', data);
+      
+    },
+    
+    user_avatar: function (data) {
+      
+      alert('Updated user avatar.');
+      console.log('User avatar data', data);
+      
     }
 
   },

@@ -104,7 +104,28 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
 
   id = params[:id]
   chunk = params[:chunk]
+  
+  upload = @group.uploads.find(id)
+  
+  if params[:last]
+    
+    logger.info "LAST"
 
+    type, membership_or_group = if upload.is_a?(GroupAvatar)
+      [:group_avatar, upload.group]
+    elsif upload.is_a?(UserAvatar)
+      [:user_avatar, upload.group.memberships
+        .find_by(user_id: upload.owner.id)]
+    end
+    
+    if type
+      MagicBus::Publisher.broadcast(
+        upload.group, :update, type,
+       AvatarGenerator.generate(membership_or_group, @user))
+    end
+  
+  end
+  
   data = params[:data][:tempfile].read
 
   dir = File.join('uploads', id)

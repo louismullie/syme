@@ -56,7 +56,7 @@ function Uploader(file, options) {
 
     var passes = [];
     var currentWorkers = activeWorkers;
-
+    
     for (pass = 0; pass < numPasses; pass += 1) {
 
        if (pass == numPasses - 1) {
@@ -88,7 +88,7 @@ function Uploader(file, options) {
        passes.push(chunks);
 
      }
-
+     
      _this.passes = passes;
 
      _this.firstPass();
@@ -169,7 +169,7 @@ function Uploader(file, options) {
       Crypto.encryptMessage(keylistId, key, function (encryptedMessage) {
         
         var fd = new FormData();
-
+        
         fd.append('type', _this.file.type);
         fd.append('size', _this.file.size);
         fd.append('filename', _this.file.name);
@@ -215,6 +215,7 @@ function Uploader(file, options) {
     var slice = this.passes[pass][worker];
 
     var start = slice[0]; var end = slice[1];
+    
     this.sendChunk(pass, worker, start, end);
 
   };
@@ -229,11 +230,12 @@ function Uploader(file, options) {
 
     var csrf = document.querySelector('meta[name="_csrf"]');
     var token = csrf ? csrf.content : '';
-
+    
     this.workerPool.queueJob({
       pass: pass, worker: worker,
       data: data, id: this.uploadId,
-      url: appendUrl, csrf: token
+      url: appendUrl, csrf: token,
+      chunks: _this.numChunks
     }, this);
 
     delete chunk;

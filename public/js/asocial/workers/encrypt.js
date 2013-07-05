@@ -13,7 +13,8 @@ self.onmessage = function(event) {
   var id = event.data['id'];
   var csrf = event.data['csrf'];
   var url = event.data['url'];
-  
+  var chunks = event.data['chunks'];
+
   var key = data.key;
   var chunk = data.chunk;
   
@@ -28,6 +29,9 @@ self.onmessage = function(event) {
 
     var fd = new FormData();
 
+    if (pass * 4 + worker + 1 == chunks)
+      fd.append('last', 'true');
+    
     fd.append("id", id);
     fd.append("chunk", pass * 4 + worker);
     fd.append("data", data);
