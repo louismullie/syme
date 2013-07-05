@@ -64,7 +64,7 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
   else
     
     upload = @group.attachments.create(selector)
-    @group.save!
+    upload.save!
     
     upload
     
