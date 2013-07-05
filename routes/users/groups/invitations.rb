@@ -243,6 +243,8 @@ get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
 
   distribute = group.invitations.map do |invitation|
     
+    next unless invitation.distribute
+    
     distribute = JSON.parse(Base64
       .strict_decode64(invitation.distribute))
     
