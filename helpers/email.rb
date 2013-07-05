@@ -15,7 +15,7 @@ def send_email_to(email, subject, body)
       :authentication => :plain,
       :domain         => "localhost.localdomain"
     }
-  }) unless settings.environment == :development
+  })
   
 end
 
@@ -24,27 +24,31 @@ def send_invite(email, token)
 
   subject = "Join #{@user.full_name} in a group on Syme"
   
+  invitee = User.where(email: email).first
+  
   # User does not yet have an account
-  message = if User.where(email: email).first.nil?
+  message = if invitee.nil?
     
-  "Hey,
+  "<p>Hello,</p>
 
-  #{@user.full_name} invited you to join his network.
-  Follow this link to register and accept his invitation: http://asocial.io
+  <p>#{@user.full_name} has invited you to join a group on Syme, the encrypted social network. All you need to do is sign up to accept the invitation and get started.</p>
 
-  Best,
-  Syme"
+  <p><a href='http://www.getsyme.com'>[Sign up]</a></p>
+
+  <p>Best,</p>
+  <p>Syme</p>
+  "
   
   # User already has an account
   else
     
-  "Hey,
+  "<p>Hey #{invitee.full_name},</p>
 
-  #{@user.full_name} invited you to join his network.
-  Follow this link to register and accept his invitation: http://asocial.io
-
-  Best,
-  Syme"
+  <p>#{@user.full_name} has just invited you to join a group on Syme, the encrypted social network. Log on to your Syme account to accept the invitation.</p>
+  
+  <p>Best,</p>
+  <p>Syme</p>
+  "
     
   end
 
@@ -57,17 +61,17 @@ def request_confirm(invite)
 
   invitee, inviter = invite.invitee, invite.inviter
 
-  subject = "Accept #{invitee.full_name} in #{invite.group.name}"
+  subject = "Grant #{invitee.full_name} access to #{invite.group.name} on Syme"
 
   message =
 
-"Hey #{inviter.full_name},
+  "<p>Hello #{inviter.full_name},</p>
 
-#{invitee.full_name} has joined your group on Syme.
-Login to your group at http://asocial.io to approve him.
+  <p>#{invitee.full_name} has accepted the invitation to your group on Syme.</p>
+  <p>You need to log on to your account to confirm and grant him or her access.</p>
 
-Best,
-Syme"
+  <p>Best,</p>
+  <p>Syme</p>"
 
   # inviter.email
   send_email_to(inviter.email, subject, message)
@@ -79,17 +83,17 @@ def notify_confirmed(invite)
 
   invitee, inviter = invite.invitee, invite.inviter
 
-  subject = "Your request to join #{invite.group.name} was approved"
+  subject = "You've been granted access to #{invite.group.name} on Syme"
 
   message =
 
-"Hey #{invitee.full_name},
+"<p>Hello #{invitee.full_name},</p>
 
-#{inviter.full_name} has approved your registration.
-Login to your group at http://asocial.io to start sharing.
+<p>#{inviter.full_name} has granted you access to #{invite.group.name} on Syme.</p>
+All you need to do is log on to your account to start sharing.</p>
 
-Best,
-Syme"
+<p>Best,</p>
+<p>Syme</p>"
 
   # invitee.email
   send_email_to(invitee.email, subject, message)

@@ -33,6 +33,8 @@ class Invitation
   field :distribute, type: String
   field :ack_distribute, type: Array, default: []
   
+  field :notified, type: Boolean
+  
   def inviter
     User.find(inviter_id)
   end
