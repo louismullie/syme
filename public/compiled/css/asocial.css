@@ -5490,7 +5490,7 @@ input[type="checkbox"]:checked + span:before {
     #responsive-modal .container .modal-title {
       padding: .5em 1em;
       font: 200 1.1em/1.5em OpenSans, Helvetica, Arial, Geneva, sans-serif;
-      background: #fcfcfc;
+      background: #f7f7f7;
       border-bottom: 1px solid #dddddd; }
       #responsive-modal .container .modal-title a[role="close-modal"] {
         float: right;
@@ -5508,7 +5508,7 @@ input[type="checkbox"]:checked + span:before {
       #responsive-modal .container .modal-content a.modal-button {
         display: block;
         margin-top: .8em;
-        background: #fcfcfc;
+        background: #f7f7f7;
         border: 1px solid #dddddd;
         text-align: center;
         color: #423e3e; }
@@ -5556,13 +5556,14 @@ input[type="checkbox"]:checked + span:before {
       border-bottom: 11px solid rgba(0, 0, 0, 0.2);
       border-left: 11px solid transparent;
       border-right: 11px solid transparent; }
-  .popover.right {
-    right: 100%;
-    margin-right: -100%; }
-    .popover.right > h3::before {
-      right: 10px; }
-    .popover.right > h3::after {
-      right: 11px; }
+  .popover.popover--right {
+    right: 0; }
+    .popover.popover--right > h3::before {
+      left: auto;
+      right: 9px; }
+    .popover.popover--right > h3::after {
+      left: auto;
+      right: 8px; }
 
 .ptn, .pvn, .pan {
   padding-top: 0; }
@@ -5934,7 +5935,7 @@ img.placeholder-avatar {
   right: 0;
   z-index: 3;
   padding: 0 30px;
-  background: #fcfcfc;
+  background: #f7f7f7;
   border-bottom: 1px solid #dddddd; }
   #navbar #stripe-bar {
     height: 8px;
@@ -6031,6 +6032,30 @@ img.placeholder-avatar {
                 text-align: left;
                 font-size: 0.8em;
                 color: #6f6b6c; }
+      #navbar ul li #navbar-collapsed h3 {
+        background: whitesmoke;
+        border-bottom: 1px solid #dddddd; }
+        #navbar ul li #navbar-collapsed h3::before {
+          border-bottom-color: whitesmoke; }
+      #navbar ul li #navbar-collapsed ul {
+        list-style-type: none;
+        margin: 0; }
+        #navbar ul li #navbar-collapsed ul li {
+          display: block;
+          height: auto;
+          margin-right: 0;
+          border-bottom: 1px solid #dddddd; }
+          #navbar ul li #navbar-collapsed ul li:last-child {
+            border-bottom: none; }
+          #navbar ul li #navbar-collapsed ul li a {
+            display: block;
+            padding: 0 1em;
+            color: #423e3e;
+            font: 200 1em/3.5em OpenSans, Helvetica, Arial, Geneva, sans-serif; }
+            #navbar ul li #navbar-collapsed ul li a:hover {
+              background: #f7f7f7; }
+            #navbar ul li #navbar-collapsed ul li a i {
+              margin-right: .5em; }
       #navbar ul li#navbar-breadcrumbs {
         padding-left: 1em;
         border-left: 1px solid #dddddd;
@@ -6128,7 +6153,7 @@ img.placeholder-avatar {
   #auth form {
     margin-top: 2em;
     padding: 1em;
-    background: #fcfcfc;
+    background: #f7f7f7;
     border: 1px solid #dddddd;
     border-radius: 3px;
     box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3); }
@@ -6195,7 +6220,7 @@ img.placeholder-avatar {
   text-align: center;
   -webkit-font-smoothing: antialiased;
   font-smoothing: antialiased;
-  background: rgba(252, 252, 252, 0.6);
+  background: rgba(247, 247, 247, 0.6);
   border-radius: 3px;
   -webkit-transition: background 0.2s;
   -moz-transition: background 0.2s;
@@ -6203,7 +6228,7 @@ img.placeholder-avatar {
   font-size: 2em;
   border: 2px solid #bdc3c7; }
   #groups .create-first-group form#create_first_group a[role="submit"]:hover {
-    background: rgba(252, 252, 252, 0.9); }
+    background: rgba(247, 247, 247, 0.9); }
     #groups .create-first-group form#create_first_group a[role="submit"]:hover span.default {
       margin-top: -70px; }
   #groups .create-first-group form#create_first_group a[role="submit"] span {
@@ -6339,7 +6364,8 @@ img.placeholder-avatar {
         margin: 0; }
       #groups ul li.group-card .group-card-content a.group-link {
         font: 200 1.6em/1.4em OpenSans, Helvetica, Arial, Geneva, sans-serif;
-        color: #423e3e; }
+        color: #423e3e;
+        word-break: break-word; }
       #groups ul li.group-card .group-card-content .group-updated-at {
         font-size: .9em; }
 

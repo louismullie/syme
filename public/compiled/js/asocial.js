@@ -19480,7 +19480,11 @@ Handlebars.templates['navbar.hbs'] = Handlebars.template(function (Handlebars,de
   foundHelper = helpers.current_user_id;
   if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
   else { stack1 = depth0.current_user_id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1) + "'>\n                <i class='icon-cog'></i>\n              </a>\n            </li>\n            <li>\n              <a class='btn hint--bottom' data-hint='Log out' hbs='' href='logout' id='logout'>\n                <i class='icon-signout'></i>\n              </a>\n            </li>\n          </div>\n          <div class='show-for-small'>\n            <li id='side-pane'>\n              <a class='btn' hbs='' href='#'>\n                <i class='icon-reorder'></i>\n              </a>\n            </li>\n          </div>\n        </div>\n      </ul>\n    </div>\n  </div>\n</div>\n";
+  buffer += escapeExpression(stack1) + "'>\n                <i class='icon-cog'></i>\n              </a>\n            </li>\n            <li>\n              <a class='btn hint--bottom' data-hint='Log out' hbs='' href='logout' id='logout'>\n                <i class='icon-signout'></i>\n              </a>\n            </li>\n          </div>\n          <div class='show-for-small'>\n            <li id='side-pane'>\n              <a class='btn' data-popover='navbar-collapsed' href='#'>\n                <i class='icon-reorder'></i>\n              </a>\n              <div class='popover popover--right' id='navbar-collapsed'>\n                <h3>Menu</h3>\n                <div id='navbar-collapsed-content'>\n                  <ul>\n                    <li>\n                      <a hbs='' href='users/";
+  foundHelper = helpers.current_user_id;
+  if (foundHelper) { stack1 = foundHelper.call(depth0, {hash:{}}); }
+  else { stack1 = depth0.current_user_id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1) + "'>\n                        <i class='icon-cog'></i>\n                        Settings\n                      </a>\n                    </li>\n                    <li>\n                      <a hbs='' href='logout' id='logout'>\n                        <i class='icon-signout'></i>\n                        Sign out\n                      </a>\n                    </li>\n                  </ul>\n                </div>\n              </div>\n            </li>\n          </div>\n        </div>\n      </ul>\n    </div>\n  </div>\n</div>\n";
   return buffer;});
 Handlebars.registerPartial('navbar.hbs', Handlebars.templates['navbar.hbs']);
 
@@ -23415,17 +23419,24 @@ asocial.binders.add('global', { main: function(){
 
     // Toggle it
     if ( container.is(':visible') ) {
+
       // Reset possible hidden tooltips
       $(this).removeClass('hint--hidden');
 
       // Hide popover
       container.hide();
+
     } else {
+
       // Hide possible tooltips
       $(this).addClass('hint--hidden');
 
+      // Hide possible popovers
+      $('.popover').hide();
+
       // Show popover
       container.fadeIn(100);
+
     }
 
   });

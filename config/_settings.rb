@@ -21,7 +21,7 @@ set :sprockets, (Sprockets::Environment.new(root) { |env| env.logger = Logger.ne
 settings.sprockets.append_path 'public/js'
 settings.sprockets.append_path 'public/css'
 
-set :assets_prefix, 'compiled'
+set :assets_prefix, 'assets'
 set :assets_path, File.join(root, 'public', assets_prefix)
 
 set :protection,

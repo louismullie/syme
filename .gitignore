@@ -6,3 +6,6 @@
 *.pid
 
 *.hbs.js
+
+public/assets
+.extension
