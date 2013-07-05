@@ -36,13 +36,6 @@ asocial.binders.add('groups', { main: function() {
     }
   });
 
-  // Group creation panel toggling
-  $("li.group-create a.group-card-title").on({
-    click: function(e){
-      $(this).parent().toggleClass('opened');
-    }
-  });
-
   $('#create_group input[name="name"], #create_first_group input[name="name"]').keyup(function(){
     $(this).parent().find('a.btn')[
       $(this).val().length > 0 ? 'removeClass' : 'addClass'
