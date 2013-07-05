@@ -19,6 +19,11 @@ form#feed-form {
 
     border-radius: 50%;
 
+    &[data-placeholder="true"] span {
+      opacity: 1 !important;
+      background: rgba(black, 0.2) !important;
+    }
+
     &:hover span, &.active span {
       opacity: 1;
       background: rgba(black, 0.2);

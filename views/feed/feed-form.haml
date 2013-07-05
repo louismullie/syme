@@ -1,10 +1,14 @@
 %form#feed-form{ method: 'post' }
-  %a#feed-form-avatar
+
+  {{#with user}}
+  %a#feed-form-avatar{ :'data-placeholder' => '{{avatar.placeholder}}' }
+
     %span
       %i.icon-picture
       %i.icon-spinner.icon-spin
 
-    {{#with user}} {{> feed-avatar.hbs}} {{/with}}
+    {{> feed-avatar.hbs}}
+  {{/with}}
 
   %input#upload_avatar.hidden{ type: 'file', name: 'account-picture' }
 

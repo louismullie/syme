@@ -146,12 +146,13 @@ h1.enormous {
   text-shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 0 30px rgba(0, 0, 0, .075);
 }
 
-// Placeholder for loading images
+// Placeholder for loading images (some of them are deprecated)
 img.encrypted-image,
 img.encrypted-background-image,
 img.slave-avatar,
 img.user-avatar,
-img.placeholder-avatar {
+img.placeholder-avatar
+img.placeholder {
   @include inclined-stripes(transparent, 25px, rgba(0, 0, 0, .2));
 }
 

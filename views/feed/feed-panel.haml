@@ -4,7 +4,7 @@
   // Hidden file upload
   %input#group-photo-file.hidden{ type: 'file', name: 'avatar' }
 
-  %a#group-photo-edit{ href: '#', :'data-placeholder' => '{{placeholder}}', :'data-group-id' => '{{current_group_id}}' }
+  %a#group-photo-edit{ href: '#', :'data-group-id' => '{{current_group_id}}' }
     %span.cover
       %span
         %i.icon-picture
@@ -13,7 +13,7 @@
 
     {{#if placeholder}}
 
-    %img{ src: '/img/groupavatar.jpg' }
+    %img.encrypted-image{ src: '/img/groupavatar.jpg' }
 
     {{else}}
 

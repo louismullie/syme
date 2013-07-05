@@ -131,6 +131,9 @@ asocial.binders.add('feed', { form: function(){
         .data('active', false)
         // Remove spinner
         .removeClass('active');
+
+      // Remove potential placeholder
+      $('#feed-form-avatar').removeAttr('data-placeholder');
     };
 
     // Thumbnail and upload avatar
