@@ -22,6 +22,7 @@ class Group
   field :screen_name, type: String
   
   field :ack_create, type: Boolean
+  field :state, type: Integer, default: 0
   
   field :palette, type: Array, default: []
 
