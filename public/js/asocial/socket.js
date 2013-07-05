@@ -130,19 +130,31 @@ guard('socket', {
         .replaceWith(html);
 
     },
-    
+
     group_avatar: function (data) {
-      
-      alert('Updated group avatar.');
-      console.log('Group avatar data', data);
-      
+
+      // Change photo
+      $('#group-photo-edit[data-group-id="' +  + '"] img')
+        .attr('data-attachment-id', data.id)
+        .attr('data-attachment-keys', data.keys)
+        .trigger('decrypt');
+
     },
-    
+
     user_avatar: function (data) {
-      
-      alert('Updated user avatar.');
-      console.log('User avatar data', data);
-      
+
+      console.log(data);
+
+      // Change master
+      $('.user-avatar[data-user-id="' + data.owner_id + '"]')
+        .attr('data-avatar-id', data.id)
+        .attr('data-keys', data.keys)
+        .trigger('decrypt');
+
+      // Sync slaves
+      $('.slave-avatar[data-user-id="' + data.owner_id + '"]')
+        .trigger('sync');
+
     }
 
   },

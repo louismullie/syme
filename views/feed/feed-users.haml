@@ -42,10 +42,9 @@
 
       // userlist-avatar should disappear in favor of user-avatar
       %img.user-avatar.userlist-avatar{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
-                                        'data-user-id' => '{{id}}',
+                                        'data-user-id'   => '{{id}}',
                                         'data-avatar-id' => '{{avatar.id}}',
-                                        'data-size' => '{{avatar.size}}',
-                                        'data-keys' => '{{avatar.keys}}' }
+                                        'data-keys'      => '{{avatar.keys}}' }
 
       %span{ title: '{{full_name}}' }
         {{full_name}}

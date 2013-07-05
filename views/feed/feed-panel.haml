@@ -4,7 +4,7 @@
   // Hidden file upload
   %input#group-photo-file.hidden{ type: 'file', name: 'avatar' }
 
-  %a#group-photo-edit{ href: '#', :'data-placeholder' => '{{placeholder}}' }
+  %a#group-photo-edit{ href: '#', :'data-placeholder' => '{{placeholder}}', :'data-group-id' => '{{current_group_id}}' }
     %span.cover
       %span
         %i.icon-picture
@@ -18,10 +18,9 @@
     {{else}}
 
     %img.encrypted-image{ src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
-                          'data-attachment-id' => '{{id}}',
-                          'data-attachment-keys' => '{{keys}}',
-                          'data-attachment-type' => 'image',
-                          'data-attachment-group' => '{{group_name}}' }
+                          'data-attachment-id'    => '{{id}}',
+                          'data-attachment-keys'  => '{{keys}}',
+                          'data-attachment-type'  => 'image' }
     {{/if}}
 
   {{/with}}
