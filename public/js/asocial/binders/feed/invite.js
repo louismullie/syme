@@ -47,7 +47,7 @@ asocial.binders.add('feed', { invite: function() {
   });
 
   // Add new user
-  $('#main').on('click', 'a#add-user', function(){
+  $('#main').on('click', 'a#add-user, a#add-user-first', function(){
 
     var content = asocial.helpers.render('feed-modals-invite');
 
