@@ -20,18 +20,33 @@ def send_email_to(email, subject, body)
 end
 
 def send_invite(email, token)
+  
 
-  subject = "Join #{@user.full_name} on Syme"
+  subject = "Join #{@user.full_name} in a group on Syme"
+  
+  # User does not yet have an account
+  message = if User.where(email: email).first.nil?
+    
+  "Hey,
 
-  message =
+  #{@user.full_name} invited you to join his network.
+  Follow this link to register and accept his invitation: http://asocial.io
 
-"Hey,
+  Best,
+  Syme"
+  
+  # User already has an account
+  else
+    
+  "Hey,
 
-#{@user.full_name} invited you to join his network.
-Follow this link to register and accept his invitation: http://asocial.io
+  #{@user.full_name} invited you to join his network.
+  Follow this link to register and accept his invitation: http://asocial.io
 
-Best,
-Syme"
+  Best,
+  Syme"
+    
+  end
 
   # email
   send_email_to(email, subject, message)
