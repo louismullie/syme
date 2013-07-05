@@ -23,7 +23,7 @@ guard('socket', {
     post: function(post){
 
       // Remove empty group notice if there is one
-      $('.empty-group-notice').remove();
+      $('#empty-group-notice').remove();
 
       // Render post with the data
       var template = $(asocial.helpers.render('feed-post', post.view));
