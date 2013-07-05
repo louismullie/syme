@@ -58,7 +58,7 @@ post '/invitations', auth: [] do
   @group = @user.groups.find(invitation.group_id)
 
   return { status: 'own_email' }.to_json if
-    params['email'] == @user.email
+    invitation.email == @user.email
 
   token = SecureRandom.uuid
 
