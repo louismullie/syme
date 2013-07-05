@@ -6,12 +6,25 @@ guard('uploader', {
     success = success || function () {};
 
     var group = CurrentSession.getGroupId();
+    
+    if (file.size / 1024 > 1024) {
+      
+      asocial.helpers.showAlert(
+        'You can only upload files of up to 1 Mb for now.');
+      
+      return false;
+      
+    } else {
 
-    uploader = new Uploader(file, {
-      data: data, baseUrl: SERVER_URL + '/' + group + '/file/'
-    });
+      uploader = new Uploader(file, {
+        data: data, baseUrl: SERVER_URL + '/' + group + '/file/'
+      });
 
-    uploader.start(progress, success);
+      uploader.start(progress, success);
+      
+      return true;
+      
+    }
 
   },
 
@@ -135,15 +148,43 @@ guard('uploader', {
   },
 
   selectFile: function (file, type) {
-
+    
     // What to do otherwise?
     if (!(file instanceof File)) {
       file = $('#upload_file')[0].files[0];
     }
 
+    var started;
+    
+    // Upload file
+    if (asocial.uploader.hasImageMime(file)) {
+      started = asocial.uploader.uploadImage(file, progress, success);
+    } else {
+      started = asocial.uploader.uploadFile(file, progress, success);
+    }
+
+    if (!started) return;
+    
     // Get elements
     var container = $('#upload-box'),
         box       = container.find('.upload-row');
+
+    // Progress function
+    var progress = function(number) {
+      box.css('background-size', number + '%');
+    };
+
+    // Success function
+    var success = function(upload_id){
+      // Change box style
+      box.addClass('done');
+
+      // Set upload id
+      $('#upload_id').val(upload_id);
+
+      // Remove active state from container
+      container.removeClass('active');
+    };
 
     // Show upload box and mark it as active
     container.show().addClass('active');
@@ -174,32 +215,8 @@ guard('uploader', {
       $('ul#attachments').show();
     });
 
-    // Progress function
-    var progress = function(number) {
-      box.css('background-size', number + '%');
-    };
-
-    // Success function
-    var success = function(upload_id){
-      // Change box style
-      box.addClass('done');
-
-      // Set upload id
-      $('#upload_id').val(upload_id);
-
-      // Remove active state from container
-      container.removeClass('active');
-    };
-
     // Hide attachments
     $('ul#attachments').hide();
-
-    // Upload file
-    if (asocial.uploader.hasImageMime(file)) {
-      asocial.uploader.uploadImage(file, progress, success);
-    } else {
-      asocial.uploader.uploadFile(file, progress, success);
-    }
 
   },
 
