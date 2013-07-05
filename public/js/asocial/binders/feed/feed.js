@@ -102,16 +102,8 @@ asocial.binders.add('feed', { feed: function(){
             $('#load-more').show();
           }
 
-          $('#spinner').show();
-
           // Decrypt new content
-          $('.encrypted, .encrypted-image, .encrypted-audio, .encrypted-video').batchDecrypt(function(){
-            $('.post').removeClass('hidden');
-            $('#spinner').hide();
-          });
-
-          // Sync avatars
-          $('.slave-avatar').trigger('sync');
+          asocial.crypto.decryptAll();
 
           // Textarea autosizing
           $('textarea.autogrow').autogrow().removeClass('autogrow');

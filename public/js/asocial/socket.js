@@ -41,12 +41,8 @@ guard('socket', {
       // Append hidden new post
       template.insertAfter($('#newcontent'));
 
-      // Decrypt post
-      template.find('.encrypted, .encrypted-image, .encrypted-audio, .encrypted-video')
-        .trigger('decrypt');
-
-      // Synchronize avatars
-      template.find('.slave-avatar').trigger('sync');
+      // Decrypt
+      asocial.crypto.decryptAll();
 
       // Autogrow comment textarea
       $('textarea.autogrow').autogrow().removeClass('autogrow')
@@ -80,11 +76,8 @@ guard('socket', {
       // Append new comment
       container.append(asocial.helpers.render('feed-comment', data.view));
 
-      // Decrypt comment
-      container.find('.encrypted').trigger('decrypt');
-
-      // Synchronize avatars
-      container.find('.slave-avatar').trigger('sync');
+      // Decrypt
+      asocial.crypto.decryptAll();
 
       // Reset comment count counter
       post.find('[partial="feed-comment-count"]')

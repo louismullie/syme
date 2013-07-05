@@ -1,5 +1,46 @@
 guard('crypto', {
 
+  decryptAll: function(callback){
+
+    var callback = callback || function(){};
+
+    // Show spinner
+    $('#spinner').show();
+
+    // Initial decryption
+    $([
+
+      // Feed elements
+      '.encrypted',
+      '.encrypted-image',
+      '.encrypted-audio',
+      '.encrypted-video',
+
+      // User avatars
+      '.user-avatar'
+
+    ].join(',')).batchDecrypt(function(elapsedTime){
+
+      // Sync slave avatars
+      $('.slave-avatar').trigger('sync');
+
+      // Remove hidden class on posts
+      $('.post').removeClass('hidden');
+
+      // Hide spinner
+      $('#spinner').hide();
+
+      console.log(
+        'Done decrypting collection of ' + this.length +
+        ' items in ' + elapsedTime/1000 + 's'
+      );
+
+      callback.call(this);
+
+    });
+
+  },
+
   getFile: function (id, keys, callback, group) {
 
     var display = function(id, blob, save) {
