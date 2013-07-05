@@ -108,20 +108,19 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
   upload = @group.uploads.find(id)
   
   if params[:last]
-    
-    logger.info "LAST"
 
-    type, membership_or_group = if upload.is_a?(GroupAvatar)
-      [:group_avatar, upload.group]
+    if upload.is_a?(GroupAvatar)
+
+     MagicBus::Publisher.broadcast(
+        upload.group, :update, :group_avatar,
+       AvatarGenerator.generate(upload.group, @user))
+       
     elsif upload.is_a?(UserAvatar)
-      [:user_avatar, upload.group.memberships
-        .find_by(user_id: upload.owner.id)]
-    end
-    
-    if type
+      
       MagicBus::Publisher.broadcast(
-        upload.group, :update, type,
-       AvatarGenerator.generate(membership_or_group, @user))
+         upload.group, :update, :user_avatar,
+        AvatarGenerator.generate(upload, @user, true))
+
     end
   
   end
