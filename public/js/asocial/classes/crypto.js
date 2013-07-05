@@ -18,9 +18,6 @@ Crypto = function (workerUrl) {
   this.onLockRelease = [];
 
   this.executeJobWithLock = function (job, successCb) {
-
-    //alert('Executing job with lock' + JSON.stringify(job));
-
     var successCb = successCb || function () {};
     this.executeJob(true, job, successCb);
 
@@ -28,9 +25,7 @@ Crypto = function (workerUrl) {
 
   this.executeJobWithoutLock = function (job, successCb) {
 
-    //alert('Executing job without lock ' + JSON.stringify(job));
     var successCb = successCb || function () {};
-
     this.executeJob(false, job, successCb);
 
   };
@@ -270,8 +265,6 @@ Crypto = function (workerUrl) {
   this.initializeKeyfile = function (userId, password, encKeyfile, encryptedKeyfileCb) {
 
     var _this = this;
-
-    //alert('Initializing key file');
 
     Crypto.workerPool.broadcastJob({
 

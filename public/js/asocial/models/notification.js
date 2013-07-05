@@ -100,13 +100,12 @@ Notifications = (function(){
       comment_id: data.comment_id
 
     });
-
-    var resource = resource == "group"
+    
+    var resource = type.resource == "group"
       ? '<a href="' + link + '" hbs>' + data.group + '</a>'
       : '<a href="' + link + '" hbs>' + [type.resource] + '</a>';
-
+    
     var html = sprintf(type.message, {
-
       actors: '<b>' + data.actors + '</b>',
       resource: resource,
       group_name: '<b>' + data.group + '</b>'

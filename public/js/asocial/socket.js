@@ -133,8 +133,6 @@ guard('socket', {
 
     group_avatar: function (data) {
 
-      console.log('NEW GROUP AVATAR', data);
-
       // Change photo
       $('#group-photo-edit[data-group-id="' + data.group_id + '"] img')
         .attr('data-attachment-id', data.id)
