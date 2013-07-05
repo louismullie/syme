@@ -101,28 +101,40 @@ asocial.binders.add('groups', { main: function() {
     e.preventDefault();
 
     var groupId = $(this).data('group-id'),
-        message = 'Are you sure? Type "yes" to confirm.';
+        message = 'Are you sure you want to delete this group ' +
+                  'and all of its content? This cannot be undone.';
+    
+    asocial.helpers.showConfirm(message, {
+      
+      submit: 'Yes',
+      cancel: 'No',
+      
+      onsubmit: function(){
+        
+        $.ajax(SERVER_URL + '/groups/' + groupId,
+        
+          { type: 'DELETE',
 
-    if (prompt(message) == 'yes') {
+          success: function (resp) {
 
-      $.ajax(SERVER_URL + '/groups/' + groupId, {
-        type: 'DELETE',
+            CurrentSession.groups.splice(CurrentSession.groups.indexOf(groupId), 1);
+            
+            var user = CurrentSession.getUser();
+            user.deleteKeylist(groupId, Router.reload);
 
-        success: function (resp) {
+          },
 
-          var user = CurrentSession.getUser();
-
-          user.deleteKeylist(groupId, Router.reload);
-
-        },
-
-        error: function (resp) {
-          asocial.helpers.showAlert('Could not delete group', {
-            onhide: location.reload
-          });
-        }
-      });
-    }
+          error: function (resp) {
+            asocial.helpers.showAlert('Could not delete group', {
+              onhide: location.reload
+            });
+          }
+          
+        });
+        
+      }
+    });
+    
 
   });
 
