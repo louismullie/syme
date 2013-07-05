@@ -1,16 +1,15 @@
 .modal-title
-  Invite a user
+  Invite people
 
   %a.hint--left{ href: '#', role: 'close-modal', :'data-hint' => 'Close' }
     %i.icon-remove-sign
 
 .modal-content
   %p.header
-    Enter the email addresses of the people you want to invite below,
-    one per line.
+    Enter the email address of the person you want to invite below.
 
   %p.explanation
-    Your invitees will send you a token to confirm their invite.
+    Invite more than one person by entering one email per line.
 
   %form{ action: 'post' }
     %textarea.autogrow{ name: 'emails', placeholder: "email@example.com" }
