@@ -31,13 +31,10 @@ asocial.binders.add('global', { decrypt: function() {
       // Timeago
       $('time.timeago').timeago();
 
-      // Show post if post was hidden (not sure about that methodology)
-      post.removeClass('hidden');
-
       done();
 
     };
-    
+
     if (JSON.parse($.base64.decode(text)).keys[CurrentSession.getUserId()] == undefined)
       console.log($.base64.decode(text));
 

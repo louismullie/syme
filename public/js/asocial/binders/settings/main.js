@@ -1,5 +1,8 @@
 asocial.binders.add('settings', { main: function(){
 
+  // Hide spinner
+  $('#spinner').hide();
+
   // Breadcrumbs
   asocial.helpers.navbarBreadcrumbs({
     brand_only: true,

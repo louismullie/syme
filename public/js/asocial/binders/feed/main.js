@@ -1,20 +1,36 @@
 asocial.binders.add('feed', { main: function(){
 
-  // Breadcrumbs
-  asocial.helpers.navbarBreadcrumbs({
-    brand_only: false,
+  // Will be run once all original content is decrypted
+  var batchDecryptCb = function(elapsedTime) {
 
-    elements: [
-      { title: 'Groups',
-        href: 'users/' + CurrentSession.getUserId() + '/groups' },
+    console.log(
+      'Done decrypting collection of ' + this.length +
+      ' items in ' + elapsedTime/1000 + 's'
+    );
 
-      { title: $('#feed').data('group-name'),
-        href: Backbone.history.fragment }
-    ]
-  });
+    // Show decrypted posts
+    $('.post').removeClass('hidden');
+
+    // Hide spinner
+    $('#spinner').hide();
+
+    // Breadcrumbs
+    asocial.helpers.navbarBreadcrumbs({
+      brand_only: false,
+
+      elements: [
+        { title: 'Groups',
+          href: 'users/' + CurrentSession.getUserId() + '/groups' },
+
+        { title: $('#feed').data('group-name'),
+          href: Backbone.history.fragment }
+      ]
+    });
+
+  };
 
   // Initial decryption
-  var selectors = $([
+  $([
 
     // Feed elements
     '.encrypted',
@@ -25,13 +41,6 @@ asocial.binders.add('feed', { main: function(){
     // User avatars
     '.user-avatar'
 
-  ].join(','));
-
-  selectors.batchDecrypt(function(elapsedTime){
-
-    //alert('Done decrypting collection of ' + this.length +
-    //      ' items in ' + elapsedTime/1000 + 's');
-
-  });
+  ].join(',')).batchDecrypt(batchDecryptCb);
 
 } }); // asocial.binders.add();

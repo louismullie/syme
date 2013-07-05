@@ -178,19 +178,19 @@ Router = Backbone.Router.extend({
     var _this = this;
 
     this.authenticate(function(){
-      
+
       var user = CurrentSession.getUser();
-      
+
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
       if(!groupId) {
-        
+
         user.getAllGroupUpdates(groupId, function () {
           Router.renderDynamicTemplate(template, specific_binders);
         });
-        
+
       } else {
-        
+
         CurrentSession.setGroupId(groupId);
 
         user.getGroupUpdates(groupId, function () {
@@ -229,9 +229,6 @@ Router = Backbone.Router.extend({
       // Binders
       asocial.binders.bind(template, true, specific_binders);
 
-      // Hide spinner
-      $('#spinner').hide();
-
     }).fail(function(jqXHR){
       if(jqXHR.status == 401) {
         // User has been logged off.
@@ -249,7 +246,7 @@ Router = Backbone.Router.extend({
 
     // Fetch notifications.
     Notifications.start();
-    
+
     // Initialize socket.
     asocial.socket.listen();
   },
