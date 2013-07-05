@@ -100,21 +100,34 @@ end
 
 post '/:group_id/file/upload/append', auth: [] do |group_id|
 
-  @group = @user.groups.find(group_id)
+  group = @user.groups.find(group_id)
 
   id = params[:id]
   chunk = params[:chunk]
   
-  upload = @group.uploads.find(id)
+  upload = group.uploads.find(id)
   
   if params[:last]
 
     if upload.is_a?(GroupAvatar)
 
+       group.users.each do |user|
+
+         next if user.id.to_s == @user.id.to_s
+
+         user.notify({
+           action: :group_picture_update,
+           create: {
+             actor_ids: [@user.id.to_s]
+           }
+         }, group)
+
+      end
+      
      MagicBus::Publisher.broadcast(
         upload.group, :update, :group_avatar,
        AvatarGenerator.generate(upload.group, @user))
-       
+    
     elsif upload.is_a?(UserAvatar)
       
       MagicBus::Publisher.broadcast(

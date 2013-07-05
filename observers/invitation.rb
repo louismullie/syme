@@ -35,7 +35,7 @@ class InvitationObserver < Mongoid::Observer
         }
       }, group)
     
-    elsif invite.state == 3
+    elsif invite.state == 3 && !invite.notified
 
       group.users.each do |user|
         
@@ -60,6 +60,9 @@ class InvitationObserver < Mongoid::Observer
       MagicBus::Publisher.broadcast(
         group, :invitation, :distribute,
       { group_id: invite.group.id})
+      
+      invite.notified = true
+      invite.save!
 
     end
 
