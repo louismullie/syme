@@ -16,12 +16,12 @@
   .group-card-content
     %p
       {{#compare state 1}}
-      <b>{{inviter_name}}</b> has invited you to join the group <b>{{group_name}}</b>.
+      <b>{{inviter_name}}</b> has invited you to join <b>{{group_name}}</b>.
       {{/compare}}
 
       {{#compare state 2}}
-      You are awaiting <b>{{inviter_name}}</b>'s confirmation to the group <b>{{group_name}}</b>.
-      We'll notify you when you can join it.
+      <b>{{inviter_name}}</b> needs to confirm before you can join
+      <b>{{group_name}}</b>. As soon as that's done, you're in.
       {{/compare}}
 
 {{/each}}
