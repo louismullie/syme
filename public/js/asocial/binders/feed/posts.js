@@ -1,8 +1,5 @@
 asocial.binders.add('feed', { posts: function(){
 
-  // Initial textarea autosizing
-  $('textarea.autogrow').autogrow().removeClass('autogrow');
-
   // Delete post/comment toggling
   $('#main').on({
     mouseenter: function(){
@@ -57,7 +54,7 @@ asocial.binders.add('feed', { posts: function(){
     var id       = link.data('attachment-id');
     var filename = link.data('attachment-filename');
     var keys      = link.data('attachment-keys');
-    
+
     asocial.crypto.getFile(id, keys, function (url) {
 
       link.attr('href', url)

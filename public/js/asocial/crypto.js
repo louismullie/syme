@@ -27,6 +27,9 @@ guard('crypto', {
       // Remove hidden class on posts
       $('.post').removeClass('hidden');
 
+      // Textarea autosizing
+      $('textarea.autogrow').autogrow();
+
       // Hide spinner
       $('#spinner').hide();
 

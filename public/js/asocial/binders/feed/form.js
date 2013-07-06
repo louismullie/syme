@@ -1,5 +1,8 @@
 asocial.binders.add('feed', { form: function(){
 
+  // Form feed textarea autosizing
+  $('#feed-form textarea').autogrow();
+
   /* AJAX for feed form */
   $('#main').on('submit', '#feed-form', function(e){
 

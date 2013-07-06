@@ -234,12 +234,10 @@ form#feed-form {
       line-height: 2em;
 
       &.title {
-        font-weight: 600;
+        font-weight: normal;
         color: $darkgray;
 
-        @media only screen and (max-width:"#{$small-screen}") {
-          display: none;
-        }
+        @media #{$breakpointSmall} { display: none; }
       }
 
       a {
