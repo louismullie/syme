@@ -22,11 +22,14 @@ asocial.binders.add('login', { main: function(){
         remember = $this.find('input[name="remember_me"]').prop("checked");
 
       // Login
-      asocial.auth.login(email, password, remember, function(data) {
+      asocial.auth.login(email, password, remember, function(passwordKey) {
 
-        CurrentSession = new Session(null, function () {
-          Router.navigate('/users/' + CurrentSession.getUserId() +
-          '/groups', { trigger: true, replace: true });
+        CurrentSession = new Session();
+        
+        CurrentSession.initializeWithPassword(
+          password, remember, function () {
+            Router.navigate('/users/' + CurrentSession.getUserId() +
+            '/groups', { trigger: true, replace: true });
         });
 
       }, function(reason) {

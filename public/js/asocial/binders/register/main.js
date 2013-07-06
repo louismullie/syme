@@ -137,14 +137,13 @@ asocial.binders.add('register', { main: function(){
 
             user.createKeyfile(password, function () {
 
-              asocial.auth.login(email, password, remember, function() {
-
-                console.log(8);
-
-                CurrentSession = new Session(model, function () {
-
-                  Router.navigate('', { trigger: true, replace: true });
-
+              asocial.auth.login(email, password, remember, function(passwordKey) {
+                
+                CurrentSession = new Session();
+                
+                CurrentSession.initializeWithModelAndPassword(
+                  user, password, remember, function () {
+                    Router.navigate('', { trigger: true, replace: true });
                 });
 
 

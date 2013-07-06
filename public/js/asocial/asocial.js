@@ -31,7 +31,9 @@ $(function(){
   // Initialize router
   Router = new Router;
 
-  CurrentSession = new Session(null, function () {
+  CurrentSession = new Session();
+  
+  CurrentSession.initialize(function () {
 
     Backbone.history.start({ pushState: true });
 

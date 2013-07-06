@@ -311,7 +311,7 @@ var User = Backbone.RelationalModel.extend({
     
     $.ajax(SERVER_URL + '/users/' + this.get('_id'), { type: 'GET',
       success: function (user) {
-        asocial.auth.getPasswordLocal(function (p) {
+        CurrentSession.retrievePassword(function (p) {
           Crypto.initializeKeyfile(
             user._id, p,
             user.keyfile,

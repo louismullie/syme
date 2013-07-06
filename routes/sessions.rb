@@ -5,7 +5,7 @@ get '/state/session', auth: [] do
   error 403, 'unauthorized' unless @user
   
   { user_id: @user.id.to_s,
-    password_key: @user.session_id,
+    password_key: session[:password_key],
     csrf: csrf_token,
     groups: @user.groups.map(&:id).map(&:to_s)
   }.to_json
@@ -90,18 +90,18 @@ post '/login/2' do
     
     session.clear
     session[:user_id] = user.id
-
-    data = {
+    
+    session[:password_key] = SecureRandom.uuid
+    
+    track user, 'User completed login'
+    
+    {
       status: 'ok',
       user_id: user.id,
       h_amk: h_amk,
       csrf: csrf_token
-    }
-
-    track user, 'User completed login'
+    }.to_json
     
-    data.to_json
-
   else
     
     { status: 'error', reason: 'credentials' }.to_json

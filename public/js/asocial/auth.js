@@ -6,7 +6,8 @@ guard('auth', {
 
     var a = srp.srpRandom();
     var A = srp.calculateA(a);
-
+    var _this = this;
+    
     var params = $.param({ email: email, A: A.toString(16) });
 
     $.post(SERVER_URL + '/login/1', params, function (data) {
@@ -22,52 +23,28 @@ guard('auth', {
         var params = $.param({ M: M.toString(16) });
 
         $('meta[name="_csrf"]').attr('content', data.csrf);
-
+        
         $.post(SERVER_URL + '/login/2', params, function (data) {
 
           if (data.status == 'ok') {
 
             $('meta[name="_csrf"]').attr('content', data.csrf);
-
+            
             success();
 
           } else if (data.status == 'error') {
 
             console.log('State ERROR', data);
-            fail(data.reason);
+            window.location = '/';
+            //fail(data.reason);
 
           } else {
 
-            fail('server');
+            //fail('server');
 
           }
 
         });
-
-        var storage = remember ? localStorage: sessionStorage;
-
-        sessionStorage.clear(); localStorage.clear();
-
-        storage.email = email;
-        var password_key = data.B.toString();
-
-        CurrentSession.setPasswordKey(password_key);
-
-        storage.password =
-        sjcl.encrypt(password_key, password);
-
-        window.password =
-        sjcl.encrypt(password_key, password);
-
-        if (asocial.compat.inChromeExtension()) {
-
-          chrome.storage.local.set({
-            'password':  sjcl.encrypt(password_key, password)
-          }, function () {
-            console.log('Stored pass');
-          });
-
-        }
 
       } else if (data.status == 'error') {
 
@@ -110,52 +87,6 @@ guard('auth', {
         window.location = '/';
       }
     });
-
-  },
-
-  passwordStoredIn: function (storage) {
-    return typeof(storage.password) != 'undefined';
-  },
-
-  getPasswordLocal: function (callback) {
-
-    //try {
-
-      var encryptedPassword;
-
-      if (this.passwordStoredIn(window)) {
-        encryptedPassword = window.password;
-      } else if (this.passwordStoredIn(localStorage)) {
-        encryptedPassword = localStorage.password;
-      } else if (this.passwordStoredIn(sessionStorage)) {
-        encryptedPassword = sessionStorage.password;
-      }
-
-      var passwordKey = CurrentSession.getPasswordKey();
-
-      if (!encryptedPassword) {
-        if (asocial.compat.inChromeExtension()) {
-
-          chrome.storage.local.get('password', function (obj) {
-            if (obj.password) {
-              var password = sjcl.decrypt(passwordKey, obj.password);
-              callback(password);
-            } else {
-              callback(false);
-            }
-          });
-
-        } else {
-          callback(false);
-        }
-      } else {
-        var password = sjcl.decrypt(passwordKey, encryptedPassword);
-        callback(password);
-      }
-
-    //} catch (e) {
-    //  asocial.auth.disconnect();
-    //}
 
   }
 
