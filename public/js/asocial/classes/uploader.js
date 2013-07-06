@@ -15,7 +15,7 @@ function Uploader(file, options) {
   this.options.workerPath = options.workerPath || 'js/asocial/workers/';
   this.options.numWorkers = options.numWorkers || 4;
   this.options.chunkSize  = options.chunkSize  ||
-                            0.8 * 1024 * 1024;
+                            1 * 1024 * 1024;
 
   this.reader = new FileReader();
   this.workers = [];
