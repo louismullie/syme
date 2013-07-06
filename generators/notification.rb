@@ -5,7 +5,7 @@ class NotificationGenerator
     # Mustn't access through group since user
     # may not be added to the group currently.
     actors = notification.actor_ids.select do |id|
-      !User.where(id).first.nil?
+      !User.where(id: id).first.nil?
     end.map do |id|
       User.find(id).full_name
     end.join_english
