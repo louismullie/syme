@@ -7,11 +7,13 @@ guard('uploader', {
 
     var group = CurrentSession.getGroupId();
 
-    if (file.size / 1024 > 1024) {
+    if (file.size / 1024 > 1024 * 25) {
 
       asocial.helpers.showAlert(
-        'You can only upload files of up to 1 Mb for now.');
+        'You can only upload files of up to 25 Mb for now.');
 
+      asocial.helpers.resetFeedForm();
+      
       return false;
 
     } else {
