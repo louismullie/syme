@@ -26,21 +26,21 @@ guard('auth', {
         
         $.post(SERVER_URL + '/login/2', params, function (data) {
 
-          if (data.status == 'ok') {
+           if (data.status == 'ok') {
 
             $('meta[name="_csrf"]').attr('content', data.csrf);
             
             success();
 
           } else if (data.status == 'error') {
-
-            console.log('State ERROR', data);
+            
+            Backbone.Relational.store.reset();
+            
             window.location = '/';
-            //fail(data.reason);
 
           } else {
 
-            //fail('server');
+            asocial.error.fatalError();
 
           }
 
