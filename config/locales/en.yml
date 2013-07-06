@@ -54,7 +54,7 @@ en:
     post: Post
     comments: Comments
     show_hidden_comments: Show hidden comments
-    comment_post: Comment this post
+    comment_post: Comment on this post
     likes: "%d Likes"
     like: Like
     unlike: Unlike

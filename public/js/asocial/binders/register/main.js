@@ -21,7 +21,7 @@ asocial.binders.add('register', { main: function(){
 
         email: {
           required: "Please enter your email",
-          email: "Your email seems weird"
+          email: "Your email looks weird"
         },
 
         password: {
