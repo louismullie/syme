@@ -13,6 +13,6 @@ class Membership
   has_one :user_avatar
 
   field :privilege, type: Symbol, default: :none
-  field :last_email, type: DateTime
+  field :last_email, type: DateTime, default: -> { DateTime.now }
 
 end
