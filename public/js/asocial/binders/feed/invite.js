@@ -59,7 +59,7 @@ asocial.binders.add('feed', { invite: function() {
       // or submit button, and rather delegate it to the submit()
       // event specified in onshow()
 
-      onsubmit: function() { },
+      onsubmit: function() { return true; },
 
       onshow: function() {
 
