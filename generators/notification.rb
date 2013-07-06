@@ -1,14 +1,15 @@
 class NotificationGenerator
 
   def self.generate(notification, current_user)
-
-    actors = notification.actor_ids.map do |id|
-      # Mustn't access through current_group since user
-      # may not be invited at that moment.
+    
+    # Mustn't access through group since user
+    # may not be added to the group currently.
+    actors = notification.actor_ids.select do |id|
+      !User.where(id).first.nil?
+    end.map do |id|
       User.find(id).full_name
     end.join_english
 
-    # During migration only. Remove ASAP.
     group = Group.find(notification.group_id)
 
     g_notification = {
@@ -20,7 +21,8 @@ class NotificationGenerator
       group:      group.name,
       group_id:   group.id.to_s,
       actors:     actors,
-      created_at: notification.created_at.strftime("%d/%m/%Y at %H:%M")
+      created_at: notification.created_at
+        .strftime("%d/%m/%Y at %H:%M")
     }
 
     if !notification.actor_ids.empty?
