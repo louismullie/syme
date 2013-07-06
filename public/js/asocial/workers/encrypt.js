@@ -11,9 +11,10 @@ self.onmessage = function(event) {
   var pass = event.data['pass'];
   var worker = event.data['worker'];
   var id = event.data['id'];
-
+  var csrf = event.data['csrf'];
   var url = event.data['url'];
-  
+  var chunks = event.data['chunks'];
+
   var key = data.key;
   var chunk = data.chunk;
   
@@ -28,6 +29,9 @@ self.onmessage = function(event) {
 
     var fd = new FormData();
 
+    if (pass * 4 + worker + 1 == chunks)
+      fd.append('last', 'true');
+    
     fd.append("id", id);
     fd.append("chunk", pass * 4 + worker);
     fd.append("data", data);
@@ -52,8 +56,8 @@ self.onmessage = function(event) {
     });
     
     xhr.open('POST', url);
-    // var token = $('meta[name="_csrf"]').attr('content');
-    //xhr.setRequestHeader('X_CSRF_TOKEN', token);
+    
+    xhr.setRequestHeader('X_CSRF_TOKEN', csrf);
     xhr.send(fd);
     
   };

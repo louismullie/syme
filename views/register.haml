@@ -1,0 +1,36 @@
+#auth
+  %h1 Syme
+  %h2 This time, it's private.
+
+  #auth-methods.row
+    .small-centered-column
+      %form#register-form{method: 'post'}
+
+        #error.hidden
+          %i.icon-warning-sign
+          %span
+
+        .validation-container
+          .input-text-icon
+            %i.icon-user
+            %input{ type: 'text', name: 'full_name', placeholder: 'Full name', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', minlength: 5, required: '' }
+
+        .validation-container
+          .input-text-icon
+            %i.icon-envelope
+            %input{ type: 'text', name: 'email', placeholder: 'Email address', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', :'data-validate-email' => 'true', required: '' }
+
+        .validation-container
+          .input-text-icon
+            %i.icon-lock
+            %input{ type: 'password', name: 'password', placeholder: '{{t "login.password"}}', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true' }
+
+            #password-score.validation-append.hidden
+
+
+        %input{ type: 'submit' }
+        %a.btn.btn-success{ href: '#', role: 'submit' }
+          Register <i class="icon-spinner icon-spin"></i>
+
+        %p.switchmode
+          Already registered? <a href="login" hbs>Log in</a>.

@@ -1,264 +1,379 @@
-.feed-separator {
-  height: 7px;
-  margin-bottom: 15px;
+/* Breakpoints for responsive feed columns */
 
-  @include inclined-stripes(transparent, 15px, $feedSeparator);
+// Large
+@media #{$breakpointLarge} {
+  #feed-column {
+    @include grid-column(12, false, false, 3);
+  }
 }
 
-.empty-group-notice {
+// Medium
+@media #{$breakpointMedium} {
+  #feed-column {
+    @include grid-column(13, false, false, 2);
+  }
+}
+
+// Small
+@media #{$breakpointSmall} {
+  #feed-column {
+    @include grid-column(24);
+  }
+}
+
+/* ----------------------------------------- */
+
+// Open comments by default in single-post view
+#feed[data-single-post="true"] {
+  a.post-delete   { display: none !important;  }
+  .show-more      { display: none !important;  }
+  .comment-hidden { display: block !important; }
+  textarea        { display: block !important; }
+}
+
+// Notice when no posts on feed
+#empty-group-notice {
+  margin-top: 3em;
   text-align: center;
+
+  h4 {
+    font: 200 2em/1.4em $opensans;
+  }
+
+  p {
+    font: 200 1em/1.5em $opensans;
+  }
 }
 
+// Indicator for socket-added posts
 #newcontent {
-  @extend .mbl;
+  margin-bottom: 1em;
 
   display: none;
   text-align: center;
+
+  a {
+    @extend .btn;
+    @extend .btn-white;
+
+    font-size: .9em;
+  }
+}
+
+// Manual pagination
+#load-more {
+  margin-top: 1em;
+  display: none;
+
+  font-size: .9em;
+  text-align: center;
+
+  a:hover { text-decoration: none; }
+  i { padding-left: .5em; }
 }
 
 .post {
-  @include clearfix;
-  @extend .mbl;
+  padding-bottom: $bodyPadding / 2;
+  margin-bottom: $bodyPadding / 2;
+  border-bottom: $baseBorderStyle;
 
-  .post-gutter {
-    position: relative;
-
-    img.avatar {
-      width: $avatarSize; height: $avatarSize;
-      @include border-radius($avatarSize);
-      @include asocial-shadow;
-      border: 4px solid #FFF;
-    }
-
-    .gutter-infos {
-      $gutterWidth: 70px;
-
-      position: absolute;
-      top: 2px;
-      left: -($gutterWidth + 10);
-
-      width: $gutterWidth;
-      margin-top: 13px;
-
-      color: lighten($lightgray, 15%);
-      font-size: 13px;
-      text-align: center;
-
-      span.abbr-date-day {
-        display: block;
-
-        color: $lightgray;
-        font-size: 23px;
-      }
-    }
+  &:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
   }
 
-  .post-content {
-    padding: 15px;
-    @include box-sizing;
+  &.new-post { display: none; }
 
-    @include arrow(left, 15px, 1px, 26px, $box1Color, $border1Color);
+  img.avatar {
+    width: $avatarPostSize; height: auto;
+    display: inline-block;
+    float: left;
 
-    background-color: $box1Color;
+    border-radius: 50%;
+  }
 
-    @include border-radius(5px);
-    border: 1px solid $border1Color;
+  .post-indent {
+    margin-left: emCalc($avatarPostSize) + 1em;
 
-    line-height: 1.3;
-
-    .encrypted {
-      display: none;
-    }
-
-    .post-infos {
-      margin-bottom: $l / 2;
-    }
+    .encrypted { display: none; }
 
     .collapsable {
-      margin-bottom: 10px; /* your <p> margin-bottom */
-      line-height: 20px; /* your <p> line-height */
+      position: relative;
+      overflow: hidden;
+
+      // Css-only text expander
+      margin-bottom: .5em; /* child <p> margin-bottom */
+      line-height: 1.2em; /* child <p> line-height */
 
       p {
-        line-height: inherit;
         margin-bottom: inherit;
+        line-height: inherit;
+
+        font-size: .9em;
+        font-weight: 200;
+
+        word-break: break-word;
 
         &:last-child {
           margin-bottom: 0;
         }
       }
 
-      &.collapsed {
-        position: relative;
-        overflow: hidden;
+      .expand-link-container {
+        display: none;
+      }
 
+      &.collapsed {
         p {
           margin: 0;
         }
 
         .expand-link-container {
           position: absolute;
-          bottom: 0; right: 0;
+          bottom: 0; left: 0; right: 0;
           display: block;
 
           line-height: inherit;
-          padding: 0 2px 0 5px;
 
           background-color: #FFF;
-
-          box-shadow: -5px 0 5px 0 white;
         }
-      }
-
-      .expand-link-container {
-        display: none;
       }
     }
 
-    .post-tools, .comment-tools {
-      float: right;
-      color: lighten($lightgray, 15%);
+    .post-header {
+      position: relative;
 
-      a {
-        text-decoration: none;
-        color: $base;
+      margin-bottom: .5em;
 
-        i, &:hover {
-          color: lighten($lightgray, 15%);
+      p.post-header-infos {
+        display: inline-block;
+        margin: 0;
+
+        font-weight: 600;
+        font-size: .9em;
+
+        a.time {
+          display: block;
+
+          color: gray;
+          font-weight: 200;
+          font-size: .8em;
+        }
+      }
+
+      a.post-delete {
+        display: none;
+        opacity: 0;
+
+        position: absolute;
+        top: 0; right: 0;
+
+        padding: 0 0.3em;
+        font-size: 0.8em;
+        line-height: 1.5em;
+      }
+    }
+
+    .post-content {
+      .attachment {
+        margin-bottom: 1em;
+
+        p {
+          font-size: .9em;
+          font-weight: normal;
+          margin-bottom: .5em;
         }
 
-        &.post-likes, &.comment-likes {
-          &:hover, &.active {
-            color: $likesColor;
+        a {
+          font-weight: 200;
 
-            i {
-              color: inherit;
+          &.image-download {
+            display: block;
+
+            img {
+              width: 100%;
+              @include inclined-stripes(transparent, 50px, rgba(0, 0, 0, .05));
             }
           }
         }
+      }
+    }
 
-        &.post-comments:hover, &.post-comments:hover i {
-          color: $commentsColor;
-        }
+    .post-footer {
+      font-size: .8em;
 
-        &.post-delete:hover, &.comment-delete:hover {
-          color: $danger;
+      .post-footer-actions {
+        a.like-action {
+          span.default-text { display: inline; }
+          span.active-text { display: none; }
 
-          i {
-            color: $danger;
+          &.active {
+            span.default-text { display: none; }
+            span.active-text { display: inline; }
           }
         }
-      }
-    }
 
-    .attachment {
-      margin-bottom: 0;
+        a.comment-action {
 
-      p {
-        margin: 0;
+        }
       }
 
-      img {
-        margin-top: 10px;
-      }
-
-      a.decrypting {
-        color: $lightgray;
-        text-decoration: none;
-        cursor: default;
-      }
-
-      .encrypted-video {
-        width: 100%;
-        height: 100%;
-      }
-
-    }
-
-    .comments {
-      margin-left: -15px;
-      margin-right: -15px;
-
-      .show-more {
+      .post-footer-informations {
         text-align: right;
-        margin-right: 15px;
 
-        a {
-          padding-top: 7px;
+        & > span {
+          margin-left: .5em;
 
-          background: transparentize(#8A8A8A, 0.8);
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
+          a:hover {
+            text-decoration: none;
 
-          font-size: 14px;
-          color: #888485;
-          line-height: 14px;
-        }
-      }
-
-      .comment-box {
-        position: relative;
-        padding: ($m + 4) 15px 0 (15px * 2 + $commentAvatarSize);
-        min-height: $commentAvatarSize;
-
-        border-top: 1px dashed lighten($border1Color, 10%);
-
-        &:first-child {
-          border-top: 1px solid lighten($border1Color, 10%);
-        }
-
-        &.comment-hidden {
-          display: none;
-        }
-
-        a.commenter-name {
-          padding-right: 3px;
-
-          // Embedded iframe at the beginning of comment
-          & + iframe {
-            margin-top: 10px;
+            span { text-decoration: underline; }
           }
         }
+      }
+    }
 
-        span.comment-tools {
-          padding-left: 10px;
+    .post-comments {
+      margin-top: 1em;
+      padding-left: 1em;
+      border-left: 3px solid #ddd;
+
+      &.collapsed { display: none; }
+
+      .comments {
+
+        .show-more {
+          text-align: left;
+          font-size: .8em;
+          margin-bottom: 1em;
         }
 
-        img.avatar {
-          position: absolute;
-          height: $commentAvatarSize; width: $commentAvatarSize;
-          top: $m;
-          left: 15px;
+        .comment-box {
+          position: relative;
 
-          @include border-radius(3px);
+          border-bottom: 1px solid #ddd;
+          padding-bottom: .5em;
+          margin-bottom: .5em;
+
+          font-size: .9em;
+          font-weight: 200;
+          line-height: 1.4em;
+
+          @include clearfix;
+
+          &:last-child {
+            border: none;
+            margin-bottom: 0;
+          }
+
+          &.comment-hidden {
+            display: none;
+          }
+
+          a.comment-delete {
+            display: none;
+            opacity: 0;
+
+            position: absolute;
+            top: 0; right: 0;
+            z-index: 3;
+
+            padding: 0 0.3em;
+            font-size: 0.8em;
+            line-height: 1.5em;
+          }
+
+          img.avatar {
+            width: $avatarCommentSize;
+            height: auto;
+
+            float: left;
+            margin-right: 1em;
+
+            border-radius: $baseBorderRadius;
+          }
+
+          // During decryption
+          & > a.commenter-name { display: none; }
+
+          .collapsable {
+            margin-bottom: .5em;
+
+            p {
+              word-break: break-word;
+
+              a.commenter-name {
+                padding-right: .4em;
+                font-weight: bold;
+                white-space: nowrap;
+                
+                text-decoration: none;
+                
+                cursor: default;
+                color: $black; &:hover {
+                  color: inherit;
+                  text-decoration: none
+                }
+                
+              }
+
+              .expand-link-container {
+                font-size: .9em;
+              }
+            }
+          }
+
+          .comment-footer {
+            font-size: .8em;
+            font-weight: 200;
+            line-height: 1.5em;
+
+            margin-left: $avatarCommentSize;
+            padding-left: 1em;
+
+            a.like-action {
+              span.default-text { display: inline; }
+              span.active-text { display: none; }
+
+              &.active {
+                span.default-text { display: none; }
+                span.active-text { display: inline; }
+              }
+            }
+
+            a.like-count {
+              margin-left: .5em;
+
+              font-weight: normal;
+
+              &:hover { text-decoration: none; }
+
+              i {
+                font-size: 1em;
+                line-height: inherit;
+              }
+            }
+          }
         }
+      }
 
-        img + a + p {
-          display: inline;
+      .comment-form {
+        textarea {
+          width: 100%;
+          min-height: .8em; max-height: 100px;
+          padding: 7px 10px;
+          margin: 0;
+
+          @include box-sizing;
+          resize: none;
+
+          line-height: 1.5em;
+          font-size: .8em;
+          font-weight: 200;
         }
       }
     }
 
-    .comment-form {
-      margin: 0;
-
-      textarea {
-        width: 100%;
-        height: 35px;
-
-
-
-        resize: none;
-
-        margin-bottom: 0;
-        padding: $s;
-        @include box-sizing;
-
-        @include border-radius(3px);
-      }
-    }
   }
-}
-
-#load-more {
-  display: none;
 }

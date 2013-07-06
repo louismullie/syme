@@ -1,0 +1,76 @@
+/**
+ * source: hint-core.scss
+ *
+ * Defines the basic styling for the tooltip.
+ * Each tooltip is made of 2 parts:
+ *  1) body (:after)
+ *  2) arrow (:before)
+ *
+ * Classes added:
+ *  1) hint
+ */
+
+.hint, [data-hint] {
+  position: relative;
+  display: inline-block;
+
+  &.hint--hidden::before, &.hint--hidden::after { display: none !important; }
+
+  &:before, &:after {
+    position: absolute;
+
+    // HACK: Trigger hardware accelerated rendering, otherwise transform was not
+    // working on a hidden element
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+
+    // HACK: visibility is set to hidden because IE & Opera don't support
+    // pointer-events on HTML content yet because of which hovering a hidden tooltip
+    // shows the tooltip.
+    visibility: hidden;
+    opacity: 0;
+    z-index: 1000000;
+    // shouldn't receive pointer events, otherwise even hovering tooltip will make it appear
+    pointer-events: none;
+
+    // pseudo element transition is gonna come soon: https://bugs.webkit.org/show_bug.cgi?id=92591
+    @include transition(
+      top 0.3s ease, right 0.3s ease, bottom 0.3s ease, left 0.3s ease,
+      opacity 0.3s ease
+    );
+  }
+
+  &:hover:not([data-hint=""]):before, &:hover:not([data-hint=""]):after {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /**
+   * tooltip arrow
+   */
+  &:before {
+    content: '';
+    position: absolute;
+    background: transparent;
+    border: $arrowBorderWidth solid transparent;
+    // move z-index 1 up than :after so that it shows over box-shadow
+    z-index: 1000001;
+  }
+
+  /**
+   * tooltip body
+   */
+  &:after {
+    content: attr(data-hint);
+    background: $defaultColor;
+    color: white;
+    text-shadow: 0 -1px 0px darken($defaultColor, $textShadowDarkenAmount);
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 12px;
+    white-space: nowrap;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+  }
+}

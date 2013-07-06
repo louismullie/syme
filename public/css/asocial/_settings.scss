@@ -1,24 +1,74 @@
-#account-picture-upload {
-  input {
-    display: none;
+#settings {
+  $marginBetween: 20px;
+
+  h1 {
+    margin-top: 0; margin-bottom: $marginBetween;
+    font: 200 2em/1.2em $opensans;
+
+    i {
+      float: right;
+      line-height: inherit;
+
+      color: $gray;
+    }
   }
-}
 
-@media (max-width: 480px) {
-  #main {
-    form.form-horizontal {
-      text-align: center;
+  h3 {
+    margin-top: 0;
+    margin-bottom: $marginBetween;
+    font: 200 1.3em/1.5em $opensans;
 
-      &>div {
-        width: 360px;
-      }
+    padding-top: $marginBetween; &:first-child { padding-top: 0 }
+    border-top: $baseBorderStyle; &:first-child { border-top: 0 };
+  }
 
-      .control-group > label {
+  .warning { color: $danger; }
+
+  .settings-panel {
+    padding: 2em;
+
+    background: $bodyBackgroundColor3;
+
+    border: $baseBorderStyle;
+    border-radius: $baseBorderRadius;
+
+    font: 200 1em/1em $opensans;
+
+    *:last-child { margin-bottom: 0; }
+
+    input[type="text"] {
+      margin-bottom: $marginBetween/2;
+      border: $baseBorderStyle;
+
+      &:focus { border-color: $success; }
+    }
+
+    form {
+      margin-bottom: $marginBetween;
+
+      a.btn {
+        display: block;
         text-align: center;
-      }
 
-      .last-active {
-        display: none;
+        i {
+          margin-left: .5em;
+        }
+
+        span.active { display: none; }
+        &.active {
+          span.default { display: none; }
+          span.active { display: inline; }
+        }
+      }
+    }
+
+    .explanation-box {
+      margin-bottom: $marginBetween;
+      font: 200 .9em $opensans;
+
+      p {
+        margin-top: 0;
+        margin-bottom: $marginBetween/2; &:last-child { margin-bottom: 0; }
       }
     }
   }

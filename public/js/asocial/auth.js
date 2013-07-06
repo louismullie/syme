@@ -1,102 +1,50 @@
 guard('auth', {
 
-  emailExists: function(email, success, fail){
-    $.post('/auth/email', {email: email}, function(response) {
-      if(response.status == 'ok') {
-        response.exists ? success() : fail();
-      } else {
-        alert('error');
-      }
-    });
-
-  },
-
-  register: function(email, password, full_name, success, fail) {
-
-    var srp = new SRP(email, password);
-
-    var params = { email: email, full_name: full_name };
-
-    $.post('/register/1', params, function (data) {
-
-      if (data.error) {
-
-        fail(data.error);
-
-      } else {
-
-        var v = srp.calcV(data.salt).toString();
-
-        var params = $.param({ user_id: data.user_id, v: v });
-
-        $.post('/register/2', params, function (data) { success(data) });
-
-      }
-
-    });
-  },
-
-  /* Generate a random RSA keypair for the user,
-   * encrypt with a hash of the user's password,
-   * and store keypair and hash salt on server.
-   */
-  keygen: function(user_id, password, success) {
-
-    // Generate a random salt for the password hash.
-    var salt = asocial.crypto.generateRandomHexSalt();
-
-    // Derive key form the user's password using the hex salt.
-    var key = asocial.crypto.calculateHash(password, salt);
-
-    // Generate an RSA keypair, convert to JSON and encrypt with key.
-    var keypair = asocial.crypto.generateEncryptedKeyPair(key);
-
-    // Build a request for the server to create a keypair for the user.
-    var data = { user_id: user_id, keypair: keypair, keypair_salt: salt };
-
-    // Register the new keypair with the server and callback.
-    $.post('/register/3', $.param(data), success);
-
-  },
-
   login: function(email, password, remember, success, fail) {
 
-    var srp = new SRP(email, password);
-    var A = srp.getA().toString();
-    var params = $.param({email: email, A: A});
+    var srp = new SRPClient(email, password);
 
-    $.post('/login/1', params, function (data) {
+    var a = srp.srpRandom();
+    var A = srp.calculateA(a);
+    var _this = this;
+    
+    var params = $.param({ email: email, A: A.toString(16) });
 
-      if (data.status == 'ok') {
+    $.post(SERVER_URL + '/login/1', params, function (data) {
 
-        var M = srp.calcM(data.salt, data.B).toString();
-        var params = $.param({ ssc: M });
+      if (data.B && data.salt) {
 
-        $.post('/login/2', params, function (data) {
-          if (data.status == 'ok') {
-            asocial.state.getState('system', function () {
-              success(data);
-            }, { force: true });
+        var salt = data.salt;
+        var B = new BigInteger(data.B, 16);
+        var u = srp.calculateU(A, B);
+        var Sc = srp.calculateS(B, salt, u, a);
+        var M = srp.calculateM(email, salt, A, B, Sc);
+
+        var params = $.param({ M: M.toString(16) });
+
+        $('meta[name="_csrf"]').attr('content', data.csrf);
+        
+        $.post(SERVER_URL + '/login/2', params, function (data) {
+
+           if (data.status == 'ok') {
+
+            $('meta[name="_csrf"]').attr('content', data.csrf);
+            
+            success();
+
           } else if (data.status == 'error') {
-            console.log('State ERROR', data);
-            fail(data.reason);
+            
+            Backbone.Relational.store.reset();
+            
+            window.location = '/';
+
           } else {
-            fail('server');
+
+            asocial.error.fatalError();
+
           }
+
         });
-
-        var storage = remember ? localStorage: sessionStorage;
-
-        sessionStorage.clear(); localStorage.clear();
-
-        storage.email = email;
-        var password_key = data.B.toString();
-
-        storage.password =
-        sjcl.encrypt(password_key, password);
-
-        window.password =
-        sjcl.encrypt(password_key, password);
 
       } else if (data.status == 'error') {
 
@@ -113,75 +61,32 @@ guard('auth', {
 
   },
 
-  authorize: function (fn, callback, password) {
+  logout: function (callback) {
 
-    var _this = this;
-    var authorized;
+    var callback = callback || function () {};
 
-    if (password) {
-      callback(fn(password));
-    } else {
-      _this.getPasswordLocal(function (password) {
-        callback(fn(password));
-      });
-    }
+    asocial_state = {};
+
+    $.ajax(SERVER_URL + '/sessions/xyz', {
+      type: 'delete',
+      success: callback
+    });
 
   },
 
-  authorizeForUser: function (callback, password) {
+  disconnect: function () {
 
-    if (this.isAuthorizedForUser()) {
-      callback(true);
-    } else {
-      var fn = asocial.crypto.decryptKeypair;
-      this.authorize(fn, callback, password);
-    }
+    asocial.auth.logout();
 
-  },
-
-  authorizeForGroup: function (callback, password) {
-
-    if (this.isAuthorizedForGroup()) {
-      callback(true);
-    } else {
-      var fn = asocial.crypto.decryptKeylist;
-      this.authorize(fn, callback, password);
-    }
-
-  },
-
-
-  passwordStoredIn: function (storage) {
-    return typeof(storage.password) != 'undefined';
-  },
-
-  isAuthorizedForUser: function () {
-    return typeof(asocial_private_key) !== "undefined";
-  },
-
-  isAuthorizedForGroup: function () {
-    return typeof(asocial_keylist) !== "undefined";
-  },
-
-  getPasswordLocal: function (callback) {
-
-    var encryptedPassword;
-
-    if (this.passwordStoredIn(window)) {
-      encryptedPassword = window.password;
-    } else if (this.passwordStoredIn(localStorage)) {
-      encryptedPassword = localStorage.password;
-    } else if (this.passwordStoredIn(sessionStorage)) {
-      encryptedPassword = sessionStorage.password;
-    } else {
-      return false;
-    }
-
-    var passwordKey = asocial.state.user.password_key;
-    var password = sjcl.decrypt(passwordKey, encryptedPassword);
-
-    callback(password);
-    return true;
+    // Force disconnection
+    asocial.helpers.showAlert('You have been disconnected', {
+      title: 'Disconnected',
+      submit: 'Log in',
+      closable: false,
+      onhide: function(){
+        window.location = '/';
+      }
+    });
 
   }
 

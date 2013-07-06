@@ -56,3 +56,38 @@ class ::Time
   end
 
 end
+
+
+class ::RecursiveStruct < OpenStruct
+  
+  require 'ostruct'
+  
+  def initialize(hash)
+    
+    @table = {}
+
+    hash.each do |k,v|
+      v  = v.is_a?(Hash) ?
+      self.class.new(v) : v
+      @table[k.to_sym] = v
+      new_ostruct_member(k)
+    end
+
+  end
+  
+end
+
+class ::Hash
+  
+  def to_struct
+    RecursiveStruct.new(self)
+  end
+  
+end
+
+# Taken from ROR source code:
+# will return true if it’s false, empty, or a whitespace string.
+# For example, “”, “ ”, nil, [], and {} are all blank.
+def blank?
+  respond_to?(:empty?) ? empty? : !self
+end

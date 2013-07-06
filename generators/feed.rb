@@ -2,10 +2,10 @@ class FeedGenerator
 
   def self.generate(posts, current_user, current_group)
 
-    posts = generate_posts(posts, current_user)
+    posts = generate_posts(posts, current_user, current_group)
     user = generate_user(current_user, current_group)
     users = generate_user_list(current_group, current_user)
-    invite = generate_pending_invites(current_group, current_user)
+    invite = InvitationGenerator.generate_pending_invites(current_group, current_user)
     group = GroupGenerator.generate(current_group, current_user)
 
     {
@@ -21,12 +21,12 @@ class FeedGenerator
   def self.generate_user(current_user, current_group)
 
     membership = current_group.memberships
-                  .where(user_id: current_user.id).first
+                  .find_by(user_id: current_user.id)
 
     {
       id: current_user.id.to_s,
-      is_admin: current_user.is_at_least?(:admin),
-      is_mod: current_user.is_at_least?(:mod),
+      is_admin: membership.is_at_least?(:admin),
+      is_mod: membership.is_at_least?(:mod),
       avatar: AvatarGenerator.generate(membership, current_user)
     }
 
@@ -37,20 +37,18 @@ class FeedGenerator
       membership = current_group.memberships.where(user_id: user.id).first
       {
         id: user.id.to_s,
-        is_current_user:
-        current_user.id == user.id,
+        is_current_user: current_user.id == user.id,
         full_name: user.full_name,
+        deletable: membership.deletable_by?(current_user),
         avatar: AvatarGenerator.generate(membership, current_user)
       }
     end
   end
 
-  def self.generate_posts(posts, current_user, last_timestamp = false)
-
-    show_updated_at = generate_last_date(posts, last_timestamp)
+  def self.generate_posts(posts, current_user, current_group)
 
     posts.map do |post|
-      PostGenerator.generate(post, current_user, show_updated_at)
+      PostGenerator.generate(post, current_user)
     end
 
   end
@@ -61,7 +59,7 @@ class FeedGenerator
 
     last_date = last_timestamp ?
     Time.at(last_timestamp.to_i)
-    .round_to_day : Time.now + 1
+      .round_to_day : Time.now + 1
     show_updated_at = nil
 
     # Generate a big hash for each post
@@ -78,27 +76,6 @@ class FeedGenerator
     end
 
     show_updated_at
-
-  end
-
-  def self.generate_pending_invites(group, user)
-
-    select = { inviter_id: user.id.to_s, state: 2 }
-
-    group.invites.where(select).map do |invite|
-      {
-        id: invite.id.to_s,
-        token: invite.token,
-
-        invitee_id: invite.invitee_id,
-        invitee_full_name: invite.invitee.full_name,
-
-        k_P: invite.k_P,
-        PA_k: invite.PA_k,
-        p_sB: invite.p_sB,
-        sB_salt: invite.sB_salt
-      }
-    end
 
   end
 

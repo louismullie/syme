@@ -1,37 +1,50 @@
-#topbar.container
-  .navbar.navbar-inverse
-    .navbar-inner
-      .container
-        %ul.nav
-          %li
-            %a{href: '/', :'data-hbs' => ''} #{settings.app_title}
+#navbar
+  #stripe-bar &nbsp;
 
-          %li
-            %a#notifications-button{href: '#'}
-              %i.icon-inbox
+  .row
+    .small-24
+      %ul
+        %li#brand
+          %a{ href: 'users/{{current_user_id}}/groups', hbs: '' }
+            Syme
 
-              %span.navbar-unread
-                {{notifications.count}}
+        %li#notification-li{ :'data-count' => 0 }
+          %a#notifications.btn.hint--bottom{ href: '#', :'data-hint' => 'Notifications', :'data-popover' => 'notifications-container' }
+            %i.icon-bell-alt
 
-            #notifications-container.flat-popover
-              %h3 Notifications
+          #notifications-container.popover
+            %h3 Notifications
 
-              #notifications-content
-                {{notifications.view}}
+            #notifications-content.scrollable
 
-        %ul.nav.pull-right
-          {{#if user.is_admin}}
+        // Breadcrumbs
+        %li#navbar-breadcrumbs
 
-          %li
-            %a{href: '/admin', :'data-hbs' => ''}
-              %i.icon-group
+        .pull-right
+          .hide-for-small
+            %li
+              %a.btn.hint--bottom{ href: 'users/{{current_user_id}}', hbs: '', :'data-hint' => 'Settings' }
+                %i.icon-cog
 
-          {{/if}}
+            %li
+              %a#logout.btn.hint--bottom{ href: 'logout', hbs: '', :'data-hint' => 'Log out' }
+                %i.icon-signout
 
-          %li
-            %a#settings{href: '/settings', :'data-hbs' => ''}
-              %i.icon-cog
+          .show-for-small
+            %li#side-pane
+              %a.btn{ href: '#', :'data-popover' => 'navbar-collapsed' }
+                %i.icon-reorder
 
-          %li
-            %a{href: '/logout'}
-              %i.icon-off
+              #navbar-collapsed.popover.popover--right
+                %h3 Menu
+                #navbar-collapsed-content
+                  %ul
+                    %li
+                      %a{ href: 'users/{{current_user_id}}', hbs: ''}
+                        %i.icon-cog
+                        Settings
+
+                    %li
+                      %a#logout{ href: 'logout', hbs: ''}
+                        %i.icon-signout
+                        Sign out

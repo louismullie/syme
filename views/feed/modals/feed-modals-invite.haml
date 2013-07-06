@@ -1,0 +1,22 @@
+.modal-title
+  Invite people
+
+  %a.hint--left{ href: '#', role: 'close-modal', :'data-hint' => 'Close' }
+    %i.icon-remove-sign
+
+.modal-content
+  %p.header
+    Enter the email address of the person you want to invite below.
+
+  %p.explanation
+    Invite more than one person by entering one email per line.
+
+  %form{ action: 'post' }
+    %textarea.autogrow{ name: 'emails', placeholder: "email@example.com" }
+
+    %a.modal-button{ href: '#', role: 'submit' }
+      %span.invite
+        Invite
+
+      %span.spinner
+        %i.icon-spinner.icon-spin

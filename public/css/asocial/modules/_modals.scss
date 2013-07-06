@@ -1,0 +1,174 @@
+#responsive-modal {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 4;
+
+  opacity: 0;
+
+  background: rgba(0, 0, 0, 0.25);
+
+  .container {
+    max-height: 350px;
+    min-width: 100px;
+
+    position: fixed;
+    top: 50%; left: 50%;
+
+    display: block;
+
+    @include box-sizing;
+    @include transform( translate(-50%, -50%) );
+
+    overflow: auto;
+
+    background: $bodyBackgroundColor;
+    border: $baseBorderStyle;
+    border-radius: $baseBorderRadius;
+    box-shadow: 0 3px 14px -4px rgba($black, 0.8);
+
+    /* Styles */
+
+    @media #{$breakpointLarge}  { width: 50%; }
+    @media #{$breakpointMedium} { width: 60%; }
+    @media #{$breakpointSmall}  { width: 90%; }
+
+    // Small
+    &.modal-small {
+      @media #{$breakpointLarge}  { width: 40%; }
+      @media #{$breakpointMedium} { width: 50%; }
+    }
+
+    // Alert
+    &.modal-alert {
+      @media #{$breakpointLarge}  { width: 30%; }
+      @media #{$breakpointMedium} { width: 35%; }
+    }
+
+    // Confirm
+    &.modal-confirm {
+      @media #{$breakpointLarge}  { width: 30%; }
+      @media #{$breakpointMedium} { width: 35%; }
+
+      .modal-buttons {
+        margin-top: .8em;
+
+        @include column-gap(1em);
+        @include column-count(2);
+
+        a.modal-button {
+          margin: 0;
+        }
+      }
+    }
+
+    // Invite
+    &.modal-invite {
+      @media #{$breakpointLarge}  { width: 30%; }
+      @media #{$breakpointMedium} { width: 45%; }
+
+      .modal-content { text-align: left }
+
+      p.header {
+        font: normal 1.2em/1.5em $opensans;
+        margin-bottom: .6em;
+      }
+
+      p.explanation {
+        font-size: .9em;
+
+        span.secret-question {
+          border-bottom: 1px dashed $darkgray;
+          cursor: help;
+        }
+      }
+
+      a.modal-button {
+        span.spinner { display: none; }
+
+        &.spinner {
+          span.invite { display: none; }
+          span.spinner { display: inline; }
+        }
+      }
+    }
+
+    // Lightbox
+    &.modal-lightbox {
+      max-height: 768px;
+
+      @media #{$breakpointLarge}  { max-width: 70%; }
+      @media #{$breakpointMedium} { max-width: 80%; }
+
+      // Align image to center
+      text-align: center;
+
+      #lightbox-container {
+        display: inline-block;
+        position: relative;
+
+        a[role="close-modal"] {
+          position: absolute; top: 10px; right: 10px;
+          color: $black;
+
+          font-size: 1.5em;
+          text-shadow: 0 0 10px white;
+
+          @include transition(color 0.2s ease);
+
+          &:hover {
+            color: black;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    .modal-title {
+      padding: .5em 1em;
+
+      font: 200 1.1em/1.5em $opensans;
+
+      background: $bodyBackgroundColor2;
+      border-bottom: $baseBorderStyle;
+
+      a[role="close-modal"] {
+        float: right;
+        color: $gray;
+
+        @include transition(color 0.2s ease);
+
+        &:hover {
+          color: darken($gray, 20%);
+          text-decoration: none;
+        }
+      }
+    }
+
+    .modal-content {
+      padding: .8em 1em;
+
+      text-align: center;
+      font-size: .9em;
+
+      a.modal-button {
+        @extend .btn;
+
+        display: block;
+
+        margin-top: .8em;
+
+        background: $bodyBackgroundColor2;
+        border: $baseBorderStyle;
+
+        text-align: center;
+        color: $black;
+
+        &:hover, &:active, &[role="submit-modal"] {
+          color: inherit;
+          background: $bodyBackgroundColor3;
+        }
+      }
+    }
+
+  }
+}

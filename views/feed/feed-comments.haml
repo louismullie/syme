@@ -1,0 +1,13 @@
+.comments
+  // Show collapsed comments
+  .show-more{ class: '{{comments_collapsed}}' }
+    %a{href: '#'}
+      %i.icon-comment-alt
+      View <span>{{comments_collapsed_count}}</span> more comments
+
+  // Comments
+  {{#each comments}} {{> feed-comment.hbs}} {{/each}}
+
+// Comment box
+.comment-form
+  %textarea{ name: 'content', class: 'autogrow {{#unless has_comments}}hidden{{/unless}}', maxlength: 1500, placeholder: '{{t "feed.comment_post"}}' }

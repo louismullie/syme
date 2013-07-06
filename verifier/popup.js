@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     chrome.browserAction.setBadgeBackgroundColor({color: '#FF0000'});
     chrome.browserAction.setBadgeText({text:"?"});
-    document.getElementById("main").innerHTML = "<span style=\"color:#F00\">Integrity check failed.</span><br />But wait, this doesn't necessarily mean that your connection is unsafe. This may just mean that you need to refresh your browser to get the latest version of Asocial. Clear your browser cache and try again. Should the problem persist, this could mean that your session is unsafe.";
+    document.getElementById("main").innerHTML = "<span style=\"color:#F00\">Integrity check failed.</span><br />But wait, this doesn't necessarily mean that your connection is unsafe. This may just mean that you need to refresh your browser to get the latest version of Syme. Clear your browser cache and try again. Should the problem persist, this could mean that your session is unsafe.";
   }
   
 });

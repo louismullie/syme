@@ -1,0 +1,104 @@
+// Text fields
+textarea, input[type="text"], input[type="password"], input[type="datetime"],
+input[type="datetime-local"], input[type="date"], input[type="month"],
+input[type="time"], input[type="week"], input[type="number"], input[type="email"],
+input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+  height: 40px;
+  padding: 8px 5px;
+
+  border: 2px solid $lightgray;
+
+  color: $base;
+  font: $baseFont;
+  text-indent: 6px;
+  -webkit-appearance: none;
+
+  border-radius: $baseBorderRadius;
+  @include box-shadow(none);
+
+  @include placeholder {
+    color: desaturate(lighten($base, 45%), 15%);
+  }
+
+  &:focus {
+    @include box-shadow(none);
+    border-color: $success;
+    background-color: white;
+  }
+
+}
+
+//Input append
+
+.input-text-icon {
+  position: relative;
+
+  input {
+    padding-left: 2.2em;
+  }
+
+  i {
+    color: $gray;
+
+    position: absolute;
+    top: 50%; left: 1em;
+    line-height: 1em;
+    margin-top: -0.5em;
+
+    width: 1em;
+    text-align: center;
+  }
+}
+
+// Disabled state
+input[disabled], input[readonly], textarea[disabled], textarea[readonly] {
+  background-color: mix($gray, white, 10%);
+  border-color: mix($gray, white, 40%);
+  color: mix($gray, white, 40%);
+  cursor: default;
+}
+
+// Textarea
+textarea {
+  height: auto;
+  font-size: 0.9em;
+  line-height: 1.2em;
+  padding: 0.4em 0.5em;
+  text-indent: 0;
+
+  &:focus {
+    background-color: white;
+  }
+}
+
+// Fontawesome checkboxes
+input[type="radio"],
+input[type="checkbox"] {
+  display:none;
+}
+
+input[type="radio"] + span:before,
+input[type="checkbox"] + span:before {
+  font-family: 'FontAwesome';
+  font-size: 1em;
+  width: 1em;
+  text-align: center;
+  display: inline-block;
+  margin-right: .5em;
+}
+
+input[type="radio"] + span:before {
+  content: "\f10c"; /* circle-blank */
+}
+
+input[type="radio"]:checked + span:before {
+  content: "\f111"; /* circle */
+}
+
+input[type="checkbox"] + span:before {
+  content: "\f096"; /* check-empty */
+}
+
+input[type="checkbox"]:checked + span:before {
+  content: "\f046"; /* check */
+}

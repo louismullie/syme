@@ -1,4 +1,5 @@
 importScripts('sjcl.js');
+importScripts('ecc.js');
 
 var decodeBase64 = function(s) {
     var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
@@ -15,9 +16,10 @@ self.onmessage = function(event) {
   
   var id = event.data['id'];
   var chunk = event.data['chunk'];
-  var key = event.data['key'];
+
   var worker = event.data['worker'];
   var url = event.data['url'];
+  var key = event.data['key'];
   
   var xhr = new XMLHttpRequest();
   

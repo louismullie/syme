@@ -1,84 +1,229 @@
-$groupPadding: 10px;
+// Masonry content disposition
+#groups {
+  .create-first-group {
+    h2 {
+      font: 200 2em/2em $opensans;
+      text-align: center;
 
-#groups-container {
-  width: 100%;
-  display: table;
+      margin-bottom: 1em;
+    }
 
-  .group-row {
-    margin-left: -$groupPadding;
-    margin-right: -$groupPadding;
+    form#create_first_group {
+      input[type="text"] {
+        height: 70px;
+        padding: 0 0.5em;
 
-    .group {
-      display: inline-block;
+        line-height: 1.8em;
+        font-size: 1.8em;
+        font-weight: 200;
 
-      padding: $groupPadding;
-      @include box-sizing;
+        text-align: center;
+      }
 
-      .group-infos {
-        position: absolute;
-        padding: 15px 15px 0 15px;
+      a[role="submit"] {
+        @include btn-slide(70px, $bodyBackgroundColor2);
 
-        color: #FFF;
+        font-size: 2em;
 
-        h4 {
-          margin: 0;
+        span {
+          font-weight: 200;
 
-          font-size: 20px;
-
-          a {
-            color: inherit;
+          &.default {
+            color: lighten($black, 30%);
+          }
+          &.hover {
+            color: $success;
           }
         }
 
-        p.user_count {
-          margin: 0;
+        border: 2px solid $gray;
 
-          font-size: 14px;
-        }
-      }
-
-      .group-photo {
-        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.9);
-      }
-
-      // Panel arrows
-      &.paneled {
-
-        @include arrow('top', 20px, 1px, 25px, #6f6b6c, rgba(255, 0, 0, 0.5));
-
-        &:before, &:after {
-          top: auto; bottom: -25px; left: 50%;
-        }
-
-        &:before {
-          margin-left: -20px;
-        }
-
-        &:after {
-          margin-left: -21px;
+        &:hover {
+          text-decoration: none;
         }
       }
     }
   }
 
-  .group-panel-container {
-    height: 0px;
+  ul {
+    @include column-gap($bodyPadding);
 
-    @include opacity(0);
+    @include column-count(1);
+    @media #{$small}  { @include column-count(2); }
 
-    .group-panel {
-      height: 0px;
+    list-style-type: none;
+    text-align: center;
 
-      position: absolute;
-      left: 0; right: 0;
+    li.group-card {
+      width: 100%;
 
-      @include opacity(0);
+      display: inline-block;
 
-      @include box-sizing;
+      margin-bottom: $bodyPadding;
 
-      border-top: 1px solid rgba(255, 0, 0, 0.5);
-      border-bottom: 1px solid rgba(255, 0, 0, 0.5);
-      @include box-shadow(inset 0px 4px 6px -5px rgba(255, 0, 0, 0.5))
+      background: $bodyBackgroundColor;
+      border: $baseBorderStyle;
+      border-radius: $baseBorderRadius;
+
+      box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
+
+      text-align: left;
+
+      &.group-create {
+        $buttonWidth: 100px;
+
+        i.icon-chevron-down {
+          float: right;
+          line-height: inherit;
+
+          @include transition(all 0.2s ease);
+        }
+
+        .group-card-content {
+          display: none;
+
+          form#create_group {
+            position: relative;
+
+            input[type="text"] {
+              margin: 0 $buttonWidth 0 0;
+            }
+
+            a[role="submit"] {
+              width: $buttonWidth;
+              display: block;
+
+              position: absolute;
+              top: 0; right: 0;
+
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
+
+              line-height: 40px;
+              text-align: center;
+            }
+          }
+        }
+
+        &.opened {
+          a.group-card-title {
+            color: lighten($darkgray, 15%);
+
+            i.icon-chevron-down {
+              @include transform(rotate(-180deg));
+            }
+          }
+
+          .group-card-content {
+            display: block;
+          }
+        }
+      }
+
+      a.group-card-title {
+        margin: 0;
+        padding: 0 1em;
+
+        display: block;
+
+        background: $bodyBackgroundColor3;
+
+        border-bottom: $baseBorderStyle;
+        border-top-left-radius: $baseBorderRadius;
+        border-top-right-radius: $baseBorderRadius;
+
+        color: $gray;
+        font: 600 .9em/3em $opensans;
+
+        @include transition(color 0.1s ease);
+
+        &:hover {
+          color: lighten($darkgray, 15%);
+          text-decoration: none;
+        }
+      }
+
+      .group-banner {
+        position: relative;
+
+        a.delete-group, a.leave-group {
+          display: none;
+          opacity: 0;
+
+          position: absolute;
+          top: 10px; right: 10px;
+
+          padding: 0 0.5em;
+          font-size: 0.8em;
+          line-height: 1.8em;
+
+          &::before {
+            border-left-color: white;
+          }
+
+          &::after {
+            border: 1px solid white;
+          }
+        }
+
+        a.group-banner-link {
+          display: block;
+
+          &.invite-link {
+            span.cover {
+              display: block;
+
+              position: absolute;
+              top: 0; left: 0; right: 0; bottom: 0;
+
+              background: rgba(255, 255, 255, 0.7);
+
+              line-height: 160px;
+              font-weight: 200;
+              font-size: 2em;
+                @media #{$breakpointMedium} { font-size: 1.4em; }
+
+              text-align: center;
+              color: $black;
+            }
+          }
+
+          img {
+            width: 100%; height: 160px;
+
+            background-size: 100% auto;
+            background-position-y: 50%;
+
+            border-top-left-radius: $baseBorderRadius;
+            border-top-right-radius: $baseBorderRadius;
+
+            &.placeholder {
+              background-image: url('/img/groupavatar.jpg');
+            }
+          }
+        }
+      }
+
+      .group-card-content {
+        padding: 1em;
+
+        font: normal .9em/2em $opensans;
+
+        p {
+          margin: 0;
+        }
+
+        a.group-link {
+          font: 200 1.6em/1.4em $opensans;
+          color: $black;
+
+          word-break: break-word;
+        }
+
+        .group-updated-at {
+          font-size: .9em;
+        }
+      }
     }
   }
 }
