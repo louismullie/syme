@@ -3,29 +3,16 @@ guard('socket', {
   // BEGIN CUD OPERATIONS
   updatedPosts: 0,
   updatedComments: 0,
-  
-  request: {
 
-    invite: function(data) {
+  invitation: {
 
-      alert('Somebody has requested an invite!');
+    distribute: function (data) {
 
-    }
+      var user = CurrentSession.getUser();
+      var groupId = data.group_id;
+      var callback = function () {};
 
-  },
-  
-  confirm: {
-
-    invite: function(data) {
-
-      asocial.state.getState('invite', function (authorized) {
-
-        //alert('UPDATING KEYS');
-
-        if (!authorized) { alert('Not authorized for invite!'); }
-        asocial.invite.update();
-
-      }, { group: data.group });
+      user.getGroupUpdates(groupId, callback);
 
     }
 
@@ -33,33 +20,29 @@ guard('socket', {
 
   create: {
 
-    error: function(data) {
-      $('#feed').prepend('<div class="alert alert-error">' +
-      '<button type="button" class="close" data-dismiss="alert">' +
-      '&times;</button>' + data.message + '</div>');
-    },
-
     post: function(post){
 
       // Remove empty group notice if there is one
-      $('.empty-group-notice').remove();
+      $('#empty-group-notice').remove();
 
       // Render post with the data
-      var postHtml = $(Fifty.render('feed-post', post.view));
+      var template = $(asocial.helpers.render('feed-post', post.view));
 
       var owner = post.view.owner.id;
-      console.log(owner);
 
       // If the post owner isn't the user.
-      if (owner != asocial.state.user.id) {
+      if (owner != CurrentSession.getUserId()) {
         // Increment unread_posts variable
         asocial.helpers.newContent('post');
 
-        postHtml.addClass('hidden');
+        template.addClass('new-post');
       }
 
       // Append hidden new post
-      postHtml.insertAfter($('#newcontent'));
+      template.insertAfter($('#newcontent'));
+
+      // Decrypt
+      asocial.crypto.decryptAll();
 
       // Autogrow comment textarea
       $('textarea.autogrow').autogrow().removeClass('autogrow')
@@ -68,107 +51,110 @@ guard('socket', {
 
     comment: function(data){
 
-      // If related post doesn't exist on page
-      if($('#' + data.target).length == 0){
+    // If related post doesn't exist, increment new content
+    if(!$('#' + data.target).length)
+      return asocial.helpers.newContent('comment');
 
-        asocial.helpers.newContent('comment');
+      var post               = $('#' + data.target),
+          container          = post.find('.comments'),
+          showmore           = container.find('.show-more'),
+          showmore_count     = showmore.find('span'),
+          displayed_comments = container.find('.comment-box').not('.comment-hidden');
 
-      // If it exists
-      } else {
+      // If comments are still collapsed and they are full
+      if( !showmore.data('expanded') && displayed_comments.length >= 3 ){
 
-        var post               = $('#' + data.target),
-            global_count       = post.find('.post-comments span'),
-            container          = post.find('.comments'),
-            showmore           = container.find('.show-more'),
-            showmore_count     = showmore.find('span'),
-            displayed_comments = container.find('.comment-box').not('.comment-hidden');
+        // Hide first displayed comment
+        displayed_comments.first().addClass('comment-hidden');
 
-        // If comments are still collapsed and they are full
-        if( !showmore.data('expanded') && displayed_comments.length >= 3 ){
-
-          // Hide first displayed comment
-          displayed_comments.first().addClass('comment-hidden');
-
-          // Show and increment showmore counter
-          showmore.removeClass('hidden');
-          showmore_count.html(container.find('.comment-hidden').length);
-
-        }
-
-        // Append new comment
-        container.append(Fifty.render('feed-comment', data.view));
-
-        // Reset comment count counter
-        global_count.html( post.find('.comment-box').length );
-
-        // Decrypt new comment
-        asocial.crypto.decryptPostsAndComments();
+        // Show and increment showmore counter
+        showmore.removeClass('hidden');
+        showmore_count.html(container.find('.comment-hidden').length);
 
       }
+
+      // Append new comment
+      container.append(asocial.helpers.render('feed-comment', data.view));
+
+      // Decrypt
+      asocial.crypto.decryptAll();
+
+      // Reset comment count counter
+      post.find('[partial="feed-comment-count"]')
+        .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
 
     },
 
     notification: function(data){
-      
-      var html = Fifty.render('feed-notification', {
-        html: asocial.helpers.notificationText(data),
-        avatar: data.avatar,
-        id: data.id
-      });
-      
-      $('#notifications-content').prepend(html);
-      asocial.crypto.decryptAvatars();
-      
-      // Update the notifications counter.
-      //$('#notifications-button span').html(new_notifications.count);
 
+      Notifications.add(data);
 
     },
 
     user: function (data) {
 
       // Force all clients to reload to get new public key
-      window.location.reload();
+      Router.reload();
 
+    },
+
+    group: function (data) {
+      CurrentSession.getUser().refreshKeyfile(Router.reload);
     }
 
   },
 
   update: {
 
-    // This will be updated in JSON, data is of the form:
-    // { target: post_or_comment_id, view: { has_likes: bool, like_count: int,
-    //   liked_by_user: bool, liker_names: string  } }
-
     like: function(data){
 
-      console.log('New like:', data);
+      var target       = $('#' + data.target),
+          action_link  = target.find('a.like-action').first();
 
-      var link    = $('#' + data.target).find('a.post-likes, a.comment-likes').first(),
-          counter = link.find('span');
+      // Toggle action link
+      data.view.liked_by_user ?
+        action_link.addClass('active') :
+        action_link.removeClass('active');
 
-      if(data.view.like_count > 0) {
-        counter.html(data.view.like_count);
-        link.attr('data-tip', data.view.liker_names);
-      } else {
-        counter.html('');
-        link.removeAttr('data-tip');
-      }
-
-      // Toggle the like link
-      data.view.liked_by_user ? link.addClass('active') : link.removeClass('active');
-
+      // Update list of names and counter
+      target.find('[partial="feed-like-count"]').first()
+        .renderHbsTemplate({ likeable: data.view });
     },
 
     notification: function(data){
 
-      var html = Fifty.render('feed-notification', data);
+      var html = asocial.helpers.render('feed-notification', data);
 
       $('#notifications-content')
         .find('#' + data.id)
         .replaceWith(html);
 
+    },
+
+    group_avatar: function (data) {
+
+      // Change photo
+      $('#group-photo-edit[data-group-id="' + data.group_id + '"] img')
+        .attr('data-attachment-id', data.id)
+        .attr('data-attachment-keys', data.keys)
+        .trigger('decrypt');
+
+    },
+
+    user_avatar: function (data) {
+
+      // Change master
+      $('.user-avatar[data-user-id="' + data.owner_id + '"]')
+        .attr('data-avatar-id', data.id)
+        .attr('data-keys', data.keys)
+        .trigger('decrypt');
+
+      // Sync slaves
+      $('.slave-avatar[data-user-id="' + data.owner_id + '"]')
+        .trigger('sync');
+
     }
+
   },
 
   delete: {
@@ -178,8 +164,8 @@ guard('socket', {
       // If post is on the page yet
       if($('#' + data.target).length > 0){
 
-        var group = asocial.binders.getCurrentGroup();
-        var url = '/' + group + '/post/lastof/';
+        var group = CurrentSession.getGroupId();
+        var url = SERVER_URL + '/' + group + '/post/lastof/';
 
         $.get(url + $('#feed').data('pagesloaded'),
         function(data){ $('#feed').append(data); });
@@ -194,8 +180,7 @@ guard('socket', {
 
       var comment           = $('#' + data.target),
           comment_container = comment.closest('.comments'),
-          comments          = comment_container.find('.comment-box'),
-          global_count      = comment_container.closest('.post').find('.post-comments span');
+          comments          = comment_container.find('.comment-box');
 
       // Remove comment
       comment.remove();
@@ -226,27 +211,27 @@ guard('socket', {
           // Otherwise, hide show-more
           showmore.addClass('hidden');
         }
-      }
 
-      // If there are no more comments, hide comment box
-      if( comments.length == 0 ){
-        comment_container.addClass('hidden');
+      } else {
+        if(comments.length <= 3) {
+          showmore.data('expanded', false);
+        }
       }
 
       // Reset comment count counter
-      global_count.html( comments.length );
+      comment_container.closest('.post').find('[partial="feed-comment-count"]')
+        .renderHbsTemplate({ comment_count: comments.length });
 
     },
-    
+
     notification: function (data) {
       $('#' + data.target).remove();
-      
+
       if ($('#notifications-content').children().length == 0) {
         $('#notifications-content').html(
-          Fifty.render('feed-notifications-empty'));
+          asocial.helpers.render('feed-notifications-empty'));
       }
     }
-    
   },
 
   send: {
@@ -254,17 +239,17 @@ guard('socket', {
     file: function (data) {
 
       // var buffers = {};
-      var group = asocial.binders.getCurrentGroup();
+      var group = CurrentSession.getGroupId();
 
       if (data.action == 'request') {
 
         var sentence = ' would like to send you the following file: ';
         var filename = asocial.helpers.getFilename(data.filename);
 
-        alert(data.sender_name + sentence + filename);
+        asocial.helpers.showAlert(data.sender_name + sentence + filename);
 
-        $.post('/send/file/accept', $.param({
-          transfer_id: data.transfer_id, group: group
+        $.post(SERVER_URL + '/send/file/accept', $.param({
+          transfer_id: data.transfer_id, group_id: group
         }));
 
       } else if (data.action == 'accept') {
@@ -289,13 +274,13 @@ guard('socket', {
         );
 
       } else if (data.action == 'refuse') {
-        alert(data.reason);
+        asocial.helpers.showAlert(data.reason);
       }
 
     },
 
     message: function (data) {
-      alert(data.sender.name + ' sent message: ' + data.message);
+      asocial.helpers.showAlert(data.sender.name + ' sent message: ' + data.message);
     }
 
   },
@@ -318,13 +303,15 @@ guard('socket', {
     // asocial.socket.delete.like(data.data)
     this[data.action][data.model](data.data);
 
-    // Decrypt anything new.
-    if(data.action != 'delete')
-      asocial.crypto.decrypt();
-
   },
 
+  tries: 0,
+
   listen: function() {
+
+    if (typeof(window.tries) == 'undefined') {
+      window.tries = 0;
+    }
 
     var _this = this;
 
@@ -333,36 +320,41 @@ guard('socket', {
       if (typeof(document.eventSource) == 'undefined' ||
          document.eventSource.readyState != 1) {
 
-        document.eventSource = new EventSource('/stream');
+        document.eventSource = new EventSource(SERVER_URL + '/users/' +
+        CurrentSession.getUserId() + '/stream');
 
         document.eventSource.onmessage = function(e) {
+
           var json = $.parseJSON(e.data);
           console.log('Socket action: ' + json.action + '.' + json.model);
           _this.receiveUpdate(json);
+
         };
 
         document.eventSource.onclose = function(e) {
-          console.log('Socket closed. Attempting reconnect.');
-          _this.checkListen();
-        };
-
-        document.eventSource.onerror = function (e) {
-          console.log('Socket error.');
+          if (window.tries < 100) {
+            console.log('Socket closed. Attempting reconnect.');
+            _this.checkListen();
+          } else {
+            console.log('Socket FAIL after three reconnects.');
+            document.eventSource.close();
+          }
         };
 
       }
     } catch(exception){
-      console.log('asocial.socket | error: ');
       console.log(exception);
     }
 
   },
 
   checkListen: function () {
+
+    window.tries += 1;
+
     if (typeof(document.eventSource) != 'undefined' &&
-       document.eventSource.readyState == 2) {
-      this.listen();
-    }
+       document.eventSource.readyState == 2) { this.listen(); }
+
   }
 
 });

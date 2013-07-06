@@ -1,162 +1,184 @@
-asocial.binders.add('feed', { invite: function(){
+asocial.binders.add('feed', { invite: function() {
 
+  // Confirm user
   $('.invite-confirm').click(function(e) {
 
+    var $this = $(this);
+
     e.preventDefault();
-    
-    var $that = $(this);
-    
-    function recrypt(rsa, arr) {
-      
-      var result = [];
-      
-      $.each(arr, function (ind, elem) {
-        var key = rsa.encrypt(
-          asocial_private_key().decrypt(elem.key));
-  
-        result.push({id: elem.id, key: key});
-      });
-      
-      return result;
-      
-    }
-    
-    function recryptPosts(rsa, posts) {
-      
-      var result = [];
-      
-      $.each(posts, function (ind, post) {
-        var key = rsa.encrypt(
-          asocial_private_key().decrypt(post.key));
-          
-        result.push({id: post.id, key: key,
-          comments: recrypt(rsa, post.comments)});
-      });
-      
-      return result;
-      
-    }
-    
-    function recryptKeys(rsa, keys) {
-      
-      return $.base64.encode (JSON.stringify({
-        posts: recryptPosts(rsa, keys.posts),
-        uploads: recrypt(rsa, keys.uploads)
-      }) );
-      
-    }
-    
-    asocial.auth.getPasswordLocal(function (password) {
-    
-       // 3A.
-       console.log("3A");
-       
-       var invite_id = $that.data('invite-id');
-       var id_A = $that.data('invite-invitee_id');
-       var p_sB = $.base64.decode($that.data('invite-p_sb'));
-       var k_P = $.base64.decode($that.data('invite-k_p'));
-       var PA_k = $.base64.decode($that.data('invite-pa_k'));
-       var sB_salt = $that.data('invite-sb_salt');
-       
-       var sB = asocial.crypto.calculateHash(
-         password, sB_salt);
 
-       // 3B.
-       console.log("3B");
-       var p = asocial.crypto.buildPrivateKey(JSON.parse(
-         $.base64.decode(sjcl.decrypt(sB, p_sB))));
+    var invitationId  = $this.data('invite-id'),
+        inviteeId     = $this.data('invite-invitee_id'),
+        accept        = $this.data('invite-accept'),
+        name          = $this.closest('.invite').find('span').attr('title'),
+        user          = CurrentSession.getUser(),
+        keylistId     = CurrentSession.getGroupId();
 
-       // 3C.
-       console.log("3C");
-       var k = p.decrypt(k_P);
+    // Render confirmation modal
+    var confirm_modal = asocial.helpers.render(
+      'feed-modals-confirm', { name: name }
+    );
 
-       // 3D.
-       console.log("3D");
-       var PA = JSON.parse(sjcl.decrypt(k, PA_k));
+    // Show confirmation modal
+    asocial.helpers.showModal(confirm_modal, {
+      closable: false,
+      classes: 'modal-alert',
 
-       // 3E.
-       console.log("3E");
-       
-       // Get serialized key list.
-       var public_keys = asocial.crypto.serializeKeyList();
-       
-       // Add new user to key list.
-       public_keys[id_A] = PA;
-       
-       // Generate a new keylist salt.
-       var keylist_salt = asocial.crypto.generateRandomHexSalt();
+      // Disable modal closing by enter key if button is disabled
+      onsubmit: function(){
+        return $('#responsive-modal a.modal-button').hasClass('disabled');
+      },
 
-       // Generate a hash from the keylist salt.
-       var key = asocial.crypto.calculateHash(password, keylist_salt);
+      onshow: function(){
 
-       // Encrypt the public key list.
-       var keylist = asocial.crypto.encryptKeyList(key, public_keys);
+        //Proceed to confirmation
+        user.confirmInviteRequest(invitationId, accept, function (confirmation) {
+          user.transferKeysRequest(invitationId, inviteeId, function(){
 
-       // Store keylist for A encrypted using k.
-       var PPA_k = sjcl.encrypt(k, JSON.stringify(public_keys));
-       
-       var group = asocial.binders.getCurrentGroup();
-       
-      $.get('/' + group + '/invite/keys',
-        $.param({invite_id: invite_id }), function (keyData) {
+            $('#responsive-modal a.modal-button')
+              .text('Done!').removeClass('disabled');
 
-         // Generate integration data for server.
-         var confirmation = $.param({
+          });
+        });
 
-           group: group,
+      }
+    });
 
-           invite_id: invite_id,
-           PPA_k: $.base64.encode(PPA_k),
+  });
 
-           invitee_id: id_A, // not strictly necessary?
-           keys: recryptKeys(asocial.crypto.buildPublicKey(PA), keyData.keys),
-           keylist: keylist,
-           keylist_salt: keylist_salt,
+  // Add new user
+  $('#main').on('click', 'a#add-user, a#add-user-first', function(){
 
+    var content = asocial.helpers.render('feed-modals-invite');
+
+    asocial.helpers.showModal(content, {
+
+      classes: 'modal-invite',
+
+      // Specify onsubmit() to prevent normal submitting enter key
+      // or submit button, and rather delegate it to the submit()
+      // event specified in onshow()
+
+      onsubmit: function() { return true; },
+
+      onshow: function() {
+
+        // Initial textarea autosizing
+        $('textarea.autogrow').autogrow().removeClass('autogrow');
+
+        // Bind form action directly, to avoid event persistance
+        $('#responsive-modal form').submit(function(e){
+
+          var $this = $(this);
+
+          // Return if event is locked
+          if($this.data('active')) return false;
+
+          var emails = $this.find('textarea[name="emails"]').val();
+
+          // Return if textarea is blank
+          if(!emails) return false;
+
+          // Lock form
+          $this.data('active', true);
+
+          // Show spinner
+          $this.find('a.modal-button').addClass('spinner');
+
+          // Parse emails and invite them all
+          var inviteEmailsFromTextarea = function(emails, callback) {
+
+            // Validate emails and eliminate duplicates
+            var validatedEmails = [];
+            _.each(emails.split("\n"), function(email){
+              if( $.ndbValidator.regexps.email.test(email) )
+                validatedEmails.push(email);
+            });
+            validatedEmails = _.uniq(validatedEmails);
+
+            var inviteQueue = _.clone(validatedEmails),
+                succeededInvitations = [],
+                failedInvitations = {};
+
+            // Send invitations to validate emails
+            _.each(validatedEmails, function(validatedEmail){
+
+              // Submit invite
+              var user = CurrentSession.getUser();
+              var groupId = CurrentSession.getGroupId();
+
+              user.createInviteRequest(groupId, validatedEmail, function () {
+
+                succeededInvitations.push(validatedEmail);
+
+                // Remove concerned email from queue
+                inviteQueue = _.without(inviteQueue, validatedEmail);
+
+                // If queue is empty, callback with
+                // { succeeded: [*emails], failed: {*email: reason} }
+                if(inviteQueue.length == 0) callback({
+                  succeeded: succeededInvitations, failed: failedInvitations
+                });
+
+              }, function () {
+
+                failedInvitations[validatedEmail] = data.status;
+
+                // Remove concerned email from queue
+                inviteQueue = _.without(inviteQueue, validatedEmail);
+
+                // If queue is empty, callback with
+                // { succeeded: [*emails], failed: {*email: reason} }
+                if(inviteQueue.length == 0) callback({
+                  succeeded: succeededInvitations, failed: failedInvitations
+                });
+
+              });
+
+
+            });
+
+          };
+
+          // Show confirmations and/or errors
+          inviteEmailsFromTextarea(emails, function(log){
+
+            // Remove own_email errors
+            _.each(log.failed, function(value, key){
+              if ( value == "own_email" ) log.failed = _.omit(log.failed, key);
+            });
+
+            // If all trys failed, throw system error
+            if ( log.failed.length == emails.length)
+              return asocial.helpers.showAlert(
+                'There has been an error in the invite process.'
+              );
+
+            if ( _.size(log.failed) == 0 ) {
+              // If failed is empty, remove it from log
+              // for templating purposes
+              log = _.omit(log, 'failed');
+            } else {
+              // Discard reasons by converting to array of values
+              log.failed = _.keys(log.failed);
+            }
+
+            // Compile success template with log
+            template = asocial.helpers.render('feed-modals-invite-success', log);
+
+            // Show modal
+            asocial.helpers.showAlert(template, {
+              classes: 'modal-invite', title: 'Success'
+            });
+
+          });
 
         });
 
-       $.post('/invite/confirm', confirmation, function (data) {
+      }
 
-         if (data.status == 'ok') {
-           
-           var PA_msg = JSON.stringify(asocial.crypto.encryptMessage(JSON.stringify(PA)));
-          
-           console.log(PA_msg);
-          
-           var broadcast = $.param({
-             public_key: PA_msg, invitee_id: id_A,
-             group: asocial.binders.getCurrentGroup()
-           });
-
-           $.post('/invite/broadcast', broadcast, function (data) {
-
-             if (data.status == 'ok') {
-               //alert('Go back to groups panel and click on the group.');
-               $that.append('Invite confirmed!');
-               
-             } else {
-               alert('An error has occured with broadcasting.');
-             }
-           
-           });
-
-         } else {
-         
-           alert('An error has occured with confirmation.');
-         
-         }
-             
-       });
-
-      });
-        
-  
     });
-    
+
   });
 
-
 } }); // asocial.binders.add();
-
-

@@ -1,9 +1,0 @@
-{{#if placeholder}}
-
-%img.group-photo{src: '/img/groupphoto.jpg', alt: 'Group avatar'}
-
-{{else}}
-
-%img.group-photo.encrypted-image{src: empty_image, alt: 'Encrypted image', 'data-attachment-id' => '{{id}}', 'data-attachment-key' => '{{key}}', 'data-attachment-type' => 'image', 'data-attachment-group' => '{{group_name}}'}
-
-{{/if}}

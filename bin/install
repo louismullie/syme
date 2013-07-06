@@ -54,13 +54,13 @@ echo "Installing Redis, a key-value database ..."
 
   successfully brew install redis
 
-echo "Installing Asocial ..."
+echo "Installing Syme ..."
 
   successfully git clone git@github.com:louismullie/asocial.git
   successfully cd asocial
   successfully bundle install
 
-echo "Starting Asocial ..."
+echo "Starting Syme ..."
 
   # export rvmsudo_secure_path=1
   # rvmsudo bundle exec foreman export launchd /etc/launchd.conf -f ./Procfile -a asocial -u `whoami` -l ./logs

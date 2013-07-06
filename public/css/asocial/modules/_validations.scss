@@ -1,0 +1,53 @@
+.validation-container {
+  display: relative;
+
+  .validation-append {
+    width: 100px;
+    padding: 0 15px;
+
+    position: absolute;
+    top: 0; right: 0;
+
+    background: $warning;
+
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+
+    color: white;
+
+    text-align: center;
+    line-height: 40px;
+    font-weight: 200;
+    font-size: .9em;
+  }
+
+  .validation-message {
+    $validationBackgroundColor: $concrete;
+
+    position: relative;
+    display: block;
+
+    margin-bottom: 1em;
+    padding: .5em 1em;
+
+    border-radius: $baseBorderRadius;
+    background-color: $validationBackgroundColor;
+
+    color: white;
+    font-size: .8em;
+    font-weight: 200;
+
+    &::before {
+      $validationArrowSize: 15px;
+
+      content: '';
+
+      position: absolute;
+      top: -($validationArrowSize - 1); left: 17px;
+
+      @include triangle($validationArrowSize, $validationBackgroundColor, up);
+    }
+
+    &.no-arrow::before { display: none !important; }
+  }
+}

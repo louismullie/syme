@@ -1,66 +1,118 @@
-#feed-form-avatar {
-  @include arrow(right, 9px, 1px, 30px, $box1Color, $border1Color);
-
-  &:before {
-    right: -15px;
-
-    @include transition(all 0.2s linear);
-  }
-  &:after {
-    top: 30px;
-    right: -16px;
-    border-width: 9px;
-
-    @include transition(all 0.2s linear);
-  }
-
-  img.avatar {
-    width: $avatarSize; height: $avatarSize;
-    @include border-radius($avatarSize);
-    @include box-shadow(0 0 1px rgba(0, 0, 0, 0.8));
-    border: 4px solid #FFF;
-
-    @include transition(all 0.2s linear);
-  }
-
-  &.focused {
-    &:after {
-      border-left-color: $userAvatarBorderActive;
-    }
-    img.avatar {
-      @include box-shadow(0 0 1px 1px $userAvatarBorderActive);
-    }
-  }
-}
-
-#feed-form {
+form#feed-form {
   position: relative;
 
-  padding: 0;
-  margin-bottom: 15px;
+  margin-bottom: $bodyPadding / 2;
+  padding-left: emCalc($avatarPostSize) + 1em;
+  padding-bottom: $bodyPadding / 2;
 
-  @include border-radius(6px);
+  border-bottom: 1px dashed #ddd;
 
-  @include transition(all 0.2s linear);
+  background: $bodyBackgroundColor;
 
-  &.focused {
-    @include box-shadow(0 0 7px 0 $activeShadow);
+  a#feed-form-avatar {
+    width: $avatarPostSize;
+    position: absolute;
+    left: 0;
+
+    display: block;
+    margin-right: 1em;
+
+    border-radius: 50%;
+
+    &[data-placeholder="true"] span {
+      opacity: 1 !important;
+      background: rgba(black, 0.2) !important;
+    }
+
+    &:hover span, &.active span {
+      opacity: 1;
+      background: rgba(black, 0.2);
+    }
+
+    // Spinner when active
+    i.icon-spinner { display: none; }
+    &.active {
+      i.icon-picture { display: none; }
+      i.icon-spinner { display: inline-block; }
+    }
+
+    span {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+
+      border-radius: 50%;
+
+      color: white;
+      text-align: center;
+      line-height: $avatarPostSize;
+
+      opacity: 0;
+
+      @include transition(background 0.2s ease, opacity 0.2s ease);
+    }
+
+    img.avatar {
+      width: 100%; height: auto; // Preserve aspect ratio
+      border-radius: 50%;
+      box-shadow: 0 0 16px 1px white;
+    }
   }
 
-  textarea {
-    min-height: 60px;
-    max-height: 400px;
-    width: 100%;
-    @include box-sizing;
-    resize: none;
+  #textarea-holder {
+    $marginTop: $avatarPostSize / 2;
+    $arrowSize: 8px;
+    $borderSize: 2px;
+    $borderColor: $lightgray;
 
-    margin-bottom: 0;
-    padding: 10px;
+    position: relative;
+    margin-bottom: 1em;
 
-    border: 1px solid #ccc;
-    border-bottom: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    border: $borderSize solid $borderColor;
+    border-radius: $baseBorderRadius;
+
+    &.focused {
+      border-color: $success;
+    }
+
+    &:after, &:before {
+      right: 100%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    &:after {
+      border-color: rgba(255, 255, 255, 0);
+      border-right-color: #fff;
+      border-width: $arrowSize;
+      top: 0%;
+      margin-top: $marginTop - $arrowSize;
+    }
+
+    &:before {
+      border-color: rgba(0, 0, 0, 0);
+      border-right-color: inherit;
+      border-width: $arrowSize + $borderSize;
+      top: 0%;
+      margin-top: $marginTop - $arrowSize - $borderSize;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: $avatarPostSize; max-height: 200px;
+
+      @include box-sizing;
+
+      margin: 0;
+      padding: 10px;
+      border: none;
+
+      font-size: .9em;
+      font-weight: 200;
+    }
   }
 
   #drag-helper {
@@ -71,6 +123,7 @@
 
     position: absolute;
     left: 0; right: 0; top: 0; bottom: 0;
+    z-index: 4;
 
     background-color: rgba(255, 255, 255, 0.8);
 
@@ -101,121 +154,127 @@
     border-radius: 0;
   }
 
-  .markdown-cheatsheet {
-    width: 100%;
-    padding: 5px 10px;
-    @include box-sizing;
-
+  #upload-box {
     display: none;
 
-    background-color: rgba(250, 250, 250, 0.2);
-    border: 1px solid #ccc;
-    border-bottom: none;
+    margin-bottom: 1em;
 
-    font-size: 13px;
-    color: #aaa;
+    border: $baseBorderStyle;
+    border-radius: $baseBorderRadius;
 
-    h4 {
-      font-size: 1.1em;
-      margin-top: 0;
-      color: rgb(114, 114, 114);
-      border-bottom: 1px solid rgb(221, 221, 221);
-      padding-bottom: 5px;
-      margin-bottom: 5px;
-    }
+    font-size: .8em;
 
-    button {
-      margin-top: -2px;
+    div.upload-row {
+      padding: 10px 15px;
+      border-bottom: $baseBorderStyle; &:last-child { border-bottom: none; }
+
+      // Background progress-bar. Animate background-size from 0% to 100%
+      background: -webkit-linear-gradient(left, $bodyBackgroundColor3, $bodyBackgroundColor3 50%);
+      background-repeat: repeat-y;
+      background-size: 0%;
+      @include transition(background-size 0.5s ease);
+
+      &.done {
+        background: rgba($success, 0.15);
+        span.icon { display: none; }
+        a.delete-upload { display: inline-block; }
+      }
+
+      font-weight: 200;
+
+      span.icon {
+        padding-right: .5em;
+      }
+
+      span.filename {
+        overflow-x: hidden;
+        max-width: 50%;
+        display: inline-block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      span.filesize {
+        padding-left: .5em;
+        color: $gray;
+      }
+
+      a.delete-upload {
+        display: none;
+        float: right;
+
+        color: $gray;
+
+        @include transition(color 0.1s ease);
+
+        &:hover {
+          text-decoration: none;
+          color: darken($gray, 40%);
+        }
+      }
     }
   }
 
-  .textarea-supplement {
-    line-height: 26px;
+  ul#attachments {
+    margin: 0;
+    list-style-type: none;
 
-    @include box-sizing;
+    font-size: .9em;
+    line-height: 2em;
 
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-top: 0;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
+    li {
+      display: inline-block;
+      vertical-align: middle;
 
-    font-size: 13px;
-    color: lighten($lightgray, 15%);
+      margin-right: 1em;    &:last-child{ margin-right: 0; }
+      padding-right: .3em;  &:last-child{ padding-right: 0; }
 
-    cursor: default;
+      font-weight: 200;
+      font-size: 0.9em;
+      line-height: 2em;
 
-    width: 100%;
+      &.title {
+        font-weight: normal;
+        color: $darkgray;
 
-    .textarea-supplement-bar {
-      padding: 7px 0 7px 10px;
-
-      p {
-        margin-bottom: 0;
-      }
-
-      .textarea-supplement-tools {
-        margin-right: 10px;
-
-        a {
-          color: lighten($lightgray, 15%);
-
-          a:hover {
-            color: lighten($lightgray, 20%);
-          }
-        }
-      }
-    }
-
-    .post-button {
-      padding-right: 0;
-
-      button {
-        height: 34px;
-        border-radius: 0;
-        border-bottom-right-radius: 4px;
-
-        background-color: $navbar;
-
-        font-size: 14px;
-        color: #fff;
-
-        &:hover{
-          background-color: lighten($navbar, 15%);
-          color: #fff;
-          text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
-        }
+        @media #{$breakpointSmall} { display: none; }
       }
 
       a {
-        color: #aaa;
-      }
+       display: block;
+       line-height: inherit;
 
-      span {
-        padding-right: 15px;
+       color: darken($gray, 15%);
 
-        &:last-child {
-          padding-right: 0;
+        &:hover {
+          color: $darkgray;
+          text-decoration: none;
+        }
+
+        i {
+          margin-right: .1em;
+
+          font-size: 1.2em;
         }
       }
     }
   }
 
-  & > div {
+  a[role="submit"] {
+    float: right;
 
-    .right {
-      float: right;
-      text-align: right;
+    font-size: .8em;
+    line-height: 2em;
 
-      button {
-        margin-left: 5px;
-      }
-    }
+    border: 1px solid transparent;
   }
 }
 
-@media (max-width: 979px) {
-  .textarea-supplement .encrypted-info {
-    display: none;
-  }
+#feed-form-separator {
+  height: 7px;
+  margin-bottom: 1em;
+
+  @extend .hide-text;
+
+  @include inclined-stripes(transparent, 15px, $gray);
 }

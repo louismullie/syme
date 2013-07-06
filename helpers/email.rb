@@ -1,94 +1,101 @@
-def send_email(to, subject, body)
-  
-  Pony.mail(:to => to, :via =>:sendmail,
-    :from => "contact@joinasocial.com", :subject => subject,
-    :headers => { 'Content-Type' => "text/html" }, :body => body)
-  
-end
+def send_email_to(email, subject, body)
 
-def send_email2(a_to_address, a_from_address , a_subject, a_type, a_message)
-  begin
-    case settings.environment
-    when :development                          # assumed to be on your local machine
-      Pony.mail :to => a_to_address, :via =>:sendmail,
-        :from => a_from_address, :subject => a_subject,
-        :headers => { 'Content-Type' => a_type }, :body => a_message
-    when :production                         # assumed to be Heroku
-      Pony.mail :to => a_to_address, :from => a_from_address, :subject => a_subject,
-        :headers => { 'Content-Type' => a_type }, :body => a_message, :via => :smtp,
-        :via_options => {
-          :address => 'smtp.sendgrid.net',
-          :port => 25,
-          :authentication => :plain,
-          :user_name => ENV['SENDGRID_USERNAME'],
-          :password => ENV['SENDGRID_PASSWORD'],
-          :domain => ENV['SENDGRID_DOMAIN'] }
-    when :test
-      # don't send any email but log a message instead.
-      logger.debug "TESTING: Email would now be sent to #{to} from #{from} with subject #{subject}."
-    end
-  rescue StandardError => error
-    logger.error "Error sending email: #{error.message}"
-  end
+  Pony.mail({
+    :to => email,
+    :from => "contact@joinasocial.com",
+    :subject => subject,
+    :headers => { 'Content-Type' => "text/html" },
+    :body => body,
+    :via => :smtp,
+    :via_options => {
+      :address        => 'smtp.mandrillapp.com',
+      :port           => '587',
+      :user_name      => 'louis.mullie@gmail.com',
+      :password       => 'tjCX49k-tDIYzmqnW0ZjYw',
+      :authentication => :plain,
+      :domain         => "localhost.localdomain"
+    }
+  })
+  
 end
 
 def send_invite(email, token)
   
-  subject = "Join #{@user.get_name} on Asocial"
 
-  message = 
+  subject = "Join #{@user.full_name} in a group on Syme"
+  
+  invitee = User.where(email: email).first
+  
+  # User does not yet have an account
+  message = if invitee.nil?
+    
+  "<p>Hello,</p>
 
-"Hey,
+  <p>#{@user.full_name} has invited you to join a group on Syme, the encrypted social network. All you need to do is sign up to accept the invitation and get started.</p>
 
-#{@user.get_name} invited you to join his network.
-Follow this link to accept the invitation and
-register: http://localhost:5000/invite/show/#{token}.
+  <p><a href='http://www.getsyme.com'>[Sign up]</a></p>
 
-Best,
-Asocial"
+  <p>Best,</p>
+  <p>Syme</p>
+  "
+  
+  # User already has an account
+  else
+    
+  "<p>Hey #{invitee.full_name},</p>
+
+  <p>#{@user.full_name} has just invited you to join a group on Syme, the encrypted social network. Log on to your Syme account to accept the invitation.</p>
+  
+  <p>Best,</p>
+  <p>Syme</p>
+  "
+    
+  end
 
   # email
-  send_email('louis.mullie@gmail.com', subject, message)
-  
+  send_email_to(email, subject, message)
+
 end
 
-def request_confirm(inviter, invitee, token)
-  
-  subject = "Integrate #{invitee.get_name} in your group"
+def request_confirm(invite)
+
+  invitee, inviter = invite.invitee, invite.inviter
+
+  subject = "Grant #{invitee.full_name} access to #{invite.group.name} on Syme"
 
   message =
 
-"Hey #{inviter.get_name},
-     
-#{invitee.get_name} has joined your group on Asocial.
-Follow this link to accept to confirm registration:
+  "<p>Hello #{inviter.full_name},</p>
 
-http://localhost:5000/invite/confirm/#{token}
+  <p>#{invitee.full_name} has accepted the invitation to your group on Syme.</p>
+  <p>You need to log on to your account to confirm and grant him or her access.</p>
 
-Best,
-Asocial"
+  <p>Best,</p>
+  <p>Syme</p>"
 
   # inviter.email
-  send_email('louis.mullie@gmail.com', subject, message)
+  send_email_to(inviter.email, subject, message)
 
 end
 
 
-def notify_confirmed(inviter, invitee)
-  
-  subject = "Integrate #{invitee.get_name} in your group"
+def notify_confirmed(invite)
+
+  invitee, inviter = invite.invitee, invite.inviter
+
+  subject = "You've been granted access to #{invite.group.name} on Syme"
 
   message =
 
-"Hey #{invitee.get_name},
-     
-#{inviter.get_name} has approved your registration.
-Login to your group at http://localhost:5000/
+"<p>Hello #{invitee.full_name},</p>
 
-Best,
-Asocial"
+<p>#{inviter.full_name} has granted you access to #{invite.group.name} on Syme.</p>
+All you need to do is log on to your account to start sharing.</p>
+
+<p>Best,</p>
+<p>Syme</p>"
 
   # invitee.email
-  send_email('louis.mullie@gmail.com', subject, message)
+  send_email_to(invitee.email, subject, message)
 
 end

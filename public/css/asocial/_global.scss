@@ -1,134 +1,197 @@
-/* BASIC ELEMENTS */
+body {
+  background: $bodyBackgroundColor;
 
-  body {
-    padding: 20px 0 10px 0;
+  font: $baseFont;
+  color: $black;
 
-    background: $bodyBackground;
+  // Hides selection globally
+  // @include user-select(none);
 
-    &.noscroll {
-      overflow: hidden !important;
-    }
+  overflow-y: scroll;
+
+  &.noscroll {
+    // Locks scroll on document only
+    overflow: hidden !important;
   }
+}
 
-  a {
-    color: $linkColor;
-    text-decoration: none;
+// Vertical alignment for nested block elements
+* {
+  vertical-align: top
+}
 
-    &:hover {
-      color: $linkColor;
-      text-decoration: underline;
-    }
+// Scrollbar
+.scrollable::-webkit-scrollbar {
+  height: 16px;
+  overflow: visible;
+  width: 10px;
+}
+
+.scrollable::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
+
+.scrollable::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,.2);
+  background-clip: padding-box;
+  border: solid transparent;
+  border-width: 1px 1px 1px 2px;
+  min-height: 28px;
+  padding: 100px 0 0;
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background-clip: padding-box;
+  border: solid transparent;
+  border-width: 0 0 0 4px;
+}
+
+a {
+  color: $linkColor;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
+}
 
-  p {
-    line-height: $lineHeight;
+textarea {
+  resize: none;
+}
+
+code, .code {
+  font-family: $codeFontFamily;
+}
+
+// Hide canvas without display:none;
+// to prevent dom exceptions
+canvas {
+  max-height:1px;
+  position:absolute;
+  top:-1px;
+  visibility:hidden;
+}
+
+// No margins for forms and inputs
+form, input {
+  margin: 0;
+}
+
+input[type="submit"] {
+  position: absolute;
+  visibility: hidden;
+}
+
+#spinner {
+  position: fixed;
+  top: 8px; left: 0; right: 0;
+
+  display: none;
+  z-index: 4;
+  @extend .mtl;
+
+  color: $gray;
+
+  text-align: center;
+  line-height: 40px;
+  font-size: 2em;
+}
+
+#main {
+  padding-top: $navbarHeight + $bodyPadding;
+  padding-bottom: $bodyPadding;
+  padding-left: $bodyPadding/2;
+  padding-right: $bodyPadding/2;
+}
+
+.hidden {
+  display: none;
+}
+
+.hide-text {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+// CSS Tips for icons
+[data-tip].tip-icon {
+  &:before {
+    left: 0;
   }
-
-  code, .code {
-    font-family: $fontCode;
+  &:after {
+    left: -6px;
   }
+}
 
-  canvas {
-    position:absolute;
-    max-height:50px;
-    top:-50px;
-    visibility:hidden;
+h1.enormous {
+  font-size: 80px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 0 30px rgba(0, 0, 0, .075);
+}
+
+// Placeholder for loading images (some of them are deprecated)
+img.encrypted-image,
+img.encrypted-background-image,
+img.slave-avatar,
+img.user-avatar,
+img.placeholder-avatar
+img.placeholder {
+  @include inclined-stripes(transparent, 25px, rgba(0, 0, 0, .2));
+}
+
+// Avatar styles and sizes
+.avatar-post {
+  width: $avatarPostSize; height: $avatarPostSize;
+  border-radius: $baseBorderRadius;
+}
+.avatar-notification {
+  width: $avatarNotificationSize; height: $avatarNotificationSize;
+  border-radius: $baseBorderRadius;
+}
+.avatar-comment {
+  width: $avatarCommentSize; height: $avatarCommentSize;
+  border-radius: $baseBorderRadius;
+}
+
+// Tight columns for Foundation
+.row > .tight {
+  @media #{$small} {
+    padding-left: 0; padding-right: 0;
+
+    &:first-child { padding-left: $column-gutter / 2; }
+    &:last-child { padding-right: $column-gutter / 2; }
   }
+}
 
-/* HELPER CLASSES */
+.base-centered-column {
+  @media #{$breakpointLarge}  { @include grid-column(16, false, true); }
+  @media #{$breakpointMedium} { @include grid-column(20, false, true); }
+  @media #{$breakpointSmall}  { @include grid-column(24); }
 
-  .hidden {
-    display: none
-  }
+  @include transition(width 0.1s ease);
+}
 
-  // Form validation
+.small-centered-column {
+  @media #{$breakpointLarge}  { @include grid-column(8, false, true); }
+  @media #{$breakpointMedium} { @include grid-column(10, false, true); }
+  @media #{$breakpointSmall}  { @include grid-column(24); }
 
-  ul[role="alert"] {
-    margin-left: 0;
-    font-size: 0.9em;
-
-    li {
-      line-height: 1.3em;
-    }
-  }
-
-  // CSS Tips for icons
-
-  [data-tip].tip-icon {
-    &:before {
-      left: 0;
-    }
-    &:after {
-      left: -6px;
-    }
-
-  }
-
-  // Homemade jumbotron
-
-  h1.enormous {
-    font-size: 80px;
-    font-weight: bold;
-    letter-spacing: -1px;
-    line-height: 1;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 0 30px rgba(0, 0, 0, .075);
-  }
-
-  // Flat popovers
-
-  .flat-popover {
-    position: absolute;
-    display: none;
-
-    width: $popoverWidth;
-
-    @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075));
-
-    > h3 {
-      color: $popoverHeaderColor;
-      background-color: $popoverHeaderBackground;
-      line-height: $popoverHeaderHeight;
-
-      margin: 0;
-      padding: 8px 14px;
-      font-size: 14px;
-      font-weight: normal;
-
-      @include border-top-radius(2px);
-
-      @include arrow(top, 10px, 1px, 15px, $popoverHeaderBackground, transparent);
-    }
-
-    > div {
-      background-color: #FFFFFF;
-
-      @include border-bottom-radius(2px);
-      border: 1px solid $border1Color;
-      border-top: none;
-    }
-  }
-
-  .huge-icon {
-    font-size: 300px;
-    color: #FFF;
-    text-shadow: 0 0 20px #0088cc;
-  }
-
-  // Placeholder for loading images
-  img.avatar, img.group-photo {
-    @include inclined-stripes(transparent, 50px, rgba(0, 0, 0, .2));
-  }
-
-/* RESOLUTION AJUSTMENTS */
-
-  @media (max-width: 480px) {
-
-  }
-
-  @media (max-width: 767px) {
-
-  }
-
-  @media (max-width: 979px) {
-
-  }
+  @include transition(width 0.1s ease);
+}

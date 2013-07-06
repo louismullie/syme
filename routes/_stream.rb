@@ -1,13 +1,16 @@
-get '/stream', auth: [], provides: 'text/event-stream' do
+# EventSource connection for client applications.
+get '/users/:user_id/stream', auth: [],
+  provides: 'text/event-stream' do |user_id|
 
   user_id = @user.id.to_s
+  subscriber = MagicBus::Subscriber
   
   stream :keep_open do |out|
     
-    client_id = Subscriber.subscribe(user_id, out)
+    client_id = subscriber.subscribe(user_id, out)
     
-    cleanup = lambda do 
-      Subscriber.unsubscribe(user_id, client_id)
+    cleanup = lambda do
+      subscriber.unsubscribe(user_id, client_id)
       out.close
     end
     

@@ -1,15 +1,23 @@
 class CommentGenerator
 
   def self.generate(comment, current_user)
-
+    
+    current_key = comment.key_for_user(current_user)
+    
+    content = Base64.strict_encode64({
+      message: comment.content,
+      keys: {
+        current_user.id => current_key
+      },
+      senderId: comment.owner.id.to_s
+    }.to_json)
+    
     {
 
       id: comment.id.to_s,
-      content: comment.content,
-
+      content: content,
       full_time: generate_timestamp(comment),
-
-      key: comment.key_for_user(current_user),
+      
       deletable: comment.deletable_by?(current_user),
 
       commenter: generate_commenter(comment, current_user),
@@ -37,7 +45,7 @@ class CommentGenerator
 
     {
       id: commenter.id.to_s,
-      name: commenter.get_name(false),
+      name: commenter.full_name,
       # user: commenter,
       avatar: AvatarGenerator.generate(
         commenter_membership, current_user)

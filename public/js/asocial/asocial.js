@@ -1,22 +1,50 @@
 guard('asocial', {
 
-  helpers: asocial_helpers,
-  url: asocial_url,
-  binders: asocial_binders,
-  crypto: asocial_crypto,
-  socket: asocial_socket,
+  helpers:  asocial_helpers,
+  binders:  asocial_binders,
+  crypto:   asocial_crypto,
+  socket:   asocial_socket,
   uploader: asocial_uploader,
-  thumbnail: asocial_thumbnail,
-  auth: asocial_auth,
-  state: asocial_state,
-  invite: asocial_invite
+  auth:     asocial_auth,
+  state:    asocial_state,
+  error:    asocial_error,
+  compat:   asocial_compat
 
 });
 
-// Execute global and route binders.
-$(document).ready(function(){
+SERVER_URL = window.location.origin;
 
-  // Load current url and bind its binders
-  asocial.binders.loadCurrentUrl();
+// Register all Handlebars templates.
+$.each(Handlebars.templates, function (name, template) {
+  Handlebars.registerPartial(name.slice(1), template);
+});
+
+$(function(){
+
+  // Bind a[hbs] to router
+  $(document).on('click', 'a[hbs]', function(e){
+    e.preventDefault();
+
+    Router.navigate( $(this).attr('href') );
+  });
+
+  // Initialize router
+  Router = new Router;
+
+  CurrentSession = new Session();
+  
+  CurrentSession.initialize(function () {
+
+    Backbone.history.start({ pushState: true });
+
+    // Bind global binders
+    asocial.binders.bind('global', false);
+
+    // Trigger root.
+    if (asocial.compat.inChromeExtension()) {
+      Router.navigate('/');
+    }
+
+  }, function () { alert('Session failed!'); });
 
 });

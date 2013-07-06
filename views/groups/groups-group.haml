@@ -1,0 +1,29 @@
+%li.group-card
+  .group-banner
+    {{#if deletable}}
+
+    // Delete group
+    %a.delete-group.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Delete group' }
+      %i.icon-remove
+
+    {{else}}
+
+    // Leave group
+    %a.leave-group.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Leave group' }
+      %i.icon-signout
+
+    {{/if}}
+
+    %a.group-banner-link{ href: '/users/{{current_user_id}}/groups/{{id}}', hbs: '' }
+      // Group avatar
+      {{#with avatar}} {{> groups-avatar.hbs}} {{/with}}
+
+  .group-card-content
+
+    // Normal link
+    %a.group-link{href: '/users/{{current_user_id}}/groups/{{id}}', hbs: ''}
+      {{name}}
+
+    .group-updated-at
+      Updated
+      %time.timeago{ datetime: '{{updated_at}}' }

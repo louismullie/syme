@@ -20,7 +20,7 @@ rvm install 1.9.3
 sudo brew install nginx haproxy memcached redis mongodb
 ```
 
-**Install Asocial**
+**Install Syme**
 
 ```
 git clone git@github.com:louismullie/asocial.git
@@ -28,7 +28,7 @@ cd asocial
 bundle install
 ```
 
-**Launch Asocial**
+**Launch Syme**
 
 ```
 rvm use 1.9.3

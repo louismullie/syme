@@ -1,0 +1,61 @@
+.post.hidden{ id: '{{id}}', :'data-encrypted' => '{{encrypted}}' }
+  // Avatar
+  {{#with owner}} {{> feed-avatar.hbs}} {{/with}}
+
+  .post-indent
+    // Post header
+    .post-header
+      // Owner name
+      %p.post-header-infos
+        {{owner.name}}
+
+        // Post time
+        %a.time{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{id}}', hbs: '' }
+          %time.timeago{ datetime: '{{created_at}}' }
+
+      // Delete button
+      {{#if deletable}}
+      %a.btn.btn-white.post-delete.hint--left{ href: '#', :'data-hint' => 'Delete' }
+        %i.icon-remove
+      {{/if}}
+
+    // Post content
+    .post-content
+      // Collapsable content
+      .encrypted
+        {{content}}
+
+      // Attachment
+      {{#if attachment}}
+      .attachment
+        {{#with attachment}} {{> feed-attachment.hbs}} {{/with}}
+      {{/if}}
+
+    // Post footer
+    .post-footer
+      .row
+        // Actions
+        .post-footer-actions.columns.small-12
+          // Like action
+          %a{ href: '#', class: 'like-action {{#if likeable.liked_by_user}}active{{/if}}' }<
+            %span.default-text> Like
+            %span.active-text Unlike
+
+          &sdot;
+
+          // Comment action
+          %a.comment-action{ href: '#' }
+            Comment
+
+        // Informations
+        .post-footer-informations.columns.small-12
+          // Like count
+          %span{ partial: 'feed-like-count' }
+            {{> feed-like-count.hbs}}
+
+          // Comment count
+          %span{ partial: 'feed-comment-count' }
+            {{> feed-comment-count.hbs}}
+
+    .post-comments
+      {{> feed-comments.hbs}}

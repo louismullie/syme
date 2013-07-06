@@ -1,45 +1,323 @@
-.navbar {
-  position: relative;
-  z-index: 1;
+$stripeBarHeight: 8px;
 
-  height: $navbarHeight;
+#navbar {
+  position: fixed;
+  left: 0; right: 0;
+  z-index: 3;
 
-  .nav > li > a {
-    margin-top: 0 !important;
-    color: $navbartext;
+  padding: 0 $bodyPadding;
+
+  background: $bodyBackgroundColor2;
+  border-bottom: $baseBorderStyle;
+
+  #stripe-bar {
+    height: $stripeBarHeight;
+    margin: 0 #{-$bodyPadding};
+
+    opacity: .9;
+
+    background-color: $success;
+
+    background-image:
+      linear-gradient( 90deg, rgba(255,255,255,.14) 50%, transparent 50% ), // Before: .07
+      linear-gradient( 90deg, rgba(255,255,255,.26) 50%, transparent 50% ), // Before: .13
+      linear-gradient( 90deg, transparent 50%, rgba(255,255,255,.34) 50% ), // Before: .17
+      linear-gradient( 90deg, transparent 50%, rgba(255,255,255,.38) 50% ); // Before: .19
+
+    background-size: 104px 1px, 132px 1px, 74px 1px, 106px 1px;
+    background-position: 50%;
   }
 
-  .navbar-inner {
-    background-color: $navbar;
-  }
-}
+  ul {
+    margin: $navbarPadding 0;
 
-#notifications-container {
-  top: $navbarHeight - 5;
-  z-index: 2;
+    list-style-type: none;
 
-  #notifications-content {
-    padding: 5px;
-    font-size: 13px;
+    li {
+      height: $navbarLineHeight;
 
-    & > p {
-      margin: 0;
-      line-height: $popoverRowHeight;
-      text-align: center;
-    }
+      position: relative;
 
-    .notification {
-      margin-top: 5px;
-      padding-bottom: 5px;
-      border-bottom: 1px solid #eee;
+      display: inline-block;
+      vertical-align: middle;
 
-      &:last-child{
-        padding-bottom: 0;
-        border-bottom: none;
+      line-height: $navbarLineHeight;
+
+      margin-right: 1em; &:last-child{ margin-right: 0; }
+
+      & > a {
+        color: $gray;
+        line-height: $navbarLineHeight;
+
+        @include transition(color .25s);
+
+        &:hover {
+          text-decoration: none;
+          color: darken($gray, 10%);
+        }
+
+        &.btn {
+          @extend .btn-white;
+
+          width: 42px;
+          padding: 0;
+
+          text-align: center;
+
+          border-radius: 50%;
+        }
       }
 
-      .avatar {
-        width: 40px;
+      &#brand {
+        a {
+          font: 600 1.5em $opensans;
+          color: $black;
+          line-height: $navbarLineHeight;
+        }
+
+        @media #{$breakpointSmall} { display: none; }
+      }
+
+      &#notification-li {
+        position: relative;
+
+        &[data-badge]:not([data-badge="0"])::after {
+          $notificationBadgeSize: 18px;
+
+          content: attr(data-badge);
+
+          height: $notificationBadgeSize; width: $notificationBadgeSize;
+
+          position: absolute;
+          top: -3px; right: -3px;
+
+          background: $danger;
+
+          line-height: $notificationBadgeSize;
+          border-radius: 3px;
+
+          color: white;
+          font-size: 0.7em;
+          text-align: center;
+        }
+
+        #notifications-container {
+          padding-right: 7px;
+          z-index: 3;
+
+          #notifications-content {
+            max-height: 350px;
+
+            margin-bottom: .5em;
+            padding: 5px;
+            overflow-y: auto;
+
+            font-size: 90%;
+
+            .notification {
+              margin-bottom: 7px;
+              padding: 0 0 7px 7px;
+
+              border-bottom: $baseBorderStyle;
+
+              font-size: 0.9em;
+
+              &:last-child{
+                margin-bottom: 0;
+                border-bottom: none;
+              }
+
+              p {
+                margin: 0;
+              }
+
+              p.empty-notification {
+                color: $gray;
+                text-align: center;
+              }
+
+              p.notification-content {
+                a.notification-unread {
+                  display: inline-block;
+                  float: right;
+
+                  padding-top: 1px; // lol
+                  margin-left: 1em;
+
+                  font-size: 0.9em;
+                  color: $linkColor;
+                  text-shadow: 0 1px 6px rgba($linkColor, 0.5);
+
+                  @include transition(color 0.2s ease);
+
+                  &:hover {
+                    text-decoration: none;
+                    color: lighten($linkColor, 15%);
+                  }
+                }
+              }
+
+              p.notification-infos {
+                text-align: left;
+                font-size: 0.8em;
+                color: $darkgray;
+              }
+            }
+          }
+        }
+      }
+
+      #navbar-collapsed {
+        h3 {
+          background: $bodyBackgroundColor3;
+          border-bottom: $baseBorderStyle;
+
+          &::before {
+            border-bottom-color: $bodyBackgroundColor3;
+          }
+        }
+
+        ul {
+          list-style-type: none;
+          margin: 0;
+
+          li {
+            display: block;
+            height: auto;
+            margin-right: 0;
+
+            border-bottom: $baseBorderStyle;
+              &:last-child { border-bottom: none; }
+
+            a {
+              display: block;
+              padding: 0 1em;
+
+              color: $black;
+              font: 200 1em/3.5em $opensans;
+
+              &:hover {
+                background: $bodyBackgroundColor2;
+              }
+
+              i {
+                margin-right: .5em;
+              }
+            }
+          }
+        }
+      }
+
+      &#navbar-breadcrumbs {
+        padding-left: 1em;
+        border-left: $baseBorderStyle;
+
+        overflow: hidden;
+
+        @media #{$breakpointLarge} {
+          width: 75%;
+        }
+
+        @media #{$breakpointMedium} {
+          width: 55%;
+        }
+
+        // Center and display only last element
+        // on $breakpointSmall
+        @media #{$breakpointSmall} {
+          width: 60%;
+
+          position: absolute;
+          left: 50%;
+          @include transform(translateX(-50%));
+
+          margin: 0;
+          padding-left: 0;
+          border-left: none;
+
+          text-align: center;
+        }
+
+        font: 200 1.2em $opensans;
+        white-space: nowrap;
+
+        ul {
+          list-style-type: none;
+          margin: 0;
+
+          line-height: $navbarLineHeight;
+
+          &.brand-only li {
+            @media #{$breakpointSmall} {
+              display: none;
+
+              &:last-child { display: none; }
+              &::after { content: none; }
+            }
+
+            &.brand {
+              display: none;
+              @media #{$breakpointSmall} { display: inline-block; }
+
+              a {
+                font: 600 1.2em $opensans;
+                color: $black;
+                line-height: $navbarLineHeight;
+
+                &:hover { text-decoration: none; }
+              }
+            }
+
+            & + li {
+              padding-left: 0;
+            }
+          }
+
+          li {
+            margin: 0;
+
+            @media #{$breakpointSmall} { display: none }
+
+            a {
+              color: $gray;
+              line-height: inherit;
+
+              &:hover {
+                text-decoration: underline;
+                color: inherit;
+              }
+            }
+
+            // Text-overflow for last-child
+            &:last-child {
+              overflow-x: hidden;
+              text-overflow: ellipsis;
+              max-width: 76%; // I know
+
+              // Compensation for out-of-box serifs
+              padding: 0 5px;
+
+              a { color: $black; }
+
+              @media #{$breakpointSmall} { max-width: 100%; display: inline-block; }
+            }
+
+            // Separators
+            &::after {
+              content: "\f101";
+              font-family: 'FontAwesome';
+              width: 1.2em;
+              text-align: center;
+              display: inline-block;
+              margin: 0 .5em 0 .4em;
+
+              color: $gray;
+            }
+
+            // No separator for last <li>
+            &:last-child::after { display: none; }
+          }
+        }
       }
     }
   }

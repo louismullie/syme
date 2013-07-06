@@ -1,7 +1,7 @@
 module Resource::Likeable
 
   def liker_names
-    likers.map(&:get_name).join_english
+    likers.map(&:full_name).join_english
   end
 
   private

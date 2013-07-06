@@ -1,22 +1,18 @@
 asocial.binders.add('feed', { feed: function(){
 
-  asocial.state.getState('invite', function (authorized) {
-    
-    if (!authorized) { alert('Not authorized for invite!'); }
-    
-    if (asocial.state.invite.integrate) {
-      asocial.invite.integrate();
+  // Form feed focus color
+  $('#textarea-holder textarea').on({
+    focusin: function(){
+      $(this).parent().addClass('focused');
+    },
+    focusout: function(){
+      $(this).parent().removeClass('focused');
     }
-
-    if (asocial.state.invite.update) {
-      asocial.invite.update();
-    }
-
-  }, { group: asocial.state.group.name });
+  });
 
   // Unread button
-  $('#main').on('click', '#newcontent a.btn', function(e){
-    
+  $('#main').on('click', '#newcontent a', function(e){
+
     if(asocial.socket.updatedComments > 0){
       // If there are new comments, reset feed
       // to reorder the bump sorting
@@ -25,19 +21,109 @@ asocial.binders.add('feed', { feed: function(){
       // If there are only new post, append them
       asocial.helpers.showUnreadPosts();
     }
-    
+
   });
 
-  // Delete post
-  $('#main').on('click', '.post-content a.post-delete', function() {
+  // Infinite scroller
+  $('#feed').data('pagesloaded', 1);
 
-      var post_id    = $(this).closest('.post').attr('id'),
-          group      = asocial.binders.getCurrentGroup(),
-          route      = '/' + group + '/post/delete';
+  $(window).data('infinite-scroll-done', false)
+           .data('infinite-scroll-async', false)
+           .data('infinite-scroll-manual', false);
 
-      if(confirm(locales.en.feed.delete_comment_confirm)) {
-        $.post(route, $.param({ post_id: post_id }));
-      }
+  $(window).on('scroll', function(){
+
+    if( $(window).data('infinite-scroll-done'  )  ||
+        $(window).data('infinite-scroll-async' )  ||
+        $(window).data('infinite-scroll-manual')) return;
+
+    if($(window).scrollTop() >= $(document).height() - $(window).height() - 50){
+
+      // Lock semaphore before AJAX request
+      $(window).data('infinite-scroll-async', true);
+
+      // Creates an array containing all showed posts
+      var showed_posts_id = Array();
+
+      $.each($('.post'), function(index, value){
+        showed_posts_id.push($(this).attr('id'));
+      });
+
+      // Increment feed's state
+      var toload = $('#feed').data('pagesloaded') + 1;
+
+      // Build post request
+      var request = {
+        // Post a list of already showed posts to prevent duplication
+        'ignore': showed_posts_id,
+        // Post the last data timestamp to prevent pill duplication
+        'last_timestamp': $('.gutter-infos[data-timestamp]').last().data('timestamp'),
+        'page': toload
+      };
+
+      // Add optional year and month to request
+      if($('#feed').data('year')) request['year'] = $('#feed').data('year');
+      if($('#feed').data('month')) request['month'] = $('#feed').data('month');
+
+      $.post(SERVER_URL + '/' + CurrentSession.getGroupId() + '/page', request, function(data){
+
+        var lastPage = data.last_page,
+            posts    = data.posts;
+
+        // Check if there are pages to load
+        if(Object.keys(data).length > 0) {
+
+          // Buffer html.
+          var postsHtml = [];
+
+          for (var i = 0; i < posts.length; i++) {
+
+            var post = posts[i];
+
+            // Render HTML.
+            var html = asocial.helpers.render('feed-post', post);
+
+            // Append page
+            postsHtml.push(html);
+
+          }
+
+          // Append all the posts.
+          for (var i = 0; i < postsHtml.length; i++) {
+            var postHtml = postsHtml[i];
+            $('#feed').data('pagesloaded', toload).append(postHtml);
+          }
+
+          if (lastPage) {
+            // If all pages are loaded, disable infinite scrolling
+            $(window).data('infinite-scroll-done', true);
+            $('#load-more').hide();
+          } else {
+            $('#load-more').show();
+          }
+
+          // Decrypt new content
+          asocial.crypto.decryptAll();
+
+          // Textarea autosizing
+          $('textarea.autogrow').autogrow().removeClass('autogrow');
+
+
+        } else {
+
+          // No more pages to load
+          $(window).data('infinite-scroll-done', true);
+          $('#load-more').hide();
+
+        }
+
+      }).complete(function(){
+
+        // Retrieve lock after AJAX request
+        $(window).data('infinite-scroll-async', false);
+
+      });
+    }
 
   });
 
@@ -54,46 +140,5 @@ asocial.binders.add('feed', { feed: function(){
       .trigger('scroll');
 
   });
-
-  $('#invite').submit(function (e) {
-
-    e.preventDefault();
-    
-    // Get data from form.
-    var email = $(this).find('input[name="email"]').val();
-    
-    asocial.auth.getPasswordLocal(function (password) {
-
-      // 1A: !(P, p).
-      var keys = asocial.crypto.generateRSA(true);
-
-      // 1B: !sB
-      var sB_salt = asocial.crypto.generateRandomHexSalt();
-      var sB = asocial.crypto.calculateHash(password, sB_salt);
-
-      // 1C: p -> {p}sB
-      var P = $.base64.encode(JSON.stringify(keys.public_key));
-      var p = $.base64.encode(JSON.stringify(keys.private_key));
-      var p_sB = $.base64.encode(sjcl.encrypt(sB, p));
-      
-      // Build invitation.
-      var invitation = $.param({
-        email: email,
-        P: P, p_sB: p_sB,
-        sB_salt: sB_salt
-      });
-
-      // 1D: B -> R: (P, {p}sB)
-      var group = asocial.binders.getCurrentGroup();
-      
-      $.post('/' + group + '/invite/send', invitation, function (data) {
-        $('.invited-user').removeClass('hidden');
-        $('.invite-user').addClass('hidden');
-      });
-      
-    });
-
-  });
-  
 
 } }); // asocial.binders.add();

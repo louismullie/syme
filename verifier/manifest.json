@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Asocial Verifier",
-  "description": "This extension verifies the integrity of Asocial's Javascript code.",
+  "name": "Syme Verifier",
+  "description": "This extension verifies the integrity of Syme's Javascript code.",
   "version": "1.0",
 
   "browser_action": {

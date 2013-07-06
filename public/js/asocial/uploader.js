@@ -2,19 +2,31 @@ guard('uploader', {
 
   upload: function(file, data, progress, success) {
 
-    var key = asocial.crypto.generateRandomKey();
-    var keys = asocial.crypto.generateMessageKeys(key);
-
     progress = progress || function () {};
     success = success || function () {};
 
-    var group = asocial.binders.getCurrentGroup();
+    var group = CurrentSession.getGroupId();
 
-    uploader = new Uploader(file, key, keys, {
-      data: data, baseUrl: '/' + group + '/file/'
-    });
+    if (file.size / 1024 > 1024 * 25) {
 
-    uploader.start(progress, success);
+      asocial.helpers.showAlert(
+        'You can only upload files of up to 25 Mb for now.');
+
+      asocial.helpers.resetFeedForm();
+      
+      return false;
+
+    } else {
+
+      uploader = new Uploader(file, {
+        data: data, baseUrl: SERVER_URL + '/' + group + '/file/'
+      });
+
+      uploader.start(progress, success);
+
+      return true;
+
+    }
 
   },
 
@@ -29,65 +41,62 @@ guard('uploader', {
       function (upload) {
         var params = $.param({
           transfer_id: transfer_id,
-          group: asocial.binders.getCurrentGroup()
+          group_id: CurrentSession.getGroupId()
         });
 
-        $.post('/send/file/start', params);
+        $.post(SERVER_URL + '/send/file/start', params);
       }
 
     );
   },
 
-  uploadFile: function (file, progress) {
-
-    this.upload(
-
-      file, {}, progress,
-
-      function (upload_id) {
-        $('#upload_id').val(upload_id);
-      }
-    );
-
+  uploadFile: function (file, progress, success) {
+    this.upload(file, {}, progress, function(upload_id) {
+      success(upload_id);
+    });
   },
 
-  uploadImage: function (file, progress) {
+  uploadImage: function (file, progress, success) {
 
     var img = new Image();
-    
+
     var _this = this;
 
     img.onload = function () {
 
       var _that = this;
-      
+
       var callback = function (compressed) {
-        
+
         var size = _that.width.toString() + 'x' +
                    _that.height.toString();
-                   
+
         compressed.name = file.name;
         compressed.type = file.type;
         compressed.size = file.size;
-        
+
         _this.upload(
 
           compressed, { image_size: size }, progress,
 
           function(upload_id) {
-            
+
             _this.uploadThumbnail(file, upload_id);
-            
-            $('#upload_id').val(upload_id);
-            
+
+            success(upload_id);
+
           }
-          
+
         );
 
       };
-      
-      asocial.thumbnail.make(this, file.type, this.width, this.height, callback);
-      
+
+      var options = { image: this, mime: file.type };
+
+      var compressor = new ThumbPick('#canvas');
+
+      compressor.compress({ image: this, mime: file.type }, callback);
+
     };
 
     img.onerror = function () {
@@ -118,10 +127,15 @@ guard('uploader', {
 
         _this.upload(image, data);
 
-      }
+      };
 
-      var thumbnail = asocial.thumbnail.make(
-        this, file.type, 680, 500, callback);
+      var thumbnailer = new ThumbPick('#canvas');
+
+      thumbnailer.thumbnail({
+        image: this, mime: file.type,
+        width: 680, height: 500,
+        compression: 0.6
+      }, callback);
 
     };
 
@@ -137,82 +151,138 @@ guard('uploader', {
 
   selectFile: function (file, type) {
 
+    // What to do otherwise?
     if (!(file instanceof File)) {
       file = $('#upload_file')[0].files[0];
     }
 
-    var shortFilename = asocial.helpers
-      .shortenString(file.name, 25);
+    // Get elements
+    var container = $('#upload-box'),
+        box       = container.find('.upload-row');
 
-    var formattedSize = ' (' + asocial.helpers
-      .formatSize(file.size) + ')';
-
-    $('.textarea-supplement-info').hide();
-    $('.textarea-supplement-file').removeClass('hidden')
-    .text(shortFilename + formattedSize);
-
+    // Progress function
     var progress = function(number) {
-      $('#progress_bar').css('width',
-        number.toString() + '%');
+      box.css('background-size', number + '%');
     };
 
+    // Success function
+    var success = function(upload_id){
+      // Change box style
+      box.addClass('done');
+
+      // Set upload id
+      $('#upload_id').val(upload_id);
+
+      // Remove active state from container
+      container.removeClass('active');
+    };
+
+    // Show upload box and mark it as active
+    container.show().addClass('active');
+
+    // Reset box (as long as upload is single-file)
+    box.css('background-size', '0%').removeClass('done');
+
+    /* Eventually create rows. For now, as upload is a single-file
+       upload, only fill the existent static DOM */
+
+    // Fill filename
+    box.find('span.filename').text( file.name );
+
+    // Fill filesize
+    box.find('span.filesize').text(
+      asocial.helpers.formatSize(file.size)
+    );
+
+    // Delete/cancel upload event
+    box.find('a.delete-upload').one('click', function(){
+      // Delete upload_id
+      $('#upload_id').val('');
+
+      // Hide container
+      container.hide();
+
+      // Single: show attachments again
+      $('ul#attachments').show();
+    });
+
+    // Hide attachments
+    $('ul#attachments').hide();
+
+    // Upload file
     if (asocial.uploader.hasImageMime(file)) {
-      asocial.uploader.uploadImage(file, progress);
+      asocial.uploader.uploadImage(file, progress, success);
     } else {
-      asocial.uploader.uploadFile(file, progress);
+      asocial.uploader.uploadFile(file, progress, success);
     }
-
+    
   },
 
-  selectAvatar: function (file, type) {
+  selectAvatar: function (file, thumbnailCallback, uploadCallback) {
 
     if (!asocial.uploader.hasImageMime(file)) {
-      alert('This is not an image!');
-    } else {
-      this.uploadAvatar(file);
+      asocial.helpers.showAlert('This is not an image!');
+      return false;
     }
+
+    this.uploadAvatar(file, function(url){
+
+      // Return thumbnail image data-url
+      thumbnailCallback(url);
+
+    }, uploadCallback);
 
   },
 
-  selectGroupAvatar: function (file) {
+  selectGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
 
     if (!asocial.uploader.hasImageMime(file)) {
-      alert('This is not an image!');
-    } else {
-      this.uploadGroupAvatar(file);
+      asocial.helpers.showAlert('This is not an image!');
+      return false;
     }
+
+    this.uploadGroupAvatar(file, function(url){
+
+      // Return thumbnail image data-url
+      thumbnailCallback(url);
+
+    }, uploadCallback);
 
   },
 
-  uploadGroupAvatar: function (file) {
+  uploadGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
 
     var img = new Image();
     var _this = this;
 
     img.onload = function () {
 
-      asocial.thumbnail.make(
+      var thumbnailer = new ThumbPick('#canvas');
 
-        this, file.type, 300, 300, function (image) {
+      thumbnailer.thumbnail(
 
-          var colors = getColors(img),
-              dominant = arrayToRgb(colors[1]),
-              median = getInverseRgbColor(colors[1], colors[0]);
+        { image: this,
+          mime: file.type,
+          width: 700,
+          height: 700
+        },
+
+        // Blob callback: upload image
+        function (image) {
 
           var data = {
             mode: 'group_avatar',
-            image_size: '300x300',
-
-            dominant: dominant,
-            first_median: median[0],
-            second_median: median[1]
+            image_size: '700x700'
           };
 
-          _this.upload(image, data, function () {}, function () {
-            asocial.binders.loadCurrentUrl();
-          });
+          _this.upload(image, data, function () {}, uploadCallback);
 
-      });
+        },
+
+        // Url callback: pass thumbnail data url to caller function
+        function(url){ thumbnailCallback(url); }
+
+      );
 
     };
 
@@ -220,7 +290,7 @@ guard('uploader', {
 
   },
 
-  uploadAvatar: function (file) {
+  uploadAvatar: function (file, thumbnailCallback, uploadCallback) {
 
     img = new Image();
     var _this = this;
@@ -228,20 +298,33 @@ guard('uploader', {
 
     img.onload = function () {
 
-      asocial.thumbnail.make(
+      var thumbnailer = new ThumbPick('#canvas');
 
-        this, file.type, 150, 150, function (image) {
+      thumbnailer.thumbnail(
+
+        {
+          image: this,
+          mime: file.type,
+          width: 150,
+          height: 150
+        },
+
+        // Blob callback: upload image
+        function (image) {
 
           var data = {
             mode: 'avatar',
             image_size: '150x150'
           };
 
-          _this.upload(image, data, function () {},  function () {
-            asocial.binders.loadCurrentUrl();
-          }, 'allo');
+          _this.upload(image, data, function () {}, uploadCallback);
 
-      });
+        },
+
+        // Url callback: pass thumbnail data url to caller function
+        function(url){ thumbnailCallback(url); }
+
+      );
 
     };
 

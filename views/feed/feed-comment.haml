@@ -1,0 +1,30 @@
+.comment-box{id: '{{id}}', class: '{{hidden}}'}
+  -# Avatar
+  {{#with commenter}} {{> feed-avatar.hbs}} {{/with}}
+
+  -# Delete button
+  {{#if deletable}}
+  %a.comment-delete.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Delete' }
+    %i.icon-remove
+  {{/if}}
+
+  -# Commenter name (will dynamically be put in .collapsable's first <p>)
+  %a.commenter-name{href: '#'} {{commenter.name}}
+
+  -# Will transform into collapsable
+  .encrypted
+    {{content}}
+
+  -# Footer
+  .comment-footer
+    %a.time{ href: '#' }
+      %time.timeago{ datetime: '{{full_time}}' }
+
+    // Like action
+    %a{ href: '#', class: 'like-action {{#if likeable.liked_by_user}}active{{/if}}' }<
+      %span.default-text> Like
+      %span.active-text Unlike
+
+    // Like count
+    %span{ partial: 'feed-like-count' }
+      {{> feed-like-count.hbs}}

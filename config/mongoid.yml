@@ -10,9 +10,10 @@ production:
       database: asocial
       hosts:
         - localhost:27017
+        - localhost:27018
+        - localhost:27019
   options:
     allow_dynamic_fields: false
     identity_map_enabled: true
     scope_overwrite_exception: true
-    raise_not_found_error: false
     skip_version_check: true

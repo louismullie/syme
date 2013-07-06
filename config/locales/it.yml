@@ -76,7 +76,7 @@ it:
     title: Administration panel
     text:
       1: "Hello"
-      2: "In this page, you can add, edit and delete users. Why nothing else? Because Asocial is meant to be as simple and straightforward as possible."
+      2: "In this page, you can add, edit and delete users. Why nothing else? Because Syme is meant to be as simple and straightforward as possible."
     create_user: Create a user
     invite_user: Invite a user
     username: *username

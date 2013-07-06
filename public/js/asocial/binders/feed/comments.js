@@ -1,8 +1,10 @@
 asocial.binders.add('feed', { comments: function(){
 
   // Open comment box
-  $('#main').on('click', 'a.post-comments', function(){
-    $(this).closest('.post-content').find('textarea').focus();
+  $('#main').on('click', 'a.comment-action', function(){
+
+    $(this).closest('.post').find('textarea')
+      .removeClass('hidden').focus();
   });
 
   // Create comment
@@ -21,20 +23,25 @@ asocial.binders.add('feed', { comments: function(){
       if(!textarea.val().trim()) return;
 
       var message = textarea.val();
-      var comment = JSON.stringify(asocial.crypto.encryptMessage(message));
 
-      // Get the users who were mentioned in the message.
-      var mentions = JSON.stringify(asocial.helpers.findUserMentions(message));
+      var groupId = CurrentSession.getGroupId();
 
-      // Post the comment
-      $.post('/' + asocial.binders.getCurrentGroup() + '/comment/create', $.param({
-        post_id: related_post_id,
-        content: comment,
-        mentioned_users: mentions
-      }));
+      Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
-      // Clear textarea and resize it
-      textarea.val('').css('height', textarea.css('line-height'));
+        // Get the users who were mentioned in the message.
+        var mentions = JSON.stringify(/*asocial.helpers.findUserMentions(message)*/ {});
+
+        // Post the comment
+        $.post(SERVER_URL + '/' + groupId + '/comment/create', $.param({
+          post_id: related_post_id,
+          content: encryptedMessage,
+          mentioned_users: mentions
+        }));
+
+        // Clear textarea and resize it
+        textarea.val('').change();
+
+      });
 
     }
   });
@@ -44,12 +51,22 @@ asocial.binders.add('feed', { comments: function(){
 
       var post_id    = $(this).closest('.post').attr('id'),
           comment_id = $(this).closest('.comment-box').attr('id'),
-          group      = asocial.binders.getCurrentGroup(),
-          route      = '/' + group + '/comment/delete';
+          group      = CurrentSession.getGroupId(),
+          route      = SERVER_URL + '/' + group + '/comment/delete';
 
-      if(confirm(locales.en.feed.delete_comment_confirm)) {
-        $.post(route, $.param({ post_id: post_id, comment_id: comment_id }));
-      }
+      asocial.helpers.showConfirm(
+        'Do you really want to delete this comment?',
+        {
+          closable: true,
+          title: 'Delete comment',
+          submit: 'Delete',
+          cancel: 'Cancel',
+
+          onsubmit: function(){
+            $.post(route, { post_id: post_id, comment_id: comment_id });
+          }
+        }
+      );
 
   });
 

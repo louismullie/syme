@@ -1,82 +1,169 @@
 asocial.binders.add('groups', { main: function() {
 
-  // Decrypt group avatars.
-  asocial.crypto.decryptMedia();
+  // Hide spinner
+  $('#spinner').hide();
 
-  $('.delete-group').click(function (e) {
-    
-    e.preventDefault();
-    
-    var groupId = $(this).data('group-id');
-    
-    var message = 'Are you sure? Type "yes" to confirm.';
-    
-    if (prompt(message) == 'yes') {
-      $.ajax('/groups/' + groupId, {
-        type: 'DELETE',
-        success: function (resp) {
-          alert('Group was deleted.');
-          asocial.binders.loadCurrentUrl();
-        },
-        error: function (resp) {
-          alert('Error: could not delete group.');
-        }
-      });
-    }
-    
+  // Breadcrumbs
+  asocial.helpers.navbarBreadcrumbs({
+    brand_only: true,
+
+    elements: [
+      { title: 'Groups',
+        href: 'users/' + CurrentSession.getUserId() + '/groups' }
+    ]
   });
-  
-  $('#create_group').submit(function (e) {
 
-    // Prevent form submission.
+  // Group pictures decryption
+  $('.encrypted-background-image').trigger('decrypt');
+
+  // Timeago
+  $('time.timeago').timeago();
+
+  // Focus on first #create_first_group input[type="text"]
+  $('#create_first_group').find('input[type="text"]').first().focus();
+
+  // Group delete button toggling
+  $("div.group-banner").on({
+    mouseenter: function(){
+      $(this).find('a.delete-group, a.leave-group')
+        .css({ display: 'block' })
+        .transition({ opacity: 1}, 100);
+    },
+    mouseleave: function(){
+      $(this).find('a.delete-group, a.leave-group')
+        .transition({ opacity: 0}, 100)
+        .css({ display: 'none' });
+    }
+  });
+
+  $('#create_group input[name="name"], #create_first_group input[name="name"]').keyup(function(){
+    $(this).parent().find('a.btn')[
+      $(this).val().length > 0 ? 'removeClass' : 'addClass'
+    ]('disabled');
+  });
+
+  $('#main').on('submit', '#create_group, #create_first_group', function(e) {
+
     e.preventDefault();
 
-    // Get the group name from the form.
     var name = $(this).find('input[name="name"]').val();
 
-    // Get the current user's ID from state.
-    var userId = asocial.state.user.id;
+    if ( name.length == 0 ) return;
 
-    // Get the current user's public key.
-    var publicKey = asocial_public_key();
+    var group = {  name: name };
 
-    // Serialize public key to JSON format.
-    var pKeyJson = asocial.crypto.serializePublicKey(publicKey);
+    $.ajax(SERVER_URL + '/groups', {
+      type: 'POST',
+      data: group,
 
-    // Build a keylist with user's public key.
-    var keylist =  {}; keylist[userId] = pKeyJson;
-    var keylist = JSON.stringify(keylist);
+      success: function (group) {
 
-    // Generate a random salt for keylist encryption.
-    var salt = asocial.crypto.generateRandomHexSalt();
+        var route = SERVER_URL + '/users/' +
+          CurrentSession.getUserId() + '/groups';
 
-    // Retrieve the password from session storage.
-    asocial.auth.getPasswordLocal(function (password) {
+        var ack = SERVER_URL + '/users/' +
+          CurrentSession.getUserId() + '/groups/' + group.id;
 
-      // Derive a key from the user's password for encryption.
-      var key = asocial.crypto.calculateHash(password, salt);
+        Crypto.createKeylist(group.id, function (encryptedKeyfile) {
 
-      // Encrypt the keylist using the key.
-      var encryptedKeylist = sjcl.encrypt(key, keylist);
+          CurrentSession.getUser().updateKeyfile(
+            encryptedKeyfile, function () {
 
-      // Base64 encode the encrypted keylist.
-      var encryptedKeylist64 = $.base64.encode(encryptedKeylist);
+              Router.reload();
 
-      // Build parameters to pass to the group creation method.
-      var params = $.param({
-        name: name,
-        keylist: encryptedKeylist64,
-        keylist_salt: salt
-      });
+              $.ajax(ack, {
+                type: 'PUT',
+                data: { ack_create: true }
+              });
 
-      // Create the group, passing the encrypted key list.
-      $.post('/groups/create', params, function (group) {
-        asocial.binders.goToUrl(group.name);
-      });
+          });
 
+        });
+      },
+
+      error: function (error) {
+        alert('Error on group creation!');
+      }
     });
 
   });
 
+  // Delete group
+  $('.delete-group').click(function (e) {
+
+    e.preventDefault();
+
+    var groupId = $(this).data('group-id'),
+        message = 'Are you sure you want to delete this group ' +
+                  'and all of its content? This cannot be undone.';
+    
+    asocial.helpers.showConfirm(message, {
+      
+      submit: 'Yes',
+      cancel: 'No',
+      
+      onsubmit: function(){
+        
+        $.ajax(SERVER_URL + '/groups/' + groupId,
+        
+          { type: 'DELETE',
+
+          success: function (resp) {
+
+            CurrentSession.groups.splice(CurrentSession.groups.indexOf(groupId), 1);
+            
+            var user = CurrentSession.getUser();
+            user.deleteKeylist(groupId, Router.reload);
+
+          },
+
+          error: function (resp) {
+            asocial.helpers.showAlert('Could not delete group', {
+              onhide: location.reload
+            });
+          }
+          
+        });
+        
+      }
+    });
+    
+
+  });
+
+  // Leave group
+  $('#main').on('click', '.leave-group', function (e) {
+
+    var groupId = $(this).data('group-id');
+
+    asocial.helpers.showConfirm(
+      'Do you really want to leave this group?',
+      {
+        closable: true,
+        title: 'Leave group',
+        submit: 'Leave',
+        cancel: 'Cancel',
+
+        onsubmit: function(){
+
+          var route = SERVER_URL + '/users/' + CurrentSession.getUserId() +
+          '/groups/' + groupId + '/memberships/' + CurrentSession.getUserId();
+
+          $.ajax(route, { type: 'DELETE',
+
+            success: function () {
+              Router.reload();
+            },
+
+            error: function () {
+              asocial.helpers.showAlert('Could not leave group.');
+            }
+
+          });
+
+        }
+      }
+    );
+  });
 
 } }); // asocial.binders.add();

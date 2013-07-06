@@ -2,7 +2,7 @@ class PostGenerator
 
   CommentsPerThread = 3
 
-  def self.generate(post, current_user, show_updated_at = false)
+  def self.generate(post, current_user)
 
     comments = generate_comments(post, current_user)
     owner = generate_owner(post, current_user)
@@ -10,14 +10,22 @@ class PostGenerator
 
     current_key = post.key_for_user(current_user)
     deletable = post.deletable_by?(current_user)
-
+    
+    content = Base64.strict_encode64({
+      message: post.content,
+      keys: {
+        current_user.id => current_key
+      },
+      senderId: post.owner.id.to_s
+    }.to_json)
+    
     attachment = AttachmentGenerator.generate(post, current_user)
 
     {
       # General post information.
       id: post.id.to_s,
       owner: owner,
-      content: post.content,
+      content: content,
       key: current_key,
       deletable: deletable,
 
@@ -26,11 +34,10 @@ class PostGenerator
       full_time: post.created_at
         .strftime("%d/%m/%Y at %H:%M"), # t(:some time locale)
       created_at: post.created_at.iso8601,
-      show_updated_at: show_updated_at,
       timestamp: post.created_at.to_i,
 
       # Attachment information.
-      has_attachment: post.has_attachment?,
+      has_attachment: !post.attachment.nil?,
       attachment: attachment,
 
       # Likes and likers.
@@ -38,11 +45,12 @@ class PostGenerator
 
       # Comment information.
       comments: comments,
-      comment_count: comments.count.to_s,
+      has_comments: comments.count > 0,
+      comment_count: comments.count,
       comments_collapsed: comments.count >
-      CommentsPerThread ? '' : 'hidden',
+        CommentsPerThread ? '' : 'hidden',
       comments_collapsed_count: comments.count -
-      CommentsPerThread
+        CommentsPerThread
     }
 
   end
@@ -77,7 +85,7 @@ class PostGenerator
     {
       id: post.owner.id.to_s,
       user: post.owner,
-      name: post.owner.get_name,
+      name: post.owner.full_name,
       avatar: AvatarGenerator.generate(
         membership, current_user)
     }

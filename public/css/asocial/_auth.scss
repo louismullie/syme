@@ -1,35 +1,96 @@
-#auth-methods {
-  form {
+#auth {
+  padding: $bodyPadding 0;
+
+  h1 {
     margin: 0;
+
+    font: 600 3em/1.5em $opensans;
+    text-align: center;
   }
 
-  button, input[type="submit"] {
-    height: 40px;
+  h2 {
+    font: 200 1.8em/1.5em $opensans;
+    text-align: center;
   }
 
-  input[type="text"], input[type="password"] {
-    width: 100%;
-    height: auto;
-
-    @include box-sizing;
+  h3 {
+    font-weight: normal;
   }
 
-  label.checkbox {
-    // Temporary
-    display: none;
-  }
+  form {
+    margin-top: 2em;
+    padding: 1em;
 
-  input[name="full_name"] {
-    display: none;
-  }
+    background: $bodyBackgroundColor2;
+    border: $baseBorderStyle;
+    border-radius: $baseBorderRadius;
 
-  input[type="submit"] {
-    height: 40px;
-  }
-}
+    box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
 
-#auth-form[data-registering] {
-  input[name="full_name"] {
-    display: inline-block;
+    i {
+      color: $success;
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus {
+      background: white;
+      border-color: $success;
+    }
+
+    label {
+      margin-bottom: 1em;
+      margin-left: 1em;
+
+      font-size: 1em;
+
+      input[type="checkbox"] + span:before {
+        color: $success;
+      }
+    }
+
+    input[type="password"] {
+      padding-right: 108px;
+    }
+
+    #password-score {
+      &[data-strength="0"] { background: lighten($danger, 10%) }
+      &[data-strength="1"] { background: lighten($warning, 10%) }
+      &[data-strength="2"] { background: lighten($sunflower, 10%) }
+      &[data-strength="3"] { background: lighten($green, 10%) }
+      &[data-strength="4"] { background: $success }
+    }
+
+    a[role="submit"] {
+      display: block;
+      width: 100%;
+      margin: 0 auto;
+
+      text-align: center;
+      font-weight: 200;
+      font-size: 1em;
+      line-height: 2.5em;
+
+      i.icon-spinner {
+        display: none;
+
+        margin-left: .5em;
+        color: white;
+      }
+
+      &.loading {
+        &:hover {
+          background-color: $success;
+        }
+
+        i.icon-spinner {
+          display: inline-block;
+        }
+      }
+    }
+
+    p.switchmode {
+      margin: 1em 0 0 0;
+      text-align: center;
+      font-size: .9em;
+    }
   }
 }
