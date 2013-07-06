@@ -58,7 +58,6 @@ guard('crypto', {
 
         reader.onload = function(event){
           var base64 = event.target.result;
-          console.log("STORING!!!");
           store.save({ key: id, value: base64 });
         };
 
