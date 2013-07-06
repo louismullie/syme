@@ -1,25 +1,29 @@
 guard('crypto', {
 
-  decryptAll: function(callback){
+  batchDecrypt: function(callback, collection){
 
+    // Default callback
     var callback = callback || function(){};
+
+    // Default collection
+    var collection = collection || $([
+
+      // Feed elements
+      '.encrypted',
+      '.encrypted-image:not([data-decrypted="true"])',
+      '.encrypted-audio:not([data-decrypted="true"])',
+      '.encrypted-video:not([data-decrypted="true"])',
+
+      // User avatars
+      '.user-avatar:not([data-decrypted="true"])'
+
+    ].join(','));
 
     // Show spinner
     $('#spinner').show();
 
     // Initial decryption
-    $([
-
-      // Feed elements
-      '.encrypted',
-      '.encrypted-image',
-      '.encrypted-audio',
-      '.encrypted-video',
-
-      // User avatars
-      '.user-avatar'
-
-    ].join(',')).batchDecrypt(function(elapsedTime){
+    collection.batchDecrypt(function(elapsedTime){
 
       // Sync slave avatars
       $('.slave-avatar').trigger('sync');
@@ -35,7 +39,7 @@ guard('crypto', {
 
       console.log(
         'Done decrypting collection of ' + this.length +
-        ' items in ' + elapsedTime/1000 + 's'
+        ' items in ' + elapsedTime/1000 + 's', $(this)
       );
 
       callback.call(this);

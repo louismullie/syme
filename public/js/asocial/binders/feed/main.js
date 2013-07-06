@@ -1,7 +1,7 @@
 asocial.binders.add('feed', { main: function(){
 
   // Initial decryption
-  asocial.crypto.decryptAll(function(){
+  asocial.crypto.batchDecrypt(function(){
 
     // Breadcrumbs
     asocial.helpers.navbarBreadcrumbs({

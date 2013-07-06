@@ -42,7 +42,7 @@ guard('socket', {
       template.insertAfter($('#newcontent'));
 
       // Decrypt
-      asocial.crypto.decryptAll();
+      asocial.crypto.batchDecrypt();
 
       // Autogrow comment textarea
       $('textarea.autogrow').autogrow().removeClass('autogrow')
@@ -77,7 +77,7 @@ guard('socket', {
       container.append(asocial.helpers.render('feed-comment', data.view));
 
       // Decrypt
-      asocial.crypto.decryptAll();
+      asocial.crypto.batchDecrypt();
 
       // Reset comment count counter
       post.find('[partial="feed-comment-count"]')

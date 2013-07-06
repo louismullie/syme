@@ -103,7 +103,7 @@ asocial.binders.add('feed', { feed: function(){
           }
 
           // Decrypt new content
-          asocial.crypto.decryptAll();
+          asocial.crypto.batchDecrypt();
 
           // Textarea autosizing
           $('textarea.autogrow').autogrow().removeClass('autogrow');

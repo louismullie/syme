@@ -61,6 +61,9 @@ asocial.binders.add('global', { decrypt: function() {
       $this.add('.slave-avatar[data-user-id="' + user_id + '"]')
         .attr('src', url);
 
+      // Set as decrypted
+      $this.attr('data-decrypted', true);
+
       done();
     };
 
@@ -100,6 +103,9 @@ asocial.binders.add('global', { decrypt: function() {
       $this.attr('src', url)
         .removeClass('.encrypted-' + type);
 
+      // Set as decrypted
+      $this.attr('data-decrypted', true);
+
       done();
     };
 
@@ -122,6 +128,9 @@ asocial.binders.add('global', { decrypt: function() {
 
     var callback = function(url) {
       $this.css("background-image", "url('" + url + "')");
+
+      // Set as decrypted
+      $this.attr('data-decrypted', true);
 
       done();
     }
