@@ -181,6 +181,7 @@ guard('helpers', {
      $('#feed-form #upload_id').val('');
      $('#feed-form #encrypted_content').val('');
      $('#feed-form #mentioned_users').val('');
+     $('#upload-box').removeClass('active');
      $('#upload-box').hide();
      $('ul#attachments').show();
 

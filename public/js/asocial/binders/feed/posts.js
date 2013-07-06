@@ -56,11 +56,9 @@ asocial.binders.add('feed', { posts: function(){
 
     var id       = link.data('attachment-id');
     var filename = link.data('attachment-filename');
-    var key      = link.data('attachment-key');
-
-    key = asocial.crypto.ecc.decrypt(asocial_private_key(), key);
-
-    asocial.crypto.getFile(id, key, function (url) {
+    var keys      = link.data('attachment-keys');
+    
+    asocial.crypto.getFile(id, keys, function (url) {
 
       link.attr('href', url)
           .attr('download', filename)

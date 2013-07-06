@@ -28,6 +28,8 @@ end)
 set :assets_prefix, 'assets'
 set :assets_path, File.join(root, 'public', assets_prefix)
 
+set :upload_path, File.join(root, '.uploads')
+
 set :protection,
      except: [:http_origin, :remote_token, :frame_options],
      origin_whitelist: [
