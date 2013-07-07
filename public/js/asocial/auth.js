@@ -16,8 +16,6 @@ guard('auth', {
       
       success: function (data) {
         
-        alert('SuccesS1');
-        
         if (data.B && data.salt) {
 
           var salt = data.salt;
