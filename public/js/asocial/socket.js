@@ -123,11 +123,7 @@ guard('socket', {
 
     notification: function(data){
 
-      var html = asocial.helpers.render('feed-notification', data);
-
-      $('#notifications-content')
-        .find('#' + data.id)
-        .replaceWith(html);
+      Notifications.get(data.id).set(data);
 
     },
 
