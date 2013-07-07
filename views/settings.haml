@@ -17,6 +17,18 @@
             Saving
             %i.icon-spinner.icon-spin
 
+      %h3 Your email
+
+      %form#change-email{ method: 'post' }
+        %input{ type: 'text', name: 'email', placeholder: '{{email}}', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false' }
+
+        %input{ type: 'submit' }
+        %a#change-email-button.btn.btn-success.disabled{ href: '#', role: 'submit' }
+          %span.default Save
+          %span.active
+            Saving
+            %i.icon-spinner.icon-spin
+
       %h3 Delete your account
 
       .explanation-box

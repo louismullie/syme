@@ -61,6 +61,56 @@ asocial.binders.add('settings', { main: function(){
     ]('disabled');
   });
 
+  // 'Change email' form
+  $('#change-email').submit(function(e){
+
+    var $this = $(this),
+        input = $this.find('input');
+
+    var val = input.val(),
+        placeholder = input.attr('placeholder');
+
+    // If not an email or equal to placeholder, return
+    if ( !$.ndbValidator.regexps.email.test(val) || val == placeholder)
+      return false;
+
+    // Lock form
+    if(!!$this.data('active')) return false;
+    $this.data('active', true);
+
+    $('#change-email-button').addClass('active');
+
+    var callback = function(email){
+      // Reset form and button
+      $this.data('active', false);
+      $('#change-email-button').removeClass('active');
+
+      // Swap placeholder for value
+      input
+        .attr('placeholder', email)
+        .val('');
+    };
+
+    CurrentSession.getUser().save(
+      { email: val },
+      { success: function(model, response, options){
+        callback( model.attributes.email )
+      } }
+    );
+
+  });
+
+  // 'Change name' input watcher
+  $('#change-email input').keyup(function(e){
+    var val = $(this).val();
+
+    $('#change-email-button')[
+      $.ndbValidator.regexps.email.test(val) && val != $(this).attr('placeholder')
+        ? 'removeClass'
+        : 'addClass'
+    ]('disabled');
+  });
+
   // 'Delete account' form
   $('#delete-account').submit(function(e){
     // If input watcher != "delete", return.

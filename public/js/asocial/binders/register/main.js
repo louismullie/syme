@@ -54,7 +54,7 @@ asocial.binders.add('register', { main: function(){
         typeof messages[name][errors[0]] !== "undefined"
         // If message exists
         ? messages[name][errors[0]]
-        // Otherwise, default
+        // Otherwise, missing message error
         : 'Missing message for ' + errors[0];
 
       box
