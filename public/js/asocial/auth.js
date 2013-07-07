@@ -10,54 +10,68 @@ guard('auth', {
     
     var params = $.param({ email: email, A: A.toString(16) });
 
-    $.post(SERVER_URL + '/login/1', params, function (data) {
-
-      if (data.B && data.salt) {
-
-        var salt = data.salt;
-        var B = new BigInteger(data.B, 16);
-        var u = srp.calculateU(A, B);
-        var Sc = srp.calculateS(B, salt, u, a);
-        var M = srp.calculateM(email, salt, A, B, Sc);
-
-        var params = $.param({ M: M.toString(16) });
-
-        $('meta[name="_csrf"]').attr('content', data.csrf);
+    $.ajax(SERVER_URL + '/login/1', {
+      
+      type: 'POST', data: params,
+      
+      success: function (data) {
         
-        $.post(SERVER_URL + '/login/2', params, function (data) {
+        alert('SuccesS1');
+        
+        if (data.B && data.salt) {
 
-           if (data.status == 'ok') {
+          var salt = data.salt;
+          var B = new BigInteger(data.B, 16);
+          var u = srp.calculateU(A, B);
+          var Sc = srp.calculateS(B, salt, u, a);
+          var M = srp.calculateM(email, salt, A, B, Sc);
 
-            $('meta[name="_csrf"]').attr('content', data.csrf);
+          var params = $.param({ M: M.toString(16) });
+
+          $('meta[name="_csrf"]').attr('content', data.csrf);
+        
+          $.post(SERVER_URL + '/login/2', params, function (data) {
+
+             if (data.status == 'ok') {
+
+              $('meta[name="_csrf"]').attr('content', data.csrf);
             
-            success();
+              success();
 
-          } else if (data.status == 'error') {
+            } else if (data.status == 'error') {
             
-            Backbone.Relational.store.reset();
+              Backbone.Relational.store.reset();
             
-            window.location = '/';
+              window.location = '/';
 
-          } else {
+            } else {
 
-            asocial.error.fatalError();
+              asocial.error.fatalError();
 
-          }
+            }
 
-        });
+          });
 
-      } else if (data.status == 'error') {
+        } else if (data.status == 'error') {
 
-        fail(data.reason);
+          fail(data.reason);
 
-      } else {
+        } else if (xhr.status == 401) {
 
+          alert('Throttling!');
+          
+        }
+
+    }, error: function (response) {
+      
+      if (response.status == 503) {
+        fail('throttle');
+      } else {  
         fail('server');
-
       }
-
-
-    });
+      
+      
+    }});
 
   },
 

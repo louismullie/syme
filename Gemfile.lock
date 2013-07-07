@@ -89,11 +89,11 @@ GEM
     moped (1.5.0)
     multi_json (1.7.7)
     multipart-post (1.2.0)
-    net-scp (1.1.1)
+    net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
-    net-ssh (2.6.7)
+    net-ssh (2.6.8)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
     origin (1.1.0)
@@ -105,6 +105,8 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     rack (1.5.2)
+    rack-attack (2.2.0)
+      rack
     rack-nocache (0.1.0)
     rack-protection (1.5.0)
       rack
@@ -177,6 +179,7 @@ DEPENDENCIES
   mongoid
   pony
   rack (>= 1.5.2)
+  rack-attack
   rack-nocache
   rack-ssl
   rack_csrf

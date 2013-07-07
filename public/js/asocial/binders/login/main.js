@@ -43,6 +43,8 @@ asocial.binders.add('login', { main: function(){
         } else if (reason == 'max_tries') {
           msg = 'Maximum login tries has been reached. ' +
           'Please wait at least 10 seconds and refresh the page.';
+        } else if (reason == 'throttle') {
+          msg = 'Please slow down. Your IP has been logged.';
         } else {
           msg = 'An unknown error has occured.';
         }

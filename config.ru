@@ -59,6 +59,18 @@ use Rack::Session::Memcache,
   path: '/',
   secret: '8dg236rgd31238fb13vd65'
 
+require 'active_support'
+require 'rack/attack'
+
+# Setup server-side throttling.
+use Rack::Attack
+
+Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+
+Rack::Attack.throttle('logins/email', limit: 6, period: 60) do |req|
+  req.params['email'] if req.path =~ /login\/1/ && req.post?
+end
+
 # Additional mime types
 Rack::Mime::MIME_TYPES.merge!({
   ".eot" => "application/vnd.ms-fontobject",
