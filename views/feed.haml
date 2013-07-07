@@ -1,4 +1,8 @@
 .row
+  #feed-panel-column
+    // Group panel
+    {{> feed-panel.hbs}}
+
   #feed-column
     // Feed form
     {{#unless single_post}} {{> feed-form.hbs}} {{/unless}}
@@ -28,7 +32,3 @@
         %i.icon-long-arrow-down
 
     {{/unless}}
-
-  #feed-panel-column
-    // Group panel
-    {{> feed-panel.hbs}}
