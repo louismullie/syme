@@ -1,11 +1,7 @@
 .row
-  #feed-panel-column
-    // Group panel
-    {{> feed-panel.hbs}}
-
   #feed-column
     // Feed form
-    {{#unless single_post}} {{> feed-form.hbs}} {{/unless}}
+    {{> feed-form.hbs}}
 
     // Feed
     #feed{ :'data-group-name' => '{{group.name}}', :'data-year' => '{{ year }}', :'data-month' => '{{ month }}', :'data-single-post' => '{{{single_post}}}' }
@@ -34,3 +30,7 @@
         %i.icon-long-arrow-down
 
     {{/unless}}
+
+  #feed-panel-column
+    // Group panel
+    {{> feed-panel.hbs}}

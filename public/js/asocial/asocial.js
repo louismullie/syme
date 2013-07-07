@@ -25,6 +25,12 @@ $(function(){
   $(document).on('click', 'a[hbs]', function(e){
     e.preventDefault();
 
+    // Reset possible hidden tooltips
+    $('a[data-popover]').removeClass('hint--hidden');
+
+    // Hide popovers
+    $('.popover').hide();
+
     Router.navigate( $(this).attr('href') );
   });
 
@@ -32,7 +38,7 @@ $(function(){
   Router = new Router;
 
   CurrentSession = new Session();
-  
+
   CurrentSession.initialize(function () {
 
     Backbone.history.start({ pushState: true });
