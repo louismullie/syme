@@ -27,7 +27,12 @@ asocial.binders.add('register', { main: function(){
         password: {
           required: "Please enter a password",
           minlength: "Your password is too short",
+          differs_from: "You should only use your password in one field",
           password_strength: "Your password isn't strong enough"
+        },
+
+        password_confirm: {
+          equals_to: "Passwords don't match"
         }
 
       };
@@ -123,7 +128,7 @@ asocial.binders.add('register', { main: function(){
         var verifierBn = srp.calculateV(verifierSalt);
         var verifierHex = verifierBn.toString(16);
          $('meta[name="_csrf"]').attr('content', response.csrf);
-         
+
         model.save({
 
           verifier: new Verifier({
@@ -138,9 +143,9 @@ asocial.binders.add('register', { main: function(){
             user.createKeyfile(password, function () {
 
               asocial.auth.login(email, password, remember, function(passwordKey) {
-                
+
                 CurrentSession = new Session();
-                
+
                 CurrentSession.initializeWithModelAndPassword(
                   user, password, remember, function () {
                     Router.navigate('', { trigger: true, replace: true });

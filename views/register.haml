@@ -23,10 +23,14 @@
         .validation-container
           .input-text-icon
             %i.icon-lock
-            %input{ type: 'password', name: 'password', placeholder: '{{t "login.password"}}', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true' }
+            %input{ type: 'password', name: 'password', placeholder: 'Password', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true', :'data-validate-differs-from' => 'full_name, email' }
 
             #password-score.validation-append.hidden
 
+        .validation-container
+          .input-text-icon
+            %i.icon-lock
+            %input{ type: 'password', name: 'password_confirm', placeholder: 'Re-enter your password', :'data-validate-equals-to' => 'password' }
 
         %input{ type: 'submit' }
         %a.btn.btn-success{ href: '#', role: 'submit' }
