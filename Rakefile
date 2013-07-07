@@ -43,8 +43,8 @@ namespace :extensions do
     # Edit SERVER_URL to poll remote server.
     File.open('.extension/assets/asocial.js') do |file|
       contents = file.read
-      contents.sub!('SERVER_URL = window.location.origin;',
-                    'SERVER_URL = "http://198.27.65.229";')
+      contents.gsub!(/SERVER_URL[\s]*=[\s]*window\.location\.origin;/,
+                    'SERVER_URL="http://198.27.65.229";')
       File.open('.extension/assets/asocial.js', "w+") { |f| f.write(contents) }
     end
 

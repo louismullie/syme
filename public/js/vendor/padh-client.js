@@ -324,25 +324,6 @@ PAKDHClient.prototype = {
       g: '19', gBn: '5a8ca84c7d4d9b055f05c55b1f707f223979d387'
     }
     
-  },
-  
-  /*
-   * Server-side SRP functions. These should not
-   * be used on the client except for debugging.
-   */
-  
-  /* Calculate the server's public value. */
-  calculateB: function(b, v) {
-    var bb = this.g.modPow(b, this.N);
-    var B = bb.add(v.multiply(this.k)).mod(this.N);
-    return B;
-  },
-
-  /* Calculate the server's premaster secret */
-  calculateServerS: function(AA, vv, uu, bb) {
-    return vv.modPow(uu, this.N)
-      .multiply(AA).mod(this.N)
-      .modPow(bb, this.N);
   }
   
 };
