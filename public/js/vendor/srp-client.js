@@ -25,6 +25,11 @@ SRPClient = function (username, password, group) {
   this.one = this.parseBigInt("1", 16);
   this.two = this.parseBigInt("2", 16);
   
+  // Store the keys derived from the password.
+  this.key1 = null;
+  this.key2 = null;
+  
+  
 };
 
 /*
@@ -58,11 +63,15 @@ SRPClient.prototype = {
    */
   calculateX: function (saltHex) {
     
-    // Get a BigInteger object from the salt hex.
-    var salt = new BigInteger(saltHex, 16);
-    
+    // Stretch the keys as far as possible and split.
+    var xy = sjcl.hash.sha512.hash(sjcl.misc.pbkdf2(
+      this.password, saltHex, 10000, 256));
+
+    this.key1 = sjcl.codec.hex.fromBits(xy.splice(0, 8));
+    this.key2 = sjcl.codec.hex.fromBits(xy);
+  
     // Get the concatenation of username and password.
-    var up = this.username + ":" + this.password
+    var up = this.username + ":" + this.key1;
     
     // Calculate the hash of salt + hash(username:password).
     var hash = calcSHA1Hex(saltHex + calcSHA1(up));
@@ -73,6 +82,11 @@ SRPClient.prototype = {
     return (xtmp.compareTo(this.N) < 0) ? xtmp :
       xtmp.mod(this.N.subtract(this.one));
     
+  },
+  
+  // Get the key derived during initialization
+  getDerivedKey: function () {
+    return this.key2;
   },
   
   /*
@@ -127,7 +141,6 @@ SRPClient.prototype = {
     var hn = calcSHA1Hex(this.N.toString(16));
     var hnBn = new BigInteger(hn, 16);
     var hxor = hnBn.xor(this.gBn).toString(16);
-    console.log(this.gBn.toString());
     
     var hi = calcSHA1(username);
     
@@ -416,4 +429,4 @@ SRPClient.prototype = {
       .modPow(bb, this.N);
   }
   
-}
+};

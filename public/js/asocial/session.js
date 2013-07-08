@@ -217,10 +217,13 @@ Session = function () {
     } else {
       
       var encryptedPassword = sessionStorage.password;
-      
+
       try { 
+        
         var password = sjcl.decrypt(passwordKey, encryptedPassword);
+        
         success(password);
+        
       } catch (e) { error(); }
       
     }

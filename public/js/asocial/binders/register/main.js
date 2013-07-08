@@ -140,14 +140,14 @@ asocial.binders.add('register', { main: function(){
 
           success: function (model, response) {
 
-            user.createKeyfile(password, function () {
+            user.createKeyfile(srp.getDerivedKey(), function () {
 
-              asocial.auth.login(email, password, remember, function(passwordKey) {
+              asocial.auth.login(email, password, remember, function(derivedKey) {
 
                 CurrentSession = new Session();
-
+                
                 CurrentSession.initializeWithModelAndPassword(
-                  user, password, remember, function () {
+                  user, derivedKey, remember, function () {
                     Router.navigate('', { trigger: true, replace: true });
                 });
 

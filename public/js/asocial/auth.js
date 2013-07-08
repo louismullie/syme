@@ -34,7 +34,7 @@ guard('auth', {
 
               $('meta[name="_csrf"]').attr('content', data.csrf);
             
-              success();
+              success(srp.getDerivedKey());
 
             } else if (data.status == 'error') {
             
