@@ -9,7 +9,9 @@ asocial.binders.add('groups', { invite: function() {
     var groupId = $(this).data('invite-group_id');
     var request = $(this).data('invite-request');
     
-    user.acceptInviteRequest(invitationId, request, function () {
+    var token = prompt('Enter your invitation token');
+    
+    user.acceptInviteRequest(invitationId, request, token, function () {
       Router.reload();
     });
 

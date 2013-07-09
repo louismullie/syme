@@ -1,3 +1,5 @@
+importScripts('pakdh-client.js');
+
 Keyfile = function(userId, password, encKeyfile) {
   
   var that = this;
@@ -421,32 +423,43 @@ Keyfile = function(userId, password, encKeyfile) {
   that.createInviteRequest = function (keylistId, inviteeAlias) {
     
     var keylist = that.getKeylist(keylistId);
+    var invitationToken = Crypto.generateRandomHex(8);
     
+    var inviterId = that.userId;
+    
+    // PAK-DH step 1.
+    var pakdh = new PAKDHClient(invitationToken);
+    var gRa = pakdh.generategRa();
+    
+    var X = pakdh.calculateX(inviterId, inviteeAlias, gRa);
     var keypair = that.generateEncryptionKeypair();
     var keypairJson = that.serializeKeypair(keypair);
     
     var transaction = {
       inviteeAlias: inviteeAlias,
-      inviterKeypair: keypairJson
+      inviterKeypair: keypairJson,
+      inviterExponent: gRa.toString(16),
+      invitationToken: invitationToken
     };
     
     var inviterPublicKey = that.serializePublicKey(keypair.publicKey);
     
     that.createTransaction(keylistId,
       transaction, 'createInviteRequest', inviteeAlias);
-    
+     
     var inviteRequest = {
       keylistId: keylistId,
-      inviterId: that.userId,
+      inviterId: inviterId,
       inviteeAlias: inviteeAlias,
-      inviterPublicKey: inviterPublicKey
+      inviterPublicKey: inviterPublicKey,
+      inviterX: X.toString(16)
     };
     
-    return Crypto.encodeBase64(JSON.stringify(inviteRequest));
+    return [Crypto.encodeBase64(JSON.stringify(inviteRequest)), invitationToken];
     
   };
   
-  that.acceptInviteRequest = function(inviteRequestBase64) {
+  that.acceptInviteRequest = function(inviteRequestBase64, invitationToken) {
     
     var inviteRequestTxt = Crypto.decodeBase64(inviteRequestBase64);
     var inviteRequest = JSON.parse(inviteRequestTxt);
@@ -457,6 +470,7 @@ Keyfile = function(userId, password, encKeyfile) {
         !inviteRequest.inviterPublicKey || !inviteRequest.keylistId) {
       throw 'Missing required parameters.';
     }
+    
     var inviterPublicKeyJson = inviteRequest.inviterPublicKey;
     
     var inviterPublicKey = that.buildPublicKey(
@@ -468,6 +482,20 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var inviterPublicKey = that.buildPublicKey(
       inviteRequest.inviterPublicKey, 'encryption');
+    
+    var pakdh = new PAKDHClient(invitationToken);
+    
+    var gRb = pakdh.generategRb();
+    
+    var Xab = pakdh.calculateXab(inviterId,
+      inviteRequest.inviteeAlias,
+      new BigInteger(inviteRequest.inviterX, 16));
+    
+    var Y = pakdh.calculateY(inviterId,
+      inviteRequest.inviteeAlias, gRb);
+    
+    var S1 = pakdh.calculateS1(inviterId,
+      inviteRequest.inviteeAlias, Xab, gRb);
     
     var inviteeKeypair = that.generateEncryptionKeypair();
     var inviteeKeypairJson = that.serializeKeypair(inviteeKeypair);
@@ -483,7 +511,9 @@ Keyfile = function(userId, password, encKeyfile) {
       inviterPublicKey: inviterPublicKeyJson,
       inviteeKeypair: inviteeKeypairJson,
       token: token,
-      symKey: symKey
+      inviteeExponent: gRb.toString(16),
+      inviterXab: Xab.toString(16),
+      invitationToken: invitationToken
     };
       
     that.createTransaction(keylistId,
@@ -513,6 +543,8 @@ Keyfile = function(userId, password, encKeyfile) {
       inviteeAlias: inviteRequest.inviteeAlias,
       inviteeId: that.userId, inviteePublicKey:
       that.serializePublicKey(inviteeKeypair.publicKey),
+      inviteeS1: S1.toString(16),
+      inviteeY: Y.toString(16),
       encKeypairs: encryptedInviteeKeypairsBase64
     }));
     
@@ -525,6 +557,10 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var keylistId = inviteRequest.keylistId;
     var inviteeId = inviteRequest.inviteeId;
+    var inviterId = inviteRequest.inviterId;
+    var inviteeAlias = inviteRequest.inviteeAlias;
+    
+    var inviteeY = inviteRequest.inviteeY;
     
     if (!inviteRequest.inviterId || !inviteRequest.inviteeId ||
         !inviteRequest.keylistId || !inviteRequest.inviteePublicKey ||
@@ -557,15 +593,32 @@ Keyfile = function(userId, password, encKeyfile) {
     
     that.addKeypairs(keylistId, inviteeId, inviteeKeypairsJson);
     
+    var pakdh = new PAKDHClient(transaction.invitationToken);
+    
+    var gRa = new BigInteger(transaction.inviterExponent, 16);
+    
+    var Yba = pakdh.calculateYba(inviterId, inviteeAlias,
+      new BigInteger(inviteeY, 16));
+      
+    var S1p = pakdh.calculateS1(inviterId, inviteeAlias, gRa, Yba);
+
+    if (S1p.toString(16) != inviteRequest.inviteeS1)
+      throw 'Unsafe - invalid S1: ' + S1p.toString(16);
+    
+    // Upgrade invitee alias to invitee ID.
+    var S2 = pakdh.calculateS2(inviterId, inviteeId, gRa, Yba);
+    var symKey = pakdh.calculateK(inviterId, inviteeId, gRa, Yba);
+    
     var encKeylistJsonTxtBase64 = Crypto
-      .encryptThenEncodeBase64(symKey, keylistJsonTxt);
+      .encryptThenEncodeBase64(symKey.toString(16), keylistJsonTxt);
     
     var inviteConfirmation = Crypto.encodeBase64(
       JSON.stringify({
         inviterId: inviteRequest.inviterId,
         inviteeId: inviteRequest.inviteeId,
         keylistId: inviteRequest.keylistId,
-        encKeylist: encKeylistJsonTxtBase64
+        encKeylist: encKeylistJsonTxtBase64,
+        inviterS2: S2.toString(16)
     }));
     
     var encInviteeKeypairBase64 = Crypto.encryptMessage(
@@ -574,6 +627,7 @@ Keyfile = function(userId, password, encKeyfile) {
     var addUserRequest = Crypto.encodeBase64(
       JSON.stringify({
         keylistId: keylistId,
+        inviterId: inviteRequest.inviterId,
         inviteeId: inviteRequest.inviteeId,
         inviteeKeypairs: encInviteeKeypairBase64
     }));
@@ -589,20 +643,35 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var inviteRequestTxt = Crypto.decodeBase64(inviteRequestBase64);
     var inviteRequest = JSON.parse(inviteRequestTxt);
+    var inviterId = inviteRequest.inviterId;
+    var inviteeId = inviteRequest.inviteeId;
     var keylistId = inviteRequest.keylistId;
     
-    if (!inviteRequest.inviterId || !inviteRequest.inviteeId ||
+    if (!inviterId || !inviteeId ||
         !inviteRequest.keylistId || !inviteRequest.encKeylist)
       throw 'Missing required parameters.';
     
     var transaction = that.getTransaction(keylistId, 
       'acceptInviteRequest', inviteRequest.inviterId);
     
+    var pakdh = new PAKDHClient(transaction.invitationToken);
+    
+    var exponent = new BigInteger(transaction.inviteeExponent, 16);
+    var Xab = new BigInteger(transaction.inviterXab, 16);
+    var gRb = new BigInteger(transaction.inviteeExponent, 16);
+
+    var S2p = pakdh.calculateS2(inviterId, inviteeId, Xab, gRb);
+    
+    if (S2p.toString(16) !== inviteRequest.inviterS2)
+      throw 'Unsafe - invalid S2.';
+    
+    var symKey = pakdh.calculateK(inviterId, inviteeId, Xab, gRb);
+    
     if (!transaction)
       throw 'Missing acceptInviteRequest transaction.'
     
     var keylistJson = JSON.parse(Crypto.decodeBase64ThenDecrypt(
-      transaction.symKey, inviteRequest.encKeylist));
+        symKey.toString(16), inviteRequest.encKeylist));
     
     for(userId in keylistJson) {
     

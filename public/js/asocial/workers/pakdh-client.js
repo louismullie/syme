@@ -1,3 +1,6 @@
+importScripts('jsbn.js');
+importScripts('random.js');
+
 /*
  * PAK allows two parties to authenticate themselves
  * while performing the Diffie-Hellman exchange.
@@ -36,14 +39,14 @@ PAKDHClient = function (password, group) {
 PAKDHClient.prototype = {
 
   // Generates Ra, A's random secret exponent.
-  generateA: function () {
+  generategRa: function () {
     
     return this.modPow(this.random());  
     
   },
   
   // Generates Rb, B's random secret exponent.
-  generateB: function () {
+  generategRb: function () {
     
     return this.modPow(this.random());
     
@@ -55,31 +58,31 @@ PAKDHClient.prototype = {
   },
   
   // X = H1(A|B|PW)*(g^Ra)
-  calculateX: function (A) {
+  calculateX: function (A, B, gRa) {
     
-    var str = 'A' + 'B' + this.password;
+    var str = A + B + this.password;
     
-    return this.H1(str).multiply(A);
+    return this.H1(str).multiply(gRa);
     
   },
   
   // Xab = Q / H1(A|B|PW)
-  calculateXab: function (Q) {
+  calculateXab: function (A, B, Q) {
     
     if (Q.toString() == '0')
       throw 'X should not be equal to 0.'
 
-    var str = 'A' + 'B' + this.password;
+    var str = A + B + this.password;
     
     return Q.divide(this.H1(str));
     
   },
   
   // Y = H2(A|B|PW)*(g^Rb)
-  calculateY: function (B) {
+  calculateY: function (A, B, gRb) {
     
-    var str = 'A' + 'B' + this.password;
-    var Y = this.H2(str).multiply(B);
+    var str = A + B + this.password;
+    var Y = this.H2(str).multiply(gRb);
     
     if (Y.toString() == '0')
       throw 'Y should not be equal to 0.'
@@ -89,51 +92,50 @@ PAKDHClient.prototype = {
   },
   
   // Yba = Y / H2(A|B|PW)
-  calculateYba: function (B) {
+  calculateYba: function (A, B, Y) {
     
-    var Y = this.calculateY(B);
-    var str = 'A' + 'B' + this.password;
+    var str = A + B + this.password;
     
     return Y.divide(this.H2(str));
   
   },
   
   // S1 = H3(A|B|PW|Xab|g^Rb|(Xab)^Rb)
-  calculateS1: function (A, B) {
+  calculateS1: function (A, B, gRa, gRb) {
     
-    var AB = this.modPow(A.multiply(B));
+    var AB = this.modPow(gRa.multiply(gRb));
     
     return this.H3(
         this.password +
-        A.toString(16) +
-        B.toString(16) +
+        gRa.toString(16) +
+        gRb.toString(16) +
         AB.toString(16));
     
   },
   
   // S2 = H4(A|B|PW|g^Ra|Yba|(Yba)^Ra)
-  calculateS2: function (A, B) {
+  calculateS2: function (A, B, gRa, gRb) {
     
-    var AB = this.modPow(A.multiply(B));
+    var AB = this.modPow(gRa.multiply(gRb));
     
-    return this.H4(
+    return this.H4( A + B + 
         this.password +
-        A.toString(16) +
-        B.toString(16) + 
+        gRa.toString(16) +
+        gRb.toString(16) + 
         AB.toString(16));
     
   },
   
   
   // K = H5(A|B|PW|g^Ra|Yba|(Yba)^Ra)
-  calculateK: function (A, B) {
+  calculateK: function (A, B, gRa, gRb) {
     
-    var AB = this.modPow(A.multiply(B));
+    var AB = this.modPow(gRa.multiply(gRb));
     
-    return this.H5(
+    return this.H5(A + B +
         this.password +
-        A.toString(16) +
-        B.toString(16) +
+        gRa.toString(16) +
+        gRb.toString(16) +
         AB.toString(16));
     
   },

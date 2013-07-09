@@ -63,10 +63,10 @@ Crypto = {
     
   },
   
-  acceptInviteRequest: function (inviteRequest) {
+  acceptInviteRequest: function (inviteRequest, token) {
     
     var keyfile = this.getKeyfile();
-    return keyfile.acceptInviteRequest(inviteRequest);
+    return keyfile.acceptInviteRequest(inviteRequest, token);
     
   },
   

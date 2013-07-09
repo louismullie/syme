@@ -107,9 +107,9 @@ asocial.binders.add('feed', { invite: function() {
               var user = CurrentSession.getUser();
               var groupId = CurrentSession.getGroupId();
 
-              user.createInviteRequest(groupId, validatedEmail, function () {
+              user.createInviteRequest(groupId, validatedEmail, function (inviteRequestToken) {
 
-                succeededInvitations.push(validatedEmail);
+                succeededInvitations.push([validatedEmail, inviteRequestToken]);
 
                 // Remove concerned email from queue
                 inviteQueue = _.without(inviteQueue, validatedEmail);
@@ -143,6 +143,11 @@ asocial.binders.add('feed', { invite: function() {
           // Show confirmations and/or errors
           inviteEmailsFromTextarea(emails, function(log){
 
+            _.each(log.succeeded, function(value, key){
+              var email = value[0]; var token = value[1];
+              alert(email + token);
+            });
+            
             // Remove own_email errors
             _.each(log.failed, function(value, key){
               if ( value == "own_email" ) log.failed = _.omit(log.failed, key);

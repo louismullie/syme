@@ -207,12 +207,12 @@ Crypto = function (workerUrl) {
 
   };
 
-  this.acceptInviteRequest = function (inviteRequest, inviteAcceptedCb) {
+  this.acceptInviteRequest = function (inviteRequest, token, inviteAcceptedCb) {
 
     Crypto.executeJobWithLock({
 
       method: 'acceptInviteRequest',
-      params: [inviteRequest]
+      params: [inviteRequest, token]
 
     }, inviteAcceptedCb);
 
@@ -321,7 +321,7 @@ Crypto = function (workerUrl) {
     }, generatedKeysCb);
 
   };
-
+  
   var _this = this;
   
   this.seedRandom = function () {

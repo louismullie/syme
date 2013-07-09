@@ -17,7 +17,7 @@ var User = Backbone.RelationalModel.extend({
   createKeyfile: function (password, keyfileCreatedCb) {
 
     var _this = this, email = this.get('email');
-    console.log(6);
+
     Crypto.initializeKeyfile(email, password, null, function (encryptedKeyfile) {
       _this.updateKeyfile(encryptedKeyfile, keyfileCreatedCb);
     });
@@ -49,8 +49,11 @@ var User = Backbone.RelationalModel.extend({
     var _this = this;
     var invitation = new Invitation();
     
-    Crypto.createInviteRequest(keylistId, email, function (inviteRequest) {
+    Crypto.createInviteRequest(keylistId, email, function (inviteInfo) {
       
+        var inviteRequest = inviteInfo[0];
+        var inviteToken = inviteInfo[1];
+        
         invitation.save(
           {
             group_id: keylistId,
@@ -60,7 +63,9 @@ var User = Backbone.RelationalModel.extend({
           {
             success: function () {
               Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-                _this.updateKeyfile(encryptedKeyfile, inviteCreatedCb);
+                _this.updateKeyfile(encryptedKeyfile, function () {
+                  inviteCreatedCb(inviteToken);
+                });
               });
             },
             error: errorCb
@@ -70,13 +75,13 @@ var User = Backbone.RelationalModel.extend({
 
   },
   
-  acceptInviteRequest: function (invitationId, request, inviteAcceptedCb, errorCb) {
+  acceptInviteRequest: function (invitationId, request, token, inviteAcceptedCb, errorCb) {
     
     var _this = this;
     var invitation = new Invitation();
     invitation.set('_id', invitationId);
 
-    Crypto.acceptInviteRequest(request, function (inviteRequest) {
+    Crypto.acceptInviteRequest(request, token, function (inviteRequest) {
       
         invitation.save(
           { accept: inviteRequest },
