@@ -179,7 +179,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
 
-        a.invite-confirm {
+        a.invite-confirm, a.invite-pending {
           position: absolute;
           right: 10px; top: 50%;
           @include transform(translateY(-50%));

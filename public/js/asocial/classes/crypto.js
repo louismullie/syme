@@ -322,6 +322,17 @@ Crypto = function (workerUrl) {
 
   };
   
+  this.getInvitationToken = function (keylistId, userAlias, invitationTokenCb) {
+    
+    Crypto.executeJobWithoutLock({
+
+      method: 'getInvitationToken',
+      params: [keylistId, userAlias]
+
+    }, invitationTokenCb);
+    
+  };
+  
   var _this = this;
   
   this.seedRandom = function () {

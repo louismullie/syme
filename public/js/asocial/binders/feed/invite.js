@@ -45,6 +45,28 @@ asocial.binders.add('feed', { invite: function() {
     });
 
   });
+  
+  $('.invite-pending').on({
+    
+    
+    click: function(e) {
+
+    var $this = $(this);
+
+    e.preventDefault();
+
+    var invitationId  = $this.data('invite-id'),
+        email         = $this.data('invite-email'),
+        user          = CurrentSession.getUser(),
+        keylistId     = CurrentSession.getGroupId();
+    
+    Crypto.getInvitationToken(keylistId, email, function (token) {
+      
+       prompt('Invitation token for ' + email, token);
+      
+    });
+
+  }});
 
   // Add new user
   $('#main').on('click', 'a#add-user, a#add-user-first', function(){

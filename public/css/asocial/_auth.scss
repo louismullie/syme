@@ -47,7 +47,7 @@
       }
     }
 
-    input[type="password"] {
+    input[type="password"]:not([name="password_confirm"]) {
       padding-right: 108px;
     }
 

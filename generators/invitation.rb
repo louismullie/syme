@@ -21,16 +21,16 @@ class InvitationGenerator
 
   def self.generate_pending_invites(group, user)
 
-    select = { inviter_id: user.id.to_s, state: 2 }
+    select = { inviter_id: user.id.to_s, state: { '$in' => [1, 2] } }
 
     group.invitations.where(select).map do |invitation|
       {
         id: invitation.id.to_s,
         token: invitation.token,
-
+        state: invitation.state,
         invitee_id: invitation.invitee_id,
-        invitee_full_name: invitation.invitee.full_name,
-
+        invitee_full_name: invitation.invitee ?
+          invitation.invitee.full_name : invitation.email,
         accept: invitation.accept
         
       }

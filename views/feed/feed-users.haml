@@ -14,6 +14,19 @@
     // #invites-header Awaiting confirmation
 
     {{#each invite}}
+    
+    {{#compare state 1}}
+    %li.invite
+      %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
+
+      // Replace by GET request with only invite ID, which returns the rest.
+      %a.invite-pending.btn.btn-white{href: '#', 'data-invite-id'         => '{{id}}',
+                                                 'data-invite-invitee_id' => '{{invitee_id}}',
+                                                 'data-invite-email'      => '{{invitee_full_name}}' }
+        Pending
+    {{/compare}}
+    
+    {{#compare state 2}}
     %li.invite
       %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
 
@@ -22,11 +35,16 @@
                                                  'data-invite-invitee_id' => '{{invitee_id}}',
                                                  'data-invite-accept'     => '{{accept}}'}
         Confirm
+    {{/compare}}
+    
     {{/each}}
 
   {{/if}}
 
   -# User list
+  
+  #users
+  
   {{#each users}}
 
   %li{ id: '{{id}}' }

@@ -227,6 +227,17 @@ guard('socket', {
         $('#notifications-content').html(
           asocial.helpers.render('feed-notifications-empty'));
       }
+    },
+    
+    group: function (data) {
+      
+      var groupId = data.id;
+      
+      if (CurrentSession.getGroupId() == groupId);
+        Router.navigate('');
+      
+      return;
+      
     }
   },
 

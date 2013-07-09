@@ -11,11 +11,10 @@ set :use_sudo, true
 default_run_options[:pty] = true
 
 # Git login configuration.
-default_run_options[:pty] = true
 set :scm, :git
 set :scm_verbose, true
-set :repository, 'git@github.com:louismullie/asocial-clean.git'
-set :branch, 'foundation'
+set :repository, 'git@github.com:louismullie/syme.git'
+set :branch, 'master'
 
 # Deployment configuration.
 set :deploy_to, '/var/www/syme.io'

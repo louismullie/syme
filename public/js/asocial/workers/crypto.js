@@ -63,6 +63,18 @@ Crypto = {
     
   },
   
+  getInvitationToken: function (keylistId, userAlias) {
+    
+    var keyfile = this.getKeyfile();
+    
+    var transaction = keyfile.getTransaction(
+      keylistId, 'createInviteRequest', userAlias);
+    
+    
+    return transaction.invitationToken;
+    
+  },
+  
   acceptInviteRequest: function (inviteRequest, token) {
     
     var keyfile = this.getKeyfile();
