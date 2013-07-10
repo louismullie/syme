@@ -152,7 +152,7 @@ asocial.binders.add('register', { main: function(){
                 });
 
 
-              });
+              }, function () { alert('An error has occurred!'); }, true);
 
             });
           },
