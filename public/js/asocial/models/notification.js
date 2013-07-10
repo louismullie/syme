@@ -231,7 +231,7 @@ Notifications = (function(){
     
     declineInvitation: function (e) {
       var $this = $(e.currentTarget);
-      asocial.invite.declineInvitationRequest($this);
+      asocial.invite.cancelInvitationRequest($this);
     },
     
     confirmInvitation: function (e) {

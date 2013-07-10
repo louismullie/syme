@@ -232,7 +232,8 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id' do |_, grou
     error 404, 'invitation_not_found'
   end
   
-  if invitation.email != @user.email
+  if invitation.email != @user.email &&
+     invitation.inviter.id != @user.id
     error 403, 'unauthorized'
   else
     invitation.destroy

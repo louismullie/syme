@@ -16,7 +16,7 @@ guard('invite', {
     
   },
   
-  declineInvitationRequest: function (inviteLink) {
+  cancelInvitationRequest: function (inviteLink) {
     
     var userId = CurrentSession.getUserId();
     var groupId = inviteLink.data('invite-group_id');
