@@ -27,7 +27,13 @@ asocial.binders.add('feed', { invite: function() {
 
       // Disable modal closing by enter key if button is disabled
       onsubmit: function(){
-        return $('#responsive-modal a.modal-button').hasClass('disabled');
+        
+        var disabled = $('#responsive-modal a.modal-button').hasClass('disabled');
+        
+        if (!disabled) { Router.reload(); }
+        
+        return disabled;
+        
       },
 
       onshow: function(){
@@ -228,7 +234,10 @@ asocial.binders.add('feed', { invite: function() {
 
             // Show modal
             asocial.helpers.showAlert(template, {
-              classes: 'modal-invite', title: 'Success'
+              classes: 'modal-invite', title: 'Success',
+              onsubmit: function () {
+                Router.reload();
+              }
             });
 
           });
