@@ -231,8 +231,7 @@ Notifications = (function(){
     
     declineInvitation: function (e) {
       var $this = $(e.currentTarget);
-      alert('Decline invite here!');
-      // asocial.invite.declineInvitationRequest($this);
+      asocial.invite.declineInvitationRequest($this);
     },
     
     confirmInvitation: function (e) {
@@ -242,8 +241,7 @@ Notifications = (function(){
     
     cancelInvitation: function (e) {
       var $this = $(e.currentTarget);
-      alert('Cancel invite here!');
-      // asocial.invite.cancelInvitationRequest($this);
+      asocial.invite.cancelInvitationRequest($this);
     }
     
   });

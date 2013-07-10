@@ -16,6 +16,34 @@ guard('invite', {
     
   },
   
+  declineInvitationRequest: function (inviteLink) {
+    
+    var userId = CurrentSession.getUserId();
+    var groupId = inviteLink.data('invite-group_id');
+    var invitationId = inviteLink.data('invite-id');
+    
+    var url = SERVER_URL + '/users/' + userId +
+      '/groups/' + groupId + '/invitations/' + invitationId;
+    
+    $.ajax(url, { type: 'DELETE',
+      
+      success: function () {
+        alert('Declined request!');
+      },
+      
+      error: function (response) {
+        if (response.status == 404) {
+          asocial.helpers.showAlert(
+            'This invitation does not exist anymore.');
+        } else {
+          alert('Could not decline invitation request.');
+        }
+      }
+      
+    });
+    
+  },
+  
   confirmInvitationRequest: function (inviteLink) {
     
     var $this = inviteLink;

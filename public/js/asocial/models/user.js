@@ -91,7 +91,9 @@ var User = Backbone.RelationalModel.extend({
                 _this.updateKeyfile(encryptedKeyfile, inviteAcceptedCb);
               });
             },
-            error: errorCb
+            error: function () {
+              asocial.helpers.showAlert("This invitation does not exist anymore.");
+            }
         });
       
     });

@@ -91,7 +91,7 @@ put '/invitations', auth: [] do
   invitation = begin
     Invitation.find(params._id)
   rescue Mongoid::Errors::DocumentNotFound
-    error 400, 'invalid_id'
+    error 404, 'invitation_not_found'
   end
 
   if params.accept && invitation.state == 1
@@ -213,6 +213,32 @@ put '/invitations', auth: [] do
   end
   
   track @user, 'Accepted a group invitation'
+  
+  empty_response
+  
+end
+
+delete '/users/:user_id/groups/:group_id/invitations/:invitation_id' do |_, group_id, invitation_id|
+  
+  group = begin
+    Group.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'group_not_found'
+  end
+  
+  invitation = begin
+    group.invitations.find(invitation_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'invitation_not_found'
+  end
+  
+  if invitation.email != @user.email
+    error 403, 'unauthorized'
+  else
+    invitation.destroy
+  end
+  
+  content_type :json
   
   empty_response
   
