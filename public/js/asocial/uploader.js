@@ -13,7 +13,7 @@ guard('uploader', {
         'You can only upload files of up to 25 Mb for now.');
 
       asocial.helpers.resetFeedForm();
-      
+
       return false;
 
     } else {
@@ -58,7 +58,7 @@ guard('uploader', {
 
   uploadImage: function (file, progress, success) {
 
-    var img = new Image();
+    var img = document.createElement('img');
 
     var _this = this;
 
@@ -113,7 +113,7 @@ guard('uploader', {
   uploadThumbnail: function (file, uploadId) {
 
     var url = URL.createObjectURL(file);
-    var img = new Image();
+    var img = document.createElement('img');
     var _this = this;
 
     img.onload = function () {
@@ -215,7 +215,7 @@ guard('uploader', {
     } else {
       asocial.uploader.uploadFile(file, progress, success);
     }
-    
+
   },
 
   selectAvatar: function (file, thumbnailCallback, uploadCallback) {
@@ -252,7 +252,7 @@ guard('uploader', {
 
   uploadGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    var img = new Image();
+    var img = document.createElement('img');
     var _this = this;
 
     img.onload = function () {
@@ -292,7 +292,7 @@ guard('uploader', {
 
   uploadAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    img = new Image();
+    img = document.createElement('img');
     var _this = this;
 
 
