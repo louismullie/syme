@@ -72,14 +72,25 @@ asocial.binders.add('feed', { comments: function(){
 
   // Show more comments
   $('#main').on('click', '.show-more a', function(e){
+
+    var $this       = $(this),
+        collection  = $this.closest('.comments').find('.comment-hidden');
+
     // Show hidden comments
-    $(this).closest('.comments').find('.comment-hidden').removeClass('comment-hidden');
+    collection.find('.encrypted.comment-hidden').removeClass('comment-hidden');
 
-    // Add expanded state
-    $(this).parent().data('expanded', true);
+    asocial.crypto.batchDecrypt(function(){
 
-    // Hide show more link
-    $(this).parent().addClass('hidden');
+      // Show comments
+      collection.removeClass('comment-hidden');
+
+      // Add expanded state
+      $this.parent().data('expanded', true);
+
+      // Hide show more link
+      $this.parent().addClass('hidden');
+
+    });
   });
 
 } }); // asocial.binders.add();

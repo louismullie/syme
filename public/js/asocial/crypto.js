@@ -9,7 +9,7 @@ guard('crypto', {
     var collection = collection || $([
 
       // Feed elements
-      '.encrypted',
+      '.encrypted:not(.comment-hidden)',
       '.encrypted-image:not([data-decrypted="true"])',
       '.encrypted-audio:not([data-decrypted="true"])',
       '.encrypted-video:not([data-decrypted="true"])',
