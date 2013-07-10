@@ -17,7 +17,6 @@
 
     {{#each invite}}
 
-
     %li.invite
       %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
 
@@ -29,7 +28,8 @@
         %a.invite-pending.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'View key',
                                                     'data-invite-id'         => '{{id}}',
                                                     'data-invite-invitee_id' => '{{invitee_id}}',
-                                                    'data-invite-email'      => '{{invitee_full_name}}' }>
+                                                    'data-invite-email'      => '{{invitee_full_name}}',
+                                                    'data-invite-group_id'   => '{{group_id}}' }>
           %i.icon-key
         {{/compare}}
 
@@ -39,7 +39,9 @@
         %a.invite-confirm.btn.btn-white.hint--left{ href: '#',:'data-hint' => 'Confirm',
                                                     'data-invite-id'         => '{{id}}',
                                                     'data-invite-invitee_id' => '{{invitee_id}}',
-                                                    'data-invite-accept'     => '{{accept}}'}>
+                                                    'data-invite-accept'     => '{{accept}}',
+                                                    'data-invite-invitee_full_name' => '{{invitee_full_name}}',
+                                                    'data-invite-group_id'   => '{{group_id}}' }>
           %i.icon-ok
         {{/compare}}
 

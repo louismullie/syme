@@ -8,6 +8,7 @@
 //= require ./router
 //= require ./binders
 //= require ./socket
+//= require ./invite
 //= require ./uploader
 //= require ./auth
 //= require ./state

@@ -13,9 +13,8 @@ class InvitationObserver < Mongoid::Observer
     user.notify({
       action: :invite_request,
       create: {
-      actor_ids: [
-        inviter.id.to_s
-      ]
+        actor_ids: [  inviter.id.to_s ],
+        invitation: InvitationGenerator.generate(invite)
     }}, group) if user
     
   end
@@ -31,7 +30,9 @@ class InvitationObserver < Mongoid::Observer
       inviter.notify({
         action: :invite_accept,
         create: {
-          actor_ids: [invitee.id.to_s]
+          actor_ids: [invitee.id.to_s],
+          invitation: InvitationGenerator
+            .generate_pending_invitation(invite, inviter)
         }
       }, group)
     

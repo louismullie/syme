@@ -88,8 +88,13 @@ asocial.binders.add('feed', { panel: function(){
               Router.reload();
             },
 
-            error: function () {
-              alert('Could not delete user!');
+            error: function (response) {
+              if (response.status == 404) {
+                asocial.helpers.showAlert(
+                  'This user has already left the group.');
+              } else {
+                alert('Could not delete user.');
+              }
             }
 
           });
@@ -98,5 +103,5 @@ asocial.binders.add('feed', { panel: function(){
       }
     );
   });
-
+  
 } }); // asocial.binders.add();

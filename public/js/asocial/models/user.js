@@ -155,12 +155,10 @@ var User = Backbone.RelationalModel.extend({
 
   },
   
-  transferKeysRequest: function (invitationId, inviteeId, transferredKeysCb, errorCb) {
+  transferKeysRequest: function (groupId, invitationId, inviteeId, transferredKeysCb, errorCb) {
     
     var invitation = new Invitation();
     invitation.set('_id', invitationId);
-    
-    var groupId = CurrentSession.getGroupId();
     
     var url = SERVER_URL + '/users/' + CurrentSession.getUserId() +
     '/groups/' + groupId + '/keys';

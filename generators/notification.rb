@@ -48,6 +48,11 @@ class NotificationGenerator
       }) if membership # user may not have a membership if in invite - FIX
 
     end
+    
+    if notification.invitation
+      g_notification[:invitation] =
+        notification.invitation
+    end
 
     g_notification
 

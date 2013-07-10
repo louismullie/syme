@@ -11,6 +11,7 @@ class Notification
   field :comment_id, type: String
   field :group_id,   type: String
   field :action,     type: String
+  field :invitation, type: Hash
   
   # Modifiable attributes.
   field :actor_ids,  type: Array
@@ -19,6 +20,6 @@ class Notification
   # Attribute protections.
   attr_readonly   :post_id, :comment_id, :action
   attr_accessible :actor_ids, :post_id, :group_id,
-                  :comment_id, :action, :read
+                  :comment_id, :action, :read, :invitation
   
 end
