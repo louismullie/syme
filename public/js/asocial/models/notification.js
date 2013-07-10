@@ -57,7 +57,7 @@ Notifications = (function(){
       // Invitation/Confirmation
 
       invite_request: {
-        message: '%(actors)s invited you to join %(group_name)s. <a href="/" hbs>Confirm</a>.',
+        message: '%(actors)s invited you to join %(group_name)s.',
         resource: "groups"
       },
 
@@ -108,16 +108,30 @@ Notifications = (function(){
     });
     
     var resource = type.resource == "group"
-      ? '<a href="' + link + '" hbs>' + data.group + '</a>'
-      : '<a href="' + link + '" hbs>' + [type.resource] + '</a>';
+      ? data.group : type.resource;
     
     var html = sprintf(type.message, {
       actors: '<b>' + data.actors + '</b>',
       resource: resource,
       group_name: '<b>' + data.group + '</b>'
-
     });
+  
+    if (data.action == 'invite_request') {
+      
+      html =  html + asocial.helpers.render(
+        'feed-notification-invite_request', data.invitation);
 
+    } else if (data.action == 'invite_accept') {
+      
+      html = html + asocial.helpers.render(
+        'feed-notification-invite_accept', data.invitation);
+      
+    } else {
+      
+      html = '<a href="' + link + '" hbs>' + html + '</a>';
+      
+    }
+    
     // Check if notification hasn't been displayed yet...
     if (asocial.compat.inChromeExtension()) {
       
@@ -193,7 +207,11 @@ Notifications = (function(){
     },
 
     events: {
-      "click a.notification-unread": "markAsRead"
+      "click a.notification-unread": "markAsRead",
+      "click a.accept-invitation": "acceptInvitation",
+      "click a.decline-invitation": "declineInvitation",
+      "click a.confirm-invitation": "confirmInvitation",
+      "click a.cancel-invitation": "cancelInvitation",
     },
 
     markAsRead: function(e){
@@ -204,8 +222,30 @@ Notifications = (function(){
       var notification = this.collection.findWhere({ id: id });
 
       notification.save({ read: true }, {patch: true});
+    },
+    
+    acceptInvitation: function (e) {
+      var $this = $(e.currentTarget);
+      asocial.invite.acceptInvitationRequest($this);
+    },
+    
+    declineInvitation: function (e) {
+      var $this = $(e.currentTarget);
+      alert('Decline invite here!');
+      // asocial.invite.declineInvitationRequest($this);
+    },
+    
+    confirmInvitation: function (e) {
+      var $this = $(e.currentTarget);
+      asocial.invite.confirmInvitationRequest($this);
+    },
+    
+    cancelInvitation: function (e) {
+      var $this = $(e.currentTarget);
+      alert('Cancel invite here!');
+      // asocial.invite.cancelInvitationRequest($this);
     }
-
+    
   });
 
   // * Model * //

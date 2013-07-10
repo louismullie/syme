@@ -2,73 +2,10 @@ asocial.binders.add('feed', { invite: function() {
 
   // Confirm user
   $('.invite-confirm').click(function(e) {
-
-    var $this = $(this);
-
+    
     e.preventDefault();
-
-    var invitationId  = $this.data('invite-id'),
-        inviteeId     = $this.data('invite-invitee_id'),
-        accept        = $this.data('invite-accept'),
-        name          = $this.closest('.invite').find('span').attr('title'),
-        user          = CurrentSession.getUser(),
-        keylistId     = CurrentSession.getGroupId();
-
-    // Render confirmation modal
-    var confirm_modal = asocial.helpers.render(
-      'feed-modals-confirm', { name: name }
-    );
-
-    // Show confirmation modal
-    asocial.helpers.showModal(confirm_modal, {
-      
-      closable: false,
-      classes: 'modal-alert',
-
-      // Disable modal closing by enter key if button is disabled
-      onsubmit: function(){
-        
-        var disabled = $('#responsive-modal a.modal-button').hasClass('disabled');
-        
-        if (!disabled) { Router.reload(); }
-        
-        return disabled;
-        
-      },
-
-      onshow: function(){
-
-        //Proceed to confirmation
-        user.confirmInviteRequest(invitationId, accept, function (confirmation) {
-          user.transferKeysRequest(invitationId, inviteeId, function(){
-
-            $('#responsive-modal a.modal-button')
-              .text('Done!').removeClass('disabled');
-
-          });
-        }, function () {
-          
-          asocial.helpers.showConfirm(
-            
-            name + ' provided the wrong token.', {
-
-            submit: 'Send new invite',
-            cancel: 'Cancel invite',
-            closable: false,
-
-            onsubmit: function(){
-
-              alert('Sending new invite');
-
-            }
-          });
-          
-          
-        });
-
-      }
-    });
-
+    asocial.invite.confirmInvitationRequest($(this));
+    
   });
   
   $('.invite-pending').on({

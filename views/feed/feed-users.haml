@@ -22,7 +22,8 @@
       // Replace by GET request with only invite ID, which returns the rest.
       %a.invite-pending.btn.btn-white{href: '#', 'data-invite-id'         => '{{id}}',
                                                  'data-invite-invitee_id' => '{{invitee_id}}',
-                                                 'data-invite-email'      => '{{invitee_full_name}}' }
+                                                 'data-invite-email'      => '{{invitee_full_name}}',
+                                                 'data-invite-group_id'   => '{{group_id}}'}
         Pending
     {{/compare}}
     
@@ -33,7 +34,9 @@
       // Replace by GET request with only invite ID, which returns the rest.
       %a.invite-confirm.btn.btn-white{href: '#', 'data-invite-id'         => '{{id}}',
                                                  'data-invite-invitee_id' => '{{invitee_id}}',
-                                                 'data-invite-accept'     => '{{accept}}'}
+                                                 'data-invite-accept'     => '{{accept}}',
+                                                 'data-invite-invitee_full_name' => '{{invitee_full_name}}',
+                                                 'data-invite-group_id'   => '{{group_id}}'}
         Confirm
     {{/compare}}
     

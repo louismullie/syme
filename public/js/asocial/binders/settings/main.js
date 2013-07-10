@@ -130,7 +130,12 @@ asocial.binders.add('settings', { main: function(){
       },
 
       error: function () {
-        alert('Could not delete user!');
+        if (response.status == 404) {
+          asocial.helpers.showAlert(
+            'This user has already left the group.');
+        } else {
+          alert('Could not delete user.');
+        }
     }});
 
   });
