@@ -31,8 +31,10 @@ class Resource
   
   def owner
     parent_group.users.find(owner_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    nil
   end
-  
+
   def self.validates_is_bson_id(field)
     validates_format_of field, with: /[0-9a-f]{24}/
   end

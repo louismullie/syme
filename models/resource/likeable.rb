@@ -7,7 +7,9 @@ module Resource::Likeable
   private
 
   def likers
-    likes.map { |like| like.owner }
+    # Fail safe in case like.owner doesnt exist
+    likes.select { |like| like.owner }
+         .map { |like| like.owner }
   end
 
 end
