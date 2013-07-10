@@ -1,6 +1,6 @@
 guard('auth', {
 
-  login: function(email, password, remember, success, fail) {
+  login: function(email, password, remember, success, fail, hack) {
 
     var srp = new SRPClient(email, password);
 
@@ -37,10 +37,19 @@ guard('auth', {
               success(srp.getDerivedKey());
 
             } else if (data.status == 'error') {
-            
-              Backbone.Relational.store.reset();
-            
-              window.location = '/';
+              
+              // Non-deterministic Heisenbug with login
+              if (hack) {
+                
+                Backbone.Relational.store.reset();
+                CurrentSession = {};
+                Router.navigate('login');
+                
+              } else {
+                
+                fail(data.reason);
+                
+              }
 
             } else {
 
@@ -77,7 +86,7 @@ guard('auth', {
 
     var callback = callback || function () {};
 
-    asocial_state = {};
+    CurrentSession = {};
 
     $.ajax(SERVER_URL + '/sessions/xyz', {
       type: 'delete',
@@ -96,7 +105,7 @@ guard('auth', {
       submit: 'Log in',
       closable: false,
       onhide: function(){
-        window.location = '/';
+        Router.navigate('/');
       }
     });
 
