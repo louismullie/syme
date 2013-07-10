@@ -21,19 +21,19 @@ asocial.binders.add('feed', { invite: function() {
 
     // Show confirmation modal
     asocial.helpers.showModal(confirm_modal, {
-      
+
       closable: false,
       classes: 'modal-alert',
 
       // Disable modal closing by enter key if button is disabled
       onsubmit: function(){
-        
+
         var disabled = $('#responsive-modal a.modal-button').hasClass('disabled');
-        
+
         if (!disabled) { Router.reload(); }
-        
+
         return disabled;
-        
+
       },
 
       onshow: function(){
@@ -47,9 +47,9 @@ asocial.binders.add('feed', { invite: function() {
 
           });
         }, function () {
-          
+
           asocial.helpers.showConfirm(
-            
+
             name + ' provided the wrong token.', {
 
             submit: 'Send new invite',
@@ -62,49 +62,28 @@ asocial.binders.add('feed', { invite: function() {
 
             }
           });
-          
-          
+
+
         });
 
       }
     });
 
   });
-  
-  $('.invite-pending').on({
-    
-    
-    click: function(e) {
+
+  $(document).on('click', '.invite-pending', function(e) {
 
     var $this = $(this);
-
-    e.preventDefault();
 
     var invitationId  = $this.data('invite-id'),
         email         = $this.data('invite-email'),
         user          = CurrentSession.getUser(),
         keylistId     = CurrentSession.getGroupId();
-    
+
     Crypto.getInvitationToken(keylistId, email, function (token) {
-      
        prompt('Invitation token for ' + email, token);
-      
     });
 
-    },
-    
-    mouseenter: function (e) {
-      
-      $(this).text('View key');
-      
-    },
-    
-    mouseleave: function (e) {
-      
-      $(this).text('Pending');
-      
-    }
-  
   });
 
   // Add new user
@@ -208,7 +187,7 @@ asocial.binders.add('feed', { invite: function() {
               var email = value[0]; var token = value[1];
               alert(email + token);
             });
-            
+
             // Remove own_email errors
             _.each(log.failed, function(value, key){
               if ( value == "own_email" ) log.failed = _.omit(log.failed, key);

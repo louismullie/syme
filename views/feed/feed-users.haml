@@ -10,41 +10,51 @@
   -# Invites
   {{#if invite}}
 
+  {{debug}}
+
   #invites
     // #invites-header Awaiting confirmation
 
     {{#each invite}}
-    
-    {{#compare state 1}}
+
+
     %li.invite
       %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
 
-      // Replace by GET request with only invite ID, which returns the rest.
-      %a.invite-pending.btn.btn-white{href: '#', 'data-invite-id'         => '{{id}}',
-                                                 'data-invite-invitee_id' => '{{invitee_id}}',
-                                                 'data-invite-email'      => '{{invitee_full_name}}' }
-        Pending
-    {{/compare}}
-    
-    {{#compare state 2}}
-    %li.invite
-      %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
+      .invite-actions<
 
-      // Replace by GET request with only invite ID, which returns the rest.
-      %a.invite-confirm.btn.btn-white{href: '#', 'data-invite-id'         => '{{id}}',
-                                                 'data-invite-invitee_id' => '{{invitee_id}}',
-                                                 'data-invite-accept'     => '{{accept}}'}
-        Confirm
-    {{/compare}}
-    
+        // If inviter is awaiting invitee's acceptance, show link to token
+        {{#compare state 1}}
+        // Replace by GET request with only invite ID, which returns the rest.
+        %a.invite-pending.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'View key',
+                                                    'data-invite-id'         => '{{id}}',
+                                                    'data-invite-invitee_id' => '{{invitee_id}}',
+                                                    'data-invite-email'      => '{{invitee_full_name}}' }>
+          %i.icon-key
+        {{/compare}}
+
+        // If invitee is awaiting inviter's confirmation, show link to confirmation
+        {{#compare state 2}}
+        // Replace by GET request with only invite ID, which returns the rest.
+        %a.invite-confirm.btn.btn-white.hint--left{ href: '#',:'data-hint' => 'Confirm',
+                                                    'data-invite-id'         => '{{id}}',
+                                                    'data-invite-invitee_id' => '{{invitee_id}}',
+                                                    'data-invite-accept'     => '{{accept}}'}>
+          %i.icon-ok
+        {{/compare}}
+
+        // In either case, show delete button
+        %a.invite-delete.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Cancel invitation' }
+          %i.icon-trash
+
     {{/each}}
 
   {{/if}}
 
   -# User list
-  
+
   #users
-  
+
   {{#each users}}
 
   %li{ id: '{{id}}' }

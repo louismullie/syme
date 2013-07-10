@@ -165,7 +165,7 @@
 
         &:hover, &:active, &[role="submit-modal"] {
           color: inherit;
-          background: $bodyBackgroundColor3;
+          background: darken($bodyBackgroundColor2, 10%);
         }
       }
     }
