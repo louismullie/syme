@@ -10,8 +10,17 @@ class NotificationGenerator
       User.find(id).full_name
     end.join_english
 
-    group = Group.find(notification.group_id)
-
+    group = begin
+      Group.find(notification.group_id)
+    rescue Mongoid::Errors::DocumentNotFound
+    end
+    
+    # If all the users have been deleted, or the group
+    # does not exist, flag the notification as invalid.
+    if actors.empty? || group.nil?
+      return { id: notification.id.to_s, invalid: true }
+    end
+    
     g_notification = {
       id:         notification.id.to_s,
       post_id:    notification.post_id.to_s,

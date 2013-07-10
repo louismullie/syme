@@ -75,6 +75,12 @@ Notifications = (function(){
       invite_confirm: {
         message: '%(actors)s granted you access to %(resource)s',
         resource: "group"
+      },
+      
+      // Destructive operations
+      leave_group: {
+        message: '%(actors)s left %(resource)s',
+        resource: "group"
       }
 
     }
@@ -142,7 +148,11 @@ Notifications = (function(){
       var selector = this.collection.where({ read: false }).reverse();
 
       // Iterate on each
-      var notifications = _.map(selector, function(notification){
+      var notifications = _.select(selector, function (notification) {
+        return notification.invalid != true;
+      });
+      
+      var notifications = _.map(notifications, function(notification){
         // Return notification.attributes with an added message
         return _.extend(notification.attributes, {
           message: generateNotificationText(notification.attributes)

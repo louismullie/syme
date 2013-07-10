@@ -21,6 +21,7 @@ asocial.binders.add('feed', { invite: function() {
 
     // Show confirmation modal
     asocial.helpers.showModal(confirm_modal, {
+      
       closable: false,
       classes: 'modal-alert',
 
@@ -39,6 +40,24 @@ asocial.binders.add('feed', { invite: function() {
               .text('Done!').removeClass('disabled');
 
           });
+        }, function () {
+          
+          asocial.helpers.showConfirm(
+            
+            name + ' provided the wrong token.', {
+
+            submit: 'Send new invite',
+            cancel: 'Cancel invite',
+            closable: false,
+
+            onsubmit: function(){
+
+              alert('Sending new invite');
+
+            }
+          });
+          
+          
         });
 
       }
@@ -66,7 +85,21 @@ asocial.binders.add('feed', { invite: function() {
       
     });
 
-  }});
+    },
+    
+    mouseenter: function (e) {
+      
+      $(this).text('View key');
+      
+    },
+    
+    mouseleave: function (e) {
+      
+      $(this).text('Pending');
+      
+    }
+  
+  });
 
   // Add new user
   $('#main').on('click', 'a#add-user, a#add-user-first', function(){

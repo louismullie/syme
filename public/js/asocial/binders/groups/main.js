@@ -152,7 +152,13 @@ asocial.binders.add('groups', { main: function() {
           $.ajax(route, { type: 'DELETE',
 
             success: function () {
-              Router.reload();
+              
+              var user = CurrentSession.getUser();
+              
+              user.deleteKeylist(groupId, function () {
+                Router.reload();
+              });
+              
             },
 
             error: function () {

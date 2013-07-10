@@ -603,7 +603,9 @@ Keyfile = function(userId, password, encKeyfile) {
     var S1p = pakdh.calculateS1(inviterId, inviteeAlias, gRa, Yba);
 
     if (S1p.toString(16) != inviteRequest.inviteeS1)
-      throw 'Unsafe - invalid S1: ' + S1p.toString(16);
+      return { error: 'invalid_s1' };
+
+    //throw 'Unsafe - invalid S1: ' + S1p.toString(16);
     
     // Upgrade invitee alias to invitee ID.
     var S2 = pakdh.calculateS2(inviterId, inviteeId, gRa, Yba);

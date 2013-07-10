@@ -107,6 +107,9 @@ var User = Backbone.RelationalModel.extend({
 
     Crypto.confirmInviteRequest(accept, function (inviteRequestJson) {
         
+        if (inviteRequestJson.error)
+          return errorCb();
+        
         invitation.save(
           { integrate: inviteRequestJson.inviteConfirmation,
             distribute: inviteRequestJson.addUserRequest },

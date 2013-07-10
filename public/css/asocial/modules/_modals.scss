@@ -46,8 +46,8 @@
 
     // Confirm
     &.modal-confirm {
-      @media #{$breakpointLarge}  { width: 30%; }
-      @media #{$breakpointMedium} { width: 35%; }
+      @media #{$breakpointLarge}  { width: 40%; }
+      @media #{$breakpointMedium} { width: 50%; }
 
       .modal-buttons {
         margin-top: .8em;
