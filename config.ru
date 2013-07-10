@@ -34,7 +34,7 @@ end
 # Setup a strict CSP to discourage XSS.
 require 'content-security-policy'
 
-default = 'localhost:5000 198.27.65.229 syme.io'
+default = 'localhost:5000 198.27.65.229 syme.io 192.168.1.114:5000'
 
 use ContentSecurityPolicy, directives: {
   # 'default-src' => settings.secure ? 'https: ' : '*',

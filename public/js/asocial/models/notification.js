@@ -118,6 +118,18 @@ Notifications = (function(){
 
     });
 
+    if (asocial.compat.inChromeExtension()) {
+      
+      var notificationText = html.replace(/<(?:.|\n)*?>/gm, '');
+      
+      var notification = webkitNotifications.createNotification(
+        '/img/logo-48x48.png', 'New notification on Syme', notificationText
+      );
+      
+      notification.show();
+      
+    }
+    
     return html;
 
   };
@@ -168,6 +180,14 @@ Notifications = (function(){
 
       // Update count
       $('#notification-li').attr('data-badge', selector.length);
+      
+      if (asocial.compat.inChromeExtension()) {
+        
+        var count = selector.length == 0 ? '' : selector.length.toString();
+        chrome.browserAction.setBadgeText({ text: count });
+        chrome.browserAction.setBadgeBackgroundColor({color: '#ff0011'});
+        
+      }
 
     },
 

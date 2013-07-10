@@ -56,7 +56,7 @@ post '/login/1' do
     
     session[:proof] = srp[:proof]
     
-    track user, 'User started login'
+    track user, 'login.start'
     
     srp[:challenge].merge({ csrf: csrf_token }).to_json
 

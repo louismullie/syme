@@ -11,6 +11,9 @@
 		"48": "/img/logo-48x48.png",
 		"128": "/img/logo-128x128.png"
 	},
+	"web_accessible_resources": [
+    "/img/logo-48x48.png"
+  ],
 	"permissions": [
 		"http://198.27.65.229/",
 		"notifications",

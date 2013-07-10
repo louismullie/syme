@@ -142,15 +142,19 @@ Crypto = {
     var _this = this;
     
     _.each(arr, function (elem, ind) {
-      
-      var decryptedKey = _this.decryptMessageKey(keylistId, elem.key);
-      
-      var key = _this.encryptMessageKey(
-        keylistId, newUserId, decryptedKey);
+    
+      if (elem != null) {
         
-      //throw JSON.stringify([elem, decryptedKey, key]);
-      
-      result.push({ id: elem.id, key: key });
+        var decryptedKey = _this.decryptMessageKey(keylistId, elem.key);
+
+        var key = _this.encryptMessageKey(
+          keylistId, newUserId, decryptedKey);
+
+        //throw JSON.stringify([elem, decryptedKey, key]);
+
+        result.push({ id: elem.id, key: key });
+        
+      }
       
     });
   
