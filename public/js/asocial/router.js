@@ -231,26 +231,26 @@ Router = Backbone.Router.extend({
       asocial.binders.bind(template, true, specific_binders);
 
     }).fail(function(response){
-      
+
       if(response.status == 401) {
-        
+
         // User has been logged off.
         asocial.auth.disconnect();
-        
+
       } else if (response.status == 404) {
-        
+
         // Post or group doesn't exist
         $('#spinner').hide();
-        
+
         asocial.helpers.showAlert(
           "This content doesn't exist anymore."
         );
-        
+
       } else {
-        
+
         // Fatal error
         Router.error();
-        
+
       }
     });
 

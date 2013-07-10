@@ -1,7 +1,7 @@
 .row
   #feed-column
     // Feed form
-    {{> feed-form.hbs}}
+    {{#unless single_post}} {{> feed-form.hbs}} {{/unless}}
 
     // Feed
     #feed{ :'data-group-name' => '{{group.name}}', :'data-year' => '{{ year }}', :'data-month' => '{{ month }}', :'data-single-post' => '{{{single_post}}}' }
