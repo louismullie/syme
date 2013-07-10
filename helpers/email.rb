@@ -19,6 +19,66 @@ def send_email_to(email, subject, body)
   
 end
 
+def send_beta_invite(email, token)
+  
+  subject = "You've been signed up for an invite"
+  
+  message = "<p>Hello,</p>
+  <p>You recently asked us to remind you when Asocial is ready. This is just to confirm that your email is registered and that you'll be the first to know when Asocial is out.</p>
+  <p>Do you have any questions or comments? We'd love to hear from you. Don’t hesitate to get in touch by replying to this email.</p>
+  <p>Sincerely,</p>
+  <p>The Syme Team</p>
+  <p>Jon, Chris and Louis</p>
+  <p><a href='http://www.getsyme.com'>www.getsyme.com</a></p>"
+  
+  send_email_to(email, subject, message)
+  
+end
+
+def send_beta_welcome(email, token)
+  
+  subject = "Welcome to Syme beta"
+
+  message =
+  "<p>Hi there,</p>
+  
+  <p>You’re in! Welcome to Syme, the encrypted social network.</p>
+  
+  <p>All you need to do is to <a href='CHROME EXTENSIONSTORE'> install Syme</a> to get started.</p>
+
+  <p>We’re glad to have you on board. Don’t hesitate to get in touch if you have any questions or comments.</p>
+
+  <p>Sincerely,</p>
+
+  <p>The Syme Team</p>
+  <p>Jon, Chris and Louis</p>
+  <p><a href='http://www.getsyme.com'>www.getsyme.com</a></p>
+
+  <p>Get in touch: <a href='mailto:team@getsyme.com'>Email</a> |
+  <a href='http://www.facebook.com/syme'>Facebook</a> |
+  <a href='http://www.twitter.com/symeapp'>Twitter</a></p>
+   
+  <p>You received this email because you requested to join the waiting list for Asocial beta. If you have not, let us know by replying 'unsubscribe' to this e-mail.</p>"
+  
+end
+
+def send_email_confirm(email, token)
+  
+  subject = "Confirm your Syme account"
+  
+  message = 
+  
+  "Hey #{@user.full_name},
+
+  Welcome to Syme, the encrypted social network. All we need to do is make sure this is really your email address.
+
+  <p><a href='www.getsyme.com/verify/#{@user.id}'>Veriy my account</a></p>
+
+  <p>If you think you received this message by mistake, just reply 'unsubscribe' to this e-mail and we won't send you any more notifications.</p>
+  "
+  
+end
+
 def send_invite(email, token)
   
 
