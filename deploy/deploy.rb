@@ -18,7 +18,7 @@ set :branch, 'master'
 
 # Deployment configuration.
 set :deploy_to, '/var/www/syme.io'
-set :deploy_via, :remote_cache
+set :deploy_via, :copy
 
 set :ssh_options, { forward_agent: true }
 
