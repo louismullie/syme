@@ -1,7 +1,11 @@
 asocial.binders.add('feed', { main: function(){
 
+  $('#feed-panel-column').hide();
+
   // Initial decryption
   asocial.crypto.batchDecrypt(function(){
+
+    $('#feed-panel-column').show(0);
 
     // Breadcrumbs
     asocial.helpers.navbarBreadcrumbs({

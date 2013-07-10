@@ -98,8 +98,5 @@ asocial.binders.add('feed', { panel: function(){
       }
     );
   });
-  
-  // Most horrible fix on Earth for one-page view repainting
-  $('#feed-panel-column').insertAfter($('#feed-column'));
 
 } }); // asocial.binders.add();
