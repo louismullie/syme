@@ -73,14 +73,12 @@ $avatarSmall:             35px;
 // Font families
 
 $opensans:                OpenSans, Helvetica, Arial, Geneva, sans-serif;
-
-$baseFontFamily:          $opensans;
 $codeFontFamily:          Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
 
 // Font combinations
 // Example: font: bold italic 15px/20px arial,sans-serif;
 
-$baseFont:                200 1em/1.5em $baseFontFamily;
+$baseFont:                200 1em/1.5em $opensans;
 $brandFont:               600 3em/60px $opensans;
 
 $buttonFont:              normal 1em $opensans;
