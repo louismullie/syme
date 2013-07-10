@@ -118,8 +118,9 @@ Router = Backbone.Router.extend({
     this.loadStaticPage('error-notfound');
   },
 
-  error: function(){
+  error: function(error){
     // Redirect to error page
+    alert('Fatal error!');
     asocial.error.fatalError();
   },
 
@@ -229,12 +230,27 @@ Router = Backbone.Router.extend({
       // Binders
       asocial.binders.bind(template, true, specific_binders);
 
-    }).fail(function(jqXHR){
-      if(jqXHR.status == 401) {
+    }).fail(function(response){
+      
+      if(response.status == 401) {
+        
         // User has been logged off.
         asocial.auth.disconnect();
+        
+      } else if (response.status == 404) {
+        
+        // Post or group doesn't exist
+        $('#spinner').hide();
+        
+        asocial.helpers.showAlert(
+          "This content doesn't exist anymore."
+        );
+        
       } else {
+        
+        // Fatal error
         Router.error();
+        
       }
     });
 

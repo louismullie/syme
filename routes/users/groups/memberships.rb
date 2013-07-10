@@ -44,6 +44,13 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
         upload.destroy
       end
     end
+    
+    group.invitations.each do |invitation|
+      if invitation.invitee_id == member_id ||
+         invitation.inviter_id == member_id
+        invitation.destroy
+      end
+    end
 
     group.users.each do |user|
       user.notifications.each do |notification|

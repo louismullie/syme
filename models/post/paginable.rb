@@ -1,6 +1,6 @@
 module Post::Paginable
   
-  def page(page, per_page = 10)
+  def page(page, per_page = 5)
     
     posts = self.desc(:updated_at).to_a
     page, size, = page - 1, posts.size

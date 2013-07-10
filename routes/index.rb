@@ -5,7 +5,3 @@ get '/' do
     'Nothing to see here.'
   end
 end
-
-not_found do
-  redirect '/'
-end

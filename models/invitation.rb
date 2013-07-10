@@ -8,7 +8,7 @@ class Invitation
   field :token, type: String
   
   # Inviter user id.
-  field :inviter_id
+  field :inviter_id, type: String
   
   # Invitee's user id.
   field :invitee_id, type: String

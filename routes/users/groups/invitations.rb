@@ -2,7 +2,11 @@ require "base64"
 
 get '/users/:user_id/groups/:group_id/invitations', auth: [] do |_, group_id|
 
-  group = @user.groups.find(group_id)
+  group = begin
+    @user.groups.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    return empty_response
+  end
   
   invitations = {}
   
@@ -26,7 +30,6 @@ get '/users/:user_id/groups/:group_id/invitations', auth: [] do |_, group_id|
       invitation.inviter_id != @user.id.to_s &&  
       # Current user is not invitee
       invitation.invitee_id != @user.id.to_s && 
-      # Key distribution is needed, i.e. > 2 users
       invitation.distribute && 
       !invitation.ack_distribute.include?(@user.id.to_s)
 

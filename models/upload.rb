@@ -50,6 +50,8 @@ class Upload < Resource
 
   def thumbnail
     group.thumbnails.find(thumbnail_id) if thumbnail_id
+  rescue Mongoid::Errors::DocumentNotFound
+    nil
   end
   
 end

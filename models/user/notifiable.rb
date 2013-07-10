@@ -3,6 +3,8 @@ module User::Notifiable
   # To refactor.
   def notify(params, group)
 
+    return if params[:invalid]
+    
     unread_selector, create_selector =
     params[:unread], params[:create]
 

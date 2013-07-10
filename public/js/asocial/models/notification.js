@@ -118,12 +118,13 @@ Notifications = (function(){
 
     });
 
+    // Check if notification hasn't been displayed yet...
     if (asocial.compat.inChromeExtension()) {
       
       var notificationText = html.replace(/<(?:.|\n)*?>/gm, '');
       
       var notification = webkitNotifications.createNotification(
-        '/img/logo-48x48.png', 'New notification on Syme', notificationText
+        'logo-48x48.png', 'New notification on Syme', notificationText
       );
       
       notification.show();
