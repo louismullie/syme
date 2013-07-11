@@ -12,15 +12,19 @@ asocial.binders.add('global', { decrypt: function() {
 
     var formatDecryptedText = function(decryptedText) {
 
-      // Insert the markdown'd decrypted text
-      $this.html( marked(decryptedText) );
-
-      // Transform the .encrypted into .collapsable
-      $this.removeClass('encrypted').addClass('collapsable');
+      // Create a jQuery wrapper around markdown'd decrypted text
+      var content = $( marked(decryptedText) );
 
       // Put commenter name and comment tools in first paragraph of comment
-      $this.closest('.comment-box').find('a.commenter-name')
-        .prependTo( $this.closest('.collapsable').find('p:first-child') );
+      content.filter('p:first-child').prepend(
+        $this.closest('.comment-box').find('a.commenter-name')
+      );
+
+      $this
+        // Output decrypted content
+        .html( content )
+        // Transform the .encrypted into .collapsable
+        .removeClass('encrypted').addClass('collapsable');
 
       // Collapse long text
       asocial.helpers.collapseHTML(5, 'Read more');
