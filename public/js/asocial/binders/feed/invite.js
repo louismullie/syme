@@ -69,10 +69,12 @@ asocial.binders.add('feed', { invite: function() {
 
             // Validate emails and eliminate duplicates
             var validatedEmails = [];
+            
             _.each(emails.split("\n"), function(email){
               if( $.ndbValidator.regexps.email.test(email) )
                 validatedEmails.push(email);
             });
+            
             validatedEmails = _.uniq(validatedEmails);
 
             var inviteQueue = _.clone(validatedEmails),
@@ -118,7 +120,7 @@ asocial.binders.add('feed', { invite: function() {
             });
 
           };
-
+          
           // Show confirmations and/or errors
           inviteEmailsFromTextarea(emails, function(log){
 

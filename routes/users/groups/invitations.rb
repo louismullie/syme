@@ -60,8 +60,7 @@ post '/invitations', auth: [] do
   
   @group = @user.groups.find(invitation.group_id)
 
-  return { status: 'own_email' }.to_json if
-    invitation.email == @user.email
+  error 400, { reason: 'own_email' }
 
   token = SecureRandom.uuid
 
