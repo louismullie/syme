@@ -365,6 +365,34 @@ guard('helpers', {
 
   },
 
+  showPrompt: function(prompt, options) {
+
+    var options  = typeof(options) === "undefined" ? {} : options;
+    var closable = typeof(options.closable) === "undefined" ? true : options.closable;
+
+    // Defaults options.classes to 'modal-prompt'
+    options['classes'] = typeof(options.classes) === "undefined" ?
+      'modal-prompt' : options.classes;
+
+    // Default title, submit and cancel
+    var title  = typeof(options.title) === "undefined" ? 'Confirm' : options.title;
+    var submit = typeof(options.submit) === "undefined" ? 'OK' : options.submit;
+    var cancel = typeof(options.cancel) === "undefined" ? 'Cancel' : options.cancel;
+
+    // Default callbacks
+    var onsubmit = function(){ return true; };
+    var onshow = function(){
+      alert('Showed');
+    };
+
+    // Render content
+    var content = this.render('modals-confirm',
+      { content: prompt, closable: closable, title: title, submit: submit, cancel: cancel });
+
+    this.showModal(content, options);
+
+  },
+
   showLightbox: function(url) {
 
     // Url is required to proceed

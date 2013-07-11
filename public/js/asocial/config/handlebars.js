@@ -130,9 +130,9 @@ Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options
   }
 
   // Plugin for global helpers
-  if ( typeof lvalue === "string" ) {
-    lvalue = Handlebars.helpers.global(lvalue);
-  }
+  // if ( typeof lvalue === "string" ) {
+  //   lvalue = Handlebars.helpers.global(lvalue);
+  // }
 
   result = operators[operator](lvalue, rvalue);
 

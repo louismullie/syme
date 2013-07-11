@@ -7,7 +7,7 @@
     {{#if link}}
 
     // Wrap message in link
-    %a.notification-link{ href: '{{link}}'}
+    %a.notification-link{ href: '{{link}}', hbs: '' }
       %span.unread-indicator{ :'data-read' => '{{{read}}}' }
         {{{message}}}
 
@@ -16,22 +16,32 @@
     // Otherwise, just message
     {{else}}
 
-    {{{message}}}
-    %span.notification-infos {{created_at}}
+    %span.unread-indicator{ :'data-read' => '{{{read}}}' }
+      {{{message}}}
+
+      %span.notification-infos {{created_at}}
 
     {{/if}}
+
+    {{debug}}
 
     // Invite request
     {{#compare action 'invite_request'}}
     {{#with invitation}}
-    {{> feed-notification-invite_request.hbs}}
+
+    %span.notification-actions
+      {{> feed-notification-invite_request.hbs}}
+
     {{/with}}
     {{/compare}}
 
     // Invite accept
     {{#compare action 'invite_accept'}}
     {{#with invitation}}
-    {{> feed-notification-invite_accept.hbs}}
+
+    %span.notification-actions
+      {{> feed-notification-invite_accept.hbs}}
+
     {{/with}}
     {{/compare}}
 
