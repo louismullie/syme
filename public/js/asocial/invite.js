@@ -55,6 +55,7 @@ guard('invite', {
     var invitationId  = $this.data('invite-id'),
         inviteeId     = $this.data('invite-invitee_id'),
         accept        = $this.data('invite-accept'),
+        email         = $this.data('invite-email'),
         name          = $this.data('invite-invitee_full_name'),
         user          = CurrentSession.getUser(),
         keylistId     = $this.data('invite-group_id');
@@ -94,7 +95,18 @@ guard('invite', {
             closable: false,
 
             onsubmit: function(){
-              alert('Sending new invite');
+              
+              asocial.invite.cancelInvitationRequest(inviteLink);
+              
+              user.createInviteRequest(keylistId, email, function (inviteRequestToken) {
+                
+                asocial.helpers.showAlert(
+                  "We've sent a new invitation to " + email, {
+                    title: 'Invitation sent'
+                });
+              
+              });
+              
             },
             
             onhide: function () {

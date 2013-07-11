@@ -38,7 +38,8 @@ class InvitationGenerator
       invitee_id: invitation.invitee_id,
       invitee_full_name: invitation.invitee ?
         invitation.invitee.full_name : invitation.email,
-      accept: invitation.accept
+      accept: invitation.accept,
+      email: invitation.email
     }
   end
 
