@@ -2,6 +2,8 @@ guard('auth', {
 
   login: function(email, password, remember, success, fail, hack) {
 
+    Backbone.Relational.store.reset();
+    
     var srp = new SRPClient(email, password);
 
     var a = srp.srpRandom();

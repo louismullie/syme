@@ -66,7 +66,13 @@
       @media #{$breakpointLarge}  { width: 30%; }
       @media #{$breakpointMedium} { width: 45%; }
 
-      .modal-content { text-align: left }
+      .modal-content {
+        text-align: left;
+        
+        ul {
+          padding-left: 1.5em;
+        }
+      }
 
       p.header {
         font: normal 1.2em/1.5em $opensans;

@@ -60,8 +60,10 @@ post '/invitations', auth: [] do
   
   @group = @user.groups.find(invitation.group_id)
 
-  error 400, { reason: 'own_email' }
-
+  if @user.email == invitation.email
+    error 400, 'own_email'
+  end
+  
   token = SecureRandom.uuid
 
   invitation = @group.invitations.create!(
@@ -247,6 +249,7 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id' do |_, grou
     notifications = invitee.notifications.where(selector)
   
     notifications.each do |notification|
+      next unless notification.invitation
       if notification.invitation['id'] == invitation_id
         notification.destroy 
       end

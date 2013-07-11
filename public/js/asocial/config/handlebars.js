@@ -143,3 +143,18 @@ Handlebars.registerHelper('compare', function (lvalue, operator, rvalue, options
   }
 
 });
+
+Handlebars.registerHelper('key_value', function (obj, hash) {
+    var buffer, key, value;
+    buffer = "";
+    for (key in obj) {
+        if (!Object.hasOwnProperty.call(obj, key)) {
+            continue;
+        }
+        buffer += hash.fn({
+            key: key,
+            value: obj[key]
+        }) || '';
+    }
+    return buffer;
+});

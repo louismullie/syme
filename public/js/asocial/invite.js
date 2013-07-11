@@ -51,11 +51,11 @@ guard('invite', {
 
         checkForQueueCompletion();
 
-      }, function (response){
-
-        debugger;
-
-        failedInvitations[validatedEmail] = response.error.reason;
+      }, function (model, response){
+        
+        var data = JSON.parse(response.responseText);
+        
+        failedInvitations[validatedEmail] = data.error;
 
         // Remove concerned email from queue
         inviteQueue = _.without(inviteQueue, validatedEmail);

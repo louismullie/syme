@@ -74,7 +74,7 @@ asocial.binders.add('feed', { invite: function() {
 
             // Compile success template with log
             template = asocial.helpers.render('feed-modals-invite-success', log);
-
+          
             // Show modal
             asocial.helpers.showAlert(template, {
               classes: 'modal-invite', title: 'Success',
