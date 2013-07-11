@@ -71,25 +71,17 @@ guard('invite', {
       classes: 'modal-alert',
 
       // Disable modal closing by enter key if button is disabled
-      onsubmit: function(){
-        
-        var disabled = $('#responsive-modal a.modal-button').hasClass('disabled');
-        
-        if (!disabled) { Router.reload(); }
-        
-        return disabled;
-        
-      },
+      onsubmit: function(){ return true; },
 
       onshow: function(){
 
         //Proceed to confirmation
         user.confirmInviteRequest(invitationId, accept, function (confirmation) {
           user.transferKeysRequest(keylistId, invitationId, inviteeId, function(){
-
-            $('#responsive-modal a.modal-button')
-              .text('Done!').removeClass('disabled');
-
+            
+            asocial.helpers.hideModal();
+            Router.reload();
+            
           });
         }, function () {
           
@@ -102,10 +94,13 @@ guard('invite', {
             closable: false,
 
             onsubmit: function(){
-
               alert('Sending new invite');
-
+            },
+            
+            onhide: function () {
+              asocial.invite.cancelInvitationRequest(inviteLink);
             }
+            
           });
           
           
