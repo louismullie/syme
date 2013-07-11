@@ -34,7 +34,7 @@ end
 # Setup a strict CSP to discourage XSS.
 require 'content-security-policy'
 
-default = 'localhost:5000 198.27.65.229 syme.io 192.168.1.114:5000'
+default = 'localhost:5000 198.27.65.229:81 syme.io 192.168.1.114:5000'
 
 use ContentSecurityPolicy, directives: {
   # 'default-src' => settings.secure ? 'https: ' : '*',
@@ -67,7 +67,7 @@ use Rack::Attack
 
 Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
 
-Rack::Attack.throttle('logins/email', limit: 6, period: 60) do |req|
+Rack::Attack.throttle('login/email', limit: 6, period: 60) do |req|
   req.params['email'] if req.path =~ /login\/1/ && req.post?
 end
 
@@ -82,7 +82,7 @@ Rack::Mime::MIME_TYPES.merge!({
 
 # Enable token protection against CSRF.
 require 'rack/csrf'
-# use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
+use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
 
 require './app'
 

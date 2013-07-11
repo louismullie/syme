@@ -44,7 +44,7 @@ namespace :extensions do
     File.open('.extension/assets/asocial.js') do |file|
       contents = file.read
       contents.gsub!(/SERVER_URL[\s]*=[\s]*window\.location\.origin;/,
-                    'SERVER_URL="http://198.27.65.229";')
+                    'SERVER_URL="http://198.27.65.229:81";')
       File.open('.extension/assets/asocial.js', "w+") { |f| f.write(contents) }
     end
 
