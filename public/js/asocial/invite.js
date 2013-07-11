@@ -1,7 +1,75 @@
 guard('invite', {
 
+  // Parse emails and invite them all
+  createInvitationRequest: function(emails, callback) {
+
+    // Validate emails
+    var validatedEmails = [],
+        succeededInvitations = [],
+        failedInvitations = {};
+
+    _.each(emails.split("\n"), function(email){
+      // If email is blank, skip it.
+      if(email == "") return;
+
+      if ( $.ndbValidator.regexps.email.test(email) ){
+        validatedEmails.push(email);
+      } else {
+        failedInvitations[email] = 'validation';
+      }
+    });
+
+    // Eliminate duplicates
+    validatedEmails = _.uniq(validatedEmails);
+
+    var inviteQueue = _.clone(validatedEmails);
+
+    var checkForQueueCompletion = function(){
+
+      // If queue is empty, callback with
+      // { succeeded: [*{email, token}], failed: *{email: reason} }
+      if(inviteQueue.length == 0) callback({
+        succeeded: succeededInvitations,
+        failed: failedInvitations
+      });
+
+    };
+
+    // Send invitations to validate emails
+    _.each(validatedEmails, function(validatedEmail){
+
+      // Submit invite
+      var user = CurrentSession.getUser();
+      var groupId = CurrentSession.getGroupId();
+
+      user.createInviteRequest(groupId, validatedEmail, function (inviteRequestToken) {
+
+        succeededInvitations.push({ email: validatedEmail, token: inviteRequestToken});
+
+        // Remove concerned email from queue
+        inviteQueue = _.without(inviteQueue, validatedEmail);
+
+        checkForQueueCompletion();
+
+      }, function (response){
+
+        debugger;
+
+        failedInvitations[validatedEmail] = response.error.reason;
+
+        // Remove concerned email from queue
+        inviteQueue = _.without(inviteQueue, validatedEmail);
+
+        checkForQueueCompletion();
+
+      });
+
+    });
+
+  },
+
   acceptInvitationRequest: function (inviteLink) {
-    
+
     var user = CurrentSession.getUser();
 
     var invitationId = inviteLink.data('invite-id');
@@ -15,26 +83,26 @@ guard('invite', {
       Router.reload();
       $('.popover').hide();
     });
-    
+
   },
-  
+
   cancelInvitationRequest: function (inviteLink) {
-    
+
     var userId = CurrentSession.getUserId();
     var groupId = inviteLink.data('invite-group_id');
     var invitationId = inviteLink.data('invite-id');
-    
+
     var url = SERVER_URL + '/users/' + userId +
       '/groups/' + groupId + '/invitations/' + invitationId;
-    
+
     $.ajax(url, { type: 'DELETE',
-      
+
       success: function () {
         Notifications.fetch();
         Router.reload();
         $('.popover').hide();
       },
-      
+
       error: function (response) {
         if (response.status == 404) {
           asocial.helpers.showAlert(
@@ -43,13 +111,13 @@ guard('invite', {
           alert('Could not decline invitation request.');
         }
       }
-      
+
     });
-    
+
   },
-  
+
   confirmInvitationRequest: function (inviteLink) {
-    
+
     var $this = inviteLink;
 
     var invitationId  = $this.data('invite-id'),
@@ -67,7 +135,7 @@ guard('invite', {
 
     // Show confirmation modal
     asocial.helpers.showModal(confirm_modal, {
-      
+
       closable: false,
       classes: 'modal-alert',
 
@@ -79,15 +147,15 @@ guard('invite', {
         //Proceed to confirmation
         user.confirmInviteRequest(invitationId, accept, function (confirmation) {
           user.transferKeysRequest(keylistId, invitationId, inviteeId, function(){
-            
+
             asocial.helpers.hideModal();
             Router.reload();
-            
+
           });
         }, function () {
-          
+
           asocial.helpers.showConfirm(
-            
+
             name + ' provided the wrong token.', {
 
             submit: 'Send new invite',
@@ -95,32 +163,32 @@ guard('invite', {
             closable: false,
 
             onsubmit: function(){
-              
+
               asocial.invite.cancelInvitationRequest(inviteLink);
-              
+
               user.createInviteRequest(keylistId, email, function (inviteRequestToken) {
-                
+
                 asocial.helpers.showAlert(
                   "We've sent a new invitation to " + email, {
                     title: 'Invitation sent'
                 });
-              
+
               });
-              
+
             },
-            
+
             onhide: function () {
               asocial.invite.cancelInvitationRequest(inviteLink);
             }
-            
+
           });
-          
-          
+
+
         });
 
       }
     });
 
   }
-  
+
 });

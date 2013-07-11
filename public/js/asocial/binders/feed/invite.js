@@ -64,88 +64,13 @@ asocial.binders.add('feed', { invite: function() {
           // Show spinner
           $this.find('a.modal-button').addClass('spinner');
 
-          // Parse emails and invite them all
-          var inviteEmailsFromTextarea = function(emails, callback) {
-
-            // Validate emails and eliminate duplicates
-            var validatedEmails = [];
-            _.each(emails.split("\n"), function(email){
-              if( $.ndbValidator.regexps.email.test(email) )
-                validatedEmails.push(email);
-            });
-            validatedEmails = _.uniq(validatedEmails);
-
-            var inviteQueue = _.clone(validatedEmails),
-                succeededInvitations = [],
-                failedInvitations = {};
-
-            // Send invitations to validate emails
-            _.each(validatedEmails, function(validatedEmail){
-
-              // Submit invite
-              var user = CurrentSession.getUser();
-              var groupId = CurrentSession.getGroupId();
-
-              user.createInviteRequest(groupId, validatedEmail, function (inviteRequestToken) {
-
-                succeededInvitations.push([validatedEmail, inviteRequestToken]);
-
-                // Remove concerned email from queue
-                inviteQueue = _.without(inviteQueue, validatedEmail);
-
-                // If queue is empty, callback with
-                // { succeeded: [*emails], failed: {*email: reason} }
-                if(inviteQueue.length == 0) callback({
-                  succeeded: succeededInvitations, failed: failedInvitations
-                });
-
-              }, function () {
-
-                failedInvitations[validatedEmail] = data.status;
-
-                // Remove concerned email from queue
-                inviteQueue = _.without(inviteQueue, validatedEmail);
-
-                // If queue is empty, callback with
-                // { succeeded: [*emails], failed: {*email: reason} }
-                if(inviteQueue.length == 0) callback({
-                  succeeded: succeededInvitations, failed: failedInvitations
-                });
-
-              });
-
-
-            });
-
-          };
-
           // Show confirmations and/or errors
-          inviteEmailsFromTextarea(emails, function(log){
+          asocial.invite.createInvitationRequest(emails, function(log){
 
-            _.each(log.succeeded, function(value, key){
-              var email = value[0]; var token = value[1];
-              alert(email + token);
-            });
-
-            // Remove own_email errors
-            _.each(log.failed, function(value, key){
-              if ( value == "own_email" ) log.failed = _.omit(log.failed, key);
-            });
-
-            // If all trys failed, throw system error
-            if ( log.failed.length == emails.length)
-              return asocial.helpers.showAlert(
-                'There has been an error in the invite process.'
-              );
-
-            if ( _.size(log.failed) == 0 ) {
+            if ( _.size(log.failed) == 0 )
               // If failed is empty, remove it from log
               // for templating purposes
               log = _.omit(log, 'failed');
-            } else {
-              // Discard reasons by converting to array of values
-              log.failed = _.keys(log.failed);
-            }
 
             // Compile success template with log
             template = asocial.helpers.render('feed-modals-invite-success', log);
