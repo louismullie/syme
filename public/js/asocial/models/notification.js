@@ -211,7 +211,7 @@ Notifications = (function(){
       var id = $(e.currentTarget).closest('.notification').attr('id');
       var notification = this.collection.findWhere({ id: id });
 
-      notification.save({ read: true }, {patch: true});
+      notification.save({ read: true }, { patch: true });
       
     },
 

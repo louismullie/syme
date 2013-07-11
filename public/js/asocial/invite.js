@@ -76,13 +76,15 @@ guard('invite', {
     var groupId = inviteLink.data('invite-group_id');
     var request = inviteLink.data('invite-request');
 
-    var token = prompt('Enter your invitation token');
+   asocial.helpers.showPrompt('Enter your invitation key', function (token) {
+      
+      user.acceptInviteRequest(invitationId, request, token, function () {
+        Notifications.fetch();
+        Router.reload();
+        $('.popover').hide();
+      });
 
-    user.acceptInviteRequest(invitationId, request, token, function () {
-      Notifications.fetch();
-      Router.reload();
-      $('.popover').hide();
-    });
+    }, { title: 'Accept invitation' });
 
   },
 
