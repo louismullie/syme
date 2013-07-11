@@ -179,10 +179,34 @@
       .attachment {
         margin-bottom: 1em;
 
-        p {
-          font-size: .9em;
+        .file {
+          position: relative;
+
+          font-size: .8em;
           font-weight: normal;
+
           margin-bottom: .5em;
+          padding: 10px 15px;
+          padding-right: 115px;
+
+          border: $baseBorderStyle;
+          border-radius: $baseBorderRadius;
+
+          overflow-x: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          a.encrypted-file {
+            display: block;
+            width: 100px;
+
+            position: absolute;
+            top: 50%; right: 10px;
+
+            @include transform( translateY(-50%) );
+
+            text-align: right;
+          }
         }
 
         a {

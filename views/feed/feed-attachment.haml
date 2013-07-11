@@ -14,7 +14,7 @@
 
 {{else}}
 
-%p
+.file
   {{#if is_audio}}
   %i.icon-play-sign
   %b Audio file:
@@ -29,8 +29,6 @@
   {{/if}}
 
   {{filename}} ({{to_readable_size size}})
-
-  &sdot;
 
   %a.encrypted-file{href: '#',
                     'data-attachment-id'       => '{{id}}',
