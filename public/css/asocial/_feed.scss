@@ -196,6 +196,10 @@
           white-space: nowrap;
           text-overflow: ellipsis;
 
+          & > i {
+            margin-right: .5em;
+          }
+
           a.encrypted-file {
             display: block;
             width: 100px;
