@@ -1,20 +1,16 @@
 asocial.binders.add('feed', { invite: function() {
 
   // Confirm user
-  $('.invite-confirm').click(function(e) {
-
-    e.preventDefault();
-
+  $('#main').on('click', '.invite-confirm', function(e) {
     asocial.invite.confirmInvitationRequest($(this));
-
   });
-  
+
   // Accept an invitation to join a group.
-  $('.invite-delete').on('click', function (e) {
+  $('#main').on('click', '.invite-delete', function (e) {
     asocial.invite.cancelInvitationRequest($(this));
   });
 
-  $(document).on('click', '.invite-pending', function(e) {
+  $('#main').on('click', '.invite-pending', function(e) {
 
     var $this = $(this);
 
@@ -22,7 +18,7 @@ asocial.binders.add('feed', { invite: function() {
         email         = $this.data('invite-email'),
         user          = CurrentSession.getUser(),
         keylistId     = CurrentSession.getGroupId();
-    
+
     Crypto.getInvitationToken(keylistId, email, function (token) {
        prompt('Invitation token for ' + email, token);
     });

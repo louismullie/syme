@@ -54,7 +54,7 @@
 @media #{$breakpointSmall} {
   #feed-panel-column {
     // @include grid-column(24, true, false, 1);
-    display: none;
+    display: none !important;
   }
 }
 

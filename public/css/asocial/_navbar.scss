@@ -19,10 +19,10 @@ $stripeBarHeight: 8px;
     background-color: $success;
 
     background-image:
-      linear-gradient( 90deg, rgba(255,255,255,.14) 50%, transparent 50% ), // Before: .07
-      linear-gradient( 90deg, rgba(255,255,255,.26) 50%, transparent 50% ), // Before: .13
-      linear-gradient( 90deg, transparent 50%, rgba(255,255,255,.34) 50% ), // Before: .17
-      linear-gradient( 90deg, transparent 50%, rgba(255,255,255,.38) 50% ); // Before: .19
+      linear-gradient( 90deg, rgba(255,255,255,.14) 50%, transparent 50% ),
+      linear-gradient( 90deg, rgba(255,255,255,.26) 50%, transparent 50% ),
+      linear-gradient( 90deg, transparent 50%, rgba(255,255,255,.34) 50% ),
+      linear-gradient( 90deg, transparent 50%, rgba(255,255,255,.38) 50% );
 
     background-size: 104px 1px, 132px 1px, 74px 1px, 106px 1px;
     background-position: 50%;
@@ -141,6 +141,12 @@ $stripeBarHeight: 8px;
                   &:hover {
                     text-decoration: none;
                     background-color: $bodyBackgroundColor2;
+                  }
+
+                  span.unread-indicator:not([data-read="true"]) {
+                    display: block;
+                    border-left: 3px solid lighten($success, 15%);
+                    padding-left: 10px;
                   }
                 }
               }

@@ -8,9 +8,10 @@
 
     // Wrap message in link
     %a.notification-link{ href: '{{link}}'}
-      {{{message}}}
+      %span.unread-indicator{ :'data-read' => '{{{read}}}' }
+        {{{message}}}
 
-      %span.notification-infos {{created_at}}
+        %span.notification-infos {{created_at}}
 
     // Otherwise, just message
     {{else}}
