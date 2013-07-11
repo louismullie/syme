@@ -221,12 +221,7 @@ guard('socket', {
     },
 
     notification: function (data) {
-      $('#' + data.target).remove();
-
-      if ($('#notifications-content').children().length == 0) {
-        $('#notifications-content').html(
-          asocial.helpers.render('feed-notifications-empty'));
-      }
+      Notifications.fetch();
     },
     
     group: function (data) {
