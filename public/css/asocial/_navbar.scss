@@ -117,6 +117,8 @@ $stripeBarHeight: 8px;
               p { margin: 0; }
 
               p.empty-notification {
+                padding: 10px;
+
                 color: $gray;
                 text-align: center;
               }
