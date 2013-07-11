@@ -73,6 +73,7 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
     user.save!
     
     group.users.delete(user)
+    
     user.groups.delete(group)
 
     group.save!
@@ -87,6 +88,10 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
         create: { actor_ids: [ user_id ] }
       }, group)
       
+    end
+
+    if group.users.size == 0
+      group.destroy
     end
 
   else
