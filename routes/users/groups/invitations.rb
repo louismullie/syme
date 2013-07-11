@@ -241,17 +241,21 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id' do |_, grou
   
   selector = { action: { '$in' => [:invite_request, :invite_accept] } }
   
-  invitee = invitation.email == @user.email ? @user : invitation.invitee
+  invitee = User.where(email: invitation.email).first
+  
+  if invitee
     
-  notifications = invitee.notifications.where(selector)
+    notifications = invitee.notifications.where(selector)
   
-  notifications.each do |notification|
-    if notification.invitation['id'] == invitation_id
-      notification.destroy 
+    notifications.each do |notification|
+      if notification.invitation['id'] == invitation_id
+        notification.destroy 
+      end
     end
+    
+    invitee.save!
+    
   end
-  
-  invitee.save!
   
   inviter = invitation.inviter
   

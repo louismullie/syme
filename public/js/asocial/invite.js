@@ -11,7 +11,9 @@ guard('invite', {
     var token = prompt('Enter your invitation token');
 
     user.acceptInviteRequest(invitationId, request, token, function () {
+      Notifications.fetch();
       Router.reload();
+      $('.popover').hide();
     });
     
   },
@@ -28,7 +30,9 @@ guard('invite', {
     $.ajax(url, { type: 'DELETE',
       
       success: function () {
-        alert('Declined request!');
+        Notifications.fetch();
+        Router.reload();
+        $('.popover').hide();
       },
       
       error: function (response) {

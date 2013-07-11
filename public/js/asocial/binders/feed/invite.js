@@ -8,6 +8,11 @@ asocial.binders.add('feed', { invite: function() {
     asocial.invite.confirmInvitationRequest($(this));
 
   });
+  
+  // Accept an invitation to join a group.
+  $('.invite-delete').on('click', function (e) {
+    asocial.invite.cancelInvitationRequest($(this));
+  });
 
   $(document).on('click', '.invite-pending', function(e) {
 
@@ -17,7 +22,7 @@ asocial.binders.add('feed', { invite: function() {
         email         = $this.data('invite-email'),
         user          = CurrentSession.getUser(),
         keylistId     = CurrentSession.getGroupId();
-
+    
     Crypto.getInvitationToken(keylistId, email, function (token) {
        prompt('Invitation token for ' + email, token);
     });

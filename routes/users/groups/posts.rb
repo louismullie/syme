@@ -136,7 +136,11 @@ get '/users/:user_id/groups/:group_id/posts/:post_id', auth: [] do |user_id, gro
     error 404, 'group_not_found'
   end
 
-  posts = [group.posts.find(post_id)]
+  posts = begin
+    [group.posts.find(post_id)]
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'post_not_found'
+  end
 
   content_type :json
   FeedGenerator.generate(posts, @user, group)
