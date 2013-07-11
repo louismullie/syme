@@ -102,62 +102,52 @@ $stripeBarHeight: 8px;
         }
 
         #notifications-container {
-          padding-right: 7px;
           z-index: 3;
 
           #notifications-content {
             max-height: 350px;
-
-            margin-bottom: .5em;
-            padding: 5px;
             overflow-y: auto;
-
             font-size: 90%;
 
+            border-top: $baseBorderStyle;
+
             .notification {
-              margin-bottom: 7px;
-              padding: 0 0 7px 7px;
-
-              border-bottom: $baseBorderStyle;
-
               font-size: 0.9em;
 
-              &:last-child{
-                margin-bottom: 0;
-                border-bottom: none;
-              }
-
-              p {
-                margin: 0;
-              }
+              p { margin: 0; }
 
               p.empty-notification {
                 color: $gray;
                 text-align: center;
               }
 
+              // No border on last notification
+              &:last-child p.notification-content a.notification-link {
+                border-bottom: none;
+              }
+
               p.notification-content {
-                a.notification-unread {
-                  display: inline-block;
-                  float: right;
+                padding: 0 10px;
+                color: $black;
 
-                  padding-top: 1px; // lol
-                  margin-left: 1em;
+                a.notification-link {
+                  display: block;
+                  margin: 0 -10px;
+                  padding: .5em 10px;
 
-                  font-size: 0.9em;
-                  color: $linkColor;
-                  text-shadow: 0 1px 6px rgba($linkColor, 0.5);
-
-                  @include transition(color 0.2s ease);
+                  border-bottom: $baseBorderStyle;
+                  color: inherit;
 
                   &:hover {
                     text-decoration: none;
-                    color: lighten($linkColor, 15%);
+                    background-color: $bodyBackgroundColor2;
                   }
                 }
               }
 
-              p.notification-infos {
+              span.notification-infos {
+                display: block;
+
                 text-align: left;
                 font-size: 0.8em;
                 color: $darkgray;

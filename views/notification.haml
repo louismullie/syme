@@ -3,18 +3,36 @@
 .notification{ id: '{{id}}', :'data-read' => '{{{read}}}' }
 
   %p.notification-content
-    // If notification hasn't been read, show unread button
-    {{#unless read}}
-    %a.notification-unread{ href: '#', 'title' => 'Mark as read' }
-      %i.icon-circle
-    {{/unless}}
+    // If there is a global link
+    {{#if link}}
 
-    // Display message
+    // Wrap message in link
+    %a.notification-link{ href: '{{link}}'}
+      {{{message}}}
+
+      %span.notification-infos {{created_at}}
+
+    // Otherwise, just message
+    {{else}}
+
     {{{message}}}
+    %span.notification-infos {{created_at}}
 
-  %p.notification-infos
-    // Created at
-    {{created_at}}
+    {{/if}}
+
+    // Invite request
+    {{#compare action 'invite_request'}}
+    {{#with invitation}}
+    {{> feed-notification-invite_request.hbs}}
+    {{/with}}
+    {{/compare}}
+
+    // Invite accept
+    {{#compare action 'invite_accept'}}
+    {{#with invitation}}
+    {{> feed-notification-invite_accept.hbs}}
+    {{/with}}
+    {{/compare}}
 
 {{/each}}
 

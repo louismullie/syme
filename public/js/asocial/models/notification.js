@@ -1,6 +1,6 @@
 Notifications = (function(){
 
-  var generateNotificationText = function(data) {
+  var generateNotification = function(data) {
 
     var types = {
 
@@ -76,7 +76,7 @@ Notifications = (function(){
         message: '%(actors)s granted you access to %(resource)s',
         resource: "group"
       },
-      
+
       // Destructive operations
       leave_group: {
         message: '%(actors)s left %(resource)s',
@@ -106,46 +106,30 @@ Notifications = (function(){
       comment_id: data.comment_id
 
     });
-    
+
     var resource = type.resource == "group"
       ? data.group : type.resource;
-    
-    var html = sprintf(type.message, {
+
+    var message = sprintf(type.message, {
       actors: '<b>' + data.actors + '</b>',
       resource: resource,
       group_name: '<b>' + data.group + '</b>'
     });
-  
-    if (data.action == 'invite_request') {
-      
-      html =  html + asocial.helpers.render(
-        'feed-notification-invite_request', data.invitation);
 
-    } else if (data.action == 'invite_accept') {
-      
-      html = html + asocial.helpers.render(
-        'feed-notification-invite_accept', data.invitation);
-      
-    } else {
-      
-      html = '<a href="' + link + '" hbs>' + html + '</a>';
-      
-    }
-    
     // Check if notification hasn't been displayed yet...
     if (asocial.compat.inChromeExtension()) {
-      
-      var notificationText = html.replace(/<(?:.|\n)*?>/gm, '');
-      
+
+      var notificationText = message.replace(/<(?:.|\n)*?>/gm, '');
+
       var notification = webkitNotifications.createNotification(
         'logo-48x48.png', 'New notification on Syme', notificationText
       );
-      
+
       notification.show();
-      
+
     }
-    
-    return html;
+
+    return { message: message, link: link };
 
   };
 
@@ -178,12 +162,20 @@ Notifications = (function(){
       var notifications = _.select(selector, function (notification) {
         return notification.invalid != true;
       });
-      
+
+      // Return extended notification.attributes with generated content
       var notifications = _.map(notifications, function(notification){
-        // Return notification.attributes with an added message
-        return _.extend(notification.attributes, {
-          message: generateNotificationText(notification.attributes)
+
+        notification = notification.attributes;
+        var data = generateNotification(notification);
+
+        return _.extend(notification, {
+          message: data.message,
+          link: notification.action == 'invite_request' ||
+                notification.action == 'invite_accept'
+            ? false : data.link
         });
+
       });
 
       // Show no notifications notice if there are no notifications;
@@ -195,23 +187,23 @@ Notifications = (function(){
 
       // Update count
       $('#notification-li').attr('data-badge', selector.length);
-      
+
       if (asocial.compat.inChromeExtension()) {
-        
+
         var count = selector.length == 0 ? '' : selector.length.toString();
         chrome.browserAction.setBadgeText({ text: count });
         chrome.browserAction.setBadgeBackgroundColor({color: '#ff0011'});
-        
+
       }
 
     },
 
     events: {
-      "click a.notification-unread": "markAsRead",
-      "click a.accept-invitation": "acceptInvitation",
-      "click a.decline-invitation": "declineInvitation",
-      "click a.confirm-invitation": "confirmInvitation",
-      "click a.cancel-invitation": "cancelInvitation",
+      "click a.notification-unread":  "markAsRead",
+      "click a.accept-invitation":    "acceptInvitation",
+      "click a.decline-invitation":   "declineInvitation",
+      "click a.confirm-invitation":   "confirmInvitation",
+      "click a.cancel-invitation":    "cancelInvitation"
     },
 
     markAsRead: function(e){
@@ -223,27 +215,27 @@ Notifications = (function(){
 
       notification.save({ read: true }, {patch: true});
     },
-    
+
     acceptInvitation: function (e) {
       var $this = $(e.currentTarget);
       asocial.invite.acceptInvitationRequest($this);
     },
-    
+
     declineInvitation: function (e) {
       var $this = $(e.currentTarget);
       asocial.invite.cancelInvitationRequest($this);
     },
-    
+
     confirmInvitation: function (e) {
       var $this = $(e.currentTarget);
       asocial.invite.confirmInvitationRequest($this);
     },
-    
+
     cancelInvitation: function (e) {
       var $this = $(e.currentTarget);
       asocial.invite.cancelInvitationRequest($this);
     }
-    
+
   });
 
   // * Model * //
