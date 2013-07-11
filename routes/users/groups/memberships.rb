@@ -57,9 +57,21 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
         if notification.actor_ids.include?(member_id)
           notification.actor_ids.delete(member_id)
         end
+        if notification.actor_ids.empty?
+          notification.destroy
+        end
+      end
+      user.save!
+    end
+    
+    user.notifications.each do |notification|
+      if notification.group_id == group.id.to_s
+        notification.destroy
       end
     end
-
+    
+    user.save!
+    
     group.users.delete(user)
     user.groups.delete(group)
 

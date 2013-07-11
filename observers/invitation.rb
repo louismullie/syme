@@ -35,6 +35,11 @@ class InvitationObserver < Mongoid::Observer
             .generate_pending_invitation(invite, inviter)
         }
       }, group)
+      
+      invitee.notifications.find_by(
+        action: :invite_request,
+        group_id: invite.group.id.to_s
+      ).destroy
     
     elsif invite.state == 3 && !invite.notified
 
@@ -57,6 +62,11 @@ class InvitationObserver < Mongoid::Observer
           actor_ids: [inviter.id.to_s]
         }
       }, group)
+      
+      inviter.notifications.find_by(
+        action: :invite_accept,
+        group_id: invite.group.id.to_s
+      ).destroy
       
       MagicBus::Publisher.broadcast(
         group, :invitation, :distribute,
