@@ -199,7 +199,7 @@ Notifications = (function(){
     },
 
     events: {
-      "click a.notification-unread":  "markAsRead",
+      "click a.notification-link":  "markAsRead",
       "click a.accept-invitation":    "acceptInvitation",
       "click a.decline-invitation":   "declineInvitation",
       "click a.confirm-invitation":   "confirmInvitation",
@@ -207,13 +207,12 @@ Notifications = (function(){
     },
 
     markAsRead: function(e){
-      e.preventDefault();
-      e.stopPropagation();
 
       var id = $(e.currentTarget).closest('.notification').attr('id');
       var notification = this.collection.findWhere({ id: id });
 
       notification.save({ read: true }, {patch: true});
+      
     },
 
     acceptInvitation: function (e) {
