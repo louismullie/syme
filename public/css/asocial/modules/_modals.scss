@@ -61,6 +61,25 @@
       }
     }
 
+    // Prompt
+    &.modal-prompt {
+      @media #{$breakpointLarge}  { width: 40%; }
+      @media #{$breakpointMedium} { width: 50%; }
+
+      input { margin-top: .8em; }
+
+      .modal-buttons {
+        margin-top: .8em;
+
+        @include column-gap(1em);
+        @include column-count(2);
+
+        a.modal-button {
+          margin: 0;
+        }
+      }
+    }
+
     // Invite
     &.modal-invite {
       @media #{$breakpointLarge}  { width: 30%; }
@@ -68,7 +87,7 @@
 
       .modal-content {
         text-align: left;
-        
+
         ul {
           padding-left: 1.5em;
         }
