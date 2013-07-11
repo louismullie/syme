@@ -40,6 +40,8 @@ class InvitationObserver < Mongoid::Observer
         action: :invite_request,
         group_id: invite.group.id.to_s
       ).destroy
+      
+      invitee.save!
     
     elsif invite.state == 3 && !invite.notified
 
@@ -67,6 +69,8 @@ class InvitationObserver < Mongoid::Observer
         action: :invite_accept,
         group_id: invite.group.id.to_s
       ).destroy
+      
+      inviter.save!
       
       MagicBus::Publisher.broadcast(
         group, :invitation, :distribute,
