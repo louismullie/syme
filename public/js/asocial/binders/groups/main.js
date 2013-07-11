@@ -117,10 +117,19 @@ asocial.binders.add('groups', { main: function() {
 
           },
 
-          error: function (resp) {
-            asocial.helpers.showAlert('Could not delete group', {
-              onhide: location.reload
-            });
+          error: function (response) {
+            
+            if (response.status == 404) {
+              asocial.helpers.showAlert(
+                'This group does not exist anymore.', {
+                onhide: function () { Router.reload(); }
+              });
+            } else {
+              asocial.helpers.showAlert('Could not delete group', {
+                onhide: function () { Router.reload(); }
+              });
+            }
+            
           }
           
         });
