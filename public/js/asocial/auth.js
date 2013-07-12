@@ -3,8 +3,8 @@ guard('auth', {
   login: function(email, password, remember, success, fail, hack) {
 
     Backbone.Relational.store.reset();
-    
-    var srp = new SRPClient(email, password);
+
+    var srp = new SRPClient(email);
 
     var a = srp.srpRandom();
     var A = srp.calculateA(a);
@@ -19,46 +19,58 @@ guard('auth', {
       success: function (data) {
         
         if (data.B && data.salt) {
-
+          
           var salt = data.salt;
-          var B = new BigInteger(data.B, 16);
-          var u = srp.calculateU(A, B);
-          var Sc = srp.calculateS(B, salt, u, a);
-          var M = srp.calculateM(email, salt, A, B, Sc);
-
-          var params = $.param({ M: M.toString(16) });
-
-          $('meta[name="_csrf"]').attr('content', data.csrf);
-        
-          $.post(SERVER_URL + '/login/2', params, function (data) {
-
-             if (data.status == 'ok') {
-
-              $('meta[name="_csrf"]').attr('content', data.csrf);
+          
+          console.log(salt);
+          
+          Crypto.deriveKeys(password, salt, function (keys) {
+  
+            console.log(keys);
             
-              success(srp.getDerivedKey());
+            srp.password = keys.key1;
+            
+            var B = new BigInteger(data.B, 16);
+            var u = srp.calculateU(A, B);
+            var Sc = srp.calculateS(B, salt, u, a);
+            var K = srp.calcHashHex(Sc.toString(16));
+            var M = srp.calculateM(email, salt, A, B, K);
 
-            } else if (data.status == 'error') {
-              
-              // Non-deterministic Heisenbug with login
-              if (hack) {
-                
-                Backbone.Relational.store.reset();
-                CurrentSession = {};
-                Router.navigate('login');
-                
+            var params = $.param({ M: M.toString(16) });
+
+            $('meta[name="_csrf"]').attr('content', data.csrf);
+
+            $.post(SERVER_URL + '/login/2', params, function (data) {
+
+               if (data.status == 'ok') {
+
+                $('meta[name="_csrf"]').attr('content', data.csrf);
+
+                success(keys.key2);
+
+              } else if (data.status == 'error') {
+
+                // Non-deterministic Heisenbug with login
+                if (hack) {
+
+                  Backbone.Relational.store.reset();
+                  CurrentSession = {};
+                  Router.navigate('login');
+
+                } else {
+
+                  fail(data.reason);
+
+                }
+
               } else {
-                
-                fail(data.reason);
-                
+
+                asocial.error.fatalError();
+
               }
 
-            } else {
-
-              asocial.error.fatalError();
-
-            }
-
+            });
+            
           });
 
         } else if (data.status == 'error') {

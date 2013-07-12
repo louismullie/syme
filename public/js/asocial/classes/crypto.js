@@ -322,6 +322,17 @@ Crypto = function (workerUrl) {
 
   };
   
+  this.deriveKeys = function(password, salt, generatedKeysCb) {
+
+    Crypto.executeJobWithoutLock({
+
+      method: 'deriveKeys',
+      params: [password, salt]
+
+    }, generatedKeysCb);
+
+  };
+  
   this.getInvitationToken = function (keylistId, userAlias, invitationTokenCb) {
     
     Crypto.executeJobWithoutLock({

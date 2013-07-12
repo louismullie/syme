@@ -210,16 +210,18 @@ Crypto = {
 
   },
   
-  deriveKey: function (data, salt) {
-    
-    // Generate a random hexadecimal salt.
-    var salt = this.generateRandomHex(256);
+  deriveKeys: function (data, salt) {
 
-    // Perform PBKDF2 with 10,000 iterations of SHA256.
+    // Perform PBKDF2 with 100,000 iterations of SHA256.
     var key = sjcl.misc.pbkdf2(data, salt, 10000, 256);
     
+    var x = key.splice(0, key.length/2); var y = key;
+    
+    var key1 = sjcl.codec.hex.fromBits(x);
+    var key2 = sjcl.codec.hex.fromBits(y);
+    
     // Return a JSON representation of the key and salt.
-    return { key: key, salt: salt };
+    return { key1: key1, key2: key2 };
     
   },
   

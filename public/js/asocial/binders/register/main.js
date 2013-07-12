@@ -115,7 +115,8 @@ asocial.binders.add('register', { main: function(){
         remember  = $this.find('input[name="remember_me"]').prop("checked");
 
     var user = new User();
-    var srp = new SRPClient(email, password);
+    
+    var srp = new SRPClient(email);
 
     user.save(
 
@@ -125,42 +126,52 @@ asocial.binders.add('register', { main: function(){
 
         var verifierSalt = srp.randomHexSalt();
 
-        var verifierBn = srp.calculateV(verifierSalt);
-        var verifierHex = verifierBn.toString(16);
-         $('meta[name="_csrf"]').attr('content', response.csrf);
+        console.log(verifierSalt);
+        
+        Crypto.deriveKeys(password, verifierSalt, function (keys) {
 
-        model.save({
+          console.log(keys);
+          
+          srp.password = keys.key1;
+          
+          var verifierBn = srp.calculateV(verifierSalt);
+          var verifierHex = verifierBn.toString(16);
+           $('meta[name="_csrf"]').attr('content', response.csrf);
 
-          verifier: new Verifier({
-            content: verifierHex,
-            salt: verifierSalt
-          })
 
-          }, {
+          model.save({
 
-          success: function (model, response) {
+            verifier: new Verifier({
+              content: verifierHex,
+              salt: verifierSalt
+            })
 
-            user.createKeyfile(srp.getDerivedKey(), function () {
+            }, {
 
-              asocial.auth.login(email, password, remember, function(derivedKey) {
+            success: function (model, response) {
 
-                CurrentSession = new Session();
+              user.createKeyfile(keys.key2, function () {
                 
-                CurrentSession.initializeWithModelAndPassword(
-                  user, derivedKey, remember, function () {
-                    Router.navigate('', { trigger: true, replace: true });
-                });
+                asocial.auth.login(email, password, remember, function() {
+                  
+                    CurrentSession = new Session();
 
+                    CurrentSession.initializeWithModelAndPassword(
+                      user, keys.key2, remember, function () {
+                        Router.navigate('', { trigger: true, replace: true });
+                 
+                  });
 
-              }, function () { alert('An error has occurred!'); }, true);
+                }, function () { alert('An error has occurred!'); }, true);
+                
+              });
+            },
 
-            });
-          },
+            error: function (model, response) {
+              asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
+            }
 
-          error: function (model, response) {
-            asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
-          }
-
+          });
         });
 
       },

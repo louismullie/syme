@@ -3,7 +3,7 @@
  * password, and the bits identifying the 
  * group (1024 [default], 1536 or 2048 bits).
  */
-SRPClient = function (username, password, group) {
+SRPClient = function (username, password, group, hashBits) {
   
   // Store username/password.
   this.username = username;
@@ -13,23 +13,31 @@ SRPClient = function (username, password, group) {
   var group = group || 1024;
   var initVal = this.initVals[group];
   
+  // Set hashing function.
+  this.calcHash = function (string) {
+    return this.calcHashFn(string, hashBits, false);
+  };
+  
+  // Hashing function with hex packing.
+  this.calcHashHex = function (string) {
+    return this.calcHashFn(string, hashBits, true);
+  };
+  
   // Set N and g from initialization values.
-  this.N = this.parseBigInt(initVal.N, 16);
-  this.g = this.parseBigInt(initVal.g, 16);
-  this.gBn = this.parseBigInt(initVal.gBn, 16);
+  this.N = new BigInteger(initVal.N, 16);
+  this.g = new BigInteger(initVal.g, 16);
+  
+  // Pre-compute the hex-BigInteger for g.
+  var hashFn = hashBits == 256 ? 'SHA256' : 'SHA1';
+  this.gBn = new BigInteger(initVal.gBn[hashFn], 16);
   
   // Pre-compute k from N and g.
   this.k = this.calculateK();
   
   // Convenience big integer objects for 1 and 2.
-  this.one = this.parseBigInt("1", 16);
-  this.two = this.parseBigInt("2", 16);
-  
-  // Store the keys derived from the password.
-  this.key1 = null;
-  this.key2 = null;
-  
-  
+  this.one = new BigInteger("1", 16);
+  this.two = new BigInteger("2", 16);
+
 };
 
 /*
@@ -44,17 +52,14 @@ SRPClient.prototype = {
    */
   calculateK: function() {
     
-    // Calculate the hexadecimal values of N and g.
-    var nHex = String(this.bigIntToRadix(this.N, 16));
-    var gHex = String(this.bigIntToRadix(this.g, 16));
+    // Convert to hex values.
+    var toHash = [
+      this.N.toString(16),
+      this.g.toString(16)
+    ];
     
-    // Pad the hexadecimal values before hashing with SHA1.
-    var hashin = (nHex.length & 1) == 0 ? nHex : "0" + nHex;
-    hashin += (this.nZeros(nHex.length - gHex.length) + gHex);
-
-    // Calculate a temporary value of K, perform checks and return.
-    var ktmp = this.parseBigInt(calcSHA1Hex(hashin), 16);
-    return (ktmp.compareTo(this.N) < 0) ? ktmp : ktmp.mod(this.N);
+    // Return hash as a BigInteger.
+    return this.paddedHash(toHash);
 
   },
   
@@ -63,30 +68,19 @@ SRPClient.prototype = {
    */
   calculateX: function (saltHex) {
     
-    // Stretch the keys as far as possible and split.
-    var xy = sjcl.hash.sha512.hash(sjcl.misc.pbkdf2(
-      this.password, saltHex, 10000, 256));
-
-    this.key1 = sjcl.codec.hex.fromBits(xy.splice(0, 8));
-    this.key2 = sjcl.codec.hex.fromBits(xy);
-  
-    // Get the concatenation of username and password.
-    var up = this.username + ":" + this.key1;
+    // Hash the concatenated username and password.
+    var usernamePassword = this.username + ":" + this.password;
+    var usernamePasswordHash = this.calcHash(usernamePassword);
+    
+    // Calculate the padding for the salt.
+    var spad = (saltHex.length % 2 != 0) ? '0' : '';
     
     // Calculate the hash of salt + hash(username:password).
-    var hash = calcSHA1Hex(saltHex + calcSHA1(up));
+    var X = this.calcHashHex(spad + saltHex + usernamePasswordHash);
     
-    // Calculate the temporary value of x, check and return.
-    var xtmp = this.parseBigInt(hash, 16);
+    // Return X as a BigInteger.
+    return new BigInteger(X, 16);
     
-    return (xtmp.compareTo(this.N) < 0) ? xtmp :
-      xtmp.mod(this.N.subtract(this.one));
-    
-  },
-  
-  // Get the key derived during initialization
-  getDerivedKey: function () {
-    return this.key2;
   },
   
   /*
@@ -109,21 +103,11 @@ SRPClient.prototype = {
    */
   calculateU: function(A, B) {
     
-    // Get the hex value of A and B.
-    var aHex = String(this.bigIntToRadix(A, 16));
-    var bHex = String(this.bigIntToRadix(B, 16));
+    // Convert A and B to hexadecimal.
+    var toHash = [A.toString(16), B.toString(16)];
     
-    // Calculate the padding for the hex values.
-    var nlen = 2 * ((this.N.bitLength() + 7) >> 3);
-    var hashin = this.nZeros(nlen - aHex.length) + aHex;
-    hashin += this.nZeros(nlen - bHex.length) + bHex;
-    
-    // Calculate a temporary value for u.
-    var uTmp = this.parseBigInt(calcSHA1Hex(hashin), 16);
-    
-    // Perform checks and return the final value.
-    return (uTmp.compareTo(this.N) < 0) ? uTmp : 
-            uTmp.mod(this.N.subtract(one));
+    // Return hash as a BigInteger.
+    return this.paddedHash(toHash);
 
   },
   
@@ -132,35 +116,30 @@ SRPClient.prototype = {
    * where a is a random number at least 256 bits in length.
    */
   calculateA: function(a) {
+    
+    // Return A as a BigInteger.
     return this.g.modPow(a, this.N);
+    
   },
   
-  calculateM: function (username, salt, A, B, Sc) {
+  /*
+   * Calculate match M = H(H(N) xor H(g), H(I), s, A, B, K)
+   */
+  calculateM: function (username, salt, A, B, K) {
     
-    var K = calcSHA1Hex(Sc.toString(16));
-    var hn = calcSHA1Hex(this.N.toString(16));
+    var aHex = A.toString(16);
+    var bHex = B.toString(16);
+    
+    var hn = this.calcHashHex(this.N.toString(16));
     var hnBn = new BigInteger(hn, 16);
+    
     var hxor = hnBn.xor(this.gBn).toString(16);
     
-    var hi = calcSHA1(username);
+    var hi = this.calcHash(username);
     
-    return this.paddedHash([hxor, hi, salt,
-      A.toString(16), B.toString(16), K]);
-  },
-  
-  paddedHash: function (params) {
-    
-    var nlen = 2 * ((this.N.toString(16).length * 4 + 7) >> 3);
-    
-    var hashin = '';
-    
-    for (var i = 0; i < params.length; i++) {
-      hashin += this.nZeros(nlen - params[i].length) + params[i];
-    }
-    
-    var result = new BigInteger(calcSHA1Hex(hashin), 16);
-    
-    return result.mod(this.N);
+    var array = [hxor, hi, salt, aHex, bHex, K];
+
+    return this.paddedHash(array, true);
     
   },
   
@@ -186,8 +165,7 @@ SRPClient.prototype = {
   },
   
   /*
-   * Helper functions for random number
-   * generation and format conversion.
+   * Helper functions for random number generation.
    */
   
   /* Generate a random big integer */
@@ -220,28 +198,30 @@ SRPClient.prototype = {
     
   },
   
-  /* Convert a big integer to a radix. */
-  bigIntToRadix: function (bi, r) {
-    
-    var biStr = String(bi.toString(8));
-    
-    return (r == 64) ? b8tob64(biStr) : bi.toString(r);
-    
+  /*
+   * Helper functions for padding.
+   */
+
+  /*
+  * SHA1 hashing function with padding: input 
+  * is prefixed with 0 to meet N hex width.
+  */
+  paddedHash: function (array, print) {
+
+   var nlen = 2 * ((this.N.toString(16).length * 4 + 7) >> 3);
+
+   var toHash = '';
+   
+   for (var i = 0; i < array.length; i++) {
+     toHash += this.nZeros(nlen - array[i].length) + array[i];
+   }
+   
+   var hash = new BigInteger(this.calcHashHex(toHash), 16);
+   
+   return hash.mod(this.N);
+
   },
-  
-  /* Parse a big integer with a radix. */
-  parseBigInt: function(str, r) {
-    
-    if(r == 64) 
-      return this.parseBigInt(b64tob8(str), 8);
-    
-    if(str.length == 0)
-      str = "0";
-    
-    return new BigInteger(str, r);
-  
-  },
-  
+
   /* Return a string with N zeros. */
   nZeros: function(n) {
     
@@ -252,6 +232,54 @@ SRPClient.prototype = {
       t + t : t + t + '0';
   
   },
+  
+  /*
+   * Helper functions for hashing and format conversion.
+   */
+
+   calcHashFn: function (string, bits, hexInput) {
+     
+     if (bits == 256) {
+       
+       if (hexInput) {
+         
+         return this.SHA_Interleave(string);
+        
+       } else {
+         
+         var bits = sjcl.hash.sha256.hash(string);
+         return sjcl.codec.hex.fromBits(bits);
+         
+       }
+       
+     } else {
+       
+       return hexInput ? calcSHA1Hex(string) : calcSHA1(string);
+       
+     }
+     
+   },
+   
+   /*
+    * Input is in hex format - trailing odd nibble gets a zero appended.
+    */
+   hexToBlks: function(hexString) {
+     
+     var len = (hexString.length + 1) >> 1;
+     var nblk = ((len + 8) >> 6) + 1;
+     var blks = new Array(nblk * 16);
+     
+     for(var i = 0; i < nblk * 16; i++) blks[i] = 0;
+     
+     for(i = 0; i < len; i++)
+       blks[i >> 2] |= parseInt(hexString.substr(2*i, 2), 16) << (24 - (i % 4) * 8);
+    
+     blks[i >> 2] |= 0x80 << (24 - (i % 4) * 8);
+     blks[nblk * 16 - 1] = len * 8;
+     
+     return blks;
+     
+   },
   
   /*
    * SRP group parameters, composed of N (hexadecimal
@@ -266,7 +294,10 @@ SRPClient.prototype = {
          '8E495C1D6089DAD15DC7D7B46154D6B6CE8EF4AD69B15D4982559B29' +
          '7BCF1885C529F566660E57EC68EDBC3C05726CC02FD4CBF4976EAA9A' +
          'FD5138FE8376435B9FC61D2FC0EB06E3',
-      g: '2', gBn: 'b858cb282617fb0956d960215c8e84d1ccf909c6'
+      g: '2', gBn: {
+         'SHA1': 'b858cb282617fb0956d960215c8e84d1ccf909c6',
+         'SHA256': '36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068'
+      }
 
     },
     
@@ -278,7 +309,10 @@ SRPClient.prototype = {
          '6EDF019539349627DB2FD53D24B7C48665772E437D6C7F8CE442734A' +
          'F7CCB7AE837C264AE3A9BEB87F8A2FE9B8B5292E5A021FFF5E91479E' +
          '8CE7A28C2442C6F315180F93499A234DCF76E3FED135F9BB',
-      g: '2', gBn: 'b858cb282617fb0956d960215c8e84d1ccf909c6'
+      g: '2', gBn: {
+         'SHA1': 'b858cb282617fb0956d960215c8e84d1ccf909c6',
+         'SHA256': '36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068'
+      } 
     },
     
     2048: {
@@ -291,7 +325,10 @@ SRPClient.prototype = {
          '5EA77A2775D2ECFA032CFBDBF52FB3786160279004E57AE6AF874E73' +
          '03CE53299CCC041C7BC308D82A5698F3A8D0C38271AE35F8E9DBFBB6' +
          '94B5C803D89F7',
-      g: '2', gBn: 'b858cb282617fb0956d960215c8e84d1ccf909c6'
+       g: '2', gBn: {
+          'SHA1': 'b858cb282617fb0956d960215c8e84d1ccf909c6',
+          'SHA256': '36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068'
+       }
     },
     
     3072: {
@@ -417,16 +454,19 @@ SRPClient.prototype = {
   
   /* Calculate the server's public value. */
   calculateB: function(b, v) {
+    
     var bb = this.g.modPow(b, this.N);
     var B = bb.add(v.multiply(this.k)).mod(this.N);
+    
     return B;
   },
 
   /* Calculate the server's premaster secret */
   calculateServerS: function(AA, vv, uu, bb) {
-    return vv.modPow(uu, this.N)
-      .multiply(AA).mod(this.N)
-      .modPow(bb, this.N);
+    
+    return vv.modPow(uu, this.N).multiply(AA)
+            .mod(this.N).modPow(bb, this.N);
+
   }
   
 };
