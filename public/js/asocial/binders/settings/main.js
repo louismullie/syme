@@ -84,18 +84,23 @@ asocial.binders.add('settings', { main: function(){
       // Reset form and button
       $this.data('active', false);
       $('#change-email-button').removeClass('active');
-
+      
       // Swap placeholder for value
-      input
-        .attr('placeholder', email)
-        .val('');
+      if (email) {
+        input.attr('placeholder', email)
+        input.val('');
+      }
+      
     };
 
     CurrentSession.getUser().save(
       { email: val },
       { success: function(model, response, options){
-        callback( model.attributes.email )
-      } }
+          callback( model.get('email') )
+        }, error: function (model, response) {
+          asocial.helpers.showAlert('This e-mail is already taken.');
+          callback();
+      }}
     );
 
   });

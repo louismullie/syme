@@ -102,6 +102,21 @@ put '/users' do
   if model.full_name
     user.full_name = model.full_name
   end
+  
+  # Update user email.
+  if model.email
+    
+    existing_user = User.where(
+      email: model.email).first
+    
+    if existing_user && @user &&
+       existing_user.id != @user.id
+      error 400, 'email_taken'
+    else
+      user.email = model.email
+    end
+    
+  end
 
   # Save user.
   user.save!
