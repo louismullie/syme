@@ -77,7 +77,11 @@ var User = Backbone.RelationalModel.extend({
                   });
                 });
               },
-              error: errorCb
+              error: function (model, response) {
+                counter--;
+                if (counter == 0)
+                  inviteCreatedCb(inviteInfos);
+              }
           });
 
       });

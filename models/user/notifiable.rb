@@ -21,8 +21,10 @@ module User::Notifiable
     if unread_selector and notification =
        notifications.where(unread_selector).first
       
-      unless notification.actor_ids.include?(id.to_s)
-        notification.actor_ids << id.to_s 
+      actor_id = create_selector[:actor_ids].first
+      
+      unless notification.actor_ids.include?(actor_id.to_s)
+        notification.actor_ids << actor_id.to_s 
       end
 
       MagicBus::Publisher.broadcast(group, :update, :notification,
