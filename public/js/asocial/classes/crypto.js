@@ -196,12 +196,12 @@ Crypto = function (workerUrl) {
 
   };
 
-  this.createInviteRequest = function (keylistId, userAlias, inviteCreatedCb) {
+  this.createInviteRequests = function (keylistId, userAliases, inviteCreatedCb) {
 
     Crypto.executeJobWithLock({
 
-      method: 'createInviteRequest',
-      params: [keylistId, userAlias]
+      method: 'createInviteRequests',
+      params: [keylistId, userAliases]
 
     }, inviteCreatedCb);
 

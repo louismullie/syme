@@ -44,32 +44,43 @@ var User = Backbone.RelationalModel.extend({
     
   },
   
-  createInviteRequest: function (keylistId, email, inviteCreatedCb, errorCb) {
+  createInviteRequests: function (keylistId, emails, inviteCreatedCb, errorCb) {
     
     var _this = this;
     var invitation = new Invitation();
     
-    Crypto.createInviteRequest(keylistId, email, function (inviteInfo) {
+    Crypto.createInviteRequests(keylistId, emails, function (inviteInfos) {
       
-        var inviteRequest = inviteInfo[0];
-        var inviteToken = inviteInfo[1];
-        
-        invitation.save(
-          {
-            group_id: keylistId,
-            email: email,
-            request: inviteRequest
-          },
-          {
-            success: function () {
-              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-                _this.updateKeyfile(encryptedKeyfile, function () {
-                  inviteCreatedCb(inviteToken);
-                });
-              });
+      var counter = emails.length;
+
+      _.each(inviteInfos, function (inviteInfo) {
+
+          var email = inviteInfo.alias,
+              request = inviteInfo.request;
+
+          var inviteRequest = request[0];
+          var inviteToken = request[1];
+
+          invitation.save(
+            {
+              group_id: keylistId,
+              email: email,
+              request: inviteRequest
             },
-            error: errorCb
-        });
+            {
+              success: function () {
+                Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                  _this.updateKeyfile(encryptedKeyfile, function () {
+                    counter--;
+                    if (counter == 0)
+                      inviteCreatedCb(inviteInfos);
+                  });
+                });
+              },
+              error: errorCb
+          });
+
+      });
       
     });
 

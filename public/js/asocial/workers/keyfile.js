@@ -420,6 +420,19 @@ Keyfile = function(userId, password, encKeyfile) {
     
   };
   
+  that.createInviteRequests = function (keylistId, inviteeAliases) {
+    
+    var inviteRequests = [];
+    
+    _.each(inviteeAliases, function (inviteeAlias) {
+      var request = that.createInviteRequest(keylistId, inviteeAlias);
+      inviteRequests.push({ alias: inviteeAlias, request: request });
+    });
+    
+    return inviteRequests;
+    
+  };
+  
   that.createInviteRequest = function (keylistId, inviteeAlias) {
     
     var keylist = that.getKeylist(keylistId);

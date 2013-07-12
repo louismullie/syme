@@ -22,47 +22,22 @@ guard('invite', {
     // Eliminate duplicates
     validatedEmails = _.uniq(validatedEmails);
 
-    var inviteQueue = _.clone(validatedEmails);
-
-    var checkForQueueCompletion = function(){
-
-      // If queue is empty, callback with
-      // { succeeded: [*{email, token}], failed: *{email: reason} }
-      if(inviteQueue.length == 0) callback({
-        succeeded: succeededInvitations,
-        failed: failedInvitations
+    // Submit invite
+    var user = CurrentSession.getUser();
+    var groupId = CurrentSession.getGroupId();
+    
+    var succeededInvitations = [];
+    
+    user.createInviteRequests(groupId, validatedEmails, function (inviteRequests) {
+      
+      _.each(inviteRequests, function (inviteRequestInfo) {
+        succeededInvitations.push({
+          email: inviteRequestInfo.alias,
+          token: inviteRequestInfo.request[1]
+        });
       });
-
-    };
-
-    // Send invitations to validate emails
-    _.each(validatedEmails, function(validatedEmail){
-
-      // Submit invite
-      var user = CurrentSession.getUser();
-      var groupId = CurrentSession.getGroupId();
-
-      user.createInviteRequest(groupId, validatedEmail, function (inviteRequestToken) {
-
-        succeededInvitations.push({ email: validatedEmail, token: inviteRequestToken});
-
-        // Remove concerned email from queue
-        inviteQueue = _.without(inviteQueue, validatedEmail);
-
-        checkForQueueCompletion();
-
-      }, function (model, response){
-        
-        var data = JSON.parse(response.responseText);
-        
-        failedInvitations[validatedEmail] = data.error;
-
-        // Remove concerned email from queue
-        inviteQueue = _.without(inviteQueue, validatedEmail);
-
-        checkForQueueCompletion();
-
-      });
+      
+      callback({ succeeded: succeededInvitations, failed: failedInvitations });
 
     });
 
@@ -171,7 +146,8 @@ guard('invite', {
               user.createInviteRequest(keylistId, email, function (inviteRequestToken) {
 
                 asocial.helpers.showAlert(
-                  "We've sent a new invitation to " + email, {
+                  "We've sent a new invitation to " + email + "." +
+                  " The token is: " + inviteRequestToken + ".", {
                     title: 'Invitation sent'
                 });
 

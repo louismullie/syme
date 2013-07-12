@@ -56,10 +56,10 @@ Crypto = {
     
   },
   
-  createInviteRequest: function(keylistId, userAlias) {
+  createInviteRequests: function(keylistId, userAliases) {
     
     var keyfile = this.getKeyfile();
-    return keyfile.createInviteRequest(keylistId, userAlias);
+    return keyfile.createInviteRequests(keylistId, userAliases);
     
   },
   
