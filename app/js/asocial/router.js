@@ -103,10 +103,16 @@ Router = Backbone.Router.extend({
   },
 
   userGroup: function(user_id, group_id) {
+    
+    ONE_PAGE_VIEW = false; // FIX
+    
     this.loadDynamicPage('feed', group_id);
   },
 
   userGroupPost: function(user_id, group_id, post_id) {
+    
+    ONE_PAGE_VIEW = true; // FIX
+    
     this.loadDynamicPage('feed', group_id,
       // Specific binders
       ['comments', 'posts', 'main', 'panel', 'shared', 'invite']);

@@ -5,6 +5,13 @@ guard('crypto', {
     // Default callback
     var callback = callback || function(){};
 
+    // Cleanup / fix
+    if (ONE_PAGE_VIEW) {
+      $.each($('.comment-hidden'), function (comment) {
+        comment.removeClass('.comment-hidden');
+      });
+    }
+    
     // Default collection
     var collection = collection || $([
 
