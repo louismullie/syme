@@ -14,6 +14,7 @@
 //= require ./state
 //= require ./error
 //= require ./compat
+//= require ./hangout
 //= require ./asocial
 //= require_tree ./models
 //= require_tree ./binders

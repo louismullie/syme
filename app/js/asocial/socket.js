@@ -4,6 +4,73 @@ guard('socket', {
   updatedPosts: 0,
   updatedComments: 0,
 
+  hangout: {
+    
+    create: function (data) {
+      
+      var hangoutId = data.id;
+      
+      asocial.helpers.showConfirm(
+        
+        asocial.helpers.render('hangout'), 
+        {
+          title: 'Video chat with Louis Mullie',
+          closable: false,
+          submit: 'Accept',
+          cancel: 'Decline',
+          
+          onsubmit: function () {
+            
+            $.ajax('/hangouts', {
+              type: 'PUT',
+              data: {
+                hangout_id: hangoutId,
+                accept: true
+              },
+              success: function () {
+              },
+              error: function () {
+                alert('Could not accept hangout!');
+              }
+              
+            });
+            
+          },
+          
+          onhide: function () {
+            
+            $.ajax('/hangouts', {
+              type: 'PUT',
+              data: { 
+                hangout_id: hangoutId,
+                accept: false
+              },
+              success: function () { },
+              error: function () {
+                alert('Could not decline hangout!');
+              }
+              
+            });
+            
+          }
+          
+      });
+      
+    },
+    
+    decline: function (data) {
+      asocial.helpers.showModal(data.recipient_name +
+        ' declined your request to video chat.');
+    },
+    
+    start: function (data) {
+      
+      asocial.hangout.start(data);
+      
+    }
+  
+  },
+  
   invitation: {
 
     distribute: function (data) {
@@ -101,7 +168,6 @@ guard('socket', {
     group: function (data) {
       CurrentSession.getUser().refreshKeyfile(Router.reload);
     }
-
   },
 
   update: {
@@ -123,7 +189,10 @@ guard('socket', {
 
     notification: function(data){
 
-      Notifications.get(data.id).set(data);
+      var notification = Notifications.get(data.id);
+      
+      if (notification)
+        notification.set(data);
 
     },
 
