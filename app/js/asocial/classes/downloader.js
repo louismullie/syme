@@ -20,9 +20,7 @@ function Downloader(id, keys, options) {
   this.options.numWorkers = options.numWorkers || 4;
   this.options.baseUrl = options.baseUrl || '/file/';
   this.options.privKey = options.privKey;
-  this.options.workerPath = options.workerPath ||
-                          'js/asocial/workers/';
-  //////////
+  this.options.workerPath = options.workerPath || 'workers/';
 
   this.mimeType = null;
   this.success = null;

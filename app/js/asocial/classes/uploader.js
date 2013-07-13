@@ -12,7 +12,7 @@ function Uploader(file, options) {
 
   this.options.data       = options.data       || {};
   this.options.baseUrl    = options.baseUrl    || '/file/';
-  this.options.workerPath = options.workerPath || 'js/asocial/workers/';
+  this.options.workerPath = options.workerPath || 'workers/';
   this.options.numWorkers = options.numWorkers || 4;
   this.options.chunkSize  = options.chunkSize  ||
                             1 * 1024 * 1024;

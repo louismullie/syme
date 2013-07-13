@@ -90,8 +90,8 @@ map '/assets' do
 
   environment = Sprockets::Environment.new
 
-  environment.append_path 'public/js'
-  environment.append_path 'public/css'
+  environment.append_path 'app/js'
+  environment.append_path 'app/css'
 
   if $env == :production
     environment.js_compressor = Closure::Compiler.new

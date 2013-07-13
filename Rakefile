@@ -19,11 +19,11 @@ namespace :extensions do
     FileUtils.cp(css_path, '.extension/assets')
     
     # Copy worker scripts to extension directory.
-    FileUtils.mkdir_p('.extension/js/asocial/workers')
-    worker_path = settings.root + '/public/js/asocial/workers/*.js'
+    FileUtils.mkdir_p('.extension/js/workers')
+    worker_path = settings.root + '/public/workers/*.js'
     
     Dir[worker_path].each do |worker|
-      FileUtils.cp(worker, '.extension/js/asocial/workers')
+      FileUtils.cp(worker, '.extension/js/workers')
     end
     
     # Copy main HTML file to extension directory.
