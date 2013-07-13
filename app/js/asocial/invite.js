@@ -132,10 +132,10 @@ guard('invite', {
         }, function () {
 
           asocial.helpers.showConfirm(
-
-            name + ' provided the wrong token.', {
-
-            submit: 'Send new invite',
+            
+            name + ' entered the wrong key.', {
+            title: 'Wrong key',
+            submit: 'Send a new invite',
             cancel: 'Cancel invite',
             closable: false,
 
@@ -143,7 +143,7 @@ guard('invite', {
 
               asocial.invite.cancelInvitationRequest(inviteLink);
 
-              user.createInviteRequest(keylistId, email, function (inviteRequestToken) {
+              user.createInviteRequests(keylistId, [email], function (inviteRequestToken) {
 
                 asocial.helpers.showAlert(
                   "We've sent a new invitation to " + email + "." +

@@ -38,7 +38,7 @@ asocial.binders.add('feed', { posts: function(){
   });
 
   // Link every encrypted file on the page.
-  $('.encrypted-file').on('click', function() {
+  $('#main').on('click', '.encrypted-file', function() {
 
     var link     = $(this),
         progress = link.parent().find('span');

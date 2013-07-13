@@ -97,6 +97,11 @@ guard('auth', {
     var callback = callback || function () {};
 
     CurrentSession = {};
+    
+    // Reset notification counter.
+    if (asocial.compat.inChromeExtension()) {
+      chrome.browserAction.setBadgeText({ text: '' });
+    }
 
     $.ajax(SERVER_URL + '/sessions/xyz', {
       type: 'delete',

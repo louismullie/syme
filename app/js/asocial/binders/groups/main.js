@@ -99,6 +99,7 @@ asocial.binders.add('groups', { main: function() {
     
     asocial.helpers.showConfirm(message, {
       
+      title: 'Delete group',
       submit: 'Yes',
       cancel: 'No',
       
@@ -113,7 +114,10 @@ asocial.binders.add('groups', { main: function() {
             CurrentSession.groups.splice(CurrentSession.groups.indexOf(groupId), 1);
             
             var user = CurrentSession.getUser();
-            user.deleteKeylist(groupId, Router.reload);
+            
+            user.deleteKeylist(groupId, function () {
+              Router.navigate();
+            });
 
           },
 

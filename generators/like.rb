@@ -7,7 +7,7 @@ class LikeGenerator
       like_count: likeable.likes.count,
       liked_by_user: likeable.likes.where(
         owner_id: current_user.id).exists?,
-      liker_names: likeable.liker_names
+      liker_names: likeable.liker_names.uniq
 
     }
 

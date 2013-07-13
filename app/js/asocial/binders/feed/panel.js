@@ -104,29 +104,29 @@ asocial.binders.add('feed', { panel: function(){
     );
   });
   
-  $('#main').on('click', '.user', function (e) {
-    
-    var userId = $(this).closest('li').attr('id');
-    
-    $.ajax('/hangouts', { 
-      
-      type: 'POST',
-      data: { recipient_id: userId },
-      
-      success: function (data) {
-        
-        var hangoutId = data.id;
-        
-      },
-      
-      error: function (response) {
-        
-        alert('Could not create hangout.');
-        
-      }
-      
-    });
-    
-  });
+  //$('#main').on('click', '.user', function (e) {
+  //  
+  //  var userId = $(this).closest('li').attr('id');
+  //  
+  //  $.ajax(SERVER_URL + '/hangouts', { 
+  //    
+  //    type: 'POST',
+  //    data: { recipient_id: userId },
+  //    
+  //    success: function (data) {
+  //      
+  //      var hangoutId = data.id;
+  //      
+  //    },
+  //    
+  //    error: function (response) {
+  //      
+  //      alert('Could not create hangout.');
+  //      
+  //    }
+  //    
+  //  });
+  //  
+  //});
   
 } }); // asocial.binders.add();

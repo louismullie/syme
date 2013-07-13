@@ -66,7 +66,7 @@ asocial.binders.add('global', { main: function(){
     var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/notifications';
     
     $.ajax(url, { type: 'DELETE',
-      success: function () { Notifications.fetch(); },
+      success: function () { Notifications.reset(); Notifications.fetch(); },
       error: function () { alert('Could not create notifications.'); }
     });
     

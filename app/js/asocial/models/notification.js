@@ -89,7 +89,7 @@ Notifications = (function(){
       groups:  'users/%(current_id)s/groups',
       group:   'users/%(current_id)s/groups/%(group_id)s',
       post:    'users/%(current_id)s/groups/%(group_id)s/posts/%(post_id)s',
-      comment: 'users/%(current_id)s/groups/%(group_id)s/posts/%(post_id)s/comments/%(comment_id)s'
+      comment: 'users/%(current_id)s/groups/%(group_id)s/posts/%(post_id)s'
     }
 
     // If action doesn't exist, return false
@@ -117,17 +117,18 @@ Notifications = (function(){
     });
 
     // Check if notification hasn't been displayed yet...
-    if (asocial.compat.inChromeExtension()) {
-
-      var notificationText = message.replace(/<(?:.|\n)*?>/gm, '');
-
-      var notification = webkitNotifications.createNotification(
-        'logo-48x48.png', 'New notification on Syme', notificationText
-      );
-
-      notification.show();
-
-    }
+    //if (asocial.compat.inChromeExtension() &&
+    //   $('notification[id="' + data.id + '"]').length < 1) {
+    //
+    //  var notificationText = message.replace(/<(?:.|\n)*?>/gm, '');
+    //
+    //  var notification = webkitNotifications.createNotification(
+    //    'logo-48x48.png', 'New notification', notificationText
+    //  );
+    //
+    //  notification.show();
+    //
+    //}
 
     return { message: message, link: link };
 

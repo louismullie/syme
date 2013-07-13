@@ -7,8 +7,8 @@ guard('crypto', {
 
     // Cleanup / fix
     if (ONE_PAGE_VIEW) {
-      $.each($('.comment-hidden'), function (comment) {
-        comment.removeClass('.comment-hidden');
+      $.each($('.comment-hidden'), function (ind, comment) {
+        $(comment).removeClass('comment-hidden');
       });
     }
     
