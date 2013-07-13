@@ -141,7 +141,6 @@ Crypto = function (workerUrl) {
 
   this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
 
-    console.log(1);
     Crypto.executeJobWithoutLock({
       method: 'getEncryptedKeyfile'
     }, function (message) {

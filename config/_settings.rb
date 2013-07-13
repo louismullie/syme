@@ -32,4 +32,4 @@ set :upload_path, File.join(root, '.uploads')
 
 set :protection,
      except: [:http_origin, :remote_token, :frame_options],
-     origin_whitelist: ["chrome-extension://gfkpjafgokaledaoffhnndbgcnainjpp"]
+     origin_whitelist: ['chrome-extension://lknjcaaofhbomggcengbnfalhjhpengc']

@@ -30,7 +30,8 @@ guard('binders', {
       // Execute specified functions
       _.each(modules, function(element){
         // Check module existence
-        if(!$().binders[route][element]) return console.log('No module' + element);
+        if(!$().binders[route][element])
+          throw 'No module' + element;
 
         // Call it
         $().binders[route][element]();

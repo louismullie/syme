@@ -49,11 +49,6 @@ function Uploader(file, options) {
 
     _this.numPasses = numPasses;
 
-    console.log("File size: " + _this.blob.size);
-    console.log("Number of chunks: " + numChunks);
-    console.log("Number of passes: " + numPasses);
-    console.log("Active workers: " + activeWorkers);
-
     var passes = [];
     var currentWorkers = activeWorkers;
     
@@ -66,9 +61,6 @@ function Uploader(file, options) {
           currentWorkers = activeWorkers;
        }
 
-       console.log("Pass #" + pass + ", " +
-       currentWorkers + " using workers.");
-
        var chunks = [];
 
        for (worker = 0; worker < currentWorkers; worker += 1) {
@@ -78,10 +70,7 @@ function Uploader(file, options) {
 
          var end = (start + chunkSize > _this.blob.size) ?
              _this.blob.size : start + chunkSize;
-
-         console.log("Chunk " + pass + "." +
-         worker + ": [" + start + ", " + end + "]");
-
+             
          chunks.push([start, end]);
        }
 
@@ -102,9 +91,6 @@ function Uploader(file, options) {
     if(msg.data['status'] == 'ok') {
 
       _this.uploadedChunks += 1;
-
-      console.log("Uploaded " + _this.uploadedChunks +
-                  "/" + _this.numChunks + " chunks");
 
       _this.progress(_this.uploadedChunks / _this.numChunks * 100);
 
@@ -154,7 +140,6 @@ function Uploader(file, options) {
     xhr.addEventListener("load", function(evt) {
 
       var data = JSON.parse(event.target.responseText);
-      console.log(data);
       _this.uploadId = data.upload.id;
       _this.reader.readAsDataURL(_this.file);
 
@@ -206,8 +191,6 @@ function Uploader(file, options) {
   };
 
   this.nextChunk = function (pass, worker) {
-
-    console.log("Chunk " + pass + "." + worker);
 
     if (!this.passes[pass] || !this.passes[pass][worker])
       return;

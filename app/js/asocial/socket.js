@@ -295,8 +295,8 @@ guard('socket', {
 
     // Check corresponding function existence
     if(!this[data.action][data.model]){
-      console.log('asocial.socket.' + data.action +
-            '.' + data.model + '() doesn\'t exist');
+      throw 'asocial.socket.' + data.action +
+            '.' + data.model + '() doesn\'t exist';
       return false;
     }
 
@@ -328,17 +328,14 @@ guard('socket', {
         document.eventSource.onmessage = function(e) {
 
           var json = $.parseJSON(e.data);
-          console.log('Socket action: ' + json.action + '.' + json.model);
           _this.receiveUpdate(json);
 
         };
 
         document.eventSource.onclose = function(e) {
           if (window.tries < 100) {
-            console.log('Socket closed. Attempting reconnect.');
             _this.checkListen();
           } else {
-            console.log('Socket FAIL after three reconnects.');
             document.eventSource.close();
           }
         };

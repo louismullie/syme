@@ -41,9 +41,6 @@ function Downloader(id, keys, options) {
 
         _this.downloadedChunks += 1;
 
-        console.log("Downloaded " + _this.downloadedChunks +
-                    "/" + _this.numChunks + " chunks");
-
         var data = msg.data['data'];
 
         var worker = msg.data['worker'];
@@ -52,14 +49,11 @@ function Downloader(id, keys, options) {
         _this.blobDict[chunk] = data;
 
         if (_this.downloadedChunks == _this.numChunks) {
-          console.log("SUCCESS");
           _this.success(_this.getAsBlob());
           return;
         } else if (_this.currentChunk >= _this.numChunks - 1) {
-          console.log("RETURNING");
           return;
         } else {
-          console.log("NEXT CHUNK");
           _this.currentChunk += 1;
           _this.nextChunk(worker, _this.currentChunk);
         }
@@ -138,9 +132,6 @@ function Downloader(id, keys, options) {
   };
 
   this.nextChunk = function (worker, chunk) {
-
-    console.log("Downloading chunk #" +
-      chunk + " with worker " + worker);
 
     var fileUrl = this.options.baseUrl +
                   'download/' + this.fileId;

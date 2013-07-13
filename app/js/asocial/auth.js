@@ -22,12 +22,8 @@ guard('auth', {
           
           var salt = data.salt;
           
-          console.log(salt);
-          
           Crypto.deriveKeys(password, salt, function (keys) {
   
-            console.log(keys);
-            
             srp.password = keys.key1;
             
             var B = new BigInteger(data.B, 16);

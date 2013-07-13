@@ -125,13 +125,9 @@ asocial.binders.add('register', { main: function(){
       { success: function (model, response) {
 
         var verifierSalt = srp.randomHexSalt();
-
-        console.log(verifierSalt);
         
         Crypto.deriveKeys(password, verifierSalt, function (keys) {
 
-          console.log(keys);
-          
           srp.password = keys.key1;
           
           var verifierBn = srp.calculateV(verifierSalt);
@@ -191,7 +187,7 @@ asocial.binders.add('register', { main: function(){
         }[error];
 
         // Console if there's no error message
-        if( !errorType ) return console.log("No error message for" + error);
+        if( !errorType ) throw "No error message for" + error;
 
         // Set container as closest .validation-container
         var container = $('input[name="' + errorType.field + '"]')

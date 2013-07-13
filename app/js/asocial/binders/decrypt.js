@@ -40,7 +40,7 @@ asocial.binders.add('global', { decrypt: function() {
     };
 
     if (JSON.parse($.base64.decode(text)).keys[CurrentSession.getUserId()] == undefined)
-      console.log($.base64.decode(text));
+      throw 'Missing keys for current user.';
 
     // Decrypt, then format element
     Crypto.decryptMessage(groupId, text, formatDecryptedText);
