@@ -17,7 +17,7 @@ form#feed-form {
     display: block;
     margin-right: 1em;
 
-    border-radius: 50%;
+    border-radius: 3px;
 
     &[data-placeholder="true"] span {
       opacity: 1 !important;
@@ -40,7 +40,7 @@ form#feed-form {
       position: absolute;
       top: 0; right: 0; bottom: 0; left: 0;
 
-      border-radius: 50%;
+      border-radius: 3px;
 
       color: white;
       text-align: center;
@@ -53,7 +53,7 @@ form#feed-form {
 
     img.avatar {
       width: 100%; height: auto; // Preserve aspect ratio
-      border-radius: 50%;
+      border-radius: 3px;
       box-shadow: 0 0 16px 1px white;
     }
   }
