@@ -24,7 +24,7 @@ def send_beta_invite(email, token)
   subject = "You've been signed up for an invite"
   
   message = "<p>Hello,</p>
-  <p>You recently asked us to remind you when Asocial is ready. This is just to confirm that your email is registered and that you'll be the first to know when Asocial is out.</p>
+  <p>You recently asked us to remind you when Syme is ready. This is just to confirm that your email is registered and that you'll be the first to know when Syme is out.</p>
   <p>Do you have any questions or comments? We'd love to hear from you. Don’t hesitate to get in touch by replying to this email.</p>
   <p>Sincerely,</p>
   <p>The Syme Team</p>
@@ -58,7 +58,7 @@ def send_beta_welcome(email, token)
   <a href='http://www.facebook.com/syme'>Facebook</a> |
   <a href='http://www.twitter.com/symeapp'>Twitter</a></p>
    
-  <p>You received this email because you requested to join the waiting list for Asocial beta. If you have not, let us know by replying 'unsubscribe' to this e-mail.</p>"
+  <p>You received this email because you requested to join the waiting list for Syme beta. If you have not, let us know by replying 'unsubscribe' to this e-mail.</p>"
   
 end
 

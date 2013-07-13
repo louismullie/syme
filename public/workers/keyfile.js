@@ -6,7 +6,9 @@ Keyfile = function(userId, password, encKeyfile) {
   
   that.userId = userId;
   that.password = password;
+  
   that.encKeyfile = encKeyfile;
+  
   that.keyfileJson = {};
   that.keyfile = {};
   
@@ -32,10 +34,8 @@ Keyfile = function(userId, password, encKeyfile) {
   
    var keyfile = {};
 
-    // Iterate over every keylist inside the keyfile.
     _.each(keyfileJson, function (keylistJson, keylistId) {
 
-       // Build the keypairs inside the key list and register.
        keyfile[keylistId] = that.buildKeylist(keylistJson);
 
     });
@@ -50,10 +50,8 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var keylist = {};
     
-    // Iterate over every keypair inside the keyfile.
     _.each(keylistJson, function (keypairs, userId) {
 
-      // Build the key objects and register them.
       if (userId != '_transactions')
         var keypairs = that.buildKeypairs(keypairs);
       
@@ -61,56 +59,51 @@ Keyfile = function(userId, password, encKeyfile) {
 
     });
     
-    // Return the final keylist.
     return keylist;
     
   };
   
   that.buildKeypairs = function(keypairsJson) {
     
-    // Verify that encryption keys are present.
     if (!keypairsJson.encryptionKeypair)
       throw 'Encryption key(s) missing.';
     
-    // Verify that the decryption keys are present.
     if (!keypairsJson.signatureKeypair)
       throw 'Signature key(s) missing.'
     
-    var encryptionKeypair = that
-      .buildKeypair(keypairsJson.encryptionKeypair, 'encryption');
+    var encryptionKeypair = that.buildKeypair(
+      keypairsJson.encryptionKeypair, 'encryption');
     
-    var signatureKeypair = that
-      .buildKeypair(keypairsJson.signatureKeypair, 'signature');
+    var signatureKeypair = that.buildKeypair(
+      keypairsJson.signatureKeypair, 'signature');
     
-    // Build the keypair objects.
     var keypairs = {
       encryptionKeypair: encryptionKeypair, 
       signatureKeypair: signatureKeypair
     };
     
-    // Return the keypairs in JSON format.
     return keypairs;
     
   };
   
   that.buildKeypair = function(keypairJson, type) {
     
-    if (!type) throw 'Keypair type is missing';
+    if (!type)
+      throw 'Keypair type is missing';
     
-    // Check for presence of the public key.
-    if (!keypairJson.publicKey) throw 'Public key is missing.'
+    if (!keypairJson.publicKey)
+      throw 'Public key is missing.'
       
-    // Build the public key and the keypair object.
-    var publicKey = that.buildPublicKey(keypairJson.publicKey, type);
+    var publicKey = that.buildPublicKey(
+      keypairJson.publicKey, type);
+      
     var keypair = { publicKey: publicKey };
     
-    // Build the private key if it is present.
     if (keypairJson.privateKey) {
-      keypair.privateKey =
-      that.buildPrivateKey(keypairJson.privateKey, type);
+      keypair.privateKey = that.buildPrivateKey(
+        keypairJson.privateKey, type);
     }
     
-    // Return the keypair objects.
     return keypair;
     
   };
@@ -119,15 +112,12 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var keyType = that.getKeyType(type);
 
-    // Retrieve the point from the serialized key.
     var point = sjcl.ecc.curves["c" + pubJson.curve]
       .fromBits(pubJson.point);
 
-    // Build the key from the curve and the point.
     var publicKey = new keyType.publicKey(
         pubJson.curve, point.curve, point);
 
-    // Return the public key object.
     return publicKey;
     
   },
@@ -136,16 +126,13 @@ Keyfile = function(userId, password, encKeyfile) {
 
     var keyType = that.getKeyType(type);
     
-    // Retrieve the exponent from the serialized key.
     var exponent = sjcl.bn.fromBits(privJson.exponent);
 
-    // Retrieve the curve number and build the private key.
     var curve = "c" + privJson.curve;
     
     var privateKey = new keyType.secretKey(
         privJson.curve, sjcl.ecc.curves[curve], exponent);
 
-    // Return the private key object.
     return privateKey;
   };
 
@@ -154,11 +141,17 @@ Keyfile = function(userId, password, encKeyfile) {
     var keyType;
     
     if (type == 'encryption') {
+      
       keyType = sjcl.ecc.elGamal;
+      
     } else if (type == 'signature') {
+      
       keyType = sjcl.ecc.ecdsa;
+      
     } else {
+      
       throw 'Keypair type is missing or invalid';
+      
     }
     
     return keyType;
@@ -170,7 +163,9 @@ Keyfile = function(userId, password, encKeyfile) {
     var keyfileJson = {};
     
     _.each(that.keyfile, function (keylist, keylistId) {
+      
       keyfileJson[keylistId] = that.serializeKeylist(keylist);
+      
     });
     
     return keyfileJson;
@@ -268,20 +263,16 @@ Keyfile = function(userId, password, encKeyfile) {
   
   that.generateEncryptionKeypair = function () {
     
-    // Generate a new keypair for ECC encryption.
     var keypair = sjcl.ecc.elGamal.generateKeys(384, 1);
     
-    // Serialize the keypair to JSON.
     return { publicKey: keypair.pub, privateKey: keypair.sec };
     
   };
   
   that.generateSignatureKeypair = function () {
     
-    // Generate a new keypair for ECDSA signing.
     var keypair = sjcl.ecc.ecdsa.generateKeys(384, 1);
     
-    // Serialize the keypair to JSON.
     return { publicKey: keypair.pub, privateKey: keypair.sec };
     
   };
@@ -302,10 +293,6 @@ Keyfile = function(userId, password, encKeyfile) {
     var keylist = that.getKeylist(keylistId);
     
     var keypairs = that.buildKeypairs(keypairsJson);
-    
-    //console.log('Adding keypairs for ' + userId + ' to user ' + that.userId, keypairs);
-
-    //console.log(that.getKeylist(keylistId));
     
     that.keyfile[keylistId][userId] = keypairs;
     
@@ -548,8 +535,6 @@ Keyfile = function(userId, password, encKeyfile) {
     var encryptedInviteeKeypairsBase64 = Crypto
       .encryptThenEncodeBase64(symKey, inviteeKeypairsTxt);
     
-    //console.log(encryptedInviteeKeypairsBase64);
-
     return Crypto.encodeBase64(JSON.stringify({
       keylistId: inviteRequest.keylistId,
       inviterId: inviteRequest.inviterId,
@@ -617,8 +602,6 @@ Keyfile = function(userId, password, encKeyfile) {
 
     if (S1p.toString(16) != inviteRequest.inviteeS1)
       return { error: 'invalid_s1' };
-
-    //throw 'Unsafe - invalid S1: ' + S1p.toString(16);
     
     // Upgrade invitee alias to invitee ID.
     var S2 = pakdh.calculateS2(inviterId, inviteeId, gRa, Yba);

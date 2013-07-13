@@ -82,7 +82,7 @@ Rack::Mime::MIME_TYPES.merge!({
 
 # Enable token protection against CSRF.
 require 'rack/csrf'
-use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
+# use Rack::Csrf, skip: ['POST:/login/1', 'POST:/users']
 
 require './app'
 
