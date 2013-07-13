@@ -71,7 +71,7 @@ code, .code {
 
 // Hide canvas without display:none;
 // to prevent dom exceptions
-canvas {
+#canvas {
   max-height:1px;
   position:absolute;
   top:-1px;
@@ -194,4 +194,12 @@ img.placeholder {
   @media #{$breakpointSmall}  { @include grid-column(24); }
 
   @include transition(width 0.1s ease);
+}
+
+/* Hangouts */
+video.source, video.audio, canvas.encrypt, img.frame {
+  visibility: hidden;
+  width: 1px; height: 1px;
+  position: absolute;
+  top: -1px; left: -1px;
 }
