@@ -60,5 +60,16 @@ asocial.binders.add('global', { main: function(){
     if( !$(this).hasClass('disabled') )
       $(this).closest('form').submit();
   });
+  
+  $(document).on('click', '.clear-notifications', function (e) {
+    
+    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/notifications';
+    
+    $.ajax(url, { type: 'DELETE',
+      success: function () { Notifications.fetch(); },
+      error: function () { alert('Could not create notifications.'); }
+    });
+    
+  });
 
 } }); // asocial.binders.add();

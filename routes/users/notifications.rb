@@ -35,3 +35,17 @@ patch '/users/:user_id/notifications', auth: [] do |_|
   status 204
 
 end
+
+delete '/users/:user_id/notifications', auth: [] do
+
+  content_type :json
+
+  @user.notifications.each do |notification|
+     notification.update_attributes(read: true)
+  end
+  
+  @user.save!
+  
+  empty_response
+
+end
