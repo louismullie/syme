@@ -46,7 +46,7 @@ Session = function () {
   
   this.fetchUser = function (data, callback) {
     
-    this.passworKey = data.password_key;
+    this.passwordKey = data.password_key;
     
     $('meta[name="_csrf"]').attr('content', data.csrf);
 

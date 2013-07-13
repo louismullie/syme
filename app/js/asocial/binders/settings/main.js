@@ -99,6 +99,7 @@ asocial.binders.add('settings', { main: function(){
           callback( model.get('email') )
         }, error: function (model, response) {
           asocial.helpers.showAlert('This e-mail is already taken.');
+          model.set('email', input.attr('placeholder')); // ??
           callback();
       }}
     );

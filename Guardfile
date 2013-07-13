@@ -12,7 +12,7 @@ end
 
 hbs_config = { 
   input: './.hbs/views',
-  output_folder: './app/css/asocial/templates',
+  output_folder: './app/js/asocial/templates',
   register_partials: true,
   run_at_start: true 
 } 
