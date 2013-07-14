@@ -107,8 +107,6 @@ var User = Backbone.RelationalModel.extend({
               });
             },
             error: function (error) {
-              console.log(error);
-              alert('WHORE!');
               asocial.helpers.showAlert("This invitation does not exist anymore.");
             }
         });
@@ -117,32 +115,42 @@ var User = Backbone.RelationalModel.extend({
 
   },
   
-  confirmInviteRequest: function (invitationId, accept, inviteConfirmedCb, errorCb) {
+  confirmInviteRequest: function (keylistId, invitationId, inviteeId, inviteRequest, inviteConfirmedCb, errorCb) {
     
     var _this = this;
     
     var invitation = new Invitation();
     invitation.set('_id', invitationId);
-
-    Crypto.confirmInviteRequest(accept, function (inviteRequestJson) {
+    
+   
+   var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' + keylistId + '/keys';
+  
+    $.getJSON(url, function (keysJson) {
+    
+      Crypto.confirmInviteRequest(keylistId, inviteeId, inviteRequest, keysJson, function (inviteRequestJson) {
         
-        if (inviteRequestJson.error)
-          return errorCb();
-        
-        invitation.save(
-          { integrate: inviteRequestJson.inviteConfirmation,
-            distribute: inviteRequestJson.addUserRequest },
-          {
-            success: function () {
-              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-                _this.updateKeyfile(encryptedKeyfile, inviteConfirmedCb);
-              });
-            },
-            error: errorCb
-        });
+          if (inviteRequestJson.error)
+            return errorCb();
       
+            invitation.save(
+              { integrate: inviteRequestJson.confirm.inviteConfirmation,
+                distribute: inviteRequestJson.confirm.addUserRequest,
+                transfer: inviteRequestJson.keys },
+              {
+                success: function () {
+              
+                  Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                    _this.updateKeyfile(encryptedKeyfile, inviteConfirmedCb);
+                  });
+              
+                },
+                error: errorCb
+            });
+      
+      });
+    
     });
-
+    
   },
   
   completeInviteRequest: function (groupId, invitationId, completeRequest, inviteCompletedCb, errorCb) {
@@ -174,33 +182,6 @@ var User = Backbone.RelationalModel.extend({
       
     });
 
-  },
-  
-  transferKeysRequest: function (groupId, invitationId, inviteeId, transferredKeysCb, errorCb) {
-    
-    var invitation = new Invitation();
-    invitation.set('_id', invitationId);
-    
-    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() +
-    '/groups/' + groupId + '/keys';
-    
-    $.getJSON(url, function (keys) {
-      
-      Crypto.transferKeysRequest(groupId, inviteeId, keys,
-      
-        function (recryptedKeys) {
-          
-          invitation.save(
-            { transfer: recryptedKeys },
-            {
-              success: transferredKeysCb,
-              error: errorCb
-          });
-          
-      });
-      
-    });
-    
   },
   
   addUsersRequest: function (addUsersRequest, addedUsersCb) {

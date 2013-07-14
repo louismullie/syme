@@ -218,12 +218,12 @@ Crypto = function (workerUrl) {
 
   };
 
-  this.confirmInviteRequest = function (inviteRequest, inviteAcceptedCb) {
+  this.confirmInviteRequest = function (keylistId, inviteeId, inviteRequest, keysJson, inviteAcceptedCb) {
 
     Crypto.executeJobWithLock({
 
       method: 'confirmInviteRequest',
-      params: [inviteRequest]
+      params: [keylistId, inviteeId, inviteRequest, keysJson]
 
     }, inviteAcceptedCb);
 

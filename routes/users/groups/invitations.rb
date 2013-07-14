@@ -104,44 +104,9 @@ put '/invitations', auth: [] do
     request_confirm(invitation)
     
   elsif params.integrate && params.distribute &&
-        invitation.state == 2
+        params.transfer && invitation.state == 2
   
-    invitation.integrate = params.integrate
-    
-    unless params.distribute == 'e30=' # fix {}
-      invitation.distribute = params.distribute
-    end
-    
-    invitation.state = 3
-    invitation.save!
-    
-    group   = invitation.group
-    invitee = invitation.invitee
-    inviter = invitation.inviter
-
-    notify_confirmed(invitation)
-
-    membership = Membership.create
-
-    group.memberships << membership
-    group.users << invitee
-    group.save!
-
-    invitee.memberships << membership
-
-    invitee.save!
-
-    track @user, 'Confirmed a new group member'
-    
-    notify_confirmed(invitation)
-    
-  elsif params.completed
-    
-    invitation.state = 4
-    invitation.save!
-  
-  elsif params.transfer
-    
+    # Transfer keys.
     keys = JSON.parse(Base64.
       strict_decode64(params.transfer))
 
@@ -204,6 +169,42 @@ put '/invitations', auth: [] do
       
     end
     
+    invitation.save!
+  
+    # User enters group.
+    invitation.integrate = params.integrate
+
+    unless params.distribute == 'e30=' # fix {}
+      invitation.distribute = params.distribute
+    end
+
+    invitation.state = 3
+    invitation.save!
+
+    group   = invitation.group
+    invitee = invitation.invitee
+    inviter = invitation.inviter
+
+    notify_confirmed(invitation)
+
+    membership = Membership.create
+
+    group.memberships << membership
+    group.users << invitee
+    group.save!
+
+    invitee.memberships << membership
+
+    invitee.save!
+
+    track @user, 'Confirmed a new group member'
+
+    notify_confirmed(invitation)
+
+  
+  elsif params.completed
+    
+    invitation.state = 4
     invitation.save!
     
   else

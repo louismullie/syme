@@ -82,10 +82,23 @@ Crypto = {
     
   },
   
-  confirmInviteRequest: function (inviteRequest) {
+  confirmInviteRequest: function (keylistId, inviteeId, inviteRequest, keysJson) {
+    
+    if (!keylistId || !inviteeId || !inviteRequest || !keysJson)
+      throw 'Missing required parameter.';
     
     var keyfile = this.getKeyfile();
-    return keyfile.confirmInviteRequest(inviteRequest);
+    var confirm = keyfile.confirmInviteRequest(inviteRequest);
+    
+    var recryptedKeys = this.encodeBase64(JSON.stringify({
+      posts: this.recryptPosts(keylistId, inviteeId, keysJson.posts),
+      uploads: this.recryptResource(keylistId, inviteeId, keysJson.uploads),
+      distribute: this.recryptResource(keylistId, inviteeId, keysJson.distribute)
+    }));
+    
+    var result = { confirm: confirm, keys: recryptedKeys };
+    
+    return result;
     
   },
   
@@ -117,20 +130,6 @@ Crypto = {
     
     return acknowledgements;
 
-  },
-  
-  transferKeysRequest: function (keylistId, newUserId, keysJson) {
-    
-    var keyfile = this.getKeyfile(keylistId);
-    
-    var recryptedKeys = this.encodeBase64(JSON.stringify({
-      posts: this.recryptPosts(keylistId, newUserId, keysJson.posts),
-      uploads: this.recryptResource(keylistId, newUserId, keysJson.uploads),
-      distribute: this.recryptResource(keylistId, newUserId, keysJson.distribute)
-    }));
-    
-    return recryptedKeys;
-    
   },
   
   recryptResource: function (keylistId, newUserId, arr) {

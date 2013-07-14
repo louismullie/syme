@@ -122,13 +122,11 @@ guard('invite', {
       onshow: function(){
 
         //Proceed to confirmation
-        user.confirmInviteRequest(invitationId, accept, function (confirmation) {
-          user.transferKeysRequest(keylistId, invitationId, inviteeId, function(){
+        user.confirmInviteRequest(keylistId, invitationId, inviteeId, accept, function () {
 
-            asocial.helpers.hideModal();
-            Router.reload();
+          asocial.helpers.hideModal();
+          Router.reload();
 
-          });
         }, function () {
 
           asocial.helpers.showConfirm(

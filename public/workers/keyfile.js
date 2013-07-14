@@ -560,8 +560,8 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var inviteeY = inviteRequest.inviteeY;
     
-    if (!inviteRequest.inviterId || !inviteRequest.inviteeId ||
-        !inviteRequest.keylistId || !inviteRequest.inviteePublicKey ||
+    if (!inviterId || !inviteeId || !inviteeAlias ||
+        !keylistId || !inviteRequest.inviteePublicKey ||
         !inviteRequest.encKeypairs)
       throw 'Missing required parameters.'
     
