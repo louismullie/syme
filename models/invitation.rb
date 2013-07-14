@@ -10,9 +10,6 @@ class Invitation
   # Inviter user id.
   field :inviter_id, type: String
   
-  # Invitee's user id.
-  field :invitee_id, type: String
-  
   # Invitee's e-mail.
   field :email, type: String
   
@@ -40,7 +37,11 @@ class Invitation
   end
   
   def invitee
-    invitee_id ? User.find(invitee_id) : nil
+    User.where(email: email).first
   end
 
+  def invitee_id
+    invitee.id.to_s if invitee
+  end
+  
 end

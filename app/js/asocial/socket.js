@@ -297,6 +297,9 @@ guard('socket', {
       
       var groupId = data.id;
       
+      Notifications.reset();
+      Notifications.fetch();
+      
       if (CurrentSession.getGroupId() == groupId);
         Router.navigate('');
       

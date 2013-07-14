@@ -85,6 +85,8 @@ asocial.binders.add('feed', { panel: function(){
           $.ajax(route, { type: 'DELETE',
 
             success: function () {
+              Notifications.reset();
+              Notifications.fetch();
               Router.reload();
             },
 

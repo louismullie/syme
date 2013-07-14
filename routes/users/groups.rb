@@ -111,6 +111,15 @@ delete '/groups/:id', auth: [] do |id|
 
   group = Group.find(id)
   
+  User.all.each do |user|
+    
+    notifications = user.notifications
+      .where(group_id: group.id.to_s)
+    
+    notifications.destroy_all
+    
+  end
+  
   group.invitations.each do |invitation|
     invitation.destroy
   end

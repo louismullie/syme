@@ -80,6 +80,9 @@ asocial.binders.add('feed', { invite: function() {
               classes: 'modal-invite', title: 'Success',
               onsubmit: function () {
                 Router.reload();
+              },
+              onhide: function () {
+                Router.reload();
               }
             });
 

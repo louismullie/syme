@@ -97,7 +97,6 @@ put '/invitations', auth: [] do
 
   if params.accept && invitation.state == 1
     
-    invitation.invitee_id = @user.id.to_s
     invitation.accept = params.accept
     invitation.state = 2
     invitation.save!
@@ -146,7 +145,7 @@ put '/invitations', auth: [] do
     keys = JSON.parse(Base64.
       strict_decode64(params.transfer))
 
-    invitee_id = invitation.invitee.id.to_s
+    invitee_id = invitation.invitee_id
     group = invitation.group
     
     keys['posts'].each do |post_info|

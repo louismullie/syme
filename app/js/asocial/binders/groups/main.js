@@ -116,6 +116,8 @@ asocial.binders.add('groups', { main: function() {
             var user = CurrentSession.getUser();
             
             user.deleteKeylist(groupId, function () {
+              Notifications.reset();
+              Notifications.fetch();
               Router.navigate();
             });
 
@@ -169,6 +171,8 @@ asocial.binders.add('groups', { main: function() {
               var user = CurrentSession.getUser();
               
               user.deleteKeylist(groupId, function () {
+                Notifications.reset();
+                Notifications.fetch();
                 Router.reload();
               });
               
