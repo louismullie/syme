@@ -17,6 +17,12 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
   end
 
   if membership.deletable_by?(@user) || @user.id == user.id
+        
+    user.notifications.each do |notification|
+      if notification.group_id == group.id.to_s
+        notification.destroy
+      end
+    end
 
     group.posts.each do |post|
 
@@ -62,12 +68,6 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
         end
       end
       user.save!
-    end
-    
-    user.notifications.each do |notification|
-      if notification.group_id == group.id.to_s
-        notification.destroy
-      end
     end
     
     user.save!

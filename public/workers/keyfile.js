@@ -674,6 +674,9 @@ Keyfile = function(userId, password, encKeyfile) {
     for(userId in keylistJson) {
     
       var keypairsJson = keylistJson[userId];
+      
+      if (userId == that.userId) continue;
+      
       that.addKeypairs(keylistId, userId, keypairsJson);
       
     };

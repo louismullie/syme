@@ -151,7 +151,7 @@ var User = Backbone.RelationalModel.extend({
     var invitation = new Invitation();
     invitation.set('_id', invitationId);
     
-    Crypto.completeInviteRequest(completeRequest, function () {
+    Crypto.completeInviteRequest(completeRequest, function () { // This causes the error
         
         var acknowledgement = { invitation_id: invitationId };
         
@@ -161,9 +161,11 @@ var User = Backbone.RelationalModel.extend({
             success: function () {
               
               Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+                
                 _this.updateKeyfile(encryptedKeyfile, function () {
                   _this.acknowledgeIntegrate(groupId, acknowledgement, inviteCompletedCb);
                 });
+                
               });
             },
             error: errorCb

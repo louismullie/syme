@@ -18,6 +18,7 @@ Crypto = function (workerUrl) {
   this.onLockRelease = [];
 
   this.executeJobWithLock = function (job, successCb) {
+    
     var successCb = successCb || function () {};
     this.executeJob(true, job, successCb);
 

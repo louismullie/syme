@@ -143,11 +143,13 @@ guard('invite', {
 
               asocial.invite.cancelInvitationRequest(inviteLink);
 
-              user.createInviteRequests(keylistId, [email], function (inviteRequestToken) {
+              user.createInviteRequests(keylistId, [email], function (inviteInfo) {
 
+                var token = inviteInfo.request[1];
+                
                 asocial.helpers.showAlert(
                   "We've sent a new invitation to " + email + "." +
-                  " The token is: " + inviteRequestToken + ".", {
+                  " The token is: <b>" + token + "</b>.", {
                     title: 'Invitation sent'
                 });
 
