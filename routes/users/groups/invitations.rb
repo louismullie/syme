@@ -345,9 +345,7 @@ post '/users/:user_id/invitations/acknowledge' do |_|
         invitation = group.invitations.find(invitation_id)
     
         previous = invitation.ack_distribute
-
         previous << @user.id.to_s
-    
         invitation.ack_distribute = previous
        
         invitation.save!

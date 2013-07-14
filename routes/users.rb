@@ -113,10 +113,6 @@ put '/users' do
        existing_user.id != @user.id
       error 400, 'email_taken'
     else
-      Invitation.where(user.email).each do |invitation|
-        invitation.email = model.email
-        invitation.save!
-      end
       user.email = model.email
     end
     

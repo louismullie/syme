@@ -59,7 +59,7 @@ guard('invite', {
         $('.popover').hide();
       });
 
-    }, { title: 'Accept invitation' });
+    }, { title: 'Accept invitation', closable: false });
 
   },
 
