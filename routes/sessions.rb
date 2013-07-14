@@ -113,6 +113,10 @@ end
 # Clear session.
 delete '/sessions/:session_id' do |session_id|
   
+  # Clear the current session.
   session.clear
+  
+  # Return an empty JSON response.
+  empty_response
   
 end
