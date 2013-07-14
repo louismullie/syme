@@ -149,9 +149,6 @@ Session = function () {
 
   this.setGroupId = function (groupId) {
 
-    if (!groupId)
-      throw 'Missing required parameter.'
-
     this.groupId = groupId;
 
   };

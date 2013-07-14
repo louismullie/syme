@@ -2,6 +2,8 @@ Router = Backbone.Router.extend({
 
   /* RULES */
 
+  currentRoute: '',
+  
   navigate: function (fragment, options) {
 
     var history = Backbone.history;
@@ -18,10 +20,19 @@ Router = Backbone.Router.extend({
     //   History[options.replace ? 'replaceState' : 'pushState'](
     //     { fragment: fragment }, document.title, '#'
     //   );
-
+    
+    this.currentRoute = fragment;
+    
     // Override pushstate and load url directly
     history.loadUrl(fragment);
 
+  },
+  
+  insideGroup: function () {
+    
+    var bits = this.currentRoute.split('/');
+    return bits[bits.length-1] != 'groups';
+    
   },
 
   // Bypass checkURL to load the current pushed fragment
@@ -193,6 +204,7 @@ Router = Backbone.Router.extend({
       if(!groupId) {
 
         user.getAllGroupUpdates(groupId, function () {
+          //CurrentSession.setGroupId(null);
           Router.renderDynamicTemplate(template, specific_binders);
         });
 

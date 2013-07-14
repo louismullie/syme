@@ -1,51 +1,70 @@
-get '/users/:user_id/notifications', auth: [] do
+get '/users/:user_id/notifications', auth: [] do |user_id|
 
-  content_type :json
-
-  @user.notifications.map do |notification|
-    NotificationGenerator.generate(notification, @user)
-  end.to_json
+  # Verify user is authorized to view notifications.
+  if user_id != @user.id.to_s
+    error 403, 'unauthorized'
+  end
+  
+  # Grab the current user's notifications.
+  notifications = @user.notifications
+  
+  # Generate and return notifications in JSON format.
+  NotificationGenerator.generate_notifications(
+    notifications, @user).to_json
 
 end
 
 patch '/users/:user_id/notifications/:notification_id',
-  auth: [] do |_, notification_id|
+  auth: [] do |user_id, notification_id|
 
+  # Verify user is authorized to modify notifications.
+  if user_id != @user.id.to_s
+    error 403, 'unauthorized'
+  end
+  
+  # Get the Backbone model as JSON.
   model = get_model(request)
 
-  return empty_response unless model
-
-  notification = @user.notifications.find(notification_id)
-
-  notification.update_attributes(read: model.read) if model.read
-
-  status 204
-
-end
-
-patch '/users/:user_id/notifications', auth: [] do |_|
-
-  model = get_model(request)
-
-  if model.read
-    @user.notifications.update_all(:read, true)
-    @user.save!
+  # Return 400 if params are missing.
+  error 400, 'missing_params' if !model
+  
+  # Get the notification by ID.
+  notification = begin
+    @user.notifications.find(notification_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'not_found'
   end
 
+  # Update the notification's read status.
+  if model.read
+    notification.read = model.read
+  end
+  
+  # Save the notification to the database.
+  notification.save!
+
+  # Return no response.
   status 204
 
 end
 
-delete '/users/:user_id/notifications', auth: [] do
-
-  content_type :json
-
+# Fix - take from params and move to patch.
+delete '/users/:user_id/notifications', auth: [] do |user_id|
+  
+  # Verify user is authorized to clear notifications.
+  if user_id != @user.id.to_s
+    error 403, 'unauthorized' 
+  end
+  
+  # Mark all the user's notifications as read.
   @user.notifications.each do |notification|
      notification.update_attributes(read: true)
   end
   
+  # Save the user to the database.
   @user.save!
   
-  empty_response
+  # Return an empty response.
+  status 204
 
 end

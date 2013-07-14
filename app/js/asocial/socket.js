@@ -154,6 +154,11 @@ guard('socket', {
 
     notification: function(data){
 
+      if (!Router.insideGroup() && (
+          data.action == 'invite_confirm' ||
+          data.action == 'invite_request'))
+        Router.reload();
+      
       Notifications.add(data);
 
     },
@@ -300,7 +305,8 @@ guard('socket', {
       Notifications.reset();
       Notifications.fetch();
       
-      if (CurrentSession.getGroupId() == groupId);
+      if (Router.insideGroup() &&
+          CurrentSession.getGroupId() == groupId);
         Router.navigate('');
       
       return;

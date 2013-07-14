@@ -1,3 +1,6 @@
+# 
+# WARNING: EXPERIMENTAL
+#
 post '/hangouts', auth: [] do
   
   recipient_id = params[:recipient_id]
@@ -23,7 +26,7 @@ post '/hangouts', auth: [] do
   
 end
 
-put '/hangouts' do
+put '/hangouts', auth: [] do
   
   hangout_id = params[:hangout_id]
   
@@ -92,7 +95,9 @@ put '/hangouts' do
 end
 
 
-get '/hangouts/:hangout_id', auth: [], provides: 'text/event-stream' do |hangout_id|
+get '/hangouts/:hangout_id', auth: [] do |hangout_id|
+  
+  content_type 'text/event-stream'
   
   user_id = @user.id.to_s
   

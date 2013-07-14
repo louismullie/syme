@@ -1,7 +1,14 @@
 class NotificationGenerator
 
-  def self.generate(notification, current_user)
+  def self.generate_notifications(notifications, current_user)
     
+    notifications.map do |notification|
+      self.generate(notification, current_user)
+    end
+    
+  end
+  
+  def self.generate(notification, current_user)
     # Mustn't access through group since user
     # may not be added to the group currently.
     actors = notification.actor_ids.select do |id|

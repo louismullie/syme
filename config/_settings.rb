@@ -28,6 +28,7 @@ end)
 set :assets_prefix, 'assets'
 set :assets_path, File.join(root, 'public', assets_prefix)
 
+set :hbs_path, File.join(root, '.hbs', 'views')
 set :upload_path, File.join(root, '.uploads')
 
 set :protection,

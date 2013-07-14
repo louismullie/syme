@@ -1,32 +1,45 @@
 # Get the current user's information.
 get '/users' do
   
-  # Get ID and e-mail as GET parameters.
+  # Get ID and e-mail from GET parameters.
   id, email = params[:id], params[:email]
 
   # Make sure either ID or e-mail was provided.
   if id.blank? && email.blank?
     error 400, 'missing_params'
   end
-
+  
+  # Make sure user exists by ID or e-mail.
   unless (User.where(id: id).any? ||
          User.where(email: email).any?)
    error 404, 'user_not_found'
   end
   
+  # Make sure user is logged in and
+  # authorized for the requested user.
   if !@user || (id != @user.id.to_s)
     error 403, 'unauthorized'
   end
 
+  # Return the user document as JSON.
   @user.to_json
   
 end
 
-# A client submits a email. If the email is
-# available, we generate a salt, store it,
-# and return the salt to the client for SRP.
+# FIX: merge with above.
+get '/users/:user_id', auth: [] do |user_id|
+
+  user = User.find(user_id) if @user.id.to_s == user_id
+
+  user.to_json
+
+end
+
+# A client submits a email and a name. If the email is
+# available, reserve it by creating a new user.
 post '/users' do
 
+  # Get Backbone JSON as struct.
   user = get_model(request)
 
   # Get the e-mail from params.
@@ -56,35 +69,49 @@ post '/users' do
     error 400, 'validation_failed'
   end
 
+  # Save the user in the database.
   user.save!
   
-  # Return the user ID and salt on success.
-  JSON.parse(user.to_json).merge(
-    { csrf: csrf_token }).to_json
+  # Save the user in the session.
+  session[:user_id] = user.id.to_s
+  
+  # Parse the JSON back into a hash.
+  user_json = JSON.parse(user.to_json)
+  
+  # Merge the CSRF token to the json.
+  user_json.merge({ csrf: csrf_token })
+  
+  # Convert the hash back to JSON.
+  user_json.to_json
 
 end
 
-# The client creates the password verifier
-# and sends it to the server. The server
-# saves the verifier in the database.
-put '/users' do
-
+# The client creates the salt and verifier (s, v)
+# and sends them to the server, which stores them.
+put '/users', auth: [] do
+  
+  # Get Backbone JSON as struct.
   model = get_model(request)
+  
+  # Authorize the user to edit.
+  if model._id != @user.id.to_s
+    error 403, 'unauthorized'
+  end
   
   # Find the user with the supplied ID.
   user = begin
     User.find(model._id)
-  # Return not found if the user is nonexistent.
+  # Return 404 if the user cannot be found.
   rescue Mongoid::Errors::DocumentNotFound
-    error 400, 'user_not_found'
+    error 404, 'user_not_found'
   end
 
-  # Update verifier
+  # Update the verifier and salt.
   if model.verifier
 
     # Build the verifier with the salt.
     user.verifier = Verifier.new(
-      salt:  model.verifier.salt,
+      salt:     model.verifier.salt,
       content:  model.verifier.content
     )
 
@@ -92,33 +119,35 @@ put '/users' do
 
   end
 
-  # Update keypair.
+  # Update the keypair.
   if model.keyfile
     user.keyfile = model.keyfile
-    user.save!
   end
 
-  # Update user name.
+  # Update the user name.
   if model.full_name
     user.full_name = model.full_name
   end
   
-  # Update user email.
+  # Update the user email.
   if model.email
     
+    # Find existing user with e-mail.
     existing_user = User.where(
       email: model.email).first
     
+    # Announce if e-mail is taken.
     if existing_user && @user &&
        existing_user.id != @user.id
       error 400, 'email_taken'
     else
+    # Set the e-mail if available.
       user.email = model.email
     end
     
   end
 
-  # Save user.
+  # Save user to database.
   user.save!
 
   # Return empty JSON.
@@ -126,24 +155,23 @@ put '/users' do
 
 end
 
-get '/users/:user_id', auth: [] do |user_id|
-
-  user = User.find(user_id) if @user.id.to_s == user_id
-
-  content_type :json
-  user.to_json
-
-end
-
 # Delete a user permanently.
 delete '/users/:user_id', auth: [] do |user_id|
 
+  # Verify user is authorized to delete.
+  if user_id != @user.id.to_s
+    error 403, 'unauthorized'
+  end
+
+  # Destroy all of the user's groups.
   @user.groups.each do |group|
     group.destroy
   end
   
+  # Destroy the user.
   @user.destroy
 
+  # Clear the session.
   session.clear
   
   # Return empty JSON.
