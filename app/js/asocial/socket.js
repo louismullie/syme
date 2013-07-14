@@ -154,9 +154,17 @@ guard('socket', {
 
     notification: function(data){
 
+      // Refresh if on group UI and invite state changes.
       if (!Router.insideGroup() && (
           data.action == 'invite_confirm' ||
-          data.action == 'invite_request'))
+          data.action == 'invite_request' ||
+          data.action == 'invite_cancel'))
+        Router.reload();
+      
+      // Refresh if inside group and invite state changes.
+      if (Router.insideGroup() && 
+          data.action == 'invite_accept' &&
+          CurrentSession.getGroupId() == data.group_id)
         Router.reload();
       
       Notifications.add(data);
