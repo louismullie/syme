@@ -36,10 +36,12 @@ class InvitationObserver < Mongoid::Observer
         }
       }, group)
       
-      invitee.notifications.find_by(
+      notif = invitee.notifications.where(
         action: :invite_request,
         group_id: invite.group.id.to_s
-      ).destroy
+      ).first # none if invitee had no account
+      
+      notif.destroy if notif
       
       invitee.save!
     

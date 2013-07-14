@@ -108,6 +108,7 @@ var User = Backbone.RelationalModel.extend({
             },
             error: function (error) {
               console.log(error);
+              alert('WHORE!');
               asocial.helpers.showAlert("This invitation does not exist anymore.");
             }
         });

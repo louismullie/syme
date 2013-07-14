@@ -108,6 +108,11 @@ Notifications = (function(){
 
     var type = types[data.action];
 
+    //if (data.action == 'invite_accept') {
+    //  if (!CurrentSession.groupId) // Fix
+    //    Router.reload();
+    //}
+    
     var link = sprintf(resources[type.resource], {
 
       current_id: CurrentSession.getUserId(),
