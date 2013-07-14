@@ -108,7 +108,7 @@ put '/invitations', auth: [] do
   
     invitation.integrate = params.integrate
     
-    unless params.distribute == 'e30='
+    unless params.distribute == 'e30=' # fix {}
       invitation.distribute = params.distribute
     end
     
@@ -269,6 +269,27 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id' do |_, grou
   end
   
   inviter.save!
+  
+  # Move out to observers
+  if inviter.id.to_s == @user.id.to_s
+    
+    invitee.notify({
+      action: :invite_cancel,
+      create: {
+        actor_ids: [  inviter.id.to_s ],
+        invitation: InvitationGenerator.generate(invitation)
+    }}, group) if invitee
+    
+  elsif invitee.id.to_s == @user.id.to_s
+    
+    inviter.notify({
+      action: :invite_decline,
+      create: {
+        actor_ids: [  invitee.id.to_s ],
+        invitation: InvitationGenerator.generate(invitation)
+    }}, group) if invitee
+  
+  end
   
   content_type :json
   

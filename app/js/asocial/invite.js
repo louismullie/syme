@@ -143,14 +143,18 @@ guard('invite', {
 
               asocial.invite.cancelInvitationRequest(inviteLink);
 
-              user.createInviteRequests(keylistId, [email], function (inviteInfo) {
+              user.createInviteRequests(keylistId, [email], function (inviteInfos) {
 
-                var token = inviteInfo.request[1];
+                var token = inviteInfos[0].request[1];
                 
                 asocial.helpers.showAlert(
-                  "We've sent a new invitation to " + email + "." +
-                  " The token is: <b>" + token + "</b>.", {
-                    title: 'Invitation sent'
+                  "You've sent a new invitation to <b>" + email + "</b>. <br />" +
+                  "A new invitation key was created." +
+                  "The new key is: <b>" + token + "</b>.", {
+                    title: 'Invitation sent',
+                    onsubmit: function () {
+                      Router.reload();
+                    }
                 });
 
               });
@@ -158,7 +162,9 @@ guard('invite', {
             },
 
             onhide: function () {
+              
               asocial.invite.cancelInvitationRequest(inviteLink);
+              
             }
 
           });

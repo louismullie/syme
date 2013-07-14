@@ -7,50 +7,50 @@ Notifications = (function(){
       // Posts
 
       new_post: {
-        message: '%(actors)s made a new %(resource)s in %(group_name)s',
+        message: '%(actors)s posted in %(group_name)s.',
         resource: "post"
       },
 
       // Comments
 
       comment_on_own_post: {
-        message: '%(actors)s commented on your %(resource)s in %(group_name)s',
+        message: '%(actors)s commented on your %(resource)s in %(group_name)s.',
         resource: "post"
       },
 
       comment_on_same_post: {
-        message: '%(actors)s commented on the same %(resource)s as you in %(group_name)s',
+        message: '%(actors)s commented on the same %(resource)s as you in %(group_name)s.',
         resource: "post"
       },
 
       // Likes
 
       like_on_post: {
-        message: '%(actors)s liked your %(resource)s in %(group_name)s',
+        message: '%(actors)s liked your %(resource)s in %(group_name)s.',
         resource: "post"
       },
 
       like_on_comment: {
-        message: '%(actors)s liked your %(resource)s in %(group_name)s',
+        message: '%(actors)s liked your %(resource)s in %(group_name)s.',
         resource: "comment"
       },
 
       // Mentions
 
       mention_in_post: {
-        message: '%(actors)s mentioned you in a %(resource)s in %(group_name)s',
+        message: '%(actors)s mentioned you in a %(resource)s in %(group_name)s.',
         resource: "post"
       },
 
       mention_in_comment: {
-        message: '%(actors)s mentioned you in a %(resource)s in %(group_name)s',
+        message: '%(actors)s mentioned you in a %(resource)s in %(group_name)s.',
         resource: "comment"
       },
 
       // Picture updates
 
       group_picture_update: {
-        message: "%(actors)s changed the group picture in %(resource)s",
+        message: "%(actors)s changed the group picture in %(resource)s.",
         resource: "group"
       },
 
@@ -62,7 +62,7 @@ Notifications = (function(){
       },
 
       new_group_user: {
-        message: '%(actors)s joined %(resource)s',
+        message: '%(actors)s joined %(resource)s.',
         resource: "group"
       },
 
@@ -73,7 +73,17 @@ Notifications = (function(){
       },
 
       invite_confirm: {
-        message: '%(actors)s granted you access to %(resource)s',
+        message: '%(actors)s granted you access to %(resource)s.',
+        resource: "group"
+      },
+      
+      invite_cancel: {
+        message: '%(actors)s canceled your invitation to %(resource)s.',
+        resource: "group"
+      },
+      
+      invite_decline: {
+        message: '%(actors)s declined your invitation to %(resource)s.',
         resource: "group"
       },
 
@@ -83,7 +93,7 @@ Notifications = (function(){
         resource: "group"
       }
 
-    }
+    };
 
     var resources = {
       groups:  'users/%(current_id)s/groups',
