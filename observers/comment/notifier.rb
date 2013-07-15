@@ -67,12 +67,14 @@ module CommentObserver::Notifier
 
     post_owner = comment.post.owner
 
-    commenters.reject do |id|
+    commenters.uniq.reject do |id|
       id == commenter.id.to_s ||
       id == post_owner.id.to_s
-    end.uniq
+    end
 
-    commenters.map { |id| User.find(id) }
+    group = comment.post.group
+    
+    commenters.map { |id| group.find(id) }
 
   end
 

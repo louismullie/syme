@@ -72,6 +72,11 @@ class InvitationObserver < Mongoid::Observer
         group_id: invite.group.id.to_s
       ).destroy
       
+      inviter.notifications.find_by(
+        action: :invite_accept,
+        group_id: invite.group.id.to_s
+      ).destroy
+      
       inviter.save!
       
       MagicBus::Publisher.broadcast(

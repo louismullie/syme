@@ -1,5 +1,8 @@
 asocial.binders.add('global', { main: function(){
 
+  // Set the title for the document.
+  document.title = "Syme";
+  
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
     e.stopPropagation();

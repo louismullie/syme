@@ -86,7 +86,7 @@ asocial.binders.add('register', { main: function(){
     var strength = zxcvbn(val).score;
 
     // Password strength indicators (5 indexes)
-    var explanations = [ 'poor', 'okay', 'good', 'great', 'perfect' ];
+    var explanations = [ 'poor', 'weak', 'good', 'great', 'perfect' ];
 
     $('#password-score')
       // Style accordingly to strengh level
