@@ -74,9 +74,9 @@ class InvitationObserver < Mongoid::Observer
       
       # Delete twice works only?@!@!
       # This is a bug in Moped
-      if inviter.notifications.find_by(
+      if inviter.notifications.where(
           action: :invite_accept,
-          group_id: invite.group.id.to_s)
+          group_id: invite.group.id.to_s).first
         inviter.notifications.find_by(
           action: :invite_accept,
           group_id: invite.group.id.to_s
