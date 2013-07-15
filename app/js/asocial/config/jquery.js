@@ -29,7 +29,7 @@ $.fn.batchDecrypt = function(callback){
 
     // Call callback if all elements are done,
     // passing back $this and elapsed time
-    if(counter == $this.length){
+    if(counter == $this.length - 1){
 
       var endTime     = new Date,
           elapsedTime = endTime - startTime;
