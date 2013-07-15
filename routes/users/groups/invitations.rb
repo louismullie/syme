@@ -94,7 +94,7 @@ put '/invitations', auth: [] do
   rescue Mongoid::Errors::DocumentNotFound
     error 404, 'invitation_not_found'
   end
-
+  
   if params.accept && invitation.state == 1
     
     invitation.accept = params.accept
@@ -130,7 +130,7 @@ put '/invitations', auth: [] do
       post.save!
 
     end
-
+    
     # Transfer the upload keys to new user.
     keys['uploads'].each do |upload_info|
 
@@ -170,6 +170,12 @@ put '/invitations', auth: [] do
     end
     
     invitation.save!
+    
+    invitation = begin
+      Invitation.find(params._id)
+    rescue Mongoid::Errors::DocumentNotFound
+      error 404, 'invitation_not_found'
+    end
   
     # User enters group.
     invitation.integrate = params.integrate
@@ -201,7 +207,6 @@ put '/invitations', auth: [] do
 
     notify_confirmed(invitation)
 
-  
   elsif params.completed
     
     invitation.state = 4
