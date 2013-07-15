@@ -43,14 +43,14 @@ module CommentObserver::Notifier
 
       next if user.id.to_s == commenter.id.to_s
 
-      user.notify({
-        action: :comment_on_same_post,
-        unread: { post_id: post.id.to_s },
-        create: {
-          post_id: post.id.to_s,
-          comment_id: comment.id.to_s,
-          actor_ids: [commenter.id.to_s]
-      }}, group)
+      #user.notify({
+      #  action: :comment_on_same_post,
+      #  unread: { post_id: post.id.to_s },
+      #  create: {
+      #    post_id: post.id.to_s,
+      #    comment_id: comment.id.to_s,
+      #    actor_ids: [commenter.id.to_s]
+      #}}, group)
 
     end
 
