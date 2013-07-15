@@ -72,9 +72,7 @@ module CommentObserver::Notifier
       id == post_owner.id.to_s
     end
 
-    group = comment.parent_group || Group
-    
-    commenters.map { |id| group.find(id) }
+    commenters.map { |id| Group.find(id) }
 
   end
 
