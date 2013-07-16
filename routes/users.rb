@@ -58,11 +58,17 @@ post '/users' do
     error 400, 'email_taken'
   end
 
+  # Escape HTML entities in email and full name.
+  coder = HTMLEntities.new
+  
+  email = coder.encode(user.email)
+  full_name = coder.encode(user.full_name)
+
   # Validate and create the user.
   user = begin
     User.create!(
-      email: user.email,
-      full_name: user.full_name,
+      email: email,
+      full_name: full_name,
     )
   # Return bad request if validation fails.
   rescue Mongoid::Errors::Validations
@@ -126,15 +132,23 @@ put '/users', auth: [] do
 
   # Update the user name.
   if model.full_name
-    user.full_name = model.full_name
+    
+    coder = HTMLEntities.new
+    full_name = coder.encode(model.full_name)
+    user.full_name = full_name
+    
   end
   
   # Update the user email.
   if model.email
     
+    coder = HTMLEntities.new
+    email = coder.encode(model.email)
+    email = email.downcase
+    
     # Find existing user with e-mail.
     existing_user = User.where(
-      email: model.email).first
+      email: email).first
     
     # Announce if e-mail is taken.
     if existing_user && @user &&
@@ -142,7 +156,7 @@ put '/users', auth: [] do
       error 400, 'email_taken'
     else
     # Set the e-mail if available.
-      user.email = model.email
+      user.email = email
     end
     
   end
