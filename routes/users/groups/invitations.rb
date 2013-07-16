@@ -59,9 +59,20 @@ post '/invitations', auth: [] do
   end
   
   @group = @user.groups.find(invitation.group_id)
-
-  if @user.email == invitation.email
+  
+  # Cleanup the e-mail.
+  email = invitation.email
+  
+  coder = HTMLEntities.new
+  email = coder.encode(email)
+  email = email.downcase
+  
+  if @user.email == email
     error 400, 'own_email'
+  end
+  
+  if @group.users.where(email: email).any?
+    error 400, 'already_joined'
   end
   
   token = SecureRandom.uuid
@@ -70,7 +81,7 @@ post '/invitations', auth: [] do
     inviter_id: @user.id.to_s,
     privileges: :none, token: token,
     request: invitation.request,
-    email: invitation.email
+    email: email
   )
 
   invitation.save!

@@ -9,6 +9,9 @@ get '/users' do
     error 400, 'missing_params'
   end
   
+  # Sanitize the e-mail if present.
+  email = email.downcase if email
+  
   # Make sure user exists by ID or e-mail.
   unless (User.where(id: id).any? ||
          User.where(email: email).any?)

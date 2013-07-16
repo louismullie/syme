@@ -40,6 +40,7 @@ post '/login/1' do
   content_type :json
 
   email = params[:email]
+  email = email.downcase
   session[:email] = email
   
   begin
