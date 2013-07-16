@@ -1,9 +1,5 @@
 guard('socket', {
 
-  // BEGIN CUD OPERATIONS
-  updatedPosts: 0,
-  updatedComments: 0,
-
   hangout: {
     
     create: function (data) {
@@ -99,8 +95,9 @@ guard('socket', {
 
       // If the post owner isn't the user.
       if (owner != CurrentSession.getUserId()) {
+
         // Increment unread_posts variable
-        asocial.helpers.newContent('post');
+        asocial.helpers.newContent('post', post.view.group_id);
 
         template.addClass('new-post');
       }
@@ -120,7 +117,7 @@ guard('socket', {
 
     // If related post doesn't exist, increment new content
     if(!$('#' + data.target).length)
-      return asocial.helpers.newContent('comment');
+      return asocial.helpers.newContent('comment', data.view.group_id);
 
       var post               = $('#' + data.target),
           container          = post.find('.comments'),

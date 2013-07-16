@@ -24,6 +24,7 @@ class PostGenerator
     {
       # General post information.
       id: post.id.to_s,
+      group_id: post.group.id.to_s,
       owner: owner,
       content: content,
       key: current_key,

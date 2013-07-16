@@ -35,7 +35,7 @@ class Post < Resource
   embeds_many :comments
 
   attr_accessible :content, :keys,
-          :upload_id, :attachment
+  :upload_id, :attachment, :mentions
   
   def delete
     attachment.destroy if attachment

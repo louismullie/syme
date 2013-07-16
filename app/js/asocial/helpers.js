@@ -6,20 +6,24 @@ guard('helpers', {
   },
 
   // Increment unread counter when there is a new comment/post
-  newContent: function (type) {
+  newContent: function (type, groupId) {
 
     var newcontent = $('#newcontent');
-
+    
     // Update respective counters
     if(type == "post"){
-      asocial.state.feed.updatedPosts += 1;
+      if (typeof(asocial.state.feed.updatedPosts[groupId]) == 'undefined')
+        return;
+      asocial.state.feed.updatedPosts[groupId] += 1;
     } else if(type == "comment"){
-      asocial.state.feed.updatedComments += 1;
+      if (typeof(asocial.state.feed.updatedComments[groupId]) == 'undefined')
+        return;
+      asocial.state.feed.updatedComments[groupId] += 1;
     }
-
+    
     // Update the counter with updated count
-    var total = asocial.state.feed.updatedPosts +
-                asocial.state.feed.updatedComments;
+    var total = asocial.state.feed.updatedPosts[groupId] +
+                asocial.state.feed.updatedComments[groupId];
 
     // Show and update container
     newcontent.find('a span')
@@ -114,30 +118,41 @@ guard('helpers', {
 
   },
 
-  replaceUserMentions: function (string)  {
-    /*var full_names = this.findUserMentions(string);
+  replaceUserMentions: function (string, groupId)  {
+    
+    var full_names = this.findUserMentions(string, groupId);
+    var currentUserName = CurrentSession.getUser().get('name');
+    
     $.each(full_names, function (i, full_name) {
+      
       var mention = '@' + full_name;
+      
+      if (full_name == currentUserName)
+        return;
+        
       string = string.replace(mention,
       "<a href='#' class='userTag'>" +
         mention + "</a>");
-    });*/
+      
+    });
+    
     return string;
+    
   },
 
-  findUserMentions: function (string)  {
-    var matches = string.match(
-      /(@[A-Za-z0-9][-\w]*[A-Za-z0-9])/mg);
+  findUserMentions: function (string, groupId)  {
+    
     var full_names = [];
-    var user_list = asocial.state.group.full_names;
-    if (matches == null) { return []; }
-    $.each(matches, function (i, mention) {
-      var full_name = mention.slice(1, mention.length);
-      if (user_list.indexOf(full_name) !== -1) {
-        full_names.push(full_name);
+    var user_list = CurrentSession.getGroupMembers(groupId);
+    
+    $.each(user_list, function (i, user) {
+      if (string.indexOf('@' + user) !== -1) {
+        full_names.push(user);
       }
     });
+    
     return full_names;
+    
   },
 
   formatSize: function (bytes, precision) {

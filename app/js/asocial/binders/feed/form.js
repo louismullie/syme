@@ -11,7 +11,9 @@ asocial.binders.add('feed', { form: function(){
     var $this = $(this);
 
     // Get the message from the textarea.
-    var message = $this.find('textarea').val();
+    var message = $this.find('textarea').val()
+                  .replace('#', '\\#');
+    // Allow hashtags despite markdown by escaping #
 
     // If a file is uploading, indicate to wait
     if( $('#upload-box').hasClass('active') ) {
@@ -58,7 +60,8 @@ asocial.binders.add('feed', { form: function(){
       // Build request
       var request = {
         encrypted_content: encryptedMessage,
-        upload_id: $form.find('input[name="upload_id"]').val()
+        upload_id: $form.find('input[name="upload_id"]').val(),
+        mentioned_users: asocial.helpers.findUserMentions(message, groupId)
       };
 
       var url = SERVER_URL + '/' + groupId + '/post/create';

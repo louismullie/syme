@@ -5,8 +5,8 @@ var asocial_state = {
   group: null,
 
   feed: {
-    updatedPosts: 0,
-    updatedComments: 0
+    updatedPosts: {},
+    updatedComments: {}
   }
 
 };

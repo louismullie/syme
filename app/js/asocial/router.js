@@ -210,10 +210,15 @@ Router = Backbone.Router.extend({
 
       } else {
 
+        asocial.state.feed.updatedPosts[groupId] = 0;
+        asocial.state.feed.updatedComments[groupId] = 0;
+        
         CurrentSession.setGroupId(groupId);
 
         user.getGroupUpdates(groupId, function () {
+          
           Router.renderDynamicTemplate(template, specific_binders);
+          
         });
 
       }

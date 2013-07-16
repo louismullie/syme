@@ -9,6 +9,7 @@ class NotificationGenerator
   end
   
   def self.generate(notification, current_user)
+    
     # Mustn't access through group since user
     # may not be added to the group currently.
     actors = notification.actor_ids.select do |id|

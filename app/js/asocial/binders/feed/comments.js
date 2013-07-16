@@ -22,14 +22,15 @@ asocial.binders.add('feed', { comments: function(){
       // If textarea is empty, do not submit form
       if(!textarea.val().trim()) return;
 
-      var message = textarea.val();
+      // Allow hashtags despite markdown by escaping.
+      var message = textarea.val().replace('#', '\\#');
 
       var groupId = CurrentSession.getGroupId();
 
       Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
         // Get the users who were mentioned in the message.
-        var mentions = JSON.stringify(/*asocial.helpers.findUserMentions(message)*/ {});
+        var mentions = asocial.helpers.findUserMentions(message, groupId);
 
         // Post the comment
         $.post(SERVER_URL + '/' + groupId + '/comment/create', $.param({

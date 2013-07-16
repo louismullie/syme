@@ -51,6 +51,7 @@ Session = function () {
     $('meta[name="_csrf"]').attr('content', data.csrf);
 
     _this.groups = data.groups;
+    _this.groupMembers = data.group_members;
     
     if (!data.user_id)
       throw 'Server did not send user ID';
@@ -160,6 +161,15 @@ Session = function () {
 
     return this.groupId;
 
+  };
+  
+  this.getGroupMembers = function (groupId) {
+    
+    if (!this.groupMembers || !this.groupMembers[groupId])
+      throw 'No group members initialized for this group.'
+    
+    return this.groupMembers[groupId];
+    
   };
   
   this.storeSession = function (callback) {

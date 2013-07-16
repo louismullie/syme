@@ -205,8 +205,6 @@ put '/invitations', auth: [] do
 
     track @user, 'Confirmed a new group member'
 
-    notify_confirmed(invitation)
-
   elsif params.completed
     
     invitation.state = 4

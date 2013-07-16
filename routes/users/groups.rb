@@ -14,7 +14,7 @@ get '/users/:id/groups', auth: [] do
     end
 
   content_type :json
-
+  
   {
     groups: groups,
     invites: invites

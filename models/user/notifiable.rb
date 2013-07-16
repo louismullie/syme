@@ -59,14 +59,14 @@ module User::Notifiable
     notification = notifications.create(
       post_id: post_id,
       comment_id: comment_id,
-      actor_ids: user.id.to_s,
+      actor_ids: [user.id.to_s],
       action: action,
       read: false,
       group_id: group.id.to_s
     )
 
-    MagicBus::Publisher.broadcast(group, :update, :notification,
-    NotificationGenerator.generate(notification, group, self))
+    MagicBus::Publisher.broadcast(group, :create, :notification,
+    NotificationGenerator.generate(notification, self))
 
   end
 

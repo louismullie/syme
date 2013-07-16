@@ -2,6 +2,8 @@ module ResourceObserver::Notifier
 
   def notify_mentioned(resource)
 
+    return unless resource.mentions
+    
     user = resource.owner
     full_names = resource.mentions
     group = resource.parent_group

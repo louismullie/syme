@@ -1,11 +1,19 @@
 get '/state/session', auth: [] do
   
+  group_members = {}
+  
+  @user.groups.each do |group|
+    group_members[group.id.to_s] = 
+    group.users.map { |user| user.full_name }
+  end
+  
   content_type :json
 
   error 403, 'unauthorized' unless @user
   
   { user_id: @user.id.to_s,
     password_key: session[:password_key],
+    group_members: group_members,
     csrf: csrf_token,
     groups: @user.groups.map(&:id).map(&:to_s)
   }.to_json

@@ -7,10 +7,7 @@ post '/:group_id/post/create', auth: [] do |group_id|
   message = JSON.parse(Base64.strict_decode64(
     params[:encrypted_content]))
 
-  #mentions = JSON.parse(params[:mentioned_users])
-
-  # Disable temporarily mentioned users
-  mentions = []
+  mentions = params[:mentioned_users]
 
   attachment = if !(upload_id = params[:upload_id]).blank?
     @group.attachments.find(upload_id)
