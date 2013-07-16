@@ -95,52 +95,58 @@ asocial.binders.add('groups', { main: function() {
 
     var groupId = $(this).data('group-id'),
         message = 'Are you sure you want to delete this group ' +
-                  'and all of its content? This cannot be undone.';
+                  'and all of its content? <br> Type <b>delete</b> ' +
+                  'below to confirm.';
     
-    asocial.helpers.showConfirm(message, {
+    var $this = $(this);
+    
+    asocial.helpers.showPrompt(message, 
+    
+    function (value) {
       
-      title: 'Delete group',
-      submit: 'Yes',
-      cancel: 'No',
+      if (value != 'delete') return;
       
-      onsubmit: function(){
-        
-        $.ajax(SERVER_URL + '/groups/' + groupId,
-        
-          { type: 'DELETE',
+      $.ajax(SERVER_URL + '/groups/' + groupId,
+      
+        { type: 'DELETE',
 
-          success: function (resp) {
+        success: function (resp) {
 
-            CurrentSession.groups.splice(CurrentSession.groups.indexOf(groupId), 1);
-            
-            var user = CurrentSession.getUser();
-            
-            user.deleteKeylist(groupId, function () {
-              Notifications.reset();
-              Notifications.fetch();
-              Router.navigate();
+          CurrentSession.groups.splice(CurrentSession.groups.indexOf(groupId), 1);
+          
+          var user = CurrentSession.getUser();
+          
+          user.deleteKeylist(groupId, function () {
+            Notifications.reset();
+            Notifications.fetch();
+            Router.navigate();
+          });
+
+        },
+
+        error: function (response) {
+          
+          if (response.status == 404) {
+            asocial.helpers.showAlert(
+              'This group does not exist anymore.', {
+              onhide: function () { Router.reload(); }
             });
-
-          },
-
-          error: function (response) {
-            
-            if (response.status == 404) {
-              asocial.helpers.showAlert(
-                'This group does not exist anymore.', {
-                onhide: function () { Router.reload(); }
-              });
-            } else {
-              asocial.helpers.showAlert('Could not delete group', {
-                onhide: function () { Router.reload(); }
-              });
-            }
-            
+          } else {
+            asocial.helpers.showAlert('Could not delete group', {
+              onhide: function () { Router.reload(); }
+            });
           }
           
-        });
+        }
         
-      }
+      });
+      
+    },
+    
+    {  
+      title: 'Delete group',
+      submit: 'Yes',
+      cancel: 'No'
     });
     
 
