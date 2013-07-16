@@ -1,19 +1,19 @@
 def send_email_to(email, subject, body)
 
   Pony.mail({
-    :to => email,
-    :from => "team@getsyme.com",
-    :subject => subject,
-    :headers => { 'Content-Type' => "text/html" },
-    :body => body,
-    :via => :smtp,
-    :via_options => {
-      :address        => 'smtp.mandrillapp.com',
-      :port           => '587',
-      :user_name      => 'louis.mullie@gmail.com',
-      :password       => 'tjCX49k-tDIYzmqnW0ZjYw',
-      :authentication => :plain,
-      :domain         => "localhost.localdomain"
+    to: email,
+    from: "Syme App <team@getsyme.com>",
+    subject: subject,
+    headers: { 'Content-Type' => "text/html" },
+    body: body,
+    via: :smtp,
+    via_options: {
+      address: 'smtp.mandrillapp.com',
+      port: '587',
+      user_name: 'louis.mullie@gmail.com',
+      password: 'tjCX49k-tDIYzmqnW0ZjYw',
+      authentication: :plain,
+      domain: "localhost.localdomain"
     }
   })
   
