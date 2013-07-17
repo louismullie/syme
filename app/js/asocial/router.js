@@ -82,7 +82,7 @@ Router = Backbone.Router.extend({
 
       function(){
         // Otherwise, go to register
-        Router.navigate('/register', { trigger: true, replace: true });
+        Router.navigate('/login', { trigger: true, replace: true });
       }
     );
   },

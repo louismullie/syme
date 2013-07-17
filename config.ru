@@ -53,7 +53,7 @@ require 'securerandom'
 # Setup server-side sessions.
 use Rack::Session::Memcache,
   key: 'session',
-  expire_after: 3600,
+  expire_after: 60 * 60 * 24,
   secure: $secure,
   sidbits: 256,
   path: '/',

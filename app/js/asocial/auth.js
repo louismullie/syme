@@ -1,7 +1,12 @@
 guard('auth', {
 
   login: function(email, password, remember, success, fail, hack) {
-
+    
+    //alert(remember);
+    
+    if (asocial.compat.inChromeExtension())
+      chrome.storage.local.set({ 'remember':  remember });
+    
     Backbone.Relational.store.reset();
 
     var srp = new SRPClient(email);
@@ -32,7 +37,10 @@ guard('auth', {
             var K = srp.calcHashHex(Sc.toString(16));
             var M = srp.calculateM(email, salt, A, B, K);
 
-            var params = $.param({ M: M.toString(16) });
+            var params = $.param({
+              M: M.toString(16),
+              remember: remember
+            });
 
             $('meta[name="_csrf"]').attr('content', data.csrf);
 

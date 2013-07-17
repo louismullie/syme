@@ -69,14 +69,27 @@ guard('binders', {
     idleTime = 0;
 
     var timerIncrement = function() {
+      
       idleTime++;
 
-      // After x minutes
-      if (idleTime > 20) {
-        clearInterval(idleInterval);
-        asocial.auth.disconnect();
-      }
+      if (asocial.compat.inChromeExtension()) {
 
+        chrome.storage.local.get('remember', function (setting) {
+          
+          // If the delay has not passed, or the user clicks
+          // "remember me", no idle timeout is set on the session.
+          if (idleTime < 20 || setting.remember) return;
+          
+          // Clear the timer interval.
+          clearInterval(idleInterval);
+          
+          // Disconnect the user.
+          asocial.auth.disconnect();
+          
+        });
+
+      }
+        
     };
 
     var timerReset = function(){ idleTime = 0; };

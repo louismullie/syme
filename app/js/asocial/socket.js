@@ -195,6 +195,7 @@ guard('socket', {
       // Update list of names and counter
       target.find('[partial="feed-like-count"]').first()
         .renderHbsTemplate({ likeable: data.view });
+      
     },
 
     notification: function(data){

@@ -8,7 +8,7 @@ get '/state/session', auth: [] do
   end
   
   content_type :json
-
+  
   error 403, 'unauthorized' unless @user
   
   { user_id: @user.id.to_s,
@@ -98,6 +98,7 @@ post '/login/2' do
     user.save!
     
     session.clear
+
     session[:user_id] = user.id
     
     session[:password_key] = SecureRandom.uuid
