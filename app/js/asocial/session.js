@@ -15,15 +15,64 @@ Session = function () {
     
     var _this = this;
     
+    var version;
+    
+    if (asocial.compat.inChromeExtension()) {
+      version = chrome.app.getDetails().version;
+    } else {
+      version = '0.0.2';
+    }
+    
     $.ajax(SERVER_URL + '/state/session', {
 
       type: 'GET',
+      
+      data: { version: version },
 
       success: function (data) {
         _this.passwordKey = data.password_key;
         _this.fetchUser(data, callback);
       },
-      error: callback
+      
+      error: function (response) {
+        
+        if (response.status == 401) callback();
+        
+        if (response.status == 409) {
+          
+          var msg = "Hi there! We've noticed you're using an "+
+          "outdated version of Syme. Please update " +
+          "your browser extension before continuing. <br> <br>" +
+          "You can do this by entering <b>chrome://extensions/</b> " +
+          "in your address bar and cliking on <b>\"Update "+
+          "extensions now\"</b>.";
+          
+          asocial.helpers.showAlert(msg, {
+            closable: false,
+            title: 'Please update Syme'
+          });
+          
+        } else if (response.status == 503) {
+          
+          var msg = "We're down for maintenance. Please try again later.";
+          asocial.helpers.showAlert(msg, { closable: false,
+            closable: false,
+            title: 'Down for maintenance'
+          });
+          
+        } else {
+          
+          var msg = "Our servers are not responding in the usual way. " +
+                    "Please try again later.";
+          
+          asocial.helpers.showAlert(msg, {
+            closable: false,
+            title: 'Oops!'
+          });
+          
+        }
+        
+      }
 
     });
 
@@ -169,6 +218,14 @@ Session = function () {
       throw 'No group members initialized for this group.'
     
     return this.groupMembers[groupId];
+    
+  };
+  
+  this.setGroupMembers = function (groupId) {
+    
+    this.groupMembers = groupId;
+
+    return null;
     
   };
   

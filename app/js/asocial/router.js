@@ -48,7 +48,7 @@ Router = Backbone.Router.extend({
     /* Root */
 
     '': 'root',
-    'asocial.html': 'root',
+    'syme.html': 'root',
 
     /* Logged-off routes */
 
@@ -216,7 +216,6 @@ Router = Backbone.Router.extend({
         CurrentSession.setGroupId(groupId);
 
         user.getGroupUpdates(groupId, function () {
-          
           Router.renderDynamicTemplate(template, specific_binders);
           
         });

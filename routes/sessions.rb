@@ -1,8 +1,15 @@
-get '/state/session', auth: [] do
+get '/state/session' do
+  
+  if params[:version] && params[:version] != 
+      Syme::Application::VERSION
+    error 409, 'outdated_extension'
+  end
+  
+  error 401, 'not_logged_in' if !@user
   
   group_members = {}
   
-  @user.groups.each do |group|
+  @user.groups.each do |group| # code dup
     group_members[group.id.to_s] = 
     group.users.map { |user| user.full_name }
   end
@@ -20,18 +27,6 @@ get '/state/session', auth: [] do
 
 end
 
-get '/state/system' do
-
-  content_type :json
-
-  data = {
-    install: User.all.empty?,
-    logged_in: !@user.nil?
-  }
-  
-  data.to_json
-
-end
 
 # Step 1: The user sends an identifier and public ephemeral key, A
 # The server responds with the salt and public ephemeral key, B

@@ -4,7 +4,8 @@ asocial.binders.add('feed', { comments: function(){
   $('#main').on('click', 'a.comment-action', function(){
 
     $(this).closest('.post').find('textarea')
-      .removeClass('hidden').focus();
+      .removeClass('hidden').autogrow().focus();
+    
   });
 
   // Create comment

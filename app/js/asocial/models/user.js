@@ -271,11 +271,14 @@ var User = Backbone.RelationalModel.extend({
           var invitationId = groupUpdates.integrate.id;
           var groupId = groupUpdates.integrate.group_id;
           var request = groupUpdates.integrate.request;
+          var members = groupUpdates.members;
+          
+          CurrentSession.setGroupMembers(groupUpdates.members);
           
           if (groupUpdates.distribute) {
             
             _this.completeInviteRequest(groupId, invitationId, request, function () {
-                _this.addUsersRequest(groupUpdates.distribute, updatedGroupsCb);
+                _this.addUsersRequest(groupUpdates.distribute,  updatedGroupsCb);
             });
             
           } else {

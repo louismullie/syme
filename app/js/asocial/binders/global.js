@@ -1,8 +1,11 @@
 asocial.binders.add('global', { main: function(){
 
   // Set the title for the document.
-  document.title = "Syme";
-  
+  if (asocial.compat.inChromeExtension()) {
+    document.title = "Syme";
+    window.history.replaceState('Object', 'Title', '/');
+  }
+
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
     e.stopPropagation();

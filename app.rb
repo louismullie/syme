@@ -4,6 +4,8 @@ module Syme
 
   class Application < Base
     
+    VERSION = '0.0.2'
+    
     Bundler.require :default, settings.environment
 
     configure { require_all 'config' }

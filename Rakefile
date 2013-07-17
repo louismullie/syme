@@ -27,7 +27,7 @@ namespace :extensions do
     end
     
     # Copy main HTML file to extension directory.
-    FileUtils.cp('./.hbs/views/layout.hbs', '.extension/asocial.html')
+    FileUtils.cp('./.hbs/views/layout.hbs', '.extension/syme.html')
     
     # Copy fonts and images to extension directory.
     public_path = settings.root + '/public'

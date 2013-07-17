@@ -1,10 +1,10 @@
 $.fn.autogrow = function(){
 
   this.filter('textarea').each(function() {
-
+    
     var $this = $(this),
 
-        minHeight = $this.height(),
+        minHeight = Math.abs($this.height()),
 
         shadow = $('<div></div>').css({
             position:       'absolute',
