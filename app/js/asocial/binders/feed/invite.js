@@ -43,8 +43,9 @@ asocial.binders.add('feed', { invite: function() {
       onshow: function() {
 
         // Initial textarea autosizing
-        $('textarea.autogrow').autogrow().removeClass('autogrow');
-
+        $('textarea.autogrow')
+          .autogrow().removeClass('autogrow');
+        
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal form').submit(function(e){
 

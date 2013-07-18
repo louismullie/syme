@@ -1,5 +1,7 @@
 asocial.binders.add('groups', { main: function() {
 
+  console.log('BOUND GROUPS');
+  
   // Hide spinner
   $('#spinner').hide();
 
@@ -12,9 +14,6 @@ asocial.binders.add('groups', { main: function() {
         href: 'users/' + CurrentSession.getUserId() + '/groups' }
     ]
   });
-
-  // Group pictures decryption
-  $('.encrypted-background-image').trigger('decrypt');
 
   // Timeago
   $('time.timeago').timeago();
@@ -95,8 +94,8 @@ asocial.binders.add('groups', { main: function() {
 
     var groupId = $(this).data('group-id'),
         message = 'Are you sure you want to delete this group ' +
-                  'and all of its content? <br> Type <b>delete</b> ' +
-                  'below to confirm.';
+                  'and all of its content? This is irreversible.' +
+                  '<br>Type <b>delete</b> below to confirm.';
     
     var $this = $(this);
     
@@ -145,8 +144,8 @@ asocial.binders.add('groups', { main: function() {
     
     {  
       title: 'Delete group',
-      submit: 'Yes',
-      cancel: 'No'
+      submit: 'Ok',
+      cancel: 'Cancel'
     });
     
 
@@ -195,4 +194,7 @@ asocial.binders.add('groups', { main: function() {
     );
   });
 
+  // Group pictures decryption
+  $('.encrypted-background-image').trigger('decrypt');
+  
 } }); // asocial.binders.add();

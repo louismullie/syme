@@ -136,7 +136,10 @@ guard('socket', {
         showmore_count.html(container.find('.comment-hidden').length);
 
       }
-
+      
+      // Autogrow comment textarea
+      $('textarea.autogrow').autogrow().removeClass('autogrow');
+      
       // Append new comment
       container.append(asocial.helpers.render('feed-comment', data.view));
 

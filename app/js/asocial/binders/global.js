@@ -3,7 +3,6 @@ asocial.binders.add('global', { main: function(){
   // Set the title for the document.
   if (asocial.compat.inChromeExtension()) {
     document.title = "Syme";
-    window.history.replaceState('Object', 'Title', '/');
   }
 
   // Popovers
@@ -76,6 +75,32 @@ asocial.binders.add('global', { main: function(){
       error: function () { alert('Could not create notifications.'); }
     });
     
+  });
+  
+  // Background image decryption
+  $(document).on('decrypt', '.encrypted-background-image', function(e, done){
+
+    var $this = $(this),
+        done  = done || function(){};
+
+    var image_id  = $this.attr('data-attachment-id'),
+        keys      = $this.attr('data-attachment-keys'),
+        group_id  = $this.attr('data-attachment-group');
+
+    if ( !keys ) return done();
+
+    var callback = function(url) {
+      $this.css("background-image", "url('" + url + "')");
+
+      // Set as decrypted
+      $this.attr('data-decrypted', true);
+
+      done();
+    }
+
+    // Decrypt and place background-image
+    asocial.crypto.getFile(image_id, keys, callback, group_id);
+
   });
 
 } }); // asocial.binders.add();

@@ -34,7 +34,9 @@ asocial.binders.add('global', { decrypt: function() {
 
       // Timeago
       $('time.timeago').timeago();
-
+      
+      $('textarea').autogrow();
+      
       done();
 
     };
@@ -118,30 +120,5 @@ asocial.binders.add('global', { decrypt: function() {
 
   });
 
-  // Background image decryption
-  $(document).on('decrypt', '.encrypted-background-image', function(e, done){
-
-    var $this = $(this),
-        done  = done || function(){};
-
-    var image_id  = $this.attr('data-attachment-id'),
-        keys      = $this.attr('data-attachment-keys'),
-        group_id  = $this.attr('data-attachment-group');
-
-    if ( !keys ) return done();
-
-    var callback = function(url) {
-      $this.css("background-image", "url('" + url + "')");
-
-      // Set as decrypted
-      $this.attr('data-decrypted', true);
-
-      done();
-    }
-
-    // Decrypt and place background-image
-    asocial.crypto.getFile(image_id, keys, callback, group_id);
-
-  });
 
 } });

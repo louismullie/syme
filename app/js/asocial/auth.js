@@ -54,19 +54,15 @@ guard('auth', {
                 'This means that we might make small changes to our ' +
                 'software that could imply loss of your data. You ' +
                 'should always keep backups of any important information ' +
-                'that you share in your groups. <br><br>' +
-
-                'As much as we would want it to, Syme can’t protect you ' +
-                'against untrustworthy people or key loggers. <br><br>' +
-
-                'Syme protects what you share, but it doesn’t anonymize '+
-                'your connection.<br>';
+                'that you share in your groups.';
+                
                 
                 asocial.helpers.showAlert(msg, {
                   
                   title: 'Beta warning', closable: false,
                 
-                  onsubmit: function () { success(keys.key2); return true; }
+                  onsubmit: function () { success(keys.key2); return true; },
+                  onhide: function () { success(keys.key2); return true; }
                     
                 });
                 

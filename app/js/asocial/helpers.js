@@ -70,7 +70,9 @@ guard('helpers', {
 
       // If the current div needs collapsing
       if( $(this).height() > maxHeight) {
-
+        
+        if ($(this).find('iframe').length > 0) return;
+        
         $(this)
           // Collapse it
           .addClass('collapsed')

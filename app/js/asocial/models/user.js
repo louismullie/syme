@@ -247,10 +247,12 @@ var User = Backbone.RelationalModel.extend({
     
     _.each(groups, function (groupId) {
       
-      counter--;
-      
       _this.getGroupUpdates(groupId, function () {
+      
+        counter--;
+      
         if (counter == 0) updatedGroupsCb();
+        
       });
 
     });

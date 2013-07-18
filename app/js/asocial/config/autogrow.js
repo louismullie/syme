@@ -2,6 +2,8 @@ $.fn.autogrow = function(){
 
   this.filter('textarea').each(function() {
     
+    if ($(this)[0].offsetHeight == 0) return;
+    
     var $this = $(this),
 
         minHeight = Math.abs($this.height()),
@@ -42,6 +44,9 @@ $.fn.autogrow = function(){
 
     $this.change(update).keyup(update).keydown(update).focus(update).on('paste', update);
     update.apply(this);
+    
+    $this.data('autogrow', true);
+    
   });
 
   return this;

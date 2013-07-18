@@ -183,13 +183,14 @@ Router = Backbone.Router.extend({
 
   },
 
-  loadDynamicPage: function (template, groupId, specific_binders) {
+  loadDynamicPage: function (template, groupId, specificBinders) {
 
     // Optional group id for routes that require group authentication
     var groupId = groupId || false;
 
     // Clear breadcrumbs
     $('#navbar-breadcrumbs').html('');
+    
     // Show spinner
     $('#spinner').show();
 
@@ -202,10 +203,9 @@ Router = Backbone.Router.extend({
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
       if(!groupId) {
-
+        
         user.getAllGroupUpdates(groupId, function () {
-          //CurrentSession.setGroupId(null);
-          Router.renderDynamicTemplate(template, specific_binders);
+          Router.renderDynamicTemplate(template, specificBinders);
         });
 
       } else {
@@ -216,8 +216,7 @@ Router = Backbone.Router.extend({
         CurrentSession.setGroupId(groupId);
 
         user.getGroupUpdates(groupId, function () {
-          Router.renderDynamicTemplate(template, specific_binders);
-          
+          Router.renderDynamicTemplate(template, specificBinders);
         });
 
       }

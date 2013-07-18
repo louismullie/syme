@@ -36,38 +36,37 @@ Session = function () {
       
       error: function (response) {
         
-        if (response.status == 401) callback();
+        if (response.status == 401) return callback();
         
         if (response.status == 409) {
           
-          var msg = "Hi there! We've noticed you're using an "+
+          var msg = "You seem to be using an "+
           "outdated version of Syme. Please update " +
           "your browser extension before continuing. <br> <br>" +
           "You can do this by entering <b>chrome://extensions/</b> " +
           "in your address bar and cliking on <b>\"Update "+
-          "extensions now\"</b>.";
+          "extensions now\"</b> near the top right corner.";
           
           asocial.helpers.showAlert(msg, {
-            closable: false,
-            title: 'Please update Syme'
-          });
+            closable: false, title: 'Please update Syme' });
           
         } else if (response.status == 503) {
           
-          var msg = "We're down for maintenance. Please try again later.";
-          asocial.helpers.showAlert(msg, { closable: false,
-            closable: false,
-            title: 'Down for maintenance'
-          });
+          var msg = "Sorry, we're down for maintenance.  " +
+                    "Syme will be back up and running " +
+                    "as soon as possible. <br><br>Please "+
+                    " try again later.<br><br>";
+          
+          asocial.helpers.showModal(msg, {
+            closable: false, title: 'Oops!' });
           
         } else {
           
-          var msg = "Our servers are not responding in the usual way. " +
-                    "Please try again later.";
+          var msg = "Our servers are not responding in the usual way. ";
           
           asocial.helpers.showAlert(msg, {
             closable: false,
-            title: 'Oops!'
+            title: 'No Internet connection'
           });
           
         }
@@ -214,8 +213,11 @@ Session = function () {
   
   this.getGroupMembers = function (groupId) {
     
-    if (!this.groupMembers || !this.groupMembers[groupId])
-      throw 'No group members initialized for this group.'
+    if (!this.groupMembers || !this.groupMembers[groupId]) {
+      console.log('No group members initialized for this group.');
+      // legacy -> change to throw
+      return [];
+    }
     
     return this.groupMembers[groupId];
     
