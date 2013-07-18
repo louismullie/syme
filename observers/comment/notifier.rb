@@ -73,6 +73,8 @@ module CommentObserver::Notifier
     end
 
     commenters.map { |id| User.find(id) }
+    .reject { |user| comment.mentions &&
+    comment.mentions.include?(user.full_name) }
 
   end
 

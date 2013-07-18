@@ -19,6 +19,8 @@ module PostObserver::Notifier
 
   def other_group_users(post)
     post.group.users.not_in(id: post.owner.id.to_s)
+    .reject { |user| post.mentions &&
+      post.mentions.include?(user.full_name) }
   end
 
 end

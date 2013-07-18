@@ -48,7 +48,8 @@ Session = function () {
           "extensions now\"</b> near the top right corner.";
           
           asocial.helpers.showAlert(msg, {
-            closable: false, title: 'Please update Syme' });
+            closable: false, title: 'Please update Syme',
+            onsubmit: function () { Router.reload(); } });
           
         } else if (response.status == 502) {
           
@@ -58,7 +59,9 @@ Session = function () {
                     " try again later.<br><br>";
           
           asocial.helpers.showAlert(msg, {
-            closable: false, title: 'Oops!' });
+            closable: false, title: 'Oops!',
+            onsubmit: function () { Router.reload(); }
+          });
           
         } else {
           
@@ -67,7 +70,8 @@ Session = function () {
           
           asocial.helpers.showAlert(msg, {
             closable: false,
-            title: 'No Internet connection'
+            title: 'No Internet connection',
+            onsubmit: function () { Router.reload(); }
           });
           
         }

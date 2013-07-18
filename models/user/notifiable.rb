@@ -43,7 +43,7 @@ module User::Notifiable
 
   end
 
-  def notify_mentioned_by_in(user, post_or_comment, group)
+  def notify_mentioned_by_in(user,  post_or_comment, group)
 
     poc = post_or_comment
 
@@ -64,8 +64,10 @@ module User::Notifiable
       read: false,
       group_id: group.id.to_s
     )
-
-    MagicBus::Publisher.broadcast(group, :create, :notification,
+    
+    save!
+    
+    MagicBus::Publisher.send_to(id, :create, :notification,
     NotificationGenerator.generate(notification, self))
 
   end

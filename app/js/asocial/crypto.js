@@ -26,6 +26,9 @@ guard('crypto', {
 
     ].join(','));
 
+    if (collection.length == 0)
+      return;
+
     // Show spinner
     $('#spinner').show();
 

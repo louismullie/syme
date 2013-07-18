@@ -10,8 +10,9 @@ module ResourceObserver::Notifier
 
     full_names.each do |full_name|
 
-      user = User.where(full_name: full_name).first
-      user.notify_mentioned_by_in(user, resource, group)
+      other_user = User.where(full_name: full_name).first
+      next unless other_user # user changed name in the meantime
+      other_user.notify_mentioned_by_in(user, resource, group)
 
     end
 
