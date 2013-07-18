@@ -19,17 +19,17 @@ $.fn.batchDecrypt = function(callback){
   // Initialize variables
   var $this     = this,
       callback  = callback || function(){},
-      counter   = 0,
+      decryptCounter   = 0,
       startTime = new Date;
 
   // Asynchronous callback
   var incrementCounter = function(e){
-    // Iterate queue
-    counter++;
+    
+    decryptCounter++;
 
     // Call callback if all elements are done,
     // passing back $this and elapsed time
-    if(counter == $this.length - 1){
+    if(decryptCounter == $this.length){
 
       var endTime     = new Date,
           elapsedTime = endTime - startTime;
@@ -41,7 +41,7 @@ $.fn.batchDecrypt = function(callback){
 
   // Trigger decrypt, then wait for callback
   $this.trigger('decrypt', incrementCounter);
-
+  
   return $this;
 
 }

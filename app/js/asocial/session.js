@@ -50,19 +50,20 @@ Session = function () {
           asocial.helpers.showAlert(msg, {
             closable: false, title: 'Please update Syme' });
           
-        } else if (response.status == 503) {
+        } else if (response.status == 502) {
           
           var msg = "Sorry, we're down for maintenance.  " +
                     "Syme will be back up and running " +
                     "as soon as possible. <br><br>Please "+
                     " try again later.<br><br>";
           
-          asocial.helpers.showModal(msg, {
+          asocial.helpers.showAlert(msg, {
             closable: false, title: 'Oops!' });
           
         } else {
           
-          var msg = "Our servers are not responding in the usual way. ";
+          var msg = "Please check your Internet connection " +
+                    "and try again.";
           
           asocial.helpers.showAlert(msg, {
             closable: false,
