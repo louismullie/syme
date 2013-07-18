@@ -264,7 +264,7 @@ Router = Backbone.Router.extend({
         $('#spinner').hide();
 
         asocial.helpers.showAlert(
-          "This content doesn't exist anymore."
+          "This content has been removed by its owner."
         );
 
       } else {

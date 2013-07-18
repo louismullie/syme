@@ -267,15 +267,17 @@ var User = Backbone.RelationalModel.extend({
     var _this = this;
     
     $.getJSON(url, function (groupUpdates) {
-      
+        
+        if (groupUpdates.members) {
+          CurrentSession.setGroupMembers(groupUpdates.members); 
+        }
+        
         if (groupUpdates.integrate) {
           
           var invitationId = groupUpdates.integrate.id;
           var groupId = groupUpdates.integrate.group_id;
           var request = groupUpdates.integrate.request;
           var members = groupUpdates.members;
-          
-          CurrentSession.setGroupMembers(groupUpdates.members);
           
           if (groupUpdates.distribute) {
             
