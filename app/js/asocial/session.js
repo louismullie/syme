@@ -44,8 +44,8 @@ Session = function () {
           "outdated version of Syme. Please update " +
           "your browser extension before continuing. <br> <br>" +
           "You can do this by entering <b>chrome://extensions/</b> " +
-          "in your address bar and cliking on <b>\"Update "+
-          "extensions now\"</b> near the top right corner.";
+          "in your address bar, checking <b>\"Developer mode\"</b> and " +
+          "cliking on <b>\"Update extensions now\"</b>.";
           
           asocial.helpers.showAlert(msg, {
             closable: false, title: 'Please update Syme',

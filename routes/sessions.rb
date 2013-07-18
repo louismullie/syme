@@ -1,7 +1,7 @@
 get '/state/session' do
   
-  if params[:version] && params[:version] != 
-      Syme::Application::VERSION
+  if params[:version] && Gem::Version.new(params[:version]) <
+      Gem::Version.new(Syme::Application::VERSION)
     error 409, 'outdated_extension'
   end
   
