@@ -38,7 +38,8 @@ guard('helpers', {
     // Show hidden posts
     $('.post').removeClass('new-post');
 
-    asocial.state.feed.updatedPosts = 0;
+    var groupId = CurrentSession.getGroupId();
+    asocial.state.feed.updatedPosts[groupId] = 0;
 
     // Hide new content button
     $('#newcontent').hide();

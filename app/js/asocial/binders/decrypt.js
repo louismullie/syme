@@ -8,7 +8,7 @@ asocial.binders.add('global', { decrypt: function() {
 
     var post    = $this.closest('.post'),
         text    = $this.text().replace(/^\s+|\s+$/g, ''),
-        groupId = CurrentSession.getGroupId();
+        groupId = post.data('group_id');
 
     var formatDecryptedText = function(decryptedText) {
 
