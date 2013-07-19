@@ -93,21 +93,29 @@ asocial.binders.add('feed', { feed: function(){
             var postHtml = postsHtml[i];
             $('#feed').data('pagesloaded', toload).append(postHtml);
           }
-
+          
           if (lastPage) {
             // If all pages are loaded, disable infinite scrolling
             $(window).data('infinite-scroll-done', true);
+            
+            // Please Chris, look at this
+            $('#feed .post').last().css({ 'border-bottom': 'none' });
+            
             $('#load-more').hide();
           } else {
+            
+            // Please Chris, look at this
+            $('#feed .post').last().css({ 'border-bottom': '1px solid #ddd' });
+            
             $('#load-more').show();
           }
 
           // Decrypt new content
           asocial.crypto.batchDecrypt();
-
+            
           // Textarea autosizing
-          $('textarea.autogrow').autogrow().removeClass('autogrow');
-
+          $('textarea.autogrow')
+            .autogrow().removeClass('autogrow');
 
         } else {
 

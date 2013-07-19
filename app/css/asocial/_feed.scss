@@ -67,7 +67,7 @@
 
   font-size: .9em;
   text-align: center;
-
+  color: #423E3E;
   a:hover { text-decoration: none; }
   i { padding-left: .5em; }
 }
@@ -78,8 +78,6 @@
   border-bottom: $baseBorderStyle;
 
   &:last-child {
-    padding-bottom: 0;
-    margin-bottom: 0;
     border-bottom: none;
   }
 

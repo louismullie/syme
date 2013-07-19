@@ -17,14 +17,14 @@
       // Posts loop
       {{> feed-posts.hbs}}
 
-    // Load more button, triggered by infinite scroller
-    // every few pages
+    // Load more button.
     {{#unless single_post}}
 
     #load-more
       %a{href: '#'}
-        Loading more posts ...
-
+        Scroll down to load more posts
+      %i.icon-arrow-down
+    
     {{/unless}}
 
   #feed-panel-column
