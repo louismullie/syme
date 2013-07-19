@@ -23,5 +23,5 @@ asocial.binders.add('feed', { main: function(){
     });
 
   });
-
+  
 } }); // asocial.binders.add();

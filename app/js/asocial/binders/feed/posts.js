@@ -68,12 +68,14 @@ asocial.binders.add('feed', { posts: function(){
       link.closest('.attachment').find('a.image-download')
           .attr('href', url)
           .attr('download', filename);
+      
+      
+      link.on('click', function () {
+        var blob = ThumbPick.prototype.dataURItoBlob(url);
+        saveAs(blob, filename);
+      });
 
       progress.remove();
-
-      //if(confirm('Click OK to download.')) {
-      //  saveAs(url, filename);
-      //}
 
     });
 

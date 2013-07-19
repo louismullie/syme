@@ -192,7 +192,7 @@ get '/:group_id/file/download/:id/:chunk', auth: [] do |group_id, id, chunk|
   upload = @group.uploads.find(id)
 
   # Set the request headers.
-  if upload.type
+  unless upload.type.to_s == ''
     content_type(upload.type)
   end
 
