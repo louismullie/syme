@@ -15,10 +15,10 @@ asocial.binders.add('feed', { feed: function(){
 
     if(asocial.socket.updatedComments > 0){
       // If there are new comments, reset feed
-      // to reorder the bump sorting
+      // to reorder the bump sorting.
       Router.reload();
     } else {
-      // If there are only new post, append them
+      // If there are only new post, append them.
       asocial.helpers.showUnreadPosts();
     }
 
@@ -57,7 +57,7 @@ asocial.binders.add('feed', { feed: function(){
         // Post a list of already showed posts to prevent duplication
         'ignore': showed_posts_id,
         // Post the last data timestamp to prevent pill duplication
-        'last_timestamp': $('.gutter-infos[data-timestamp]').last().data('timestamp'),
+        //'last_timestamp': $('.gutter-infos[data-timestamp]').last().data('timestamp'),
         'page': toload
       };
 

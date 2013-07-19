@@ -10,11 +10,19 @@ asocial.binders.add('feed', { comments: function(){
 
   // Create comment
   $('#main').on('keydown', '.comment-form textarea', function(e){
+    
+    var $this = $(this);
+    
     if (e.which == 13 && !e.shiftKey) { // Enter key, but not Shift+Enter
 
       e.preventDefault();
-
-      // Storing elements for performance and persistance.
+      
+      // Return if a comment is being posted.
+      if ($this.data('active') == true) return;
+      
+      // Lock the comment textarea while posting.
+      $this.data('active', true);
+      
       var related_post    = $(this).closest('.post'),
           related_post_id = related_post.attr('id'),
           post_encrypted  = related_post.data('encrypted'),
@@ -49,6 +57,8 @@ asocial.binders.add('feed', { comments: function(){
           },
           
           success: function (comment) {
+            
+            $this.data('active', false);
             
             asocial.socket.create.comment({
               target: postId, view: comment
