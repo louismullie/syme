@@ -64,16 +64,27 @@ asocial.binders.add('feed', { form: function(){
         mentioned_users: asocial.helpers.findUserMentions(message, groupId)
       };
 
-      var url = SERVER_URL + '/' + groupId + '/post/create';
+      var userId = CurrentSession.getUserId();
+      
+      var url = SERVER_URL + '/users/' + userId +
+                '/groups/' + groupId + '/posts';
 
-      $.post(url, request, function(data){
-
-        asocial.helpers.resetFeedForm();
-
-      }).fail(function(){
-
-        asocial.helpers.showAlert('Posting failed');
-
+      $.ajax(url, {
+        
+        type: 'POST',
+        
+        data: request,
+        
+        success: function(post){
+          console.log(post);
+          asocial.helpers.resetFeedForm();
+          asocial.socket.create.post({ view: post });
+        },
+        
+        error: function (post) {
+          asocial.helpers.showAlert('Posting failed');
+        }
+        
       });
 
     });

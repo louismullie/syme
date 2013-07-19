@@ -32,13 +32,37 @@ asocial.binders.add('feed', { comments: function(){
 
         // Get the users who were mentioned in the message.
         var mentions = asocial.helpers.findUserMentions(message, groupId);
-
-        // Post the comment
-        $.post(SERVER_URL + '/' + groupId + '/comment/create', $.param({
-          post_id: related_post_id,
-          content: encryptedMessage,
-          mentioned_users: mentions
-        }));
+        
+        var postId = related_post_id, userId = CurrentSession.getUserId();
+        
+        var url = SERVER_URL + '/users/' + userId + '/groups/' + 
+                  groupId    + '/posts/' + postId   + '/comments';
+        
+        // Post the comment.
+        $.ajax(url, {
+          
+          type: 'POST',
+          
+          data: {
+            content: encryptedMessage,
+            mentioned_users: mentions
+          },
+          
+          success: function (comment) {
+            
+            asocial.socket.create.comment({
+              target: postId, view: comment
+            });
+            
+          },
+          
+          error: function () {
+            
+            asocial.helpers.showAlert('Posting failed!');
+            
+          }
+          
+        });
 
         // Clear textarea and resize it
         textarea.val('').change();

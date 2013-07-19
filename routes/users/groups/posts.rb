@@ -1,4 +1,4 @@
-post '/:group_id/post/create', auth: [] do |group_id|
+post '/users/:user_id/groups/:group_id/posts', auth: [] do |user_id, group_id|
 
   @group = @user.groups.find(group_id)
 
@@ -30,8 +30,8 @@ post '/:group_id/post/create', auth: [] do |group_id|
 
   content_type :json
 
-  { status: 'ok', id: post.id }.to_json
-
+  PostGenerator.generate(post, @user).to_json
+  
 end
 
 get '/:group_id/post/:id', auth: [] do |group_id, id|

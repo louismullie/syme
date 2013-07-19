@@ -1,11 +1,15 @@
 # Create comment
-post '/:group_id/comment/create', auth: [] do |group_id|
+post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |user_id, group_id, post_id|
 
   @group = @user.groups.find(group_id)
 
   @group.touch
 
-  post = @group.posts.find(params[:post_id])
+  post = begin
+    @group.posts.find(post_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'post_not_found'
+  end
 
   post.touch
 
@@ -27,6 +31,7 @@ post '/:group_id/comment/create', auth: [] do |group_id|
   comment.save!
 
   content_type :json
-  { status: 'ok' }
+  
+  CommentGenerator.generate(comment, @user).to_json
 
 end

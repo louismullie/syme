@@ -85,6 +85,9 @@ guard('socket', {
 
     post: function(post){
 
+      // Just return if the post has already been displayed.
+      if ($('#' + post.view.id).length > 0) return;
+      
       // Remove empty group notice if there is one
       $('#empty-group-notice').remove();
 
@@ -115,9 +118,12 @@ guard('socket', {
 
     comment: function(data){
 
-    // If related post doesn't exist, increment new content
-    if(!$('#' + data.target).length)
-      return asocial.helpers.newContent('comment', data.view.group_id);
+      // If related post doesn't exist, increment new content
+      if(!$('#' + data.target).length)
+        return asocial.helpers.newContent('comment', data.view.group_id);
+  
+      // Just return if the comment has already been displayed.
+      if ($('#' + data.view.id).length > 0) return;
 
       var post               = $('#' + data.target),
           container          = post.find('.comments'),
