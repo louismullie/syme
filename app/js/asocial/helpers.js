@@ -125,6 +125,9 @@ guard('helpers', {
     
     var full_names = this.findUserMentions(string, groupId);
     
+    // Add the current user to the list of other group members.
+    full_names.push(CurrentSession.getUser().get('full_name'));
+    
     $.each(full_names, function (i, full_name) {
       
       var mention = '@' + full_name;
