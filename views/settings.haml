@@ -8,7 +8,7 @@
       %h3 Your name
 
       %form#change-name{ method: 'post' }
-        %input{ type: 'text', name: 'full_name', placeholder: '{{full_name}}', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false' }
+        %input{ type: 'text', name: 'full_name', placeholder: '{{full_name}}', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', maxlength: '70' }
 
         %input{ type: 'submit' }
         %a#change-name-button.btn.btn-success.disabled{ href: '#', role: 'submit' }

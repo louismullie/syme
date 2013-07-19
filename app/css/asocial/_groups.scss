@@ -113,6 +113,10 @@
               @include transform(rotate(-180deg));
             }
           }
+          
+          a.group-card-title:hover {
+            cursor: default;
+          }
 
           .group-card-content {
             display: block;
@@ -202,6 +206,10 @@
             }
           }
         }
+      }
+      
+      a.group-banner-link[data-invite-state="2"] {
+        cursor: default;
       }
 
       .group-card-content {
