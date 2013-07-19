@@ -22,7 +22,7 @@ post '/:group_id/comment/create', auth: [] do |group_id|
     mentions: mentions
   )
 
-  track @user, 'Commented on a post'
+  track @user, 'User commented on post'
 
   comment.save!
 

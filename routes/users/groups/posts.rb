@@ -26,7 +26,7 @@ post '/:group_id/post/create', auth: [] do |group_id|
 
   post.save!
 
-  track @user, 'Created a new post'
+  track @user, 'User created post'
 
   content_type :json
 

@@ -97,7 +97,7 @@ post '/invitations', auth: [] do
 
   invitation.save!
 
-  track @user, 'Invited a new group member'
+  track @user, 'User invited new group member'
   
   send_invite(invitation.email, token)
 
@@ -122,6 +122,8 @@ put '/invitations', auth: [] do
     invitation.accept = params.accept
     invitation.state = 2
     invitation.save!
+    
+    track @user, 'User accepted invitation'
     
     request_confirm(invitation)
     
@@ -225,7 +227,7 @@ put '/invitations', auth: [] do
 
     invitee.save!
 
-    track @user, 'Confirmed a new group member'
+    track @user, 'User confirmed new group member'
 
   elsif params.completed
     
@@ -238,13 +240,11 @@ put '/invitations', auth: [] do
     
   end
   
-  track @user, 'Accepted a group invitation'
-  
   empty_response
   
 end
 
-delete '/users/:user_id/groups/:group_id/invitations/:invitation_id' do |_, group_id, invitation_id|
+delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] do |_, group_id, invitation_id|
   
   group = begin
     Group.find(group_id)
@@ -306,6 +306,8 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id' do |_, grou
         invitation: InvitationGenerator.generate(invitation)
     }}, group) if invitee
     
+    track @user, 'User canceled invitation'
+    
   elsif invitee.id.to_s == @user.id.to_s
     
     inviter.notify({
@@ -314,7 +316,9 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id' do |_, grou
         actor_ids: [  invitee.id.to_s ],
         invitation: InvitationGenerator.generate(invitation)
     }}, group) if invitee
-  
+
+    track @user, 'User declined invitation'
+    
   end
   
   content_type :json
@@ -376,7 +380,7 @@ get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
 
 end
 
-post '/users/:user_id/invitations/acknowledge' do |_|
+post '/users/:user_id/invitations/acknowledge', auth: [] do |_|
   
   ack_distribute = params[:distribute]
   

@@ -82,7 +82,7 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
   dir = File.join(settings.upload_path, upload.id)
   FileUtils.mkdir(dir)
 
-  track @user, 'Uploaded a new file'
+  track @user, 'User started uploading file'
 
   content_type :json
 
@@ -171,6 +171,8 @@ get '/:group_id/file/download/:id', auth: [] do |group_id, id|
 
   chunk_files = File.join(dir, '*')
   chunks = Dir.glob(chunk_files).count
+  
+  track @user, 'User started downloading file'
 
   content_type :json
 

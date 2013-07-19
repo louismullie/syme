@@ -11,6 +11,9 @@ get '/users/:user_id/stream', auth: [] do |user_id|
   
   subscriber = MagicBus::Subscriber
   
+  # Track the user's subscription to the stream.
+  track @user, 'User subscribed to stream'
+  
   # Stream the response to the client application.
   stream :keep_open do |out|
     
@@ -19,6 +22,7 @@ get '/users/:user_id/stream', auth: [] do |user_id|
     
     # Unsubscribe the client and close the stream.
     cleanup = lambda do
+      track @user, 'User was unsubscribed from stream'
       subscriber.unsubscribe(user_id, client_id)
       out.close
     end

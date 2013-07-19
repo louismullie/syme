@@ -60,7 +60,7 @@ post '/login/1' do
     
     session[:proof] = srp[:proof]
     
-    track user, 'login.start'
+    track user, 'User started login'
     
     srp[:challenge].merge({ csrf: csrf_token }).to_json
 
@@ -109,6 +109,8 @@ post '/login/2' do
     
   else
     
+    track user, 'User entered wrong credentials'
+    
     { status: 'error', reason: 'credentials' }.to_json
 
   end
@@ -117,6 +119,9 @@ end
 
 # Clear session.
 delete '/sessions/:session_id' do |session_id|
+  
+  # Track the event.
+  track @user, 'User was logged out'
   
   # Clear the current session.
   session.clear

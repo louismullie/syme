@@ -70,7 +70,7 @@ post '/groups', auth: [] do
   @user.save!
   group.save!
 
-  track @user, 'Created a new group'
+  track @user, 'User created a new group'
 
   content_type :json
 
@@ -88,6 +88,8 @@ put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
     group.save!
   end
   
+  track @user, 'User acknowledged group creation'
+
   empty_response
   
 end
@@ -100,7 +102,7 @@ post '/:group_id/avatar', auth: [] do
 
   @group.avatar_id = avatar_id
 
-  track @user, 'Added a group avatar'
+  track @user, 'User changed the group avatar'
 
   content_type :json
   { status: 'ok' }.to_json
@@ -126,7 +128,7 @@ delete '/groups/:id', auth: [] do |id|
   
   group.destroy
 
-  track @user, 'Deleted a group'
+  track @user, 'User deleted group'
 
   { status: 'ok' }.to_json
 
