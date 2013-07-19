@@ -16,7 +16,7 @@ asocial.binders.add('feed', { feed: function(){
     if(asocial.socket.updatedComments > 0){
       // If there are new comments, reset feed
       // to reorder the bump sorting
-      asocial.binders.loadRoute('feed');
+      Router.reload();
     } else {
       // If there are only new post, append them
       asocial.helpers.showUnreadPosts();
