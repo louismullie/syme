@@ -109,8 +109,6 @@ post '/login/2' do
     
   else
     
-    track user, 'User entered wrong credentials'
-    
     { status: 'error', reason: 'credentials' }.to_json
 
   end

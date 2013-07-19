@@ -13,7 +13,8 @@ asocial.binders.add('global', { decrypt: function() {
     var formatDecryptedText = function(decryptedText) {
 
       // Create a jQuery wrapper around markdown'd decrypted text
-      var content = $( asocial.helpers.replaceUserMentions(marked(decryptedText), groupId) );
+      var formattedText = marked(decryptedText).replace('<a', '<a target="_blank"');
+      var content = $( asocial.helpers.replaceUserMentions(formattedText, groupId) );
 
       // Put commenter name and comment tools in first paragraph of comment
       content.filter('p:first-child').prepend(
