@@ -227,7 +227,7 @@ put '/invitations', auth: [] do
 
     invitee.save!
 
-    track @user, 'User confirmed new group member'
+    track @user, 'User confirmed invitation'
 
   elsif params.completed
     

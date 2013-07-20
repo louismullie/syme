@@ -1,1 +1,1 @@
-Analytics.init(secret: 'ov5t9tashcudr6xid5ts')
+Analytics.init(secret: 'n5u5pkqotj7ik7d8n954')
