@@ -60,11 +60,11 @@ class PostGenerator
 
   def self.generate_comments(post, current_user)
 
-    post.comments.each_with_index.map do |comment, i|
+    post.complete_comments.each_with_index.map do |comment, i|
 
       result = CommentGenerator.generate(comment, current_user)
       result.merge({
-        hidden: (i < post.comments.count -
+        hidden: (i < post.complete_comments.count -
         CommentsPerThread) ? 'comment-hidden' : ''
       })
 

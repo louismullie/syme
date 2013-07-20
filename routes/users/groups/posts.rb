@@ -69,12 +69,9 @@ end
 get '/:group_id/post/:id', auth: [] do |group_id, id|
 
   @group = Group.find(group_id)
-  post = @group.posts.find(id)
-
-  if post.content == ''
-    post.destroy
-    error 404, 'post_not_found'
-  end
+  post = @group.complete_posts.find(id)
+  
+  error 404, 'post_not_found' unless post.complete
   
   content_type :json
 
@@ -88,10 +85,10 @@ get '/:group_id/post/lastof/:page', auth: [] do |group_id, page|
 
   @group = Group.find(group_id)
 
-  return '' if @group.posts.count == 0
+  return '' if @group.complete_posts.count == 0
 
-  page = @group.posts.page(page.to_i)
-  last = @group.posts.desc(:updated_at).last.id
+  page = @group.complete_posts.page(page.to_i)
+  last = @group.complete_posts.desc(:updated_at).last.id
 
   if !page.last || page.last.id == last
     ''
@@ -109,7 +106,7 @@ get '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
     error 404, 'group_not_found'
   end
 
-  posts = group.posts.page(1)
+  posts = group.complete_posts.page(1)
 
   content_type :json
   FeedGenerator.generate(posts, @user, group).to_json
@@ -129,7 +126,7 @@ post '/:group_id/page', auth: [] do |group_id|
 
   year, month = params[:year], params[:month]
 
-  posts = group.posts
+  posts = group.complete_posts
 
   # Narrow post selection.
   if !month.blank?
@@ -172,13 +169,13 @@ get '/users/:user_id/groups/:group_id/posts/:post_id', auth: [] do |user_id, gro
 
   posts = begin
     
-    post = group.posts.find(post_id)
+    post = group.complete_posts.find(post_id)
     
     if !post.content
       post.destroy; raise
     end
     
-    [group.posts.find(post_id)]
+    [group.complete_posts.find(post_id)]
     
   rescue
     error 404, 'post_not_found'

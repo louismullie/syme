@@ -163,7 +163,7 @@ get '/:group_id/file/download/:id', auth: [] do |group_id, id|
   @group = Group.find(group_id)
 
   id = params[:id]
-  upload = @group.uploads.find(id)
+  upload = @group.complete_uploads.find(id)
 
   raise "Can't find upload." unless upload
 
@@ -189,7 +189,7 @@ get '/:group_id/file/download/:id/:chunk', auth: [] do |group_id, id, chunk|
   file = File.join(settings.upload_path, id, chunk)
 
   # Find the record in the DB.
-  upload = @group.uploads.find(id)
+  upload = @group.complete_uploads.find(id)
 
   # Set the request headers.
   unless upload.type.to_s == ''

@@ -5,10 +5,10 @@ post '/:group_id/:model/delete', auth: [] do |group_id, model|
   
   @group.touch
 
-  post = @group.posts.find(params[:post_id])
+  post = @group.complete_posts.find(params[:post_id])
 
   resource = if model == 'comment'
-    post.comments.find(params[:comment_id])
+    post.complete_comments.find(params[:comment_id])
   elsif model == 'post'
     post
   end
@@ -30,10 +30,10 @@ post '/:group_id/:model/like/:operation', auth: [] do |group_id, model, operatio
   
   @group.touch
 
-  post = @group.posts.find(params[:post_id])
+  post = @group.complete_posts.find(params[:post_id])
 
   likeable = model == 'comment' ?
-  post.comments.find(params[:comment_id]) : post
+  post.complete_comments.find(params[:comment_id]) : post
 
   likeable.touch
   

@@ -4,7 +4,7 @@ class Resource
   include Mongoid::Timestamps
 
   field :owner_id, type: String
-  field :complete, type: Boolean
+  field :complete, type: Boolean, default: false
   
   attr_readonly :owner_id
   attr_accessible :owner_id, :complete

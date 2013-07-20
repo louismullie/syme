@@ -6,7 +6,7 @@ post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |us
   @group.touch
 
   post = begin
-    @group.posts.find(post_id)
+    @group.complete_posts.find(post_id)
   rescue Mongoid::Errors::DocumentNotFound
     error 404, 'post_not_found'
   end
@@ -44,7 +44,7 @@ put '/users/:user_id/groups/:group_id/posts/:post_id/comments/:comment_id', auth
   end
   
   post = begin
-    @group.posts.find(post_id)
+    @group.complete_posts.find(post_id)
   rescue Mongoid::Errors::DocumentNotFound
     error 404, 'post_not_found'
   end

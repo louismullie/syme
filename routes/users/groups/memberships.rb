@@ -24,13 +24,13 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
       end
     end
 
-    group.posts.each do |post|
+    group.complete_posts.each do |post|
 
       post.likes.each do |like|
         like.destroy if like.owner.id == user.id
       end
       
-      post.comments.each do |comment|
+      post.complete_comments.each do |comment|
         if comment.owner.id == user.id
           comment.destroy
         end
@@ -45,7 +45,7 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
 
     end
 
-    group.uploads.each do |upload|
+    group.complete_uploads.each do |upload|
       if upload.owner.id == user.id
         upload.destroy
       end

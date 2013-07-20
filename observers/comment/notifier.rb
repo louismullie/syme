@@ -61,7 +61,7 @@ module CommentObserver::Notifier
   # excluding the owner of the post and the commenter.
   def other_commenters(comment, commenter)
 
-    commenters = comment.post.comments.map do |comment|
+    commenters = comment.post.complete_comments.map do |comment|
       comment.owner.id.to_s
     end
 

@@ -139,12 +139,12 @@ put '/invitations', auth: [] do
     
     keys['posts'].each do |post_info|
 
-      post = group.posts.find(post_info['id'])
+      post = group.complete_posts.find(post_info['id'])
       post.keys[invitee_id] = post_info['key']
 
       post_info['comments'].each do |comment_info|
 
-        comment = post.comments.find(comment_info['id'])
+        comment = post.complete_comments.find(comment_info['id'])
         comment.keys[invitee_id] = comment_info['key']
 
         comment.save!
@@ -158,7 +158,7 @@ put '/invitations', auth: [] do
     # Transfer the upload keys to new user.
     keys['uploads'].each do |upload_info|
 
-      upload = group.uploads.find(upload_info['id'])
+      upload = group.complete_uploads.find(upload_info['id'])
       
       upload.keys[invitee_id] = upload_info['key']
       
@@ -333,11 +333,11 @@ get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
 
   group = @user.groups.find(group_id)
 
-  posts = group.posts.map do |post|
+  posts = group.complete_posts.map do |post|
     {
       id: post.id.to_s,
       key: post.key_for_user(@user),
-      comments: post.comments.map do |comment|
+      comments: post.complete_comments.map do |comment|
         {
           id: comment.id.to_s,
           key: comment.key_for_user(@user)
@@ -346,7 +346,7 @@ get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
     }
   end
 
-  uploads = group.uploads.map do |upload|
+  uploads = group.complete_uploads.map do |upload|
     {
       id: upload.id.to_s,
       key: upload.key_for_user(@user)
