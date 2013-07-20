@@ -1,6 +1,6 @@
 get '/users/:id/groups', auth: [] do
 
-  groups = @user.groups.map do |group|
+  groups = @user.groups.desc(:updated_at).map do |group|
     GroupGenerator.generate(group, @user)
   end
 
