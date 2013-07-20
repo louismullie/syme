@@ -81,7 +81,7 @@ post '/groups', auth: [] do
   @user.save!
   group.save!
 
-  track @user, 'User created a new group'
+  track @user, 'User created new group'
 
   content_type :json
 
