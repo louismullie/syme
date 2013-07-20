@@ -23,7 +23,7 @@ module User::Deletable
   end
   
   def delete_uploads
-    group.complete_uploads.where(owner_id: id.to_s).destroy_all
+    group.uploads.where(owner_id: id.to_s).destroy_all
   end
 
   def delete_posts

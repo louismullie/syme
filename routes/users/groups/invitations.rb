@@ -158,7 +158,7 @@ put '/invitations', auth: [] do
     # Transfer the upload keys to new user.
     keys['uploads'].each do |upload_info|
 
-      upload = group.complete_uploads.find(upload_info['id'])
+      upload = group.uploads.find(upload_info['id'])
       
       upload.keys[invitee_id] = upload_info['key']
       
@@ -346,7 +346,7 @@ get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
     }
   end
 
-  uploads = group.complete_uploads.map do |upload|
+  uploads = group.uploads.map do |upload|
     {
       id: upload.id.to_s,
       key: upload.key_for_user(@user)
