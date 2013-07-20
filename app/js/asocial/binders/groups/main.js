@@ -49,6 +49,9 @@ asocial.binders.add('groups', { main: function() {
     // Mark pending group creation.
     $(this).data('active', true);
     
+    // Pass reference to self to subcontext.
+    var $this = $(this);
+    
     var name = $(this).find('input[name="name"]').val();
 
     if ( name.length == 0 ) return;
