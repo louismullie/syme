@@ -42,45 +42,6 @@ asocial.binders.add('feed', { comments: function(){
       var timestamp = new Date;
       var createdAt = timestamp.toISOString();
     
-      var shimComment = {
-        
-        target: postId,
-        
-        view: {
-          
-          // Generate a random, temporary comment ID.
-          id: Math.random()*Math.exp(40).toString(),
-          
-          commenter: {
-            
-            id: userId,
-            name: user.get('full_name'),
-            avatar: {
-              placeholder: true // *
-            },
-            
-          },
-          
-          content: message,
-          encrypted: false,
-          created_at: createdAt,
-          deletable: true,
-          group_id: groupId,
-          
-          likeable: {
-            
-            has_likes: false,
-            like_count: 0,
-            liked_by_user: false,
-            liker_names: ""
-            
-          }
-        }
-        
-      };
-      
-      var $comment = asocial.socket.create.comment(shimComment, true);
-      
       Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
         // Get the users who were mentioned in the message.
@@ -101,7 +62,19 @@ asocial.binders.add('feed', { comments: function(){
           
           success: function (comment) {
 
-            $comment.attr('id', comment.id);
+            // Clear textarea and resize it
+            textarea.val('').change();
+            
+            // Shim comment message.
+            comment.content = message;
+            comment.encrypted = false;
+            
+            // Create and display comment.
+            asocial.socket.create.comment({
+              target: postId, view: comment
+            });
+            
+            // Unlock comment textare.
             $this.data('active', false);
             
           },
@@ -113,9 +86,6 @@ asocial.binders.add('feed', { comments: function(){
           }
           
         });
-
-        // Clear textarea and resize it
-        textarea.val('').change();
 
       });
 
@@ -170,3 +140,42 @@ asocial.binders.add('feed', { comments: function(){
   });
 
 } }); // asocial.binders.add();
+
+/*
+
+
+  var shimComment = {
+    
+    target: postId,
+    
+    view: {
+      
+      // Generate a random, temporary comment ID.
+      id: Math.random()*Math.exp(40).toString(),
+      
+      commenter: {
+        
+        id: userId,
+        name: user.get('full_name'),
+        avatar: { placeholder: true }
+        
+      },
+      
+      content: message,
+      encrypted: false,
+      created_at: createdAt,
+      deletable: true,
+      group_id: groupId,
+      
+      likeable: {
+        
+        has_likes: false,
+        like_count: 0,
+        liked_by_user: false,
+        liker_names: ""
+        
+      }
+    }
+    
+  };
+*/

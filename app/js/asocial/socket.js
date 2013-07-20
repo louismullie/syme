@@ -112,11 +112,13 @@ guard('socket', {
       asocial.crypto.batchDecrypt();
 
       // Autogrow comment textarea
-      $('textarea.autogrow').autogrow().removeClass('autogrow')
+      $('textarea.autogrow').autogrow().removeClass('autogrow');
+      
+      return null;
 
     },
 
-    comment: function(data, decrypted){
+    comment: function(data){
       
       // If related post doesn't exist, increment new content
       if(!$('#' + data.target).length)
@@ -131,9 +133,6 @@ guard('socket', {
           showmore_count     = showmore.find('span'),
           displayed_comments = container.find('.comment-box').not('.comment-hidden');
 
-      if (decrypted)
-        console.log(displayed_comments.find('.collapsable'));
-        
       // If comments are still collapsed and they are full
       if( !showmore.data('expanded') && displayed_comments.length >= 3 ){
 
@@ -159,7 +158,7 @@ guard('socket', {
       post.find('[partial="feed-comment-count"]')
         .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
       
-      return container.find('#' + data.view.id);
+      return null;
 
     },
 

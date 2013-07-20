@@ -76,9 +76,13 @@ asocial.binders.add('feed', { form: function(){
         data: request,
         
         success: function(post){
-          console.log(post);
-          asocial.helpers.resetFeedForm();
+          
+          post.content = message;
+          post.encrypted = false;
+          
           asocial.socket.create.post({ view: post });
+          asocial.helpers.resetFeedForm();
+          
         },
         
         error: function (post) {
@@ -187,3 +191,37 @@ asocial.binders.add('feed', { form: function(){
   $('#upload_file').on('change', asocial.uploader.selectFile);
 
 } }); // asocial.binders.add();
+
+
+/*
+
+
+var shimPost = {
+
+  attachment: false, // *
+  has_attachment: false, //*
+  comment_count: 0,
+  has_comments: false,
+  comments: [],
+  comments_collapsed: "hidden",
+  comments_collapsed_count: -3,
+  content: message,
+  deletable: true,
+  encrypted: false,
+  created_at: createdAt,
+  group_id: groupId,
+  
+  likeable: {
+    has_likes: false,
+    like_count: 0,
+    liked_by_user: false,
+    liker_names: ""
+  },
+  
+  owner: {
+    id: userId,
+    avatar: { placeholder: true },
+    name: user.get('full_name')
+  }
+  
+};*/
