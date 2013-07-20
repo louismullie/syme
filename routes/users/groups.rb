@@ -3,6 +3,17 @@ get '/users/:id/groups', auth: [] do
   groups = @user.groups.desc(:updated_at).map do |group|
     GroupGenerator.generate(group, @user)
   end
+  
+  shift, left_column, right_column = true, [], []
+  
+  # Reorder posts for a two-column layout
+  groups.each do |group|
+    right_column << group if shift
+    left_column << group if !shift
+    shift = shift ? false : true
+  end
+  
+  groups = left_column + right_column
 
   user_invites = Invitation.where(
     email: @user.email, state: { '$in' => [1, 2]})
