@@ -153,7 +153,7 @@ Notifications = (function(){
 
   var View = Backbone.View.extend({
 
-    initialize: function(){
+    initialize: function() {
       // Called on modifications
       this.collection.on('sync change', this.render, this);
 
@@ -167,7 +167,7 @@ Notifications = (function(){
       }, this);
     },
 
-    render: function(){
+    render: function() {
 
       _this = this;
 
@@ -201,14 +201,21 @@ Notifications = (function(){
       _this.$el.html( asocial.helpers.render('notification',
         { notifications: notifications }) );
 
-      // Update count
+      // Update notification count in the navbar badge.
       $('#notification-li').attr('data-badge', selector.length);
-
+      
+      // In a Chrome extension, update the title and badge count.
       if (asocial.compat.inChromeExtension()) {
 
         var count = selector.length == 0 ? '' : selector.length.toString();
+         
+         // Update notification count in the Chrome action badge.
         chrome.browserAction.setBadgeText({ text: count });
         chrome.browserAction.setBadgeBackgroundColor({color: '#ff0011'});
+
+        // Update notification count in the document title.
+        var title = (count == '' ? 'Syme' : '(' + count + ') Syme');
+        document.title = title;
 
       }
 
@@ -264,7 +271,9 @@ Notifications = (function(){
 
     // Call this when the DOM is loaded and CurrentSession is available
     start: function(){
-      this.url = SERVER_URL + "/users/" + CurrentSession.getUserId() + "/notifications";
+      
+      var userId = CurrentSession.getUserId();
+      this.url = SERVER_URL + "/users/" + userId + "/notifications";
       this.view.setElement( $('#notifications-content') );
 
       // Fetch notifications

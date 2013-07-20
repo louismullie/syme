@@ -34,14 +34,57 @@ asocial.binders.add('feed', { comments: function(){
       // Allow hashtags despite markdown by escaping.
       var message = textarea.val().replace('#', '\\#');
 
-      var groupId = CurrentSession.getGroupId();
-
+      var groupId = CurrentSession.getGroupId()
+          userId = CurrentSession.getUserId(),
+          user   = CurrentSession.getUser(),
+          postId = related_post_id;
+      
+      var timestamp = new Date;
+      var createdAt = timestamp.toISOString();
+    
+      var shimComment = {
+        
+        target: postId,
+        
+        view: {
+          
+          // Generate a random, temporary comment ID.
+          id: Math.random()*Math.exp(40).toString(),
+          
+          commenter: {
+            
+            id: userId,
+            name: user.get('full_name'),
+            avatar: {
+              placeholder: true // *
+            },
+            
+          },
+          
+          content: message,
+          encrypted: false,
+          created_at: createdAt,
+          deletable: true,
+          group_id: groupId,
+          
+          likeable: {
+            
+            has_likes: false,
+            like_count: 0,
+            liked_by_user: false,
+            liker_names: ""
+            
+          }
+        }
+        
+      };
+      
+      var $comment = asocial.socket.create.comment(shimComment, true);
+      
       Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
         // Get the users who were mentioned in the message.
         var mentions = asocial.helpers.findUserMentions(message, groupId);
-        
-        var postId = related_post_id, userId = CurrentSession.getUserId();
         
         var url = SERVER_URL + '/users/' + userId + '/groups/' + 
                   groupId    + '/posts/' + postId   + '/comments';
@@ -57,12 +100,9 @@ asocial.binders.add('feed', { comments: function(){
           },
           
           success: function (comment) {
-            
+
+            $comment.attr('id', comment.id);
             $this.data('active', false);
-            
-            asocial.socket.create.comment({
-              target: postId, view: comment
-            });
             
           },
           

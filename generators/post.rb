@@ -41,6 +41,8 @@ class PostGenerator
       has_attachment: !post.attachment.nil?,
       attachment: attachment,
 
+      encrypted: true,
+      
       # Likes and likers.
       likeable: LikeGenerator.generate(post, current_user),
 

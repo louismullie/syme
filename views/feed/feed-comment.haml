@@ -12,7 +12,7 @@
   %a.commenter-name{href: '#'} {{commenter.name}}
 
   -# Will transform into collapsable
-  %div{ class: 'encrypted {{hidden}}' }
+  %div{ class: 'encrypted {{hidden}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}' }
     {{content}}
 
   -# Footer

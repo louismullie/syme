@@ -8,8 +8,8 @@ asocial.binders.add('settings', { main: function(){
     brand_only: true,
 
     elements: [
-      { title: 'Settings',
-        href: 'users/' + CurrentSession.getUserId() }
+      { title: 'Groups',
+        href: '/' }
     ]
   });
 

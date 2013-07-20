@@ -116,8 +116,8 @@ guard('socket', {
 
     },
 
-    comment: function(data){
-
+    comment: function(data, decrypted){
+      
       // If related post doesn't exist, increment new content
       if(!$('#' + data.target).length)
         return asocial.helpers.newContent('comment', data.view.group_id);
@@ -131,6 +131,9 @@ guard('socket', {
           showmore_count     = showmore.find('span'),
           displayed_comments = container.find('.comment-box').not('.comment-hidden');
 
+      if (decrypted)
+        console.log(displayed_comments.find('.collapsable'));
+        
       // If comments are still collapsed and they are full
       if( !showmore.data('expanded') && displayed_comments.length >= 3 ){
 
@@ -155,6 +158,8 @@ guard('socket', {
       // Reset comment count counter
       post.find('[partial="feed-comment-count"]')
         .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
+      
+      return container.find('#' + data.view.id);
 
     },
 

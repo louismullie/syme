@@ -4,6 +4,8 @@ class CommentGenerator
     
     current_key = comment.key_for_user(current_user)
     
+    # Generate a Base64-encoded message containing
+    # the comment, the current user's key and the sender id.
     content = Base64.strict_encode64({
       message: comment.content,
       keys: {
@@ -14,16 +16,17 @@ class CommentGenerator
     
     {
 
-      id: comment.id.to_s,
-      group_id: comment.parent_group.id.to_s,
-      content: content,
-      full_time: generate_timestamp(comment),
+      id:         comment.id.to_s,
+      group_id:   comment.parent_group.id.to_s,
+      content:    content,
+      full_time:  generate_timestamp(comment),
+      encrypted:  true,
       created_at: comment.created_at.iso8601,
       
-      deletable: comment.deletable_by?(current_user),
+      deletable:  comment.deletable_by?(current_user),
 
-      commenter: generate_commenter(comment, current_user),
-      likeable: LikeGenerator.generate(comment, current_user)
+      commenter:  generate_commenter(comment, current_user),
+      likeable:   LikeGenerator.generate(comment, current_user)
 
     }
 

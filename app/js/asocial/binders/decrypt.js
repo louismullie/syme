@@ -29,26 +29,41 @@ asocial.binders.add('global', { decrypt: function() {
         // Transform the .encrypted into .collapsable
         .removeClass('encrypted').addClass('collapsable');
 
-      // Collapse long text
+      // Collapse long posts.
       asocial.helpers.collapseHTML(5, 'Read more');
 
-      // Parse oEmbed links. Use fill mode to strip links.
+      // Embed rich media content.
       $('.post-content').oembed();
 
-      // Timeago
+      // Format dynamic timestamps.
       $('time.timeago').timeago();
       
+      // Format comment textarea.
       $('textarea').autogrow();
       
       done();
 
     };
-
-    if (JSON.parse($.base64.decode(text)).keys[CurrentSession.getUserId()] == undefined)
-      throw 'Missing keys for current user.';
-
+    
     // Decrypt, then format element
-    Crypto.decryptMessage(groupId, text, formatDecryptedText);
+    if ($this.data('encrypted') == true) {
+      
+      // Check that keys exist for current user.
+      var userId = CurrentSession.getUserId();
+      var message = JSON.parse($.base64.decode(text));
+
+      // Throw exception if they don't.
+      if (message.keys[userId] == undefined)
+        throw 'Missing keys for current user.';
+
+      Crypto.decryptMessage(groupId, text, formatDecryptedText);
+      
+    // Just format element.
+    } else {
+      
+      formatDecryptedText(text);
+      
+    }
 
   });
 
@@ -100,7 +115,7 @@ asocial.binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || function(){};
 
-    var media_id = $this.attr('data-attachment-id');
+    var media_id = $this.attr('data-attachment-id'),
         keys     = $this.attr('data-attachment-keys'),
         type     = $this.attr('data-attachment-type'),
         group_id = $this.attr('data-attachment-group');
