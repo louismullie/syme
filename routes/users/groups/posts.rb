@@ -4,20 +4,20 @@ post '/users/:user_id/groups/:group_id/posts', auth: [] do |user_id, group_id|
 
   @group.touch
 
-  message = JSON.parse(Base64.strict_decode64(
-    params[:encrypted_content]))
-
   mentions = params[:mentioned_users] || []
 
   attachment = if !(upload_id = params[:upload_id]).blank?
-    @group.attachments.find(upload_id)
+    begin
+      @group.attachments.find(upload_id)
+    rescue Mongoid::Errors::DocumentNotFound
+      nil
+    end
   end
 
   post = @group.posts.create(
     owner_id: @user.id,
-    content: message['message'],
-    keys: message['keys'],
     mentions: mentions,
+    content: '', keys: {},
     attachment: attachment
   )
 
@@ -34,11 +34,48 @@ post '/users/:user_id/groups/:group_id/posts', auth: [] do |user_id, group_id|
   
 end
 
+put '/users/:user_id/groups/:group_id/posts/:post_id' do |user_id, group_id, post_id|
+
+  error 400, 'missing_params' if !params[:content]
+  
+  message = JSON.parse(Base64.strict_decode64(params[:content]))
+  
+  @group = begin
+    @user.groups.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'group_not_found'
+  end
+  
+  post = begin
+    @group.posts.find(post_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'post_not_found'
+  end
+  
+  if (user_id  != @user.id.to_s)   ||
+     (@user.id.to_s != post.owner_id.to_s)
+    error 403, 'access_unauthorized'
+  end
+  
+  post.content = message['message']
+  post.keys =  message['keys']
+  
+  post.save!
+  
+  empty_response
+  
+end
+
 get '/:group_id/post/:id', auth: [] do |group_id, id|
 
   @group = Group.find(group_id)
   post = @group.posts.find(id)
 
+  if post.content == ''
+    post.destroy
+    error 404, 'post_not_found'
+  end
+  
   content_type :json
 
   PostGenerator.generate(post, @user).to_json
@@ -134,12 +171,21 @@ get '/users/:user_id/groups/:group_id/posts/:post_id', auth: [] do |user_id, gro
   end
 
   posts = begin
+    
+    post = group.posts.find(post_id)
+    
+    if !post.content
+      post.destroy; raise
+    end
+    
     [group.posts.find(post_id)]
-  rescue Mongoid::Errors::DocumentNotFound
+    
+  rescue
     error 404, 'post_not_found'
   end
 
   content_type :json
+  
   FeedGenerator.generate(posts, @user, group)
     .merge({ single_post: true }).to_json
 

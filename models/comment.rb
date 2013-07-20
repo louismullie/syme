@@ -22,7 +22,6 @@ class Comment < Resource
    field :mentions, type: Array, default: []
   
   # Attribute protection.
-  attr_readonly :content, :keys
   attr_accessible :content, :keys, :mentions
 
   # Validations.

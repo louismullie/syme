@@ -53,43 +53,55 @@ asocial.binders.add('feed', { form: function(){
 
     // Encrypt the message and write the content to the file.
     var $form   = $(this),
-        groupId = CurrentSession.getGroupId();
+        groupId = CurrentSession.getGroupId(),
+        userId = CurrentSession.getUserId();
 
-    Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+    var url = SERVER_URL + '/users/' + userId +
+              '/groups/' + groupId + '/posts';
 
-      // Build request
-      var request = {
-        encrypted_content: encryptedMessage,
+    $.ajax(url, {
+
+      type: 'POST',
+
+      data: {
+  
         upload_id: $form.find('input[name="upload_id"]').val(),
         mentioned_users: asocial.helpers.findUserMentions(message, groupId)
-      };
+        
+      },
 
-      var userId = CurrentSession.getUserId();
-      
-      var url = SERVER_URL + '/users/' + userId +
-                '/groups/' + groupId + '/posts';
+      success: function(post){
 
-      $.ajax(url, {
-        
-        type: 'POST',
-        
-        data: request,
-        
-        success: function(post){
+        post.content = message;
+        post.encrypted = false;
+
+        asocial.socket.create.post({ view: post });
+        asocial.helpers.resetFeedForm();
+
+        Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+
+          $.ajax(url + '/' + post.id, {
+            
+            type: 'PUT',
+            
+            data: { content: encryptedMessage },
+            
+            success: function (){ },
+            
+            error: function () {
+              // Should delete post here.
+              asocial.helpers.showAlert('Posting failed (PUT)');
+            }
+            
+          });
           
-          post.content = message;
-          post.encrypted = false;
-          
-          asocial.socket.create.post({ view: post });
-          asocial.helpers.resetFeedForm();
-          
-        },
+        });
         
-        error: function (post) {
-          asocial.helpers.showAlert('Posting failed');
-        }
-        
-      });
+      },
+
+      error: function (post) {
+        asocial.helpers.showAlert('Posting failed (POST)');
+      }
 
     });
 
