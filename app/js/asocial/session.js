@@ -20,7 +20,7 @@ Session = function () {
     if (asocial.compat.inChromeExtension()) {
       version = chrome.app.getDetails().version;
     } else {
-      version = '0.0.5';
+      version = '0.0.6';
     }
     
     $.ajax(SERVER_URL + '/state/session', {
