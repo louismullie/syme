@@ -24,8 +24,6 @@ post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |us
 
   track @user, 'User commented on post'
 
-  comment.save!
-
   content_type :json
   
   CommentGenerator.generate(comment, @user).to_json

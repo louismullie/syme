@@ -7,5 +7,5 @@ class PostObserver < ResourceObserver
 
   include PostObserver::Publisher
   include PostObserver::Notifier
-
+  
 end

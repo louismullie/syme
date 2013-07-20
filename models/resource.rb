@@ -4,9 +4,10 @@ class Resource
   include Mongoid::Timestamps
 
   field :owner_id, type: String
+  field :complete, type: Boolean
   
   attr_readonly :owner_id
-  attr_accessible :owner_id
+  attr_accessible :owner_id, :complete
   
   require_relative 'resource/authorizable'
   require_relative 'resource/likeable'

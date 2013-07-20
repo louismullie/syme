@@ -20,9 +20,6 @@ asocial.binders.add('feed', { comments: function(){
       // Return if a comment is being posted.
       if ($this.data('active') == true) return;
       
-      // Lock the comment textarea while posting.
-      $this.data('active', true);
-      
       var related_post    = $(this).closest('.post'),
           related_post_id = related_post.attr('id'),
           post_encrypted  = related_post.data('encrypted'),
@@ -30,6 +27,9 @@ asocial.binders.add('feed', { comments: function(){
 
       // If textarea is empty, do not submit form
       if(!textarea.val().trim()) return;
+      
+      // Lock the comment textarea while posting.
+      $this.data('active', true);
 
       // Allow hashtags despite markdown by escaping.
       var message = textarea.val().replace('#', '\\#');
@@ -42,7 +42,6 @@ asocial.binders.add('feed', { comments: function(){
       
       var url = SERVER_URL + '/users/' + userId + '/groups/' + 
                 groupId    + '/posts/' + postId   + '/comments';
-    
     
       // Get the users who were mentioned in the message.
       var mentions = asocial.helpers.findUserMentions(message, groupId);
@@ -103,6 +102,9 @@ asocial.binders.add('feed', { comments: function(){
         },
         
         error: function () {
+          
+          // Unlock comment textare.
+          $this.data('active', false);
           
           // Show error message.
           asocial.helpers.showAlert('Posting failed (POST)!');

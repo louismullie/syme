@@ -21,10 +21,10 @@ post '/users/:user_id/groups/:group_id/posts', auth: [] do |user_id, group_id|
     attachment: attachment
   )
 
-  attachment.post = post if attachment
-  attachment.save! if attachment
-
-  post.save!
+  if attachment
+    attachment.post = post
+    attachment.save!
+  end
 
   track @user, 'User created post'
 
