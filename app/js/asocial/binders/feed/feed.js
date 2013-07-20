@@ -64,7 +64,7 @@ asocial.binders.add('feed', { feed: function(){
       // Add optional year and month to request
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
-
+      
       $.post(SERVER_URL + '/' + CurrentSession.getGroupId() + '/page', request, function(data){
 
         var lastPage = data.last_page,
