@@ -1,7 +1,5 @@
 asocial.binders.add('groups', { main: function() {
 
-  console.log('BOUND GROUPS');
-  
   // Hide spinner
   $('#spinner').hide();
 
@@ -45,6 +43,12 @@ asocial.binders.add('groups', { main: function() {
 
     e.preventDefault();
 
+    // Prevent rapid creation of groups.
+    if ($(this).data('active') == true) return;
+    
+    // Mark pending group creation.
+    $(this).data('active', true);
+    
     var name = $(this).find('input[name="name"]').val();
 
     if ( name.length == 0 ) return;
@@ -57,23 +61,40 @@ asocial.binders.add('groups', { main: function() {
 
       success: function (group) {
 
-        var route = SERVER_URL + '/users/' +
-          CurrentSession.getUserId() + '/groups';
-
-        var ack = SERVER_URL + '/users/' +
-          CurrentSession.getUserId() + '/groups/' + group.id;
+        var userId =  CurrentSession.getUserId(), groupId = group.id;
+        
+        var route = SERVER_URL + '/users/' + userId + '/groups/' + groupId;
 
         Crypto.createKeylist(group.id, function (encryptedKeyfile) {
 
-          CurrentSession.getUser().updateKeyfile(
-            encryptedKeyfile, function () {
+          var currentUser = CurrentSession.getUser();
+          
+          currentUser.updateKeyfile(encryptedKeyfile, function () {
+            
+            Router.reload();
 
-              Router.reload();
-
-              $.ajax(ack, {
-                type: 'PUT',
-                data: { ack_create: true }
-              });
+            $.ajax(route, {
+            
+              type: 'PUT',
+            
+              data: { ack_create: true },
+            
+              success: function () {
+                
+                $this.data('active', false);
+                
+              },
+            
+              error: function () {
+                
+                asocial.helpers.showAlert(
+                  'Could not acknowledge group creation.');
+                
+                $this.data('active', false);
+                
+              }
+            
+            });
 
           });
 
