@@ -6,15 +6,12 @@ class ResourceObserver < Mongoid::Observer
   include ResourceObserver::Publisher
   include ResourceObserver::Notifier
   
-  def after_save(resource)
-    if !resource.complete
-      publish_create(resource)
-      notify_create(resource)
-      notify_mentioned(resource)
-      resource.update_attribute(:complete, true)
-    end
+  def after_create(resource)
+    publish_create(resource)
+    notify_create(resource)
+    notify_mentioned(resource)
   end
-  
+
   def before_destroy(resource)
     publish_delete(resource)
   end

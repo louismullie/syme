@@ -9,6 +9,7 @@ class Comment < Resource
   
   # Relations.
   embedded_in :post
+  
   embeds_many :likes, as: :likeable
 
   # Fields.

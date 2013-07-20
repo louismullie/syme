@@ -71,8 +71,6 @@ get '/:group_id/post/:id', auth: [] do |group_id, id|
   @group = Group.find(group_id)
   post = @group.complete_posts.find(id)
   
-  error 404, 'post_not_found' unless post.complete
-  
   content_type :json
 
   PostGenerator.generate(post, @user).to_json
