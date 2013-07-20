@@ -18,6 +18,7 @@ class CommentGenerator
       group_id: comment.parent_group.id.to_s,
       content: content,
       full_time: generate_timestamp(comment),
+      created_at: comment.created_at.iso8601,
       
       deletable: comment.deletable_by?(current_user),
 

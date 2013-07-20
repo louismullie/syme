@@ -17,8 +17,6 @@
 
   -# Footer
   .comment-footer
-    %a.time{ href: '#' }
-      %time.timeago{ datetime: '{{full_time}}' }
 
     // Like action
     %a{ href: '#', class: 'like-action {{#if likeable.liked_by_user}}active{{/if}}' }<
@@ -28,3 +26,8 @@
     // Like count
     %span{ partial: 'feed-like-count' }
       {{> feed-like-count.hbs}}
+    
+    %span ·
+    
+    %a.time{ href: '#' }
+      %time.timeago{ datetime: '{{created_at}}' }
