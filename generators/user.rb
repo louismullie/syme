@@ -10,8 +10,8 @@ class UserGenerator
     
     {
       full_name:              user.full_name,
-      post_count:             group.posts.where(owner_id: user.id.to_s).count,
-      attachment_count:       group.posts.where(owner_id: user.id.to_s)
+      post_count:             group.complete_posts.where(owner_id: user.id.to_s).count,
+      attachment_count:       group.complete_posts.where(owner_id: user.id.to_s)
         .where(:attachment.ne => nil).count,
       is_current_user:        current_user.id.to_s == user.id.to_s,
       deletable:              membership.deletable_by?(current_user),

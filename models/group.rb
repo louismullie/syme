@@ -26,4 +26,12 @@ class Group
   
   field :palette, type: Array, default: []
 
+  def complete_posts
+    self.posts.not_in(complete: false)
+  end
+  
+  def complete_uploads
+    self.uploads.not_in(complete: false)
+  end
+  
 end

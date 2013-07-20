@@ -1,6 +1,6 @@
 {
 	"name": "Syme",
-	"version": "0.0.7",
+	"version": "0.0.9",
 	"manifest_version": 2,
 	"description": "",
 	"browser_action": {

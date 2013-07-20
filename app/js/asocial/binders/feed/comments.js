@@ -20,9 +20,6 @@ asocial.binders.add('feed', { comments: function(){
       // Return if a comment is being posted.
       if ($this.data('active') == true) return;
       
-      // Lock the comment textarea while posting.
-      $this.data('active', true);
-      
       var related_post    = $(this).closest('.post'),
           related_post_id = related_post.attr('id'),
           post_encrypted  = related_post.data('encrypted'),
@@ -30,6 +27,9 @@ asocial.binders.add('feed', { comments: function(){
 
       // If textarea is empty, do not submit form
       if(!textarea.val().trim()) return;
+      
+      // Lock the comment textarea while posting.
+      $this.data('active', true);
 
       // Allow hashtags despite markdown by escaping.
       var message = textarea.val().replace('#', '\\#');
@@ -39,54 +39,78 @@ asocial.binders.add('feed', { comments: function(){
           user   = CurrentSession.getUser(),
           postId = related_post_id;
       
-      var timestamp = new Date;
-      var createdAt = timestamp.toISOString();
+      
+      var url = SERVER_URL + '/users/' + userId + '/groups/' + 
+                groupId    + '/posts/' + postId   + '/comments';
     
-      Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+      // Get the users who were mentioned in the message.
+      var mentions = asocial.helpers.findUserMentions(message, groupId);
 
-        // Get the users who were mentioned in the message.
-        var mentions = asocial.helpers.findUserMentions(message, groupId);
+      // Post the comment.
+      $.ajax(url, {
         
-        var url = SERVER_URL + '/users/' + userId + '/groups/' + 
-                  groupId    + '/posts/' + postId   + '/comments';
+        type: 'POST',
         
-        // Post the comment.
-        $.ajax(url, {
-          
-          type: 'POST',
-          
-          data: {
-            content: encryptedMessage,
-            mentioned_users: mentions
-          },
-          
-          success: function (comment) {
+        data: {
+          mentioned_users: mentions
+        },
+        
+        success: function (comment) {
 
-            // Clear textarea and resize it
-            textarea.val('').change();
+          // Clear textarea and resize it
+          textarea.val('').change();
+          
+          // Shim comment message.
+          comment.content = message;
+          comment.encrypted = false;
+          
+          // Create and display comment.
+          asocial.socket.create.comment({
+            target: postId, view: comment
+          });
+          
+          Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
             
-            // Shim comment message.
-            comment.content = message;
-            comment.encrypted = false;
-            
-            // Create and display comment.
-            asocial.socket.create.comment({
-              target: postId, view: comment
+            $.ajax(url + '/' + comment.id, {
+              
+              type: 'PUT',
+              
+              data: { content: encryptedMessage },
+              
+              success: function () {
+                
+                // Unlock comment textare.
+                $this.data('active', false);
+                
+              },
+              
+              error: function () {
+                
+                // Unlock comment textare.
+                $this.data('active', false);
+                
+                // Show error message.
+                asocial.helpers.showAlert('Posting failed (PUT)!');
+                
+              }
+              
+              
             });
             
-            // Unlock comment textare.
-            $this.data('active', false);
-            
-          },
+          });
           
-          error: function () {
-            
-            asocial.helpers.showAlert('Posting failed!');
-            
-          }
+        },
+        
+        error: function () {
           
-        });
-
+          // Unlock comment textare.
+          $this.data('active', false);
+          
+          // Show error message.
+          asocial.helpers.showAlert('Posting failed (POST)!');
+          
+        }
+        
       });
 
     }
@@ -140,42 +164,3 @@ asocial.binders.add('feed', { comments: function(){
   });
 
 } }); // asocial.binders.add();
-
-/*
-
-
-  var shimComment = {
-    
-    target: postId,
-    
-    view: {
-      
-      // Generate a random, temporary comment ID.
-      id: Math.random()*Math.exp(40).toString(),
-      
-      commenter: {
-        
-        id: userId,
-        name: user.get('full_name'),
-        avatar: { placeholder: true }
-        
-      },
-      
-      content: message,
-      encrypted: false,
-      created_at: createdAt,
-      deletable: true,
-      group_id: groupId,
-      
-      likeable: {
-        
-        has_likes: false,
-        like_count: 0,
-        liked_by_user: false,
-        liker_names: ""
-        
-      }
-    }
-    
-  };
-*/

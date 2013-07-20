@@ -7,5 +7,16 @@ class PostObserver < ResourceObserver
 
   include PostObserver::Publisher
   include PostObserver::Notifier
-
+  
+  def after_save(post)
+    if !post.complete
+      publish_create(post)
+      notify_create(post)
+      notify_mentioned(post)
+      post.update_attribute(:complete, true)
+    end
+  end
+  
+  def after_create(post); end
+  
 end

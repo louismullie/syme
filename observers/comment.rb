@@ -8,4 +8,15 @@ class CommentObserver < ResourceObserver
   include CommentObserver::Publisher
   include CommentObserver::Notifier
   
+  def after_save(comment)
+    if !comment.complete
+      publish_create(comment)
+      notify_create(comment)
+      notify_mentioned(comment)
+      comment.update_attribute(:complete, true)
+    end
+  end
+  
+  def after_create(comment); end
+  
 end

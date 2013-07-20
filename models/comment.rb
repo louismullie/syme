@@ -9,6 +9,7 @@ class Comment < Resource
   
   # Relations.
   embedded_in :post
+  
   embeds_many :likes, as: :likeable
 
   # Fields.
@@ -22,7 +23,6 @@ class Comment < Resource
    field :mentions, type: Array, default: []
   
   # Attribute protection.
-  attr_readonly :content, :keys
   attr_accessible :content, :keys, :mentions
 
   # Validations.

@@ -47,7 +47,6 @@ class Upload < Resource
   attr_accessible :key, :keys, :store, :filename,
   :size, :image_size, :finished, :thumbnail_id, :type, :encrypted
 
-
   def thumbnail
     group.thumbnails.find(thumbnail_id) if thumbnail_id
   rescue Mongoid::Errors::DocumentNotFound
