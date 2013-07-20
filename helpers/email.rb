@@ -2,7 +2,7 @@ def send_email_to(email, subject, body)
 
   Pony.mail({
     to: email,
-    from: "Syme App <team@getsyme.com>",
+    from: "Syme <team@getsyme.com>",
     subject: subject,
     headers: { 'Content-Type' => "text/html" },
     body: body,
