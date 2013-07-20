@@ -178,7 +178,7 @@ Crypto = {
         keylistId, newUserId, decryptedKey);
       
       var comments = _this.recryptResource(
-        keylistId, newUserId, post.complete_comments);
+        keylistId, newUserId, post.comments);
       
       result.push({ id: post.id, key: key, comments: comments });
       
