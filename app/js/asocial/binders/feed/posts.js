@@ -47,7 +47,7 @@ asocial.binders.add('feed', { posts: function(){
     if(link.data('decrypting')) return false;
 
     // Lock link
-    link.html('Decrypting')
+    link.html('<i class="icon-cog icon-spin"></i>&nbsp;Decrypting')
         .addClass('decrypting')
         .data('decrypting', true);
 
@@ -60,7 +60,7 @@ asocial.binders.add('feed', { posts: function(){
       link.attr('href', url)
           .attr('download', filename)
           // Change link status
-          .html('Download')
+          .html('<i class="icon-arrow-down"></i>&nbsp;Download')
           .removeClass('decrypting')
           // Unbind decryption
           .off('click');
@@ -71,8 +71,20 @@ asocial.binders.add('feed', { posts: function(){
       
       
       link.on('click', function () {
-        var blob = ThumbPick.prototype.dataURItoBlob(url);
-        saveAs(blob, filename);
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+        
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            var blob = this.response;
+            saveAs(blob, filename);
+          }
+        };
+        
+        xhr.send();
+        
       });
 
       progress.remove();
