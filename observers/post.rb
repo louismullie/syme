@@ -9,7 +9,7 @@ class PostObserver < ResourceObserver
   include PostObserver::Notifier
   
   def after_save(post)
-    if !post.complete
+    if !post.complete && post.content != ''
       publish_create(post)
       notify_create(post)
       notify_mentioned(post)

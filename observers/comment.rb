@@ -9,7 +9,7 @@ class CommentObserver < ResourceObserver
   include CommentObserver::Notifier
   
   def after_save(comment)
-    if !comment.complete
+    if !comment.complete && comment.content != ''
       publish_create(comment)
       notify_create(comment)
       notify_mentioned(comment)
