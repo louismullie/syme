@@ -13,7 +13,7 @@ class CommentObserver < ResourceObserver
       publish_create(comment)
       notify_create(comment)
       notify_mentioned(comment)
-      comment.update_attribute(:complete, true)
+      comment.update_attribute(:complete, 'true')
     end
   end
   

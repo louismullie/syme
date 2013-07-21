@@ -45,7 +45,7 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
 
     end
 
-    group.complete_uploads.each do |upload|
+    group.uploads.each do |upload|
       if upload.owner.id == user.id
         upload.destroy
       end

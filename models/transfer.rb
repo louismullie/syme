@@ -13,7 +13,7 @@ class Transfer
     type: Integer,default: 0
   
   def upload
-    group.complete_uploads.find(upload_id)
+    group.uploads.find(upload_id)
   end
 
 end

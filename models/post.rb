@@ -38,9 +38,7 @@ class Post < Resource
   :upload_id, :attachment, :mentions
   
   def complete_comments
-    self.comments.all.select do |comment|
-      comment.complete == nil || comment.complete == true
-    end
+    self.comments.not_in(complete: 'false')
   end
   
   def delete
