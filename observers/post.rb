@@ -13,7 +13,7 @@ class PostObserver < ResourceObserver
       publish_create(post)
       notify_create(post)
       notify_mentioned(post)
-      post.update_attribute(:complete, 'true')
+      post.update_attribute(:complete, true)
     end
   end
   

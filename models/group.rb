@@ -27,7 +27,7 @@ class Group
   field :palette, type: Array, default: []
 
   def complete_posts
-    self.posts.not_in(complete: 'false')
+    self.posts.where(complete: { '$in' => [nil, true]})
   end
   
 end

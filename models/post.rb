@@ -38,7 +38,7 @@ class Post < Resource
   :upload_id, :attachment, :mentions
   
   def complete_comments
-    self.comments.not_in(complete: 'false')
+    self.comments.where(complete: { '$in' => [nil, true]})
   end
   
   def delete
