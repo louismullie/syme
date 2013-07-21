@@ -33,9 +33,13 @@ class Post < Resource
   
   # Each post may embed comments.
   embeds_many :comments
-
+  
   attr_accessible :content, :keys,
   :upload_id, :attachment, :mentions
+  
+  def complete_comments
+    self.comments.not_in(complete: false)
+  end
   
   def delete
     attachment.destroy if attachment

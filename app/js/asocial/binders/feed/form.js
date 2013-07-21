@@ -53,43 +53,55 @@ asocial.binders.add('feed', { form: function(){
 
     // Encrypt the message and write the content to the file.
     var $form   = $(this),
-        groupId = CurrentSession.getGroupId();
+        groupId = CurrentSession.getGroupId(),
+        userId = CurrentSession.getUserId();
 
-    Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+    var url = SERVER_URL + '/users/' + userId +
+              '/groups/' + groupId + '/posts';
 
-      // Build request
-      var request = {
-        encrypted_content: encryptedMessage,
+    $.ajax(url, {
+
+      type: 'POST',
+
+      data: {
+  
         upload_id: $form.find('input[name="upload_id"]').val(),
         mentioned_users: asocial.helpers.findUserMentions(message, groupId)
-      };
+        
+      },
 
-      var userId = CurrentSession.getUserId();
-      
-      var url = SERVER_URL + '/users/' + userId +
-                '/groups/' + groupId + '/posts';
+      success: function(post){
 
-      $.ajax(url, {
-        
-        type: 'POST',
-        
-        data: request,
-        
-        success: function(post){
+        post.content = message;
+        post.encrypted = false;
+
+        asocial.socket.create.post({ view: post });
+        asocial.helpers.resetFeedForm();
+
+        Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+
+          $.ajax(url + '/' + post.id, {
+            
+            type: 'PUT',
+            
+            data: { content: encryptedMessage },
+            
+            success: function (){ },
+            
+            error: function () {
+              // Should delete post here.
+              asocial.helpers.showAlert('Posting failed (PUT)');
+            }
+            
+          });
           
-          post.content = message;
-          post.encrypted = false;
-          
-          asocial.socket.create.post({ view: post });
-          asocial.helpers.resetFeedForm();
-          
-        },
+        });
         
-        error: function (post) {
-          asocial.helpers.showAlert('Posting failed');
-        }
-        
-      });
+      },
+
+      error: function (post) {
+        asocial.helpers.showAlert('Posting failed (POST)');
+      }
 
     });
 
@@ -191,37 +203,3 @@ asocial.binders.add('feed', { form: function(){
   $('#upload_file').on('change', asocial.uploader.selectFile);
 
 } }); // asocial.binders.add();
-
-
-/*
-
-
-var shimPost = {
-
-  attachment: false, // *
-  has_attachment: false, //*
-  comment_count: 0,
-  has_comments: false,
-  comments: [],
-  comments_collapsed: "hidden",
-  comments_collapsed_count: -3,
-  content: message,
-  deletable: true,
-  encrypted: false,
-  created_at: createdAt,
-  group_id: groupId,
-  
-  likeable: {
-    has_likes: false,
-    like_count: 0,
-    liked_by_user: false,
-    liker_names: ""
-  },
-  
-  owner: {
-    id: userId,
-    avatar: { placeholder: true },
-    name: user.get('full_name')
-  }
-  
-};*/

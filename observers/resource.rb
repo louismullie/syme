@@ -7,11 +7,11 @@ class ResourceObserver < Mongoid::Observer
   include ResourceObserver::Notifier
   
   def after_create(resource)
-     publish_create(resource)
-     notify_create(resource)
-     notify_mentioned(resource)
+    publish_create(resource)
+    notify_create(resource)
+    notify_mentioned(resource)
   end
-  
+
   def before_destroy(resource)
     publish_delete(resource)
   end
