@@ -27,11 +27,15 @@ class Group
   field :palette, type: Array, default: []
 
   def complete_posts
-    self.posts.not_in(complete: false)
+    self.posts.all.select do |post|
+      post.complete == nil || post.complete == true
+    end
   end
   
   def complete_uploads
-    self.uploads.not_in(complete: false)
+    self.uploads.all.select do |upload|
+      upload.complete == nil || upload.complete == true
+    end
   end
   
 end
