@@ -22,25 +22,29 @@ class FeedGenerator
 
     membership = current_group.memberships
                   .find_by(user_id: current_user.id)
-
+    avatar = membership.user_avatar
+    
     {
       id: current_user.id.to_s,
       is_admin: membership.is_at_least?(:admin),
       is_mod: membership.is_at_least?(:mod),
-      avatar: AvatarGenerator.generate(membership, current_user)
+      avatar: AvatarGenerator.generate(avatar, current_user)
     }
 
   end
 
   def self.generate_user_list(current_group, current_user)
     current_group.users.map do |user|
+      
       membership = current_group.memberships.where(user_id: user.id).first
+      avatar = membership.user_avatar
+      
       {
         id: user.id.to_s,
         is_current_user: current_user.id == user.id,
         full_name: user.full_name,
         deletable: membership.deletable_by?(current_user),
-        avatar: AvatarGenerator.generate(membership, current_user)
+        avatar: AvatarGenerator.generate(avatar, current_user)
       }
     end
   end

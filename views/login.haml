@@ -11,17 +11,17 @@
 
         .input-text-icon
           %i.icon-envelope
-          %input{type: 'text', name: 'email', placeholder: 'Email'}
+          %input{type: 'text', name: 'email', placeholder: 'Email', tabindex: '1'}
 
         .input-text-icon
           %i.icon-lock
-          %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}'}
+          %input{type: 'password', name: 'password', placeholder: '{{t "login.password"}}', tabindex: '2'}
 
         %label{ for: 'remember_me' }
-          %input#remember_me{type: 'checkbox', name: 'remember_me'}
+          %input#remember_me{type: 'checkbox', name: 'remember_me', tabindex: '3'}
           %span Keep me logged in
 
-        %input{ type: 'submit' }
+        %input{ type: 'submit', tabindex: '4' }
         %a.btn.btn-success{ href: '#', role: 'submit' }
           Log in <i class="icon-spinner icon-spin"></i>
 

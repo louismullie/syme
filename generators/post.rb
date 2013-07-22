@@ -82,15 +82,17 @@ class PostGenerator
 
   def self.generate_owner(post, current_user)
 
-    membership = post.group.memberships.where(
-      user_id: post.owner.id).first
-
+    membership = post.group.memberships.find_by(
+      user_id: post.owner.id)
+    
+    avatar = membership.user_avatar
+    
     {
       id: post.owner.id.to_s,
       user: post.owner,
       name: post.owner.full_name,
       avatar: AvatarGenerator.generate(
-        membership, current_user)
+        avatar, current_user)
     }
 
   end

@@ -84,6 +84,8 @@ post '/users' do
   # Save the user in the session.
   session[:user_id] = user.id.to_s
   
+  track user, 'User started registration'
+  
   # Parse the JSON back into a hash.
   user_json = JSON.parse(user.to_json)
   
@@ -166,6 +168,8 @@ put '/users', auth: [] do
 
   # Save user to database.
   user.save!
+  
+  track user, 'User completed registration'
 
   # Return empty JSON.
   empty_response

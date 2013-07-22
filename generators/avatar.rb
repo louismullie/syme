@@ -1,23 +1,10 @@
 class AvatarGenerator
 
-  def self.generate(membership_or_group, current_user, override = false)
-
-    group = if membership_or_group.is_a?(Group)
-      membership_or_group
-    elsif membership_or_group.is_a?(Membership)
-      membership_or_group.group
-    end unless override
-
-    avatar = if membership_or_group.is_a?(Group)
-      membership_or_group.group_avatar
-    elsif membership_or_group.is_a?(Membership)
-      membership_or_group.user_avatar
-    end unless override
-
-    avatar = membership_or_group if override
-    group = avatar.group if override
+  def self.generate(avatar, current_user)
 
     if avatar
+
+      group = avatar.group
 
       current_key = avatar.key_for_user(current_user)
 

@@ -10,10 +10,12 @@ class GroupGenerator
     invitation = group.invitations.where(
       invitee_id: user.id.to_s, state: 3).first
     
+    avatar = group.group_avatar
+    
     group_token = {
       id: group.id.to_s,
       name: group.name,
-      avatar: AvatarGenerator.generate(group, user),
+      avatar: AvatarGenerator.generate(avatar, user),
       user_count: group.users.count,
       palette: group.palette.to_json,
       updated_at: group.updated_at.iso8601,

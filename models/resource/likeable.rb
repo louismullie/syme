@@ -4,8 +4,6 @@ module Resource::Likeable
     likers.map(&:full_name).uniq.join_english
   end
 
-  private
-
   # Select the likes where the owner still exists,
   # then retrieve a unique list of likers.
   def likers

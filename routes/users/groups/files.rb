@@ -111,8 +111,10 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
 
     if upload.is_a?(GroupAvatar)
 
-      MagicBus::Publisher.scatter(upload.group, :update, :group_avatar) do |user|
-        AvatarGenerator.generate(upload.group, user)
+      group = upload.group
+      
+      MagicBus::Publisher.scatter(group, :update, :group_avatar) do |user|
+        AvatarGenerator.generate(upload, user)
       end
 
        group.users.each do |user|
@@ -130,8 +132,10 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
 
     elsif upload.is_a?(UserAvatar)
 
-      MagicBus::Publisher.scatter(upload.group, :update, :user_avatar) do |user|
-        AvatarGenerator.generate(upload, user, true)
+      group = upload.group
+      
+      MagicBus::Publisher.scatter(group, :update, :user_avatar) do |user|
+        AvatarGenerator.generate(upload, user)
       end
 
     end

@@ -47,13 +47,14 @@ class CommentGenerator
     commenter = comment.owner
     commenter_membership = comment.parent_group
       .memberships.where(user_id: commenter.id).first
+    commenter_avatar = commenter_membership.user_avatar
 
     {
       id: commenter.id.to_s,
       name: commenter.full_name,
       # user: commenter,
       avatar: AvatarGenerator.generate(
-        commenter_membership, current_user)
+        commenter_avatar, current_user)
     }
 
   end

@@ -8,7 +8,7 @@ $.ajaxSetup({
   }
 });
 
-// Creating custom :external selector
+// Creating custom :external selector - remove?
 $.expr[':'].external = function(obj){
   return !obj.href.match(/^mailto\:/) &&
   (obj.hostname != location.hostname);
@@ -22,7 +22,6 @@ $.fn.batchDecrypt = function(callback){
       decryptCounter   = 0,
       startTime = new Date;
 
-  // Asynchronous callback
   var incrementCounter = function(e){
     
     decryptCounter++;

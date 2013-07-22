@@ -267,9 +267,7 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
   
   selector = { action: { '$in' => [:invite_request, :invite_accept] } }
   
-  invitee = User.where(email: invitation.email).first
-  
-  if invitee
+  if (invitee = User.where(email: invitation.email)).any?
     
     notifications = invitee.notifications.where(selector)
   
@@ -296,7 +294,7 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
   
   inviter.save!
   
-  # Move out to observers
+  # Move out to observers (?)
   if inviter.id.to_s == @user.id.to_s
     
     invitee.notify({
