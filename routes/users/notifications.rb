@@ -6,7 +6,7 @@ get '/users/:user_id/notifications', auth: [] do |user_id|
   end
   
   # Grab the current user's notifications.
-  notifications = @user.notifications
+  notifications = @user.notifications.where(read: false)
   
   # Generate and return notifications in JSON format.
   NotificationGenerator.generate_notifications(
