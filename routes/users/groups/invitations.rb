@@ -267,7 +267,9 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
   
   selector = { action: { '$in' => [:invite_request, :invite_accept] } }
   
-  if (invitee = User.where(email: invitation.email)).any?
+  invitee = User.where(email: invitation.email).first
+  
+  if !invitee.nil?
     
     notifications = invitee.notifications.where(selector)
   
