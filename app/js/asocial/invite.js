@@ -148,7 +148,7 @@ guard('invite', {
                 asocial.helpers.showAlert(
                   "You've sent a new invitation to <b>" + email + "</b>. <br />" +
                   "A new invitation key was created." +
-                  "<br />The new key is: <b>" + token + "</b>.", {
+                  "<br />The new key is: <b>" + token + "</b>", {
                     title: 'Invitation sent',
                     onsubmit: function () {
                       Router.reload();
