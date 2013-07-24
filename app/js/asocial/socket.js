@@ -215,8 +215,7 @@ guard('socket', {
 
       var notification = Notifications.get(data.id);
       
-      if (notification)
-        notification.set(data);
+      if (notification) notification.set(data);
 
     },
 

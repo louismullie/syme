@@ -17,18 +17,21 @@ module User::Notifiable
       action: params[:action],
       group_id: group.id.to_s
     })
-
+    
     if unread_selector and notification =
        notifications.where(unread_selector).first
       
       actor_id = create_selector[:actor_ids].first
       
+      # Prevent duplicate notifications
       unless notification.actor_ids.include?(actor_id.to_s)
+        
         notification.actor_ids << actor_id.to_s 
-      end
+        
+        MagicBus::Publisher.broadcast(group, :update, :notification,
+          NotificationGenerator.generate(notification, self))
 
-      MagicBus::Publisher.broadcast(group, :update, :notification,
-      NotificationGenerator.generate(notification, self))
+      end
 
     else
 

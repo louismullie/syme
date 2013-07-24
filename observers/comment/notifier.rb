@@ -13,7 +13,7 @@ module CommentObserver::Notifier
   private
 
   # If the owner of the post is not the commenter,
-  # notify him that "X commented on [his] post".
+  # notify him that X commented on his post.
   def notify_post_owner(comment, commenter)
 
     post = comment.post
