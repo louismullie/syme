@@ -91,6 +91,8 @@ class InvitationObserver < Mongoid::Observer
       
       invite.notified = true
       invite.save!
+      
+      group.touch
 
     end
 
