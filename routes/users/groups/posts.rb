@@ -66,10 +66,15 @@ put '/users/:user_id/groups/:group_id/posts/:post_id' do |user_id, group_id, pos
   
 end
 
-get '/:group_id/post/:id', auth: [] do |group_id, id|
+get '/:group_id/post/:post_id', auth: [] do |group_id, post_id|
 
   @group = Group.find(group_id)
-  post = @group.complete_posts.find(id)
+  
+  post = begin
+    @group.complete_posts.find(id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'post_not_found'
+  end
   
   content_type :json
 

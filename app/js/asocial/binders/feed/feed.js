@@ -65,6 +65,8 @@ asocial.binders.add('feed', { feed: function(){
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
       
+      $('#load-more').show();
+      
       $.post(SERVER_URL + '/' + CurrentSession.getGroupId() + '/page', request, function(data){
 
         var lastPage = data.last_page,
@@ -84,35 +86,36 @@ asocial.binders.add('feed', { feed: function(){
             var html = asocial.helpers.render('feed-post', post);
 
             // Append page
-            postsHtml.push(html);
+            $('#feed').data('pagesloaded', toload).append(html);
 
-          }
-
-          // Append all the posts.
-          for (var i = 0; i < postsHtml.length; i++) {
-            var postHtml = postsHtml[i];
-            $('#feed').data('pagesloaded', toload).append(postHtml);
           }
           
           if (lastPage) {
+            
             // If all pages are loaded, disable infinite scrolling
             $(window).data('infinite-scroll-done', true);
             
             // Please Chris, look at this
             $('#feed .post').last().css({ 'border-bottom': 'none' });
             
-            $('#load-more').hide();
+            // Decrypt new content
+            asocial.crypto.batchDecrypt(function () {
+              $('#load-more').hide();
+            });
+
           } else {
             
             // Please Chris, look at this
             $('#feed .post').last().css({ 'border-bottom': '1px solid #ddd' });
             
-            $('#load-more').show();
+
+            // Decrypt new content
+            asocial.crypto.batchDecrypt(function () {
+              $('#load-more').show();
+            });
+
           }
 
-          // Decrypt new content
-          asocial.crypto.batchDecrypt();
-            
           // Textarea autosizing
           $('textarea.autogrow')
             .autogrow().removeClass('autogrow');
@@ -121,8 +124,9 @@ asocial.binders.add('feed', { feed: function(){
 
           // No more pages to load
           $(window).data('infinite-scroll-done', true);
+          
           $('#load-more').hide();
-
+          
         }
 
       }).complete(function(){
