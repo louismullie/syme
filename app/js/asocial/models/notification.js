@@ -240,21 +240,25 @@ Notifications = (function(){
 
     acceptInvitation: function (e) {
       var $this = $(e.currentTarget);
+      $('.popover').hide();
       asocial.invite.acceptInvitationRequest($this);
     },
 
     declineInvitation: function (e) {
       var $this = $(e.currentTarget);
+      $('.popover').hide();
       asocial.invite.cancelInvitationRequest($this);
     },
 
     confirmInvitation: function (e) {
       var $this = $(e.currentTarget);
+      $('.popover').hide();
       asocial.invite.confirmInvitationRequest($this);
     },
 
     cancelInvitation: function (e) {
       var $this = $(e.currentTarget);
+      $('.popover').hide();
       asocial.invite.cancelInvitationRequest($this);
     }
 
