@@ -1,26 +1,21 @@
 class UserGenerator
 
-  def self.generate_short(user)
-    {
-      name: user.full_name
-    }
-  end
-
-  def self.generate_full(user, group, current_user)
+  def self.generate(user, current_user)
     
-    {
+    is_current_user = current_user.id.to_s == user.id.to_s
+    
+    user_hash = {
+      id:                     user.id.to_s,
       full_name:              user.full_name,
-      post_count:             group.complete_posts.where(owner_id: user.id.to_s).count,
-      attachment_count:       group.complete_posts.where(owner_id: user.id.to_s)
-        .where(:attachment.ne => nil).count,
-      is_current_user:        current_user.id.to_s == user.id.to_s,
-      deletable:              membership.deletable_by?(current_user),
-      privilege_translation: {
-        'admin' => 'admin', # t(:'admin.privilege_admin')
-        'mod' => 'mod', # t(:'admin.privilege_mod')
-        'none' => ''
-      }[user.privilege]
+      email:                  user.email,
+      is_current_user:        is_current_user
     }
+    
+    if is_current_user
+      user_hash.merge!({ keyfile: user.keyfile })
+    end
+    
+    user_hash
     
   end
 

@@ -135,7 +135,7 @@ Session = function () {
     
     var initializeKeyfile = function (password) {
       Crypto.initializeKeyfile(
-        _this.user.get('_id'), password,
+        _this.user.get('id'), password,
         _this.user.get('keyfile'),
         callback
       );
@@ -198,7 +198,7 @@ Session = function () {
   };
   
   this.getUserId = function () {
-    return this.getUser().get('_id');
+    return this.getUser().get('id');
   };
 
   this.setGroupId = function (groupId) {

@@ -12,7 +12,7 @@ module Resource::Deletable
     # Deletes all the notifications
     # associated with the resource.
     def delete_notifications
-      index = model_name + '_id'
+      index = model_name + 'id'
       parent_group.users.each do |user|
         user.notifications.where(
         index => id.to_s).destroy_all

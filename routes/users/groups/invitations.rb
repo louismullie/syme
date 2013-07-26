@@ -109,10 +109,10 @@ put '/invitations', auth: [] do
   
   params = get_model(request)
   
-  error 400, 'missing_params' if !params._id
+  error 400, 'missing_params' if !params.id
   
   invitation = begin
-    Invitation.find(params._id)
+    Invitation.find(params.id)
   rescue Mongoid::Errors::DocumentNotFound
     error 404, 'invitation_not_found'
   end
@@ -196,7 +196,7 @@ put '/invitations', auth: [] do
     invitation.save!
     
     invitation = begin
-      Invitation.find(params._id)
+      Invitation.find(params.id)
     rescue Mongoid::Errors::DocumentNotFound
       error 404, 'invitation_not_found'
     end

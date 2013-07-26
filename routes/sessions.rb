@@ -27,9 +27,6 @@ get '/state/session' do
 
 end
 
-
-# Step 1: The user sends an identifier and public ephemeral key, A
-# The server responds with the salt and public ephemeral key, B
 post '/login/1' do
 
   content_type :json
@@ -68,8 +65,6 @@ post '/login/1' do
 
 end
 
-# Step 2: The client sends its proof of S.
-# The server confirms, and sends its proof of S.
 post '/login/2' do
 
   content_type :json
@@ -115,7 +110,6 @@ post '/login/2' do
 
 end
 
-# Clear session.
 delete '/sessions/:session_id' do |session_id|
   
   # Track the event.

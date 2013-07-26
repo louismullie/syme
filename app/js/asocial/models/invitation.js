@@ -1,6 +1,6 @@
 var Invitation = Backbone.Model.extend({
 
-  idAttribute: "_id",
+  idAttribute: "id",
   url: SERVER_URL + '/invitations'
 
 });

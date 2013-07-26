@@ -9,6 +9,11 @@ get '/users' do
     error 400, 'missing_params'
   end
   
+  # Make sure user is authorized to view resource.
+  if @user.id.to_s != id
+    error 403, 'unauthorized'
+  end
+  
   # Sanitize the e-mail if present.
   email = email.downcase if email
   
@@ -25,17 +30,8 @@ get '/users' do
   end
 
   # Return the user document as JSON.
-  @user.to_json
+  UserGenerator.generate(@user, @user).to_json
   
-end
-
-# FIX: merge with above.
-get '/users/:user_id', auth: [] do |user_id|
-
-  user = User.find(user_id) if @user.id.to_s == user_id
-
-  user.to_json
-
 end
 
 # A client submits a email and a name. If the email is
@@ -86,14 +82,12 @@ post '/users' do
   
   track user, 'User started registration'
   
-  # Parse the JSON back into a hash.
-  user_json = JSON.parse(user.to_json)
-  
-  # Merge the CSRF token to the json.
-  user_json.merge({ csrf: csrf_token })
+  # Merge the CSRF token to the user hash.
+  user_hash = UserGenerator.generate(user, user)
+              .merge({ csrf: csrf_token })
   
   # Convert the hash back to JSON.
-  user_json.to_json
+  user_hash.to_json
 
 end
 
@@ -105,13 +99,13 @@ put '/users', auth: [] do
   model = get_model(request)
   
   # Authorize the user to edit.
-  if model._id != @user.id.to_s
+  if model.id != @user.id.to_s
     error 403, 'unauthorized'
   end
   
   # Find the user with the supplied ID.
   user = begin
-    User.find(model._id)
+    User.find(model.id)
   # Return 404 if the user cannot be found.
   rescue Mongoid::Errors::DocumentNotFound
     error 404, 'user_not_found'
@@ -125,6 +119,8 @@ put '/users', auth: [] do
       salt:     model.verifier.salt,
       content:  model.verifier.content
     )
+
+    track user, 'User completed registration'
 
     user.verifier.save!
 
@@ -169,8 +165,6 @@ put '/users', auth: [] do
   # Save user to database.
   user.save!
   
-  track user, 'User completed registration'
-
   # Return empty JSON.
   empty_response
 

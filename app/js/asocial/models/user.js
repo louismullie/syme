@@ -1,7 +1,7 @@
 // Our basic Todo model has text, order, and done attributes.
 var User = Backbone.RelationalModel.extend({
 
-  idAttribute: "_id",
+  idAttribute: "id",
   url: SERVER_URL + '/users',
 
   relations: [
@@ -94,7 +94,7 @@ var User = Backbone.RelationalModel.extend({
     
     var _this = this;
     var invitation = new Invitation();
-    invitation.set('_id', invitationId);
+    invitation.set('id', invitationId);
 
     Crypto.acceptInviteRequest(request, token, function (inviteRequest) {
       
@@ -120,7 +120,7 @@ var User = Backbone.RelationalModel.extend({
     var _this = this;
     
     var invitation = new Invitation();
-    invitation.set('_id', invitationId);
+    invitation.set('id', invitationId);
     
    
    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' + keylistId + '/keys';
@@ -158,7 +158,7 @@ var User = Backbone.RelationalModel.extend({
     var _this = this;
 
     var invitation = new Invitation();
-    invitation.set('_id', invitationId);
+    invitation.set('id', invitationId);
     
     Crypto.completeInviteRequest(completeRequest, function () { // This causes the error
         
@@ -261,7 +261,7 @@ var User = Backbone.RelationalModel.extend({
   
   getGroupUpdates: function (groupId, updatedGroupsCb) {
     
-    var url = SERVER_URL + '/users/' + this.get('_id') + 
+    var url = SERVER_URL + '/users/' + this.get('id') + 
       '/groups/' + groupId + '/invitations';
     
     var _this = this;
@@ -324,11 +324,11 @@ var User = Backbone.RelationalModel.extend({
   
   refreshKeyfile: function (refreshedKeyfileCb) {
     
-    $.ajax(SERVER_URL + '/users/' + this.get('_id'), { type: 'GET',
+    $.ajax(SERVER_URL + '/users/' + this.get('id'), { type: 'GET',
       success: function (user) {
         CurrentSession.retrievePassword(function (p) {
           Crypto.initializeKeyfile(
-            user._id, p,
+            user.id, p,
             user.keyfile,
             refreshedKeyfileCb
           );

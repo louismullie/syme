@@ -48,7 +48,7 @@ post '/:group_id/:model/like/:operation', auth: [] do |group_id, model, operatio
     
   elsif operation == 'delete'
 
-    if like = likeable.likes.where(owner_id: @user._id)
+    if like = likeable.likes.where(owner_id: @user.id)
       like.destroy
     end
     
