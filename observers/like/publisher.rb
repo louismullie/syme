@@ -2,6 +2,24 @@ module LikeObserver::Publisher
 
   def publish_update(like)
 
+    owner = like.likeable.owner
+    
+    if owner && like.likeable.is_a?(Post)
+      
+      owner.notifications.where(action: :like_on_post,
+        post_id: like.likeable.id).destroy_all
+      
+      owner.save!
+    
+    elsif owner && like.likeable.is_a?(Comment)
+      
+      owner.notifications.where(action: :like_on_comment,
+        comment_id: like.likeable.id).destroy_all
+      
+      owner.save!
+      
+    end
+
     group = like.likeable.parent_group
 
     MagicBus::Publisher.scatter(group, :update, :like) do |user|

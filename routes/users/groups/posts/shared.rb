@@ -5,21 +5,52 @@ post '/:group_id/:model/delete', auth: [] do |group_id, model|
   
   @group.touch
 
-  post = @group.complete_posts.find(params[:post_id])
-
+  post_id = params[:post_id]
+  
+  post = begin
+    @group.complete_posts.find(post_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'post_not_found'
+  end
+  
+  comment_id = params[:comment_id]
+  
   resource = if model == 'comment'
-    post.complete_comments.find(params[:comment_id])
-  elsif model == 'post'
+    begin
+      post.complete_comments.find(comment_id)
+    rescue Mongoid::Errors::DocumentNotFound
+      error 404, 'comment_not_found'
+    end
+    track @user, 'User deleted comment'
+  else
+    track @user, 'User deleted post'
     post
   end
 
   is_resource_owner = resource.owner.id == @user.id
 
   halt 403 unless resource.deletable_by? @user
-
-  track @user, 'User deleted post'
+  
+  resource.parent_group.users.each do |user|
+    
+    user.notifications.each do |notification|
+      
+      if model == 'post' && notification.
+          post_id == resource.id.to_s ||
+         model == 'comment' && notification.
+          comment_id == resource.id.to_s
+        notification.destroy
+      end
+      
+    end
+    
+    user.save!
+    
+  end
   
   resource.destroy
+  
+  empty_response
 
 end
 
