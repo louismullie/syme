@@ -307,8 +307,8 @@ Keyfile = function(userId, password, encKeyfile) {
     
     if (!keylist[userId] || !keylist[userId].signatureKeypair ||
         !keylist[userId].signatureKeypair.publicKey)
-      throw 'Signature public key not initialized.';
-  
+      return { missingKey: { userId: userId, groupId: groupId }  };
+    
     return keylist[userId].signatureKeypair.publicKey;
     
     

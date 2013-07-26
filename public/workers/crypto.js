@@ -146,6 +146,9 @@ Crypto = {
         
         var decryptedKey = _this.decryptMessageKey(keylistId, elem.key);
 
+        if (decryptedKey.missingKey)
+          throw 'Could not retrieve key.';
+        
         var key = _this.encryptMessageKey(
           keylistId, newUserId, decryptedKey);
 
@@ -173,6 +176,9 @@ Crypto = {
     _.each(posts, function (post, index) {
       
       var decryptedKey = _this.decryptMessageKey(keylistId, post.key);
+      
+      if (decryptedKey.missingKey)
+        throw 'Could not retrieve key.';
       
       var key = _this.encryptMessageKey(
         keylistId, newUserId, decryptedKey);
@@ -338,6 +344,9 @@ Crypto = {
     
     var decryptedSymKey = this.decryptMessageKey(
       keylistId, encSymKeyTxt64);
+    
+    if (decryptedSymKey.missingKey)
+      return { error: decryptedSymKey };
       
     var plaintext = sjcl.decrypt(
       decryptedSymKey, messageJson.message);
@@ -369,16 +378,25 @@ Crypto = {
     var publicSignatureKey = keyfile.
       getPublicSignatureKey(keylistId, contentJson.signerId);
 
-      // Check sender in keylist...
-    if (!contentJson.signerId) throw 'Signer ID is missing.';
+    if (publicSignatureKey.missingKey) {
+      
+      return publicSignatureKey;
+      
+    } else {
+      
+        // Check sender in keylist...
+      if (!contentJson.signerId) throw 'Signer ID is missing.';
+
+      var sha256 = sjcl.hash.sha256.hash(contentJson.message);
+
+      var verified = publicSignatureKey.verify(sha256, keySignatureJson);
+
+      if (!verified) throw 'Signature verification failed.'
+
+      return keyMessageJson.message;
+      
+    }
     
-    var sha256 = sjcl.hash.sha256.hash(contentJson.message);
-    
-    var verified = publicSignatureKey.verify(sha256, keySignatureJson);
-    
-    if (!verified) throw 'Signature verification failed.'
-    
-    return keyMessageJson.message;
     
   },
 

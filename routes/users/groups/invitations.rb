@@ -1,11 +1,39 @@
 require "base64"
 
+get '/users/:user_id/groups/:group_id/invitations/:invitee_id', auth: [] do |user_id, group_id, invitee_id|
+
+  if user_id.to_s != @user.id.to_s
+    error 403, 'unauthorized'
+  end
+
+  group = begin
+    @user.groups.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'group_not_found'
+  end
+  
+  invitee = begin
+    User.find(invitee_id)
+  rescue Mongoid::Errors::DocumentNotFound
+     error 404, 'invitee_not_found'
+   end
+
+  invitation = begin
+    group.invitations.find_by(email: invitee.email)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'invitation_not_found'
+  end
+
+  { id: invitation.id.to_s, request: invitation.distribute }.to_json
+
+end
+
 get '/users/:user_id/groups/:group_id/invitations', auth: [] do |_, group_id|
 
   group = begin
     @user.groups.find(group_id)
   rescue Mongoid::Errors::DocumentNotFound
-    return empty_response
+    error 404, 'group_not_found'
   end
   
   invitations = {}

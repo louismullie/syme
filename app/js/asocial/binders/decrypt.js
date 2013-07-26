@@ -11,7 +11,27 @@ asocial.binders.add('global', { decrypt: function() {
         groupId = post.data('group_id');
 
     var formatDecryptedText = function(decryptedText) {
+      
+      // Retrieve the new key.
+      if (decryptedText.error && decryptedText.error.missingKey) {
 
+        var missingKey = decryptedText.error.missingKey
+
+        $.getJSON(SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' +
+          missingKey.groupId + '/invitations/' + missingKey.userId,
+
+        function (addUserRequest) {
+
+          var user = CurrentSession.getUser();
+          user.addUsersRequest([addUserRequest],
+            function () { Router.reload(); });
+
+        });
+
+        return done();
+
+      }
+      
       // Format the text with Markdown, and make sure links open in new windows.
       var formattedText = marked(decryptedText).replace('<a', '<a target="_blank"');
 
