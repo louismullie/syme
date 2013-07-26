@@ -56,9 +56,13 @@ delete '/users/:user_id/notifications', auth: [] do |user_id|
     error 403, 'unauthorized' 
   end
   
+  # Prevent invite request and confirm from clearing.
+  permanent = [:invite_request, :invite_accept]
+  
   # Mark all the user's notifications as read.
   @user.notifications.each do |notification|
-     notification.update_attributes(read: true)
+    next if permanent.include?(notification.action)
+    notification.update_attributes(read: true)
   end
   
   # Save the user to the database.
