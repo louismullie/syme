@@ -317,6 +317,13 @@
             font-weight: 300;
             
           }
+          
+          a.time:hover {
+            
+            cursor: default;
+            text-decoration: none;
+            
+          }
 
           img.avatar {
             width: $avatarCommentSize;
