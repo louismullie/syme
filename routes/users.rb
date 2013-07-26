@@ -1,8 +1,9 @@
 # Get the current user's information.
-get '/users' do
+get '/users/?:user_id?' do |user_id|
   
   # Get ID and e-mail from GET parameters.
-  id, email = params[:id], params[:email]
+  id = user_id || params[:id]
+  email = params[:email]
 
   # Make sure either ID or e-mail was provided.
   if id.blank? && email.blank?
