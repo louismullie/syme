@@ -109,7 +109,7 @@
         line-height: inherit;
 
         font-size: .9em;
-        font-weight: 200;
+        font-weight: 300;
 
         word-break: break-word;
 
@@ -155,7 +155,7 @@
           display: block;
 
           color: gray;
-          font-weight: 200;
+          font-weight: 300;
           font-size: .8em;
         }
       }
@@ -212,7 +212,7 @@
         }
 
         a {
-          font-weight: 200;
+          font-weight: 300;
 
           &.image-download {
             display: block;
@@ -284,7 +284,7 @@
           margin-bottom: .5em;
 
           font-size: .9em;
-          font-weight: 200;
+          font-weight: 300;
           line-height: 1.4em;
 
           @include clearfix;
@@ -314,7 +314,7 @@
           a.time {
             
             color: gray;
-            font-weight: 200;
+            font-weight: 300;
             
           }
 
@@ -360,7 +360,7 @@
 
           .comment-footer {
             font-size: .8em;
-            font-weight: 200;
+            font-weight: 300;
             line-height: 1.6em;
 
             margin-left: $avatarCommentSize;
