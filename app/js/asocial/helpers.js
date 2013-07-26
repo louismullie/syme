@@ -6,7 +6,7 @@ guard('helpers', {
   },
 
   // Increment unread counter when there is a new comment/post
-  newContent: function (type, groupId) {
+  newContent: function (type, groupId, contentId) {
 
     var newcontent = $('#newcontent');
     
@@ -16,9 +16,17 @@ guard('helpers', {
         return;
       asocial.state.feed.updatedPosts[groupId] += 1;
     } else if(type == "comment"){
+      
+      // Don't show new comment button if the group is not loaded.
       if (typeof(asocial.state.feed.updatedComments[groupId]) == 'undefined')
         return;
+      
+      // Don't show new content button if updated comment is already visible.
+      if ($('#' + contentId).length > 0)
+        return;
+      
       asocial.state.feed.updatedComments[groupId] += 1;
+    
     }
     
     // Update the counter with updated count
