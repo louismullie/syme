@@ -236,70 +236,66 @@ var User = Backbone.RelationalModel.extend({
     
   },
   
-  getAllGroupUpdates: function (groupId, updatedGroupsCb) {
-    
-    var groups = CurrentSession.getGroups();
-    
-    var counter = groups.length;
-    var _this = this;
-    
-    if (counter == 0) updatedGroupsCb();
-    
-    _.each(groups, function (groupId) {
-      
-      _this.getGroupUpdates(groupId, function () {
-      
-        counter--;
-      
-        if (counter == 0) updatedGroupsCb();
-        
-      });
-
-    });
-    
-  },
-  
-  getGroupUpdates: function (groupId, updatedGroupsCb) {
+  getAllGroupUpdates: function (updatedGroupsCb) {
     
     var url = SERVER_URL + '/users/' + this.get('id') + 
-      '/groups/' + groupId + '/invitations';
+      '/invitations';
     
     var _this = this;
+    
+    var counter = 0;
+    
+    var updatedGroupsCbWrapper = function () {
+      
+      counter--;
+      if (counter <= 0) updatedGroupsCb();
+      
+    };
     
     $.getJSON(url, function (groupUpdates) {
         
-        if (groupUpdates.members) {
-          CurrentSession.setGroupMembers(groupUpdates.members); 
-        }
+        counter = Object.keys(groupUpdates).length;
+
+        if (counter == 0)
+          updatedGroupsCbWrapper();
         
-        if (groupUpdates.integrate) {
+        _.each(groupUpdates, function (updates, groupId) {
           
-          var invitationId = groupUpdates.integrate.id;
-          var groupId = groupUpdates.integrate.group_id;
-          var request = groupUpdates.integrate.request;
-          var members = groupUpdates.members;
-          
-          if (groupUpdates.distribute) {
-            
-            _this.completeInviteRequest(groupId, invitationId, request, function () {
-                _this.addUsersRequest(groupUpdates.distribute,  updatedGroupsCb);
-            });
-            
+          // Update the group member list.
+          if (updates.members) {
+            CurrentSession.setGroupMembers(updates.members); 
+          }
+
+          if (updates.integrate) {
+
+            var invitationId = updates.integrate.id;
+            var groupId = updates.integrate.group_id;
+            var request = updates.integrate.request;
+            var members = updates.members;
+
+            if (updates.distribute) {
+
+              _this.completeInviteRequest(groupId, invitationId, request, function () {
+                  _this.addUsersRequest(updates.distribute,  updatedGroupsCbWrapper);
+              });
+
+            } else {
+
+              _this.completeInviteRequest(groupId, invitationId, request, updatedGroupsCbWrapper);
+
+            }
+
+          } else if (updates.distribute) {
+
+            _this.addUsersRequest(updates.distribute, updatedGroupsCbWrapper);
+
           } else {
-            
-            _this.completeInviteRequest(groupId, invitationId, request, updatedGroupsCb);
-            
+
+            updatedGroupsCbWrapper();
+
           }
           
-        } else if (groupUpdates.distribute) {
-          
-          _this.addUsersRequest(groupUpdates.distribute, updatedGroupsCb);
-          
-        } else {
-          
-          updatedGroupsCb();
-          
-        }
+        });
         
     });
     

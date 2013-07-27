@@ -204,7 +204,7 @@ Router = Backbone.Router.extend({
       // all authentications and authorizations have been done.
       if(!groupId) {
         
-        user.getAllGroupUpdates(groupId, function () {
+        user.getAllGroupUpdates(function () {
           Router.renderDynamicTemplate(template, specificBinders);
         });
 
@@ -215,7 +215,7 @@ Router = Backbone.Router.extend({
         
         CurrentSession.setGroupId(groupId);
 
-        user.getGroupUpdates(groupId, function () {
+        user.getAllGroupUpdates(function () {
           Router.renderDynamicTemplate(template, specificBinders);
         });
 

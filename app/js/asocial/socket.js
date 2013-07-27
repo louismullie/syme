@@ -75,7 +75,7 @@ guard('socket', {
       var groupId = data.group_id;
       var callback = function () {};
 
-      user.getGroupUpdates(groupId, callback);
+      user.getAllGroupUpdates(callback);
 
     }
 

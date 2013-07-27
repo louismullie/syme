@@ -188,9 +188,10 @@ Notifications = (function(){
         return _.extend(notification, {
           message: data.message,
           link: notification.action == 'invite_request' ||
-                notification.action == 'invite_accept'
+                notification.action == 'invite_accept'  ||
+                notification.action == 'invite_cancel'
             ? false : data.link
-        });
+        }); 
 
       });
 

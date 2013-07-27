@@ -6,7 +6,10 @@ class InvitationGenerator
       id: invitation.id.to_s,
       state: invitation.state,
       
+      inviter_id: invitation.inviter_id,
       inviter_name: invitation.inviter.full_name,
+      
+      invitee_id: invitation.invitee_id,
       invitee_full_name: invitation.invitee ?
         invitation.invitee.full_name : nil,
       

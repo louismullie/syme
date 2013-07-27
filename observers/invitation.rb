@@ -36,12 +36,15 @@ class InvitationObserver < Mongoid::Observer
         }
       }, group)
       
-      notif = invitee.notifications.where(
+      invitee.notifications.where(
         action: :invite_request,
         group_id: invite.group.id.to_s
-      ).first # none if invitee had no account
-      
-      notif.destroy if notif
+      ).all.each do |notification|
+        inviter_id = notification.invitation['inviter_id']
+        if inviter_id == invite.inviter_id
+          notification.destroy
+        end
+      end
       
       invitee.save!
     
@@ -67,20 +70,14 @@ class InvitationObserver < Mongoid::Observer
         }
       }, group)
       
-      inviter.notifications.find_by(
+      inviter.notifications.where(
         action: :invite_accept,
         group_id: invite.group.id.to_s
-      ).destroy
-      
-      # Delete twice works only?@!@!
-      # This is a bug in Moped
-      if inviter.notifications.where(
-          action: :invite_accept,
-          group_id: invite.group.id.to_s).first
-        inviter.notifications.find_by(
-          action: :invite_accept,
-          group_id: invite.group.id.to_s
-        ).destroy
+      ).all.each do |notification|
+        invitee_id = notification.invitation['invitee_id']
+        if invitee_id == invite.invitee_id
+          notification.destroy
+        end
       end
       
       inviter.save!

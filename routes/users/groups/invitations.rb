@@ -28,65 +28,6 @@ get '/users/:user_id/groups/:group_id/invitations/:invitee_id', auth: [] do |use
 
 end
 
-get '/users/:user_id/groups/:group_id/invitations', auth: [] do |_, group_id|
-
-  group = begin
-    @user.groups.find(group_id)
-  rescue Mongoid::Errors::DocumentNotFound
-    error 404, 'group_not_found'
-  end
-  
-  invitations = {}
-  
-  group.invitations.each do |invitation|
-    
-    # Current user is the invitee
-    if invitation.state == 3 &&
-       invitation.invitee_id == @user.id.to_s &&
-       !invitation.ack_integrate
-    
-      invitations[:integrate] = {
-        id: invitation.id.to_s,
-        group_id: invitation.group.id.to_s,
-        request: invitation.integrate
-      }
-      
-    # Invite has been accepted
-    elsif invitation.state > 2  &&
-      
-      # Current user is not inviter
-      invitation.inviter_id != @user.id.to_s &&  
-      # Current user is not invitee
-      invitation.invitee_id != @user.id.to_s && 
-      invitation.distribute && 
-      !invitation.ack_distribute.include?(@user.id.to_s)
-
-      invitations[:distribute] ||= []
-      
-      invitations[:distribute] << {
-        id: invitation.id.to_s,
-        request: invitation.distribute
-      }
-        
-    end
-    
-  end
-  
-  invitations[:members] = {}
-  
-  @user.groups.each do |group|
-    
-    invitations[:members][group.id.to_s] =
-    group.users
-      .reject { |user| user.id == @user.id }
-      .map { |user| user.full_name }
-      
-  end
-
-  invitations.to_json
-  
-end
-
 post '/invitations', auth: [] do
 
   invitation = get_model(request)

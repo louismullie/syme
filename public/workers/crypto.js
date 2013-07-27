@@ -218,7 +218,7 @@ Crypto = {
   deriveKeys: function (data, salt) {
 
     // Perform PBKDF2 with 100,000 iterations of SHA256.
-    var key = sjcl.misc.pbkdf2(data, salt, 10000, 256);
+    var key = sjcl.misc.pbkdf2(data, salt, 10000, 256);     // FIX THIS HERE!
     
     var x = key.splice(0, key.length/2); var y = key;
     
