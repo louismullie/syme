@@ -92,7 +92,6 @@ end
 put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
   
   group = @user.groups.find(group_id)
-  logger.info params
   
   if params[:ack_create]
     group.ack_create = true

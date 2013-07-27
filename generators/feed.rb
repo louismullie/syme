@@ -51,8 +51,6 @@ class FeedGenerator
     
     user_list.unshift(current_user)
     
-    warn user_list.inspect
-    
     user_list
     
   end
