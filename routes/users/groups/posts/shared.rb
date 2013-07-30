@@ -16,12 +16,12 @@ post '/:group_id/:model/delete', auth: [] do |group_id, model|
   comment_id = params[:comment_id]
   
   resource = if model == 'comment'
+    track @user, 'User deleted comment'
     begin
       post.complete_comments.find(comment_id)
     rescue Mongoid::Errors::DocumentNotFound
       error 404, 'comment_not_found'
     end
-    track @user, 'User deleted comment'
   else
     track @user, 'User deleted post'
     post
