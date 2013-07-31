@@ -83,7 +83,7 @@ guard('auth', {
 
               } else {
 
-                asocial.error.fatalError();
+                Router.error();
 
               }
 
