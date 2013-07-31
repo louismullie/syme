@@ -1,17 +1,17 @@
 module LikeObserver::Publisher
 
-  def publish_update(like)
+  def publish_update(like, destroy = false)
 
     owner = like.likeable.owner
     
-    if owner && like.likeable.is_a?(Post)
+    if destroy && owner && like.likeable.is_a?(Post)
       
       owner.notifications.where(action: :like_on_post,
         post_id: like.likeable.id).destroy_all
       
       owner.save!
     
-    elsif owner && like.likeable.is_a?(Comment)
+    elsif destroy && owner && like.likeable.is_a?(Comment)
       
       owner.notifications.where(action: :like_on_comment,
         comment_id: like.likeable.id).destroy_all

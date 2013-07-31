@@ -12,7 +12,7 @@ class LikeObserver < Mongoid::Observer
   end
   
   def after_destroy(like)
-    publish_update(like)
+    publish_update(like, true)
   end
   
 end
