@@ -12,7 +12,6 @@
 //= require ./uploader
 //= require ./auth
 //= require ./state
-//= require ./error
 //= require ./compat
 //= require ./hangout
 //= require ./asocial

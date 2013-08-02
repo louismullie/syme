@@ -105,7 +105,8 @@ asocial.binders.add('groups', { main: function() {
       },
 
       error: function (error) {
-        alert('Error on group creation!');
+        asocial.helpers.showAlert(
+          'Could not create group.');
       }
     });
 

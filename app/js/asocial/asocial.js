@@ -8,7 +8,6 @@ guard('asocial', {
   auth:     asocial_auth,
   state:    asocial_state,
   invite:   asocial_invite,
-  error:    asocial_error,
   compat:   asocial_compat,
   hangout:  asocial_hangout
 

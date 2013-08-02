@@ -53,39 +53,41 @@ var User = Backbone.RelationalModel.extend({
       
       var counter = emails.length;
 
-      _.each(inviteInfos, function (inviteInfo) {
-
-          var email = inviteInfo.alias,
-              request = inviteInfo.request;
-
-          var inviteRequest = request[0];
-          var inviteToken = request[1];
-
-          invitation.save(
-            {
-              group_id: keylistId,
-              email: email,
-              request: inviteRequest
-            },
-            {
-              success: function () {
-                Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-                  _this.updateKeyfile(encryptedKeyfile, function () {
-                    counter--;
-                    if (counter == 0)
-                      inviteCreatedCb(inviteInfos);
-                  });
-                });
-              },
-              error: function (model, response) {
-                counter--;
-                if (counter == 0)
-                  inviteCreatedCb(inviteInfos);
-              }
-          });
-
-      });
+      var inviteCreatedCbWrapper = function () {
+        counter--;
+        if (counter == 0)
+          inviteCreatedCb(inviteInfos);
+      };
       
+      Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+        
+        _this.updateKeyfile(encryptedKeyfile, function () {
+          
+          _.each(inviteInfos, function (inviteInfo) {
+
+              var email = inviteInfo.alias,
+                  request = inviteInfo.request;
+
+              var inviteRequest = request[0];
+              var inviteToken = request[1];
+
+              invitation.save(
+                {
+                  group_id: keylistId,
+                  email: email,
+                  request: inviteRequest
+                },
+                {
+                  success: inviteCreatedCbWrapper,
+                  error: inviteCreatedCbWrapper
+              });
+          
+          });
+    
+        });
+      
+      });
+    
     });
 
   },
@@ -98,19 +100,23 @@ var User = Backbone.RelationalModel.extend({
 
     Crypto.acceptInviteRequest(request, token, function (inviteRequest) {
       
-        invitation.save(
-          { accept: inviteRequest },
-          {
-            success: function () {
-              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-                _this.updateKeyfile(encryptedKeyfile, inviteAcceptedCb);
-              });
-            },
-            error: function (error) {
-              asocial.helpers.showAlert("This invitation does not exist anymore.");
-            }
+      Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+        
+        _this.updateKeyfile(encryptedKeyfile, function () {
+          
+          invitation.save(
+            { accept: inviteRequest },
+            {
+              success: inviteAcceptedCb,
+              error: function (error) {
+                asocial.helpers.showAlert("This invitation does not exist anymore.");
+              }
+          });
+          
         });
       
+      });
+    
     });
 
   },
@@ -132,20 +138,22 @@ var User = Backbone.RelationalModel.extend({
           if (inviteRequestJson.error)
             return errorCb();
       
-            invitation.save(
-              { integrate: inviteRequestJson.confirm.inviteConfirmation,
-                distribute: inviteRequestJson.confirm.addUserRequest,
-                transfer: inviteRequestJson.keys },
-              {
-                success: function () {
+          Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+            
+            _this.updateKeyfile(encryptedKeyfile, function () {
               
-                  Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
-                    _this.updateKeyfile(encryptedKeyfile, inviteConfirmedCb);
-                  });
-              
-                },
-                error: errorCb
+                invitation.save(
+                  { integrate: inviteRequestJson.confirm.inviteConfirmation,
+                    distribute: inviteRequestJson.confirm.addUserRequest,
+                    transfer: inviteRequestJson.keys },
+                  {
+                    success: inviteConfirmedCb,
+                    error: errorCb
+                });
+                
             });
+            
+          });
       
       });
     
