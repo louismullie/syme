@@ -111,7 +111,7 @@ form#feed-form {
       border: none;
 
       font-size: .9em;
-      font-weight: normal;
+      font-weight: 400;
     }
   }
 
@@ -180,7 +180,7 @@ form#feed-form {
         a.delete-upload { display: inline-block; }
       }
 
-      font-weight: 300;
+      font-weight: 400;
 
       span.icon {
         padding-right: .5em;
@@ -229,12 +229,12 @@ form#feed-form {
       margin-right: 1em;    &:last-child{ margin-right: 0; }
       padding-right: .3em;  &:last-child{ padding-right: 0; }
 
-      font-weight: 300;
+      font-weight: 400;
       font-size: 0.9em;
       line-height: 2em;
 
       &.title {
-        font-weight: normal;
+        font-weight: 400;
         color: $darkgray;
 
         @media #{$breakpointSmall} { display: none; }

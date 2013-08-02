@@ -109,7 +109,7 @@
         line-height: inherit;
 
         font-size: .9em;
-        font-weight: 300;
+        font-weight: 400;
 
         word-break: break-word;
 
@@ -155,7 +155,7 @@
           display: block;
 
           color: gray;
-          font-weight: 300;
+          font-weight: 400;
           font-size: .8em;
         }
       }
@@ -181,7 +181,7 @@
           position: relative;
 
           font-size: .8em;
-          font-weight: normal;
+          font-weight: 400;
 
           margin-bottom: .5em;
           padding: 10px 15px;
@@ -212,7 +212,7 @@
         }
 
         a {
-          font-weight: 300;
+          font-weight: 400;
 
           &.image-download {
             display: block;
@@ -284,7 +284,7 @@
           margin-bottom: .5em;
 
           font-size: .9em;
-          font-weight: 300;
+          font-weight: 400;
           line-height: 1.4em;
 
           @include clearfix;
@@ -314,7 +314,7 @@
           a.time {
             
             color: gray;
-            font-weight: 300;
+            font-weight: 400;
             
           }
           
@@ -367,7 +367,7 @@
 
           .comment-footer {
             font-size: .8em;
-            font-weight: 300;
+            font-weight: 400;
             line-height: 1.6em;
 
             margin-left: $avatarCommentSize;
@@ -411,7 +411,7 @@
 
           line-height: 1.5em;
           font-size: .8em;
-          font-weight: normal;
+          font-weight: 400;
         }
       }
     }
