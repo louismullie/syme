@@ -90,7 +90,7 @@ guard('uploader', {
         );
 
       };
-
+      
       var options = { image: this, mime: file.type };
 
       var compressor = new ThumbPick('#canvas');
@@ -150,8 +150,7 @@ guard('uploader', {
   },
 
   selectFile: function (file, type) {
-
-    // What to do otherwise?
+    
     if (!(file instanceof File)) {
       file = $('#upload_file')[0].files[0];
     }
@@ -175,6 +174,9 @@ guard('uploader', {
 
       // Remove active state from container
       container.removeClass('active');
+      
+      $('#upload_file').val('');
+      
     };
 
     // Show upload box and mark it as active
