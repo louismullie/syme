@@ -1,7 +1,7 @@
 // Like count
 {{#with likeable}}
 {{#compare like_count '>' 0}}
-%span ·
+%span &middot;
 %a.like-count.hint--top{ href: '#', :'data-hint' => '{{liker_names}}' }
   %i.icon-thumbs-up-alt
   %span {{like_count}}

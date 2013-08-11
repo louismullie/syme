@@ -304,16 +304,17 @@ Session = function () {
     
     if (asocial.compat.inChromeExtension()) {
 
-      chrome.storage.local.get('credentials', function (credentials) {
+      chrome.storage.local.get('credentials', function (cursor) {
         
+        var credentials = cursor.credentials;
         var encryptedPassword = credentials.password,
-            encryptedKey = credentials.key;
+            encryptedKey = credentials.sessionKey;
         
         if (!encryptedPassword || !encryptedKey) return error();
         
         try { 
           
-          var password = sjcl.decrypt(passwordKey, encryptedpassword);
+          var password = sjcl.decrypt(passwordKey, encryptedPassword);
           var key = sjcl.decrypt(passwordKey, encryptedKey);
           _this.key = key;
           
