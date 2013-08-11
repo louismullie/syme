@@ -47,7 +47,7 @@ asocial.binders.add('feed', { comments: function(){
       var mentions = asocial.helpers.findUserMentions(message, groupId);
 
       // Post the comment.
-      $.ajax(url, {
+      $.encryptedAjax(url, {
         
         type: 'POST',
         
@@ -71,7 +71,7 @@ asocial.binders.add('feed', { comments: function(){
           
           Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
             
-            $.ajax(url + '/' + comment.id, {
+            $.encryptedAjax(url + '/' + comment.id, {
               
               type: 'PUT',
               

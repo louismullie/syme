@@ -1,11 +1,14 @@
-get '/state/session' do
-  
-  if params[:version] && Gem::Version.new(params[:version]) <
-      Gem::Version.new(Syme::Application::VERSION)
-    error 409, 'outdated_extension'
-  end
+get '/users/:user_id/sessions/:session_id' do |_, session_id|
   
   error 401, 'not_logged_in' if !@user
+  
+  client_version = Gem::Version.new(params[:version])
+  syme_version = Syme::Application::VERSION
+  server_version = Gem::Version.new(syme_version)
+  
+  if client_version < server_version
+    error 409, 'outdated_extension'
+  end
   
   group_members = {}
   
@@ -14,11 +17,10 @@ get '/state/session' do
     group.users.map { |user| user.full_name }
   end
   
-  content_type :json
-  
   error 403, 'unauthorized' unless @user
   
-  { user_id: @user.id.to_s,
+  response = {
+    user_id: @user.id.to_s,
     password_key: session[:password_key],
     group_members: group_members,
     csrf: csrf_token,
@@ -27,9 +29,7 @@ get '/state/session' do
 
 end
 
-post '/login/1' do
-
-  content_type :json
+post '/users/:user_id/sessions' do |_|
 
   email = params[:email]
   email = email.downcase
@@ -59,22 +59,27 @@ post '/login/1' do
     
     track user, 'User started login'
     
-    srp[:challenge].merge({ csrf: csrf_token }).to_json
+    srp[:challenge].merge({
+      csrf: csrf_token,
+      session_id: session.id.to_s
+    }).to_json
 
   end
 
 end
 
-post '/login/2' do
+put '/users/:user_id/sessions/:session_id' do |_, session_id|
 
-  content_type :json
-
-  authenticator = SRP::Verifier.new(1024)
-
+  if session_id != session.id.to_s
+    error 403, 'invalid_session'
+  end
+  
   unless session[:proof]
     error 403, 'invalid_session'
   end
-
+  
+  authenticator = SRP::Verifier.new(1024)
+  
   h_amk = authenticator.verify_session(
     session[:proof], params[:M])
   
@@ -83,9 +88,6 @@ post '/login/2' do
     email = session[:email]
 
     user = User.where(email: email).first
-
-    user.session_id = session[:proof][:B]
-    user.save!
     
     session.clear
 
@@ -95,7 +97,9 @@ post '/login/2' do
     
     track user, 'User completed login'
     
-    {
+    session[:key] = authenticator.instance_eval { @S }
+    
+    response = {
       status: 'ok',
       user_id: user.id,
       h_amk: h_amk,
@@ -104,13 +108,15 @@ post '/login/2' do
     
   else
     
-    { status: 'error', reason: 'credentials' }.to_json
+    response = { status: 'error', reason: 'credentials' }.to_json
 
   end
-
+  
+  response
+  
 end
 
-delete '/sessions/:session_id' do |session_id|
+delete '/users/:user_id/sessions/:session_id' do |_,session_id|
   
   # Track the event.
   track @user, 'User was logged out'
@@ -119,6 +125,6 @@ delete '/sessions/:session_id' do |session_id|
   session.clear
   
   # Return an empty JSON response.
-  empty_response
+  encrypt_response(empty_response)
   
 end

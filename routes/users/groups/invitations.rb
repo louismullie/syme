@@ -290,15 +290,11 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
     
   end
   
-  content_type :json
-  
   empty_response
   
 end
 
 get '/users/:user_id/groups/:group_id/keys', auth: [] do |_, group_id|
-
-  content_type :json
 
   group = @user.groups.find(group_id)
 
@@ -373,13 +369,15 @@ post '/users/:user_id/invitations/acknowledge', auth: [] do |_|
       
     end
   
+    empty_response
+
   else
     
     error 400, 'missing_parameters'
     
   end
   
-  empty_response
+  
   
 end
 
@@ -387,7 +385,11 @@ post '/users/:user_id/groups/:group_id/invitations/acknowledge' do |user_id, gro
   
   ack_integrate = params[:integrate]
   
-  group = @user.groups.find(group_id)
+  group = begin
+    @user.groups.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'group_not_found'
+  end
   
   if ack_integrate
     
@@ -398,12 +400,12 @@ post '/users/:user_id/groups/:group_id/invitations/acknowledge' do |user_id, gro
     
     invitation.save!
     
+    empty_response
+
   else
     
     error 400, 'missing_parameters'
     
   end
-  
-  empty_response
   
 end

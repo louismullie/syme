@@ -1,5 +1,5 @@
 delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,member_id|
-
+  
   group = @user.groups.find(group_id)
   
   user = begin
@@ -102,6 +102,6 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
 
   end
 
-  empty_response
+  encrypt_response(empty_response)
 
 end

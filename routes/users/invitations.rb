@@ -1,5 +1,3 @@
-
-
 get '/users/:user_id/invitations', auth: [] do |user_id|
 
   if user_id != @user.id.to_s

@@ -10,6 +10,7 @@ Session = function () {
   this.passwordKey = null;
   this.remember = null;
   this.initialized = false;
+  this.key = null;
   
   this.initialize = function (callback) {
     
@@ -17,83 +18,90 @@ Session = function () {
     
     var version;
     
+    // Get the application version.
     if (asocial.compat.inChromeExtension()) {
       version = chrome.app.getDetails().version;
     } else {
-      version = '0.1.1';
+      version = asocial.version;
     }
     
-    $.ajax(SERVER_URL + '/state/session', {
-
-      type: 'GET',
+    try {
       
-      data: { version: version },
+      $.ajax(SERVER_URL + '/users/current/sessions/current', {
 
-      success: function (data) {
-        _this.passwordKey = data.password_key;
-        _this.fetchUser(data, callback);
-      },
-      
-      error: function (response) {
-        
-        if (response.status == 401) return callback();
-        
-        if (response.status == 409) {
+        type: 'GET',
+
+        data: { version: version },
+
+        success: function (data) {
           
-          var msg = "You seem to be using an "+
-          "outdated version of Syme. Please update " +
-          "your browser extension before continuing. <br> <br>" +
-          "You can do this by entering <b>chrome://extensions/</b> " +
-          "in your address bar, checking <b>\"Developer mode\"</b> and " +
-          "cliking on <b>\"Update extensions now\"</b>.";
+          _this.passwordKey = data.password_key;
           
-          asocial.helpers.showAlert(msg, {
-            closable: false, title: 'Please update Syme',
-            onsubmit: function () { Router.reload(); } });
-          
-        } else if (response.status == 502) {
-          
-          var msg = "Sorry, we're down for maintenance.  " +
-                    "Syme will be back up and running " +
-                    "as soon as possible. <br><br>Please "+
-                    " try again later.<br><br>";
-          
-          asocial.helpers.showAlert(msg, {
-            closable: false, title: 'Oops!',
-            onsubmit: function () { Router.reload(); }
+          _this.fetchUser(data, function () {
+            
+            _this.retrieveCredentials(callback);
+            
           });
           
-        } else {
-          
-          var msg = "Please check your Internet connection " +
-                    "and try again.";
-          
-          asocial.helpers.showAlert(msg, {
-            closable: false,
-            title: 'No Internet connection',
-            onsubmit: function () { Router.reload(); }
-          });
-          
+        },
+
+        error: function (response) {
+
+          if (response.status == 401) return callback();
+
+          if (response.status == 409) {
+
+            var msg = asocial.messages.app.outdated;
+
+            asocial.helpers.showAlert(msg, {
+              closable: false, title: 'Please update Syme',
+              onsubmit: function () { Router.reload(); } });
+
+          } else if (response.status == 502) {
+
+            var msg = asocial.messages.app.maintenance;
+
+            asocial.helpers.showAlert(msg, {
+              closable: false, title: 'Oops!',
+              onsubmit: function () { Router.reload(); }
+            });
+
+          } else {
+
+            var msg = asocial.messages.app.connection;
+
+            asocial.helpers.showAlert(msg, {
+              closable: false,
+              title: 'No Internet connection',
+              onsubmit: function () { Router.reload(); }
+            });
+
+          }
+
         }
-        
-      }
 
-    });
+      });
+      
+    } catch (e) {
+      alert(e);
+      callback();
+    }
 
   };
   
-  this.initializeWithPassword = function (password, remember, callback) {
+  this.initializeWithPasswordAndKey = function (password, key, remember, callback) {
     
     this.password = password;
+    this.key = key;
     this.remember = remember;
     this.initialize(callback);
     
   };
   
-  this.initializeWithModelAndPassword = function (user, password, remember, callback) {
+  this.initializeWithModelPasswordAndKey = function (user, password, key, remember, callback) {
     
     this.user = user;
-    this.initializeWithPassword(password, remember, callback);
+    this.initializeWithPasswordAndKey(password, key, remember, callback);
     
   };
   
@@ -119,6 +127,7 @@ Session = function () {
       data: { id: data.user_id },
 
       success: function () {
+        
         _this.startSession(callback);
       },
 
@@ -140,18 +149,19 @@ Session = function () {
         callback
       );
     };
+    
+    if (!this.password || !this.key) {
 
-    if (!this.password) {
-      
-      this.retrievePassword(function (password) {
+      this.retrieveCredentials(function (credentials) {
         
         _this.initialized = true;
         
-        initializeKeyfile(password);
+        initializeKeyfile(credentials.password);
 
       }, function () {
         
         callback();
+        
       });
       
     } else {
@@ -216,6 +226,21 @@ Session = function () {
 
   };
   
+  this.setKey = function (key) {
+    
+    this.key = key;
+    
+  };
+  
+  this.getSessionKey = function () {
+    
+    if (!this.key)
+      throw 'Key not initialized.';
+  
+    return this.key;
+    
+  };
+  
   this.getGroupMembers = function (groupId) {
     
     if (!this.groupMembers || !this.groupMembers[groupId]) {
@@ -241,10 +266,16 @@ Session = function () {
     var encryptedPassword = sjcl.encrypt(
       this.passwordKey, this.password);
 
+    var encryptedKey = sjcl.encrypt(
+      this.passwordKey, this.key);
+      
     if (asocial.compat.inChromeExtension()) {
 
       chrome.storage.local.set({
-        'password':  encryptedPassword
+        'credentials':  { 
+          password: encryptedPassword,
+          sessionKey: encryptedKey
+        }
       }, callback);
 
     } else {
@@ -253,6 +284,7 @@ Session = function () {
 
       sessionStorage.email = this.user.get('email');
       sessionStorage.password = encryptedPassword;
+      sessionStorage.sessionKey = encryptedKey;
       
       callback();
       
@@ -264,7 +296,7 @@ Session = function () {
     return typeof(storage.password) != 'undefined';
   };
 
-  this.retrievePassword = function (success, error) {
+  this.retrieveCredentials = function (success, error) {
 
     var _this = this;
     
@@ -272,30 +304,39 @@ Session = function () {
     
     if (asocial.compat.inChromeExtension()) {
 
-      chrome.storage.local.get('password', function (obj) {
+      chrome.storage.local.get('credentials', function (credentials) {
         
-        var encryptedPassword = obj.password;
+        var encryptedPassword = credentials.password,
+            encryptedKey = credentials.key;
         
-        if (!encryptedPassword) return error();
+        if (!encryptedPassword || !encryptedKey) return error();
         
         try { 
-          var password = sjcl.decrypt(passwordKey, obj.password);
-          success(password);
+          
+          var password = sjcl.decrypt(passwordKey, encryptedpassword);
+          var key = sjcl.decrypt(passwordKey, encryptedKey);
+          _this.key = key;
+          
+          success({ password: password, key: key });
+          
         } catch (e) { error(); }
         
       });
 
     } else {
       
-      var encryptedPassword = sessionStorage.password;
+      var encryptedPassword = sessionStorage.password,
+          encryptedKey = sessionStorage.sessionKey;
 
-      try { 
-        
+     try {
+
         var password = sjcl.decrypt(passwordKey, encryptedPassword);
+        var key = sjcl.decrypt(passwordKey, encryptedKey);
+        _this.key = key;
         
-        success(password);
+        success({ password: password, key: key });
         
-      } catch (e) { error(); }
+     } catch (e) { error(); }
       
     }
     

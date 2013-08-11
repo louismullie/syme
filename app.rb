@@ -23,6 +23,22 @@ module Syme
 
     Mongoid.instantiate_observers
     
+    def context
+      
+      unless @context
+        @context = V8::Context.new
+
+        sjcl_path = File.join(settings.root,
+          'app', 'js', 'vendor', 'sjcl.js')
+
+        @context.eval(File.read(sjcl_path))
+      end
+      
+      @context
+    
+    end
+    
+    
   end
 
 end

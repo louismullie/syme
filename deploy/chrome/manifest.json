@@ -15,7 +15,7 @@
     "/img/logo-48x48.png"
   ],
 	"permissions": [
-		"http://198.27.65.229/",
+		"https://getsyme.com",
 		"notifications",
 		"storage"
 	],

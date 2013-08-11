@@ -1,5 +1,8 @@
 post '/users/:user_id/groups/:group_id/posts', auth: [] do |user_id, group_id|
 
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
+  
   @group = @user.groups.find(group_id)
 
   @group.touch
@@ -28,14 +31,17 @@ post '/users/:user_id/groups/:group_id/posts', auth: [] do |user_id, group_id|
 
   track @user, 'User created post'
 
-  content_type :json
-
-  PostGenerator.generate(post, @user).to_json
+  response = PostGenerator.generate(post, @user).to_json
+  
+  encrypt_response(response)
   
 end
 
 put '/users/:user_id/groups/:group_id/posts/:post_id' do |user_id, group_id, post_id|
 
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
+  
   error 400, 'missing_params' if !params[:content]
   
   message = JSON.parse(Base64.strict_decode64(params[:content]))
@@ -62,7 +68,7 @@ put '/users/:user_id/groups/:group_id/posts/:post_id' do |user_id, group_id, pos
   
   post.save!
   
-  empty_response
+  encrypt_response(empty_response)
   
 end
 
@@ -76,15 +82,11 @@ get '/:group_id/post/:post_id', auth: [] do |group_id, post_id|
     error 404, 'post_not_found'
   end
   
-  content_type :json
-
   PostGenerator.generate(post, @user).to_json
 
 end
 
 get '/:group_id/post/lastof/:page', auth: [] do |group_id, page|
-
-  content_type :json
 
   @group = Group.find(group_id)
 
@@ -98,21 +100,6 @@ get '/:group_id/post/lastof/:page', auth: [] do |group_id, page|
   else
     PostGenerator.generate(page.last, @user).to_json
   end
-
-end
-
-get '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
-
-  group = begin
-    @user.groups.find(group_id)
-  rescue
-    error 404, 'group_not_found'
-  end
-
-  posts = group.complete_posts.page(1)
-
-  content_type :json
-  FeedGenerator.generate(posts, @user, group).to_json
 
 end
 
@@ -146,8 +133,6 @@ post '/:group_id/page', auth: [] do |group_id|
     ignore.include?(post.id)
   end
 
-  content_type :json
-
   # Return nothing if there are no posts
   return empty_response if selected_posts.count == 0
 
@@ -164,6 +149,9 @@ end
 # For single-page view, feed with one post.
 get '/users/:user_id/groups/:group_id/posts/:post_id', auth: [] do |user_id, group_id, post_id|
 
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
+   
   group = begin
     @user.groups.find(group_id)
   rescue
@@ -184,11 +172,11 @@ get '/users/:user_id/groups/:group_id/posts/:post_id', auth: [] do |user_id, gro
     error 404, 'post_not_found'
   end
 
-  content_type :json
-  
-  FeedGenerator.generate(posts, @user, group)
+  response = FeedGenerator.generate(posts, @user, group)
     .merge({ single_post: true }).to_json
 
+  encrypt_response(response)
+  
 end
 
 get '/:group_id/archive/:year/?:month?', auth: [] do |group_id, year, month|
@@ -198,8 +186,6 @@ get '/:group_id/archive/:year/?:month?', auth: [] do |group_id, year, month|
   rescue
     error 404, 'group_not_found'
   end
-
-  content_type :json
 
   FeedGenerator.generate(posts, @user)
     .merge(time_scope).to_json

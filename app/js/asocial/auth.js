@@ -2,8 +2,6 @@ guard('auth', {
 
   login: function(email, password, remember, success, fail, hack) {
     
-    //alert(remember);
-    
     if (asocial.compat.inChromeExtension())
       chrome.storage.local.set({ 'remember':  remember });
     
@@ -15,9 +13,9 @@ guard('auth', {
     var A = srp.calculateA(a);
     var _this = this;
     
-    var params = $.param({ email: email, A: A.toString(16) });
+    var params = { email: email, A: A.toString(16) };
 
-    $.ajax(SERVER_URL + '/login/1', {
+    $.ajax(SERVER_URL + '/users/current/sessions', {
       
       type: 'POST', data: params,
       
@@ -26,6 +24,7 @@ guard('auth', {
         if (data.B && data.salt) {
           
           var salt = data.salt;
+          var sessionId = data.session_id;
           
           Crypto.deriveKeys(password, salt, function (keys) {
   
@@ -34,35 +33,35 @@ guard('auth', {
             var B = new BigInteger(data.B, 16);
             var u = srp.calculateU(A, B);
             var Sc = srp.calculateS(B, salt, u, a);
+            
             var K = srp.calcHashHex(Sc.toString(16));
             var M = srp.calculateM(email, salt, A, B, K);
 
-            var params = $.param({
-              M: M.toString(16),
-              remember: remember
-            });
-
+            var params = { M: M.toString(16), remember: remember };
+            
             $('meta[name="_csrf"]').attr('content', data.csrf);
 
-            $.post(SERVER_URL + '/login/2', params, function (data) {
+            $.ajax(SERVER_URL + '/users/current/sessions/' + sessionId, {
+              
+              type: 'PUT',
+              data: params,
+              
+              success: function (data) {
 
                if (data.status == 'ok') {
 
                 $('meta[name="_csrf"]').attr('content', data.csrf);
-
-                var msg = 'Syme is currently in an early beta phase. ' +
-                'This means that we might make small changes to our ' +
-                'software that could imply loss of your data. You ' +
-                'should always keep backups of any important information ' +
-                'that you share in your groups.';
                 
+                var msg = asocial.messages.beta.warning;
+                
+                var sessionKey = Sc.toString(16);
                 
                 asocial.helpers.showAlert(msg, {
                   
                   title: 'Beta warning', closable: false,
                 
-                  onsubmit: function () { success(keys.key2); return true; },
-                  onhide: function () { success(keys.key2); return true; }
+                  onsubmit: function () { success(keys.key2, sessionKey); return true; },
+                  onhide: function () { success(keys.key2, sessionKey); return true; }
                     
                 });
                 
@@ -87,7 +86,7 @@ guard('auth', {
 
               }
 
-            });
+            }});
             
           });
 
@@ -117,17 +116,22 @@ guard('auth', {
   logout: function (callback) {
 
     var callback = callback || function () {};
-
-    CurrentSession = {};
     
-    // Reset notification counter.
+    var userId = CurrentSession.getUserId();
+    
+       // Reset notification counter.
     if (asocial.compat.inChromeExtension()) {
       chrome.browserAction.setBadgeText({ text: '' });
     }
-
-    $.ajax(SERVER_URL + '/sessions/xyz', {
-      type: 'delete',
-      success: callback
+    
+    var url = SERVER_URL + '/users/' + userId + '/sessions/current';
+    
+    $.ajax(url, {
+      type: 'DELETE',
+      success: function () {
+        CurrentSession = {};
+        callback();
+      }
     });
 
   },

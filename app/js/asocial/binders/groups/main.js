@@ -58,7 +58,7 @@ asocial.binders.add('groups', { main: function() {
 
     var group = {  name: name };
 
-    $.ajax(SERVER_URL + '/groups', {
+    $.encryptedAjax(SERVER_URL + '/groups', {
       type: 'POST',
       data: group,
 
@@ -76,7 +76,7 @@ asocial.binders.add('groups', { main: function() {
             
             Router.reload();
 
-            $.ajax(route, {
+            $.encryptedAjax(route, {
             
               type: 'PUT',
             
@@ -130,7 +130,7 @@ asocial.binders.add('groups', { main: function() {
       
       if (value != 'delete') return;
       
-      $.ajax(SERVER_URL + '/groups/' + groupId,
+      $.encryptedAjax(SERVER_URL + '/groups/' + groupId,
       
         { type: 'DELETE',
 
@@ -194,7 +194,7 @@ asocial.binders.add('groups', { main: function() {
           var route = SERVER_URL + '/users/' + CurrentSession.getUserId() +
           '/groups/' + groupId + '/memberships/' + CurrentSession.getUserId();
 
-          $.ajax(route, { type: 'DELETE',
+          $.encryptedAjax(route, { type: 'DELETE',
 
             success: function () {
               

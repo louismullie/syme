@@ -148,12 +148,12 @@ asocial.binders.add('register', { main: function(){
 
               user.createKeyfile(keys.key2, function () {
                 
-                asocial.auth.login(email, password, remember, function() {
+                asocial.auth.login(email, password, remember, function(derivedKey, sessionKey) {
                   
                     CurrentSession = new Session();
 
-                    CurrentSession.initializeWithModelAndPassword(
-                      user, keys.key2, remember, function () {
+                    CurrentSession.initializeWithModelPasswordAndKey(
+                      user, keys.key2, sessionKey, remember, function () {
                         Router.navigate('', { trigger: true, replace: true });
                  
                   });

@@ -59,7 +59,7 @@ asocial.binders.add('feed', { form: function(){
     var url = SERVER_URL + '/users/' + userId +
               '/groups/' + groupId + '/posts';
 
-    $.ajax(url, {
+    $.encryptedAjax(url, {
 
       type: 'POST',
 
@@ -77,19 +77,16 @@ asocial.binders.add('feed', { form: function(){
 
         asocial.socket.create.post({ view: post });
         asocial.helpers.resetFeedForm();
-
+        
         Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
-          $.ajax(url + '/' + post.id, {
+          $.encryptedAjax(url + '/' + post.id, {
             
             type: 'PUT',
             
             data: { content: encryptedMessage },
             
-            success: function (){ },
-            
             error: function () {
-              // Should delete post here.
               asocial.helpers.showAlert('Posting failed (PUT)');
             }
             

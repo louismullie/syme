@@ -20,8 +20,6 @@ post '/hangouts', auth: [] do
   MagicBus::Publisher.send_to(recipient_id, :hangout, :create,
     { id: hangout.id.to_s, sender_name: @user.full_name })
   
-  content_type :json
-  
   { id: hangout.id.to_s }.to_json
   
 end
@@ -90,7 +88,7 @@ put '/hangouts', auth: [] do
   
   hangout.save!
   
-  empty_response
+  encrypt_response(empty_response)
   
 end
 

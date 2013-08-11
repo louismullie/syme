@@ -1,12 +1,15 @@
 # Create comment
 post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |user_id, group_id, post_id|
 
-  @group = @user.groups.find(group_id)
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
+  
+  group = @user.groups.find(group_id)
 
-  @group.touch
+  group.touch
 
   post = begin
-    @group.complete_posts.find(post_id)
+    group.complete_posts.find(post_id)
   rescue Mongoid::Errors::DocumentNotFound
     error 404, 'post_not_found'
   end
@@ -24,15 +27,18 @@ post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |us
 
   track @user, 'User commented on post'
 
-  content_type :json
+  response = CommentGenerator.generate(comment, @user).to_json
   
-  CommentGenerator.generate(comment, @user).to_json
+  encrypt_response(response)
 
 end
 
 # Create comment
 put '/users/:user_id/groups/:group_id/posts/:post_id/comments/:comment_id', auth: [] do |user_id, group_id, post_id, comment_id|
 
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
+  
   error 400, 'missing_params' if !params[:content]
   
   message = JSON.parse(Base64.strict_decode64(params[:content]))
@@ -65,6 +71,6 @@ put '/users/:user_id/groups/:group_id/posts/:post_id/comments/:comment_id', auth
   
   comment.save!
   
-  empty_response
+  encrypt_response(empty_response)
 
 end

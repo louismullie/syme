@@ -60,7 +60,7 @@ Router = Backbone.Router.extend({
 
     'users/:user_id': 'user',
     'users/:user_id/groups': 'userGroups',
-    'users/:user_id/groups/:group_id(/page-:page)': 'userGroup',
+    'users/:user_id/groups/:group_id': 'userGroup',
     'users/:user_id/groups/:group_id/posts/:post_id': 'userGroupPost',
     'users/:user_id/groups/:group_id/archive/:year(-:month)(/page-:page)': 'userGroupArchive',
 
@@ -242,23 +242,29 @@ Router = Backbone.Router.extend({
 
     // Get current URL
     var url = SERVER_URL + '/' + Backbone.history.fragment;
-
+    
     // Retreive data
-    $.getJSON(url, function (data) {
+    $.encryptedAjax(url, {
+      
+      type: 'GET',
+      
+      success: function (data) {
 
-      // First pageload: initiate logged in template
-      if( !$('#main').length ) Router.renderLoggedInTemplate();
+        // First pageload: initiate logged in template
+        if( !$('#main').length ) Router.renderLoggedInTemplate();
 
-      // Render template
-      var view = Handlebars.compileTemplate(template, data);
+        // Render template
+        var view = Handlebars.compileTemplate(template, data);
 
-      // Fill container with template
-      $('#main').html(view);
+        // Fill container with template
+        $('#main').html(view);
 
-      // Binders
-      asocial.binders.bind(template, true, specific_binders);
+        // Binders
+        asocial.binders.bind(template, true, specific_binders);
 
-    }).fail(function(response){
+      },
+      
+      error: function(response){
 
       if(response.status == 401) {
 
@@ -280,7 +286,7 @@ Router = Backbone.Router.extend({
         Router.error();
 
       }
-    });
+    }});
 
   },
 

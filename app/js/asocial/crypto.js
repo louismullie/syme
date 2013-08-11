@@ -60,18 +60,26 @@ guard('crypto', {
 
   getFile: function (id, keys, callback, group) {
 
-    var display = function(id, blob, save) {
+    var display = function(id, blob, keys, save) {
 
       if (save) {
+        
+        Crypto.decryptMessage(group, keys, function (key) {
+          
+          var reader = new FileReader();
 
-        var reader = new FileReader();
+          reader.onload = function(event){
+            
+            var base64 = sjcl.encrypt(key, event.target.result);
+            
+            store.save({ key: id, value: {
+              groupId: group, content: base64 }});
+              
+          };
+        
+          reader.readAsDataURL(blob);
 
-        reader.onload = function(event){
-          var base64 = event.target.result;
-          store.save({ key: id, value: base64 });
-        };
-
-        reader.readAsDataURL(blob);
+        });
 
       }
 
@@ -92,8 +100,11 @@ guard('crypto', {
       downloader.start(
         function() {},
         function(blob) {
-          display(id, blob, true);
-      });
+          display(id, blob, keys, true);
+        }, function () {
+          callback(false)
+        });
+      
 
     };
 
@@ -115,12 +126,19 @@ guard('crypto', {
 
           } else {
 
-            // Replace this eventually
-            var blob = ThumbPick.prototype.dataURItoBlob(me.value);
+            var data = me.value;
+            
+            Crypto.decryptMessage(data.groupId,  keys, function (key) {
+              
+              var decrypted = sjcl.decrypt(key, data.content);
+              var blob = ThumbPick.prototype.dataURItoBlob(decrypted);
+              
+              display(id, blob, false);
 
-            display(id, blob, false);
-
+            });
+            
           }
+          
         });
 
     });

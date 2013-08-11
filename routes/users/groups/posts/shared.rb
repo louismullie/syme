@@ -50,7 +50,7 @@ post '/:group_id/:model/delete', auth: [] do |group_id, model|
   
   resource.destroy
   
-  empty_response
+  encrypt_response(empty_response)
 
 end
 

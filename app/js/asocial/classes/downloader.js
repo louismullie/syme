@@ -66,10 +66,11 @@ function Downloader(id, keys, options) {
 
   };
 
-  this.start = function (progress, success) {
+  this.start = function (progress, success, error) {
 
     this.progress = progress;
     this.success = success;
+    this.error = error;
 
     if (!window.downloadWorkerPool) {
       window.downloadWorkerPool = new WorkerPool(
@@ -86,7 +87,11 @@ function Downloader(id, keys, options) {
 
     var _this = this;
 
-    xhr.addEventListener("load", function(event) {
+    xhr.addEventListener('load', function(event) {
+      
+      if (event.target.status != 200) {
+        return _this.error();
+      }
       
       var data = JSON.parse(event.target.responseText);
       _this.numChunks = data.chunks;

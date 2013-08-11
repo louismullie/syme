@@ -1,5 +1,8 @@
-get '/users/:id/groups', auth: [] do
+get '/users/:user_id/groups', auth: [] do |_|
 
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
+  
   groups = @user.groups
     .where(ack_create: true)
     .desc(:updated_at).map do |group|
@@ -14,9 +17,9 @@ get '/users/:id/groups', auth: [] do
     left_column << group if !shift
     shift = shift ? false : true
   end
-  
-  groups = left_column + right_column
 
+  groups = left_column + right_column
+  
   user_invites = Invitation.where(
     email: @user.email, state: { '$in' => [1, 2]})
 
@@ -25,43 +28,39 @@ get '/users/:id/groups', auth: [] do
     user_invites.map do |invite|
       InvitationGenerator.generate(invite)
     end
-
-  content_type :json
   
-  {
+  response = {
     groups: groups,
     invites: invites
   }.to_json
 
+  encrypt_response(response)
+  
 end
 
-get '/state/group', auth: [] do
+get '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
 
-  content_type :json
-
-  group_id = params[:group_id]
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
   
-  group = @user.groups.find(group_id)
+  group = begin
+    @user.groups.find(group_id)
+  rescue
+    error 404, 'group_not_found'
+  end
 
-  membership = @user.memberships.where(group_id: group.id).first
+  posts = group.complete_posts.page(1)
 
-  full_names = group.users.map { |user| user.full_name }
+  response = FeedGenerator.generate(posts, @user, group).to_json
   
-  group_token = {
-    id: group.id.to_s,
-    name: group.name,
-    full_names: full_names,
-    keylist: membership.keylist,
-    keylist_salt: membership.keylist_salt,
-    answer: membership.answer,
-    answer_salt: membership.answer_salt
-  }
-  
-  group_token.to_json
+  encrypt_response(response)
 
 end
 
 post '/groups', auth: [] do
+
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
 
   name, screen_name = params[:name], params[:name].slug
   
@@ -85,13 +84,16 @@ post '/groups', auth: [] do
 
   track @user, 'User created new group'
 
-  content_type :json
+  response = { id: group.id.to_s }.to_json
 
-  { id: group.id.to_s }.to_json
-
+  encrypt_response(response)
+  
 end
 
 put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
+  
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
   
   group = @user.groups.find(group_id)
   
@@ -102,7 +104,7 @@ put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
   
   track @user, 'User acknowledged group creation'
 
-  empty_response
+  encrypt_response(empty_response)
   
 end
 
@@ -116,7 +118,6 @@ post '/:group_id/avatar', auth: [] do
 
   track @user, 'User changed the group avatar'
 
-  content_type :json
   { status: 'ok' }.to_json
 
 end

@@ -20,6 +20,7 @@ class AttachmentGenerator
     {
       # General file information.
       id: upload.id.to_s,
+      group: post.group.id.to_s,
       filename: upload.filename,
       size: upload.size,
       keys: content,

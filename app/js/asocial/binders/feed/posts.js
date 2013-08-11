@@ -57,6 +57,8 @@ asocial.binders.add('feed', { posts: function(){
 
     asocial.crypto.getFile(id, keys, function (url) {
 
+      if (!url) return progress.remove();
+      
       link.attr('href', url)
           .attr('download', filename)
           // Change link status
@@ -105,10 +107,13 @@ asocial.binders.add('feed', { posts: function(){
     var keys      = $(this).data('attachment-keys');
 
     asocial.crypto.getFile(id, keys, function (url) {
-      // Hide mofo spinner
+      
       clearTimeout(spinner); $('#spinner').hide();
-
+      
+      if (!url) return;
+      
       asocial.helpers.showLightbox(url);
+      
     });
 
   });

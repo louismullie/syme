@@ -69,6 +69,6 @@ delete '/users/:user_id/notifications', auth: [] do |user_id|
   @user.save!
   
   # Return an empty response.
-  status 204
+  encrypt_response(empty_response)
 
 end

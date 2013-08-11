@@ -31,10 +31,10 @@ else
 
 end
 
-# Setup a strict CSP to discourage XSS.
+# Setup a strict CSP to discourage XSS. Redundant?
 require 'content-security-policy'
 
-default = 'localhost:5000 198.27.65.229:81 syme.io 192.168.1.114:5000'
+default = 'localhost:5000 getsyme.com:81'
 
 use ContentSecurityPolicy, directives: {
   # 'default-src' => settings.secure ? 'https: ' : '*',

@@ -346,9 +346,9 @@ guard('socket', {
 
         asocial.helpers.showAlert(data.sender_name + sentence + filename);
 
-        $.post(SERVER_URL + '/send/file/accept', $.param({
+        $.post(SERVER_URL + '/send/file/accept', {
           transfer_id: data.transfer_id, group_id: group
-        }));
+        });
 
       } else if (data.action == 'accept') {
 

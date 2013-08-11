@@ -1,12 +1,41 @@
 // CSRF token
 $.ajaxSetup({
   beforeSend: function(xhr) {
-
     var token = $('meta[name="_csrf"]').attr('content');
     xhr.setRequestHeader('X_CSRF_TOKEN', token);
-
   }
 });
+
+// 1. Guard this.
+// 2. CSRF?
+// 4. Backbone
+// 5. Downloads/uploads
+// 6. Encrypt erros?
+$.encryptedAjax = function (url, options) {
+  
+  options.data = options.data || {};
+  
+  var data = JSON.stringify(options.data);
+  
+  var sessionKey = CurrentSession.getSessionKey();
+  
+  var encryptedData = sjcl.encrypt(sessionKey, data);
+  
+  options.data = { encrypted: true, data: encryptedData };
+  
+  var success = options.success || function () {};
+  
+  options.success = function (jsonResponse) {
+
+    var txtResponse = JSON.stringify(jsonResponse);
+    var decryptedResponse = sjcl.decrypt(sessionKey, txtResponse);
+    success(JSON.parse(decryptedResponse));
+    
+  };
+  
+  $.ajax(url, options);
+  
+};
 
 // Creating custom :external selector - remove?
 $.expr[':'].external = function(obj){

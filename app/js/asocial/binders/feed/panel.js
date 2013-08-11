@@ -82,7 +82,7 @@ asocial.binders.add('feed', { panel: function(){
           var route = SERVER_URL + '/users/' + CurrentSession.getUserId() +
           '/groups/' + CurrentSession.getGroupId() + '/memberships/' + userId;
 
-          $.ajax(route, { type: 'DELETE',
+          $.encryptedAjax(route, { type: 'DELETE',
 
             success: function () {
               Notifications.reset();

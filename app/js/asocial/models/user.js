@@ -14,6 +14,33 @@ var User = Backbone.RelationalModel.extend({
     }
   }],
 
+  /*
+  sync: function(method, model, options) {
+    
+    console.log(method, options);
+    
+    options.data = options.data || {};
+
+    var data = JSON.stringify(options.data);
+
+    var encryptedData = sjcl.encrypt('password', data);
+
+    options.data = { encrypted: true, data: encryptedData };
+
+    var success = options.success;
+
+    options.success = function (jsonResponse) {
+      var txtResponse = JSON.stringify(jsonResponse);
+      var decryptedResponse = sjcl.decrypt('password', txtResponse);
+      var response = JSON.parse(decryptedResponse);
+      var model = new User(response);
+      success(model, response);
+    };
+     
+    Backbone.sync(method, model, options);
+    
+  },
+  */
   createKeyfile: function (password, keyfileCreatedCb) {
 
     var _this = this, email = this.get('email');
@@ -138,10 +165,14 @@ var User = Backbone.RelationalModel.extend({
           if (inviteRequestJson.error)
             return errorCb();
       
+          console.log(inviteRequestJson.keys);
+          
           Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
             
             _this.updateKeyfile(encryptedKeyfile, function () {
-              
+                
+                console.log(inviteRequestJson);
+                
                 invitation.save(
                   { integrate: inviteRequestJson.confirm.inviteConfirmation,
                     distribute: inviteRequestJson.confirm.addUserRequest,
@@ -328,15 +359,24 @@ var User = Backbone.RelationalModel.extend({
   
   refreshKeyfile: function (refreshedKeyfileCb) {
     
-    $.ajax(SERVER_URL + '/users/' + this.get('id'), { type: 'GET',
+    var userId = this.get('id');
+    var url = SERVER_URL + '/users/' + userId;
+    
+    $.ajax(url, {
+      
+      type: 'GET',
+      
       success: function (user) {
-        CurrentSession.retrievePassword(function (p) {
+        
+        CurrentSession.retrieveCredentials(function (credentials) {
+          
           Crypto.initializeKeyfile(
-            user.id, p,
-            user.keyfile,
-            refreshedKeyfileCb
+            user.id, credentials.password,
+            user.keyfile, refreshedKeyfileCb
           );
+        
         });
+        
     }});
     
   },

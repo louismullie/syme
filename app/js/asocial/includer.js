@@ -12,8 +12,8 @@
 //= require ./uploader
 //= require ./auth
 //= require ./state
+//= require ./messages
 //= require ./compat
-//= require ./hangout
 //= require ./asocial
 //= require_tree ./models
 //= require_tree ./binders

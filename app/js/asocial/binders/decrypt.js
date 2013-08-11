@@ -73,9 +73,11 @@ asocial.binders.add('global', { decrypt: function() {
       var message = JSON.parse($.base64.decode(text));
 
       // Throw exception if they don't.
-      if (message.keys[userId] == undefined)
-        throw 'Missing keys for current user.';
-
+      if (message.keys[userId] == undefined) {
+        console.log('ERROR: Missing keys for current user.');
+        formatDecryptedText('_This message could not be decrypted._');
+      }
+      
       Crypto.decryptMessage(groupId, text, formatDecryptedText);
       
     // Just format element.
@@ -101,6 +103,9 @@ asocial.binders.add('global', { decrypt: function() {
     if ( !keys ) return done();
 
     var callback = function(url) {
+      
+      if (!url) return done();
+      
       // Set new src to master and slaves
       $this.add('.slave-avatar[data-user-id="' + user_id + '"]')
         .attr('src', url);
@@ -143,6 +148,9 @@ asocial.binders.add('global', { decrypt: function() {
     if ( !keys ) return done();
 
     var callback = function(url){
+      
+      if (!url) return done();
+      
       // Set src to element
       $this.attr('src', url)
         .removeClass('.encrypted-' + type);

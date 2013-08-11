@@ -84,8 +84,6 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
 
   track @user, 'User started uploading file'
 
-  content_type :json
-
   { status: 'ok',
     upload: {
       id: upload.id.to_s,
@@ -155,9 +153,7 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
   File.open(file, 'w+') do |f|
     f.write(data)
   end
-
-  content_type :json
-
+  
   { status: 'ok' }.to_json
 
 end
@@ -167,22 +163,33 @@ get '/:group_id/file/download/:id', auth: [] do |group_id, id|
   @group = Group.find(group_id)
 
   id = params[:id]
-  upload = @group.uploads.find(id)
-
-  raise "Can't find upload." unless upload
-
+  
+  upload = begin
+    @group.uploads.find(id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'file_not_found'
+  end
+  
   dir = File.join(settings.upload_path, id)
 
+  unless File.directory?(dir)
+    error 404, 'file_not_found'
+  end
+  
   chunk_files = File.join(dir, '*')
   chunks = Dir.glob(chunk_files).count
   
+  unless chunks > 0
+    error 404, 'file_not_found'
+  end
+  
   track @user, 'User started downloading file'
 
-  content_type :json
-
-  { status: 'ok',
+  {
+    status: 'ok',
     chunks: chunks,
-    type: upload.type }.to_json
+    type: upload.type
+  }.to_json
 
 end
 

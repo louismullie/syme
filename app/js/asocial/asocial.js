@@ -1,4 +1,6 @@
 guard('asocial', {
+  
+  version: '0.1.1',
 
   helpers:  asocial_helpers,
   binders:  asocial_binders,
@@ -9,7 +11,7 @@ guard('asocial', {
   state:    asocial_state,
   invite:   asocial_invite,
   compat:   asocial_compat,
-  hangout:  asocial_hangout
+  messages: asocial_messages
 
 });
 

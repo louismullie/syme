@@ -72,7 +72,7 @@ guard('invite', {
     var url = SERVER_URL + '/users/' + userId +
       '/groups/' + groupId + '/invitations/' + invitationId;
 
-    $.ajax(url, { type: 'DELETE',
+    $.encryptedAjax(url, { type: 'DELETE',
 
       success: function () {
         Notifications.fetch();

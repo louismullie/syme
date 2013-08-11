@@ -1,12 +1,14 @@
 // Image
 {{#if is_image}}
 %a.image-download{href: '#', 'data-attachment-id' => '{{id}}',
+                             'data-attachment-group' => '{{group}}',
                              'data-attachment-filename' => '{{filename}}',
                              'data-attachment-size' => '{{size}}',
                              'data-attachment-keys' => '{{keys}}' }
 
   %img.attached-image.encrypted-image{src: "/img/placeholder-680x500.gif",
                                       'data-attachment-id' => '{{thumbnail.id}}',
+                                      'data-attachment-group' => '{{group}}',
                                       'data-attachment-filename' => '{{thumbnail.filename}}',
                                       'data-attachment-size' => '{{thumbnail.size}}',
                                       'data-attachment-keys' => '{{thumbnail.keys}}',
@@ -32,6 +34,7 @@
 
   %a.encrypted-file{href: '#',
                     'data-attachment-id'       => '{{id}}',
+                    'data-attachment-group' => '{{group}}',
                     'data-attachment-filename' => '{{filename}}',
                     'data-attachment-size'     => '{{size}}',
                     'data-attachment-keys'      => '{{keys}}'}

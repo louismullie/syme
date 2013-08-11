@@ -39,10 +39,10 @@ guard('uploader', {
       function (progress) { },
 
       function (upload) {
-        var params = $.param({
+        var params = {
           transfer_id: transfer_id,
           group_id: CurrentSession.getGroupId()
-        });
+        };
 
         $.post(SERVER_URL + '/send/file/start', params);
       }

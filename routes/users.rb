@@ -31,7 +31,7 @@ get '/users/?:user_id?' do |user_id|
   end
 
   # Return the user document as JSON.
-  UserGenerator.generate(@user, @user).to_json
+  response = UserGenerator.generate(@user, @user).to_json
   
 end
 
@@ -88,8 +88,8 @@ post '/users' do
               .merge({ csrf: csrf_token })
   
   # Convert the hash back to JSON.
-  user_hash.to_json
-
+  response = user_hash.to_json
+  
 end
 
 # The client creates the salt and verifier (s, v)
@@ -174,6 +174,9 @@ end
 # Delete a user permanently.
 delete '/users/:user_id', auth: [] do |user_id|
 
+  encrypted = params.dup
+  params = decrypt_params(encrypted)
+  
   # Verify user is authorized to delete.
   if user_id != @user.id.to_s
     error 403, 'unauthorized'
@@ -191,6 +194,6 @@ delete '/users/:user_id', auth: [] do |user_id|
   session.clear
   
   # Return empty JSON.
-  empty_response
+  encrypt_response(empty_response)
 
 end
