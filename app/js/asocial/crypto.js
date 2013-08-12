@@ -120,7 +120,7 @@ guard('crypto', {
 
         store.get(id, function(me) {
 
-          if (typeof(me) == "undefined") {
+          if (typeof(me) == "undefined" || !me.value.groupId) {
 
             download(id, keys, group);
 

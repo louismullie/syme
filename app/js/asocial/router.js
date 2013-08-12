@@ -243,8 +243,11 @@ Router = Backbone.Router.extend({
     // Get current URL
     var url = SERVER_URL + '/' + Backbone.history.fragment;
     
-    // Retreive data
-    $.encryptedAjax(url, {
+    // Temporary fix while Backbone sync isnt encrypted
+    var fn = template == 'settings' ? $.ajax : $.encryptedAjax;
+    
+    // Retrieve data
+    fn(url, {
       
       type: 'GET',
       
