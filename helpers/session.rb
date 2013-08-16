@@ -73,6 +73,9 @@ end
 
 def decrypt_params(params)
   
+  return params
+  
+=begin
   return params if !params[:encrypted]
   
   error 401 if !session[:key]
@@ -81,7 +84,8 @@ def decrypt_params(params)
   data = JSON.parse(params[:data]).to_json
   
   plain = context.eval("sjcl.decrypt('#{session[:key]}', '#{data}');")
-  
+=end
+
 =begin
     data = JSON.parse(params[:data])
 
@@ -113,14 +117,18 @@ def decrypt_params(params)
     end
 =end
 
+=begin
   hash = JSON.parse(plain)
   
   Hash[hash.map{ |k, v| [k.to_sym, v] }]
+=end
 
 end
 
 def encrypt_response(response)
   
-  context.eval("sjcl.encrypt('#{session[:key]}', '#{response}');")
+  # context.eval("sjcl.encrypt('#{session[:key]}', '#{response}');")
+  
+  response
   
 end

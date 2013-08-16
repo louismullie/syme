@@ -6,13 +6,9 @@ $.ajaxSetup({
   }
 });
 
-// 1. Guard this.
-// 2. CSRF?
-// 4. Backbone
-// 5. Downloads/uploads
-// 6. Encrypt erros?
 $.encryptedAjax = function (url, options) {
   
+  /*
   options.data = options.data || {};
   
   var data = JSON.stringify(options.data);
@@ -31,7 +27,7 @@ $.encryptedAjax = function (url, options) {
     var decryptedResponse = sjcl.decrypt(sessionKey, txtResponse);
     success(JSON.parse(decryptedResponse));
     
-  };
+  };*/
   
   $.ajax(url, options);
   

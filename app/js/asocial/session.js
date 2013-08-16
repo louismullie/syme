@@ -226,6 +226,7 @@ Session = function () {
 
   };
   
+  /*
   this.setKey = function (key) {
     
     this.key = key;
@@ -240,6 +241,7 @@ Session = function () {
     return this.key;
     
   };
+  */
   
   this.getGroupMembers = function (groupId) {
     
@@ -266,15 +268,15 @@ Session = function () {
     var encryptedPassword = sjcl.encrypt(
       this.passwordKey, this.password);
 
-    var encryptedKey = sjcl.encrypt(
-      this.passwordKey, this.key);
+    //var encryptedKey = sjcl.encrypt(
+    //  this.passwordKey, this.key);
       
     if (asocial.compat.inChromeExtension()) {
 
       chrome.storage.local.set({
         'credentials':  { 
-          password: encryptedPassword,
-          sessionKey: encryptedKey
+          password: encryptedPassword
+          //sessionKey: encryptedKey
         }
       }, callback);
 
@@ -284,7 +286,7 @@ Session = function () {
 
       sessionStorage.email = this.user.get('email');
       sessionStorage.password = encryptedPassword;
-      sessionStorage.sessionKey = encryptedKey;
+      //sessionStorage.sessionKey = encryptedKey;
       
       callback();
       
@@ -300,25 +302,29 @@ Session = function () {
 
     var _this = this;
     
+    var error = error || function (){ Router.navigate('login') };
+    
     var passwordKey = this.passwordKey;
     
     if (asocial.compat.inChromeExtension()) {
 
       chrome.storage.local.get('credentials', function (cursor) {
         
-        var credentials = cursor.credentials;
-        var encryptedPassword = credentials.password,
-            encryptedKey = credentials.sessionKey;
+        if (!cursor || !cursor.credentials) return error();
         
-        if (!encryptedPassword || !encryptedKey) return error();
+        var credentials = cursor.credentials;
+        var encryptedPassword = credentials.password;
+            //encryptedKey = credentials.sessionKey;
+        
+        if (!encryptedPassword) return error();
         
         try { 
           
           var password = sjcl.decrypt(passwordKey, encryptedPassword);
-          var key = sjcl.decrypt(passwordKey, encryptedKey);
-          _this.key = key;
+          //var key = sjcl.decrypt(passwordKey, encryptedKey);
+          //_this.key = key;
           
-          success({ password: password, key: key });
+          success({ password: password }); //, key: key });
           
         } catch (e) { error(); }
         
@@ -326,16 +332,16 @@ Session = function () {
 
     } else {
       
-      var encryptedPassword = sessionStorage.password,
-          encryptedKey = sessionStorage.sessionKey;
+      var encryptedPassword = sessionStorage.password;
+          //encryptedKey = sessionStorage.sessionKey;
 
      try {
 
         var password = sjcl.decrypt(passwordKey, encryptedPassword);
-        var key = sjcl.decrypt(passwordKey, encryptedKey);
-        _this.key = key;
+        //var key = sjcl.decrypt(passwordKey, encryptedKey);
+        //_this.key = key;
         
-        success({ password: password, key: key });
+        success({ password: password }); //, key: key });
         
      } catch (e) { error(); }
       

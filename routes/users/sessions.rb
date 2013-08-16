@@ -97,7 +97,7 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     
     track user, 'User completed login'
     
-    session[:key] = authenticator.instance_eval { @S }
+    # session[:key] = authenticator.instance_eval { @S }
     
     response = {
       status: 'ok',

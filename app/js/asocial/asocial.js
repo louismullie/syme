@@ -1,6 +1,6 @@
 guard('asocial', {
   
-  version: '0.1.2',
+  version: '0.1.4',
 
   helpers:  asocial_helpers,
   binders:  asocial_binders,
