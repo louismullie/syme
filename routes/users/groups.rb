@@ -2,24 +2,13 @@ get '/users/:user_id/groups', auth: [] do |_|
 
   encrypted = params.dup
   params = decrypt_params(encrypted)
-  
+
   groups = @user.groups
     .where(ack_create: true)
     .desc(:updated_at).map do |group|
     GroupGenerator.generate(group, @user)
   end
-  
-  shift, left_column, right_column = true, [], []
-  
-  # Reorder posts for a two-column layout
-  groups.each do |group|
-    right_column << group if shift
-    left_column << group if !shift
-    shift = shift ? false : true
-  end
 
-  groups = left_column + right_column
-  
   user_invites = Invitation.where(
     email: @user.email, state: { '$in' => [1, 2]})
 
@@ -28,21 +17,21 @@ get '/users/:user_id/groups', auth: [] do |_|
     user_invites.map do |invite|
       InvitationGenerator.generate(invite)
     end
-  
+
   response = {
     groups: groups,
     invites: invites
   }.to_json
 
   encrypt_response(response)
-  
+
 end
 
 get '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
 
   encrypted = params.dup
   params = decrypt_params(encrypted)
-  
+
   group = begin
     @user.groups.find(group_id)
   rescue
@@ -52,7 +41,7 @@ get '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
   posts = group.complete_posts.page(1)
 
   response = FeedGenerator.generate(posts, @user, group).to_json
-  
+
   encrypt_response(response)
 
 end
@@ -63,7 +52,7 @@ post '/groups', auth: [] do
   params = decrypt_params(encrypted)
 
   name, screen_name = params[:name], params[:name].slug
-  
+
   membership = Membership.create(privilege: :admin)
 
   group = Group.create(
@@ -74,7 +63,7 @@ post '/groups', auth: [] do
   group.memberships << membership
   group.users << @user
   group.touch
-  
+
   @user.groups << @group
   @user.memberships << membership
 
@@ -87,25 +76,25 @@ post '/groups', auth: [] do
   response = { id: group.id.to_s }.to_json
 
   encrypt_response(response)
-  
+
 end
 
 put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
-  
+
   encrypted = params.dup
   params = decrypt_params(encrypted)
-  
+
   group = @user.groups.find(group_id)
-  
+
   if params[:ack_create]
     group.ack_create = true
     group.save!
   end
-  
+
   track @user, 'User acknowledged group creation'
 
   encrypt_response(empty_response)
-  
+
 end
 
 # Set group avatar.
@@ -125,20 +114,20 @@ end
 delete '/groups/:id', auth: [] do |id|
 
   group = Group.find(id)
-  
+
   User.all.each do |user|
-    
+
     notifications = user.notifications
       .where(group_id: group.id.to_s)
-    
+
     notifications.destroy_all
-    
+
   end
-  
+
   group.invitations.each do |invitation|
     invitation.destroy
   end
-  
+
   group.destroy
 
   track @user, 'User deleted group'
