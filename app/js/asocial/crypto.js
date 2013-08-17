@@ -47,10 +47,10 @@ guard('crypto', {
       // Hide spinner
       $('#spinner').hide();
 
-      console.log(
+      /*console.log(
         'Done decrypting collection of ' + this.length +
         ' items in ' + elapsedTime/1000 + 's', $(this)
-      );
+      );*/
 
       callback.call(this);
 

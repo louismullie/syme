@@ -164,14 +164,10 @@ var User = Backbone.RelationalModel.extend({
         
           if (inviteRequestJson.error)
             return errorCb();
-      
-          console.log(inviteRequestJson.keys);
           
           Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
             
             _this.updateKeyfile(encryptedKeyfile, function () {
-                
-                console.log(inviteRequestJson);
                 
                 invitation.save(
                   { integrate: inviteRequestJson.confirm.inviteConfirmation,
