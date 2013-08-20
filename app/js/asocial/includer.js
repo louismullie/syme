@@ -9,7 +9,6 @@
 //= require ./binders
 //= require ./socket
 //= require ./invite
-//= require ./uploader
 //= require ./auth
 //= require ./state
 //= require ./messages
@@ -17,5 +16,5 @@
 //= require ./asocial
 //= require_tree ./models
 //= require_tree ./binders
-//= require_tree ./classes
+//= require_tree ./utilities
 //= require ./binders/global

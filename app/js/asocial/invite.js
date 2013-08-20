@@ -51,7 +51,7 @@ guard('invite', {
     var groupId = inviteLink.data('invite-group_id');
     var request = inviteLink.data('invite-request');
 
-   asocial.helpers.showPrompt('Enter your invitation key', function (token) {
+   Prompt.show('Enter your invitation key', function (token) {
       
       user.acceptInviteRequest(invitationId, request, token, function () {
         Notifications.fetch();
@@ -82,8 +82,8 @@ guard('invite', {
 
       error: function (response) {
         if (response.status == 404) {
-          asocial.helpers.showAlert(
-            'This invitation does not exist anymore.');
+          Alert.show(
+            asocial.messages.error.invitationNotFound);
         } else {
           alert('Could not decline invitation request.');
         }
@@ -106,12 +106,12 @@ guard('invite', {
         keylistId     = $this.data('invite-group_id');
 
     // Render confirmation modal
-    var confirm_modal = asocial.helpers.render(
+    var confirm_modal = Template.render(
       'feed-modals-confirm', { name: name }
     );
 
     // Show confirmation modal
-    asocial.helpers.showModal(confirm_modal, {
+    Modal.show(confirm_modal, {
 
       closable: false,
       classes: 'modal-alert',
@@ -124,12 +124,12 @@ guard('invite', {
         //Proceed to confirmation
         user.confirmInviteRequest(keylistId, invitationId, inviteeId, accept, function () {
 
-          asocial.helpers.hideModal();
+          Modal.hide();
           Router.reload();
 
         }, function () {
 
-          asocial.helpers.showConfirm(
+          Confirm.show(
             
             name + ' entered the wrong key.', {
             title: 'Wrong key',
@@ -145,7 +145,7 @@ guard('invite', {
 
                 var token = inviteInfos[0].request[1];
                 
-                asocial.helpers.showAlert(
+                Alert.show(
                   "You've sent a new invitation to <b>" + email + "</b>. <br />" +
                   "A new invitation key was created." +
                   "<br />The new key is: <b>" + token + "</b>", {

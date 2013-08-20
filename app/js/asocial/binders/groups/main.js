@@ -4,7 +4,7 @@ asocial.binders.add('groups', { main: function() {
   $('#spinner').hide();
 
   // Breadcrumbs
-  asocial.helpers.navbarBreadcrumbs({
+  Navbar.setBreadCrumb({
     brand_only: true,
 
     elements: [
@@ -90,7 +90,7 @@ asocial.binders.add('groups', { main: function() {
             
               error: function () {
                 
-                asocial.helpers.showAlert(
+                Alert.show(
                   'Could not acknowledge group creation.');
                 
                 $this.data('active', false);
@@ -105,7 +105,7 @@ asocial.binders.add('groups', { main: function() {
       },
 
       error: function (error) {
-        asocial.helpers.showAlert(
+        Alert.show(
           'Could not create group.');
       }
     });
@@ -124,7 +124,7 @@ asocial.binders.add('groups', { main: function() {
     
     var $this = $(this);
     
-    asocial.helpers.showPrompt(message, 
+    Prompt.show(message, 
     
     function (value) {
       
@@ -151,12 +151,12 @@ asocial.binders.add('groups', { main: function() {
         error: function (response) {
           
           if (response.status == 404) {
-            asocial.helpers.showAlert(
+            Alert.show(
               'This group does not exist anymore.', {
               onhide: function () { Router.reload(); }
             });
           } else {
-            asocial.helpers.showAlert('Could not delete group', {
+            Alert.show('Could not delete group', {
               onhide: function () { Router.reload(); }
             });
           }
@@ -181,7 +181,7 @@ asocial.binders.add('groups', { main: function() {
 
     var groupId = $(this).data('group-id');
 
-    asocial.helpers.showConfirm(
+    Confirm.show(
       'Do you really want to leave this group?',
       {
         closable: true,
@@ -209,7 +209,7 @@ asocial.binders.add('groups', { main: function() {
             },
 
             error: function () {
-              asocial.helpers.showAlert('Could not leave group.');
+              Alert.show('Could not leave group.');
             }
 
           });

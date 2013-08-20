@@ -5,7 +5,7 @@ function Downloader(id, keys, options) {
   if (typeof(id) == 'undefined' ||
       typeof(keys) == 'undefined') {
 
-    asocial.helpers.showAlert('Error: empty ID or key.')
+    alert('Download error: empty ID or key.');
     return;
 
   } else {
@@ -60,7 +60,7 @@ function Downloader(id, keys, options) {
 
       } else {
 
-        asocial.helpers.showAlert('Bungee error.');
+        alert('Unknown download error.');
 
       }
 

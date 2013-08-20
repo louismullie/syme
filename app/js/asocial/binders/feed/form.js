@@ -87,7 +87,7 @@ asocial.binders.add('feed', { form: function(){
             data: { content: encryptedMessage },
             
             error: function () {
-              asocial.helpers.showAlert('Posting failed (PUT)');
+              Alert.show('Posting failed (PUT)');
             }
             
           });
@@ -97,7 +97,7 @@ asocial.binders.add('feed', { form: function(){
       },
 
       error: function (post) {
-        asocial.helpers.showAlert('Posting failed (POST)');
+        Alert.show('Posting failed (POST)');
       }
 
     });
@@ -126,7 +126,7 @@ asocial.binders.add('feed', { form: function(){
       event.preventDefault();
       $(draghelper).hide();
       var file = event.originalEvent.dataTransfer.files[0];
-      asocial.uploader.selectFile(file);
+      FileManager.selectFile(file);
     });
 
   // Trigger avatar changing
@@ -167,7 +167,7 @@ asocial.binders.add('feed', { form: function(){
     };
 
     // Thumbnail and upload avatar
-    var started = asocial.uploader.selectAvatar(
+    var started = FileManager.selectAvatar(
       // Filename
       $(this)[0].files[0],
 
@@ -197,6 +197,6 @@ asocial.binders.add('feed', { form: function(){
   });
 
   // Prepare file upload when the file is changed.
-  $('#upload_file').on('change', asocial.uploader.selectFile);
+  $('#upload_file').on('change', FileManager.selectFile);
 
 } }); // asocial.binders.add();

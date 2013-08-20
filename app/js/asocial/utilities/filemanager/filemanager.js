@@ -1,26 +1,27 @@
-guard('uploader', {
+FileManager = {
 
   upload: function(file, data, progress, success) {
 
-    progress = progress || function () {};
-    success = success || function () {};
+    var progress = progress || function () {};
+    var success = success || function () {};
 
     var group = CurrentSession.getGroupId();
 
     if (file.size / 1024 > 1024 * 25) {
 
-      asocial.helpers.showAlert(
-        'You can only upload files of up to 25 Mb for now.');
-
+      Alert.show(
+        asocial.messages.file.maxSize);
+      
       asocial.helpers.resetFeedForm();
 
       return false;
 
     } else {
 
-      uploader = new Uploader(file, {
-        data: data, baseUrl: SERVER_URL + '/' + group + '/file/'
-      });
+      var baseUrl = SERVER_URL + '/' + group + '/file/';
+      var uploadOptions = { data: data, baseUrl: baseUrl };
+
+      uploader = new Uploader(file, uploadOptions);
 
       uploader.start(progress, success);
 
@@ -28,26 +29,6 @@ guard('uploader', {
 
     }
 
-  },
-
-  uploadTransfer: function (file, transfer_id) {
-
-    this.upload(
-
-      file, { transfer_id: transfer_id },
-
-      function (progress) { },
-
-      function (upload) {
-        var params = {
-          transfer_id: transfer_id,
-          group_id: CurrentSession.getGroupId()
-        };
-
-        $.post(SERVER_URL + '/send/file/start', params);
-      }
-
-    );
   },
 
   uploadFile: function (file, progress, success) {
@@ -212,18 +193,18 @@ guard('uploader', {
     $('ul#attachments').hide();
 
     // Upload file
-    if (asocial.uploader.hasImageMime(file)) {
-      asocial.uploader.uploadImage(file, progress, success);
+    if (FileManager.hasImageMime(file)) {
+      FileManager.uploadImage(file, progress, success);
     } else {
-      asocial.uploader.uploadFile(file, progress, success);
+      FileManager.uploadFile(file, progress, success);
     }
 
   },
 
   selectAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    if (!asocial.uploader.hasImageMime(file)) {
-      asocial.helpers.showAlert('This is not an image!');
+    if (!FileManager.hasImageMime(file)) {
+      Alert.show('This is not an image!');
       return false;
     }
 
@@ -238,8 +219,8 @@ guard('uploader', {
 
   selectGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    if (!asocial.uploader.hasImageMime(file)) {
-      asocial.helpers.showAlert('This is not an image!');
+    if (!FileManager.hasImageMime(file)) {
+      Alert.show('This is not an image!');
       return false;
     }
 
@@ -339,4 +320,4 @@ guard('uploader', {
     $('.textarea-supplement-file').addClass('hidden');
   }
 
-});
+};

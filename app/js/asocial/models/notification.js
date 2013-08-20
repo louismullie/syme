@@ -199,7 +199,7 @@ Notifications = (function(){
       if(notifications.length == 0) notifications = false;
 
       // Render all notifications into element
-      _this.$el.html( asocial.helpers.render('notification',
+      _this.$el.html( Template.render('notification',
         { notifications: notifications }) );
 
       // Update notification count in the navbar badge.

@@ -20,8 +20,6 @@ guard('messages', {
   
   auth: {
     
-    
-    
   },
   
   beta: {
@@ -32,6 +30,23 @@ guard('messages', {
              'should always keep backups of any important information ' +
              'that you share in your groups.'
     
+  },
+  
+  file: {
+    
+    maxSize: 'You can only upload files of up to 25 Mb for now.'
+    
+  },
+  
+  error: {
+    
+    fatal: 'An error has occured. We\'ve been notified ' +
+           'and we\'ll address this as soon as possible.',
+    
+    postingFailed: 'Posting failed (PUT)!',
+    
+    invitationNotFound: 'This invitation does not exist anymore.'
+  
   }
   
 });

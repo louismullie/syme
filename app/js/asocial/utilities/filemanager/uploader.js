@@ -105,7 +105,7 @@ function Uploader(file, options) {
 
     } else {
 
-      asocial.helpers.showAlert('Bungee error.');
+      Alert.show('Bungee error.');
 
     }
   };

@@ -28,9 +28,9 @@ asocial.binders.add('feed', { invite: function() {
   // Add new user
   $('#main').on('click', 'a#add-user, a#add-user-first', function(){
 
-    var content = asocial.helpers.render('feed-modals-invite');
+    var content = Template.render('feed-modals-invite');
 
-    asocial.helpers.showModal(content, {
+    Modal.show(content, {
 
       classes: 'modal-invite',
 
@@ -74,10 +74,10 @@ asocial.binders.add('feed', { invite: function() {
               log = _.omit(log, 'failed');
 
             // Compile success template with log
-            template = asocial.helpers.render('feed-modals-invite-success', log);
+            template = Template.render('feed-modals-invite-success', log);
           
             // Show modal
-            asocial.helpers.showAlert(template, {
+            Alert.show(template, {
               classes: 'modal-invite', title: 'Success',
               onsubmit: function () {
                 Router.reload();

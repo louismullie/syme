@@ -53,7 +53,7 @@ Session = function () {
 
             var msg = asocial.messages.app.outdated;
 
-            asocial.helpers.showAlert(msg, {
+            Alert.show(msg, {
               closable: false, title: 'Please update Syme',
               onsubmit: function () { Router.reload(); } });
 
@@ -61,7 +61,7 @@ Session = function () {
 
             var msg = asocial.messages.app.maintenance;
 
-            asocial.helpers.showAlert(msg, {
+            Alert.show(msg, {
               closable: false, title: 'Oops!',
               onsubmit: function () { Router.reload(); }
             });
@@ -70,7 +70,7 @@ Session = function () {
 
             var msg = asocial.messages.app.connection;
 
-            asocial.helpers.showAlert(msg, {
+            Alert.show(msg, {
               closable: false,
               title: 'No Internet connection',
               onsubmit: function () { Router.reload(); }

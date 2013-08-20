@@ -6,7 +6,6 @@ guard('asocial', {
   binders:  asocial_binders,
   crypto:   asocial_crypto,
   socket:   asocial_socket,
-  uploader: asocial_uploader,
   auth:     asocial_auth,
   state:    asocial_state,
   invite:   asocial_invite,

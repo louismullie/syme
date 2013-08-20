@@ -56,7 +56,7 @@ guard('auth', {
                 
                 var sessionKey = Sc.toString(16);
                 
-                asocial.helpers.showAlert(msg, {
+                Alert.show(msg, {
                   
                   title: 'Beta warning', closable: false,
                 
@@ -141,7 +141,7 @@ guard('auth', {
     asocial.auth.logout();
 
     // Force disconnection
-    asocial.helpers.showAlert('You have been disconnected', {
+    Alert.show('You have been disconnected', {
       title: 'Disconnected',
       submit: 'Log in',
       closable: false,

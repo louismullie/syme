@@ -7,19 +7,9 @@ Router = Backbone.Router.extend({
   navigate: function (fragment, options) {
 
     var history = Backbone.history;
-
-    // Default options and options === true to {trigger: options}
-    // if (!options || options === true) options = {trigger: options};
-
+    
     // Set fragment
     fragment = history.getFragment( fragment || '' );
-
-    // // If pushState is available, push/replace fragment as data to preserve blank url.
-    // console.log(options.replace ? 'replaceState' : 'pushState', { fragment: fragment });
-    // if (history._hasPushState)
-    //   History[options.replace ? 'replaceState' : 'pushState'](
-    //     { fragment: fragment }, document.title, '#'
-    //   );
     
     this.currentRoute = fragment;
     
@@ -34,15 +24,7 @@ Router = Backbone.Router.extend({
     return bits[bits.length-1] != 'groups';
     
   },
-
-  // Bypass checkURL to load the current pushed fragment
-  // Unused for now
-  // checkUrl: function(e) {
-  //   var state = History.getLastStoredState();
-  //   console.log('Old fragment: ', state.data.fragment);
-  //   Backbone.history.loadUrl( state.data.fragment );
-  // },
-
+  
   routes: {
 
     /* Root */
@@ -137,9 +119,8 @@ Router = Backbone.Router.extend({
 
   error: function(error){
     
-    asocial.helpers.showAlert(
-      'An error has occured. We\'ve been notified ' +
-      'and we\'ll address this as soon as possible.',
+    Alert.show(
+      asocial.messages.errors.fatal,
       {
         title: 'Oops! Something went wrong.',
         onhide: asocial.auth.disconnect
@@ -279,7 +260,7 @@ Router = Backbone.Router.extend({
         // Post or group doesn't exist
         $('#spinner').hide();
 
-        asocial.helpers.showAlert(
+        Alert.show(
           "This content has been removed by its owner."
         );
 

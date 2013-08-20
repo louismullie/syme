@@ -90,7 +90,8 @@ asocial.binders.add('feed', { comments: function(){
                 $this.data('active', false);
                 
                 // Show error message.
-                asocial.helpers.showAlert('Posting failed (PUT)!');
+                Alert.show(
+                  asocial.messages.error.postingFailed);
                 
               }
               
@@ -107,7 +108,8 @@ asocial.binders.add('feed', { comments: function(){
           $this.data('active', false);
           
           // Show error message.
-          asocial.helpers.showAlert('Posting failed (POST)!');
+          Alert.show(
+            asocial.messages.error.postingFailed);
           
         }
         
@@ -124,7 +126,7 @@ asocial.binders.add('feed', { comments: function(){
           group      = CurrentSession.getGroupId(),
           route      = SERVER_URL + '/' + group + '/comment/delete';
 
-      asocial.helpers.showConfirm(
+      Confirm.show(
         'Do you really want to delete this comment?',
         {
           closable: true,

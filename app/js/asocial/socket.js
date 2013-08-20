@@ -6,9 +6,9 @@ guard('socket', {
       
       var hangoutId = data.id;
       
-      asocial.helpers.showConfirm(
+      Confirm.show(
         
-        asocial.helpers.render('hangout'), 
+        Template.render('hangout'), 
         {
           title: 'Video chat with Louis Mullie',
           closable: false,
@@ -55,7 +55,7 @@ guard('socket', {
     },
     
     decline: function (data) {
-      asocial.helpers.showModal(data.recipient_name +
+      Modal.show(data.recipient_name +
         ' declined your request to video chat.');
     },
     
@@ -92,7 +92,7 @@ guard('socket', {
       $('#empty-group-notice').remove();
 
       // Render post with the data
-      var template = $(asocial.helpers.render('feed-post', post.view));
+      var template = $(Template.render('feed-post', post.view));
 
       var owner = post.view.owner.id;
 
@@ -149,7 +149,7 @@ guard('socket', {
       $('textarea.autogrow').autogrow().removeClass('autogrow');
       
       // Append new comment
-      container.append(asocial.helpers.render('feed-comment', data.view));
+      container.append(Template.render('feed-comment', data.view));
 
       // Decrypt
       asocial.crypto.batchDecrypt();
@@ -344,7 +344,7 @@ guard('socket', {
         var sentence = ' would like to send you the following file: ';
         var filename = asocial.helpers.getFilename(data.filename);
 
-        asocial.helpers.showAlert(data.sender_name + sentence + filename);
+        Alert.show(data.sender_name + sentence + filename);
 
         $.post(SERVER_URL + '/send/file/accept', {
           transfer_id: data.transfer_id, group_id: group
@@ -354,7 +354,7 @@ guard('socket', {
 
         var recipient = $('#' + data.recipient_id)
         var file = recipient.find('input[type="file"]')[0].files[0];
-        asocial.uploader.uploadTransfer(file, data.transfer_id);
+        FileManager.uploadTransfer(file, data.transfer_id);
 
       } else if (data.action == 'start') {
 
@@ -372,13 +372,13 @@ guard('socket', {
         );
 
       } else if (data.action == 'refuse') {
-        asocial.helpers.showAlert(data.reason);
+        Alert.show(data.reason);
       }
 
     },
 
     message: function (data) {
-      asocial.helpers.showAlert(data.sender.name + ' sent message: ' + data.message);
+      Alert.show(data.sender.name + ' sent message: ' + data.message);
     }
 
   },

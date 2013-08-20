@@ -164,7 +164,7 @@ asocial.binders.add('register', { main: function(){
             },
 
             error: function (model, response) {
-              asocial.helpers.showAlert('Registration error.', { onhide: location.reload });
+              Alert.show('Registration error.', { onhide: location.reload });
             }
 
           });

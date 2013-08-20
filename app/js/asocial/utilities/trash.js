@@ -1,3 +1,30 @@
+
+/*
+uploadTransfer: function (file, transfer_id) {
+
+  this.upload(
+
+    file, { transfer_id: transfer_id },
+
+    function (progress) { },
+
+    function (upload) {
+      
+      var params = {
+        transfer_id: transfer_id,
+        group_id: CurrentSession.getGroupId()
+      };
+
+      $.ajax(SERVER_URL + '/send/file/start', params);
+    }
+
+  );
+},
+
+*/
+
+/*
+
 guard('hangout', {
 
   start: function (data) {
@@ -27,3 +54,5 @@ guard('hangout', {
   }
 
 });
+
+*/
