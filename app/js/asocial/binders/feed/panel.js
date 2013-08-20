@@ -12,7 +12,7 @@ asocial.binders.add('feed', { panel: function(){
     var trigger = $('#group-photo-edit');
 
     // Get filename
-    var filename = asocial.helpers.getFilename($(this).val());
+    var filename = FileManager.getFilename($(this).val());
 
     // Return if filename is blank
     if (filename == '') return;

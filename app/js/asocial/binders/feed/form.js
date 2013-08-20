@@ -142,7 +142,7 @@ asocial.binders.add('feed', { form: function(){
   $('#upload_avatar').on('change', function() {
 
     // Get filename
-    var filename = asocial.helpers.getFilename($(this).val());
+    var filename = FileManager.getFilename($(this).val());
 
     // Return if filename is blank
     if (filename == "") return;

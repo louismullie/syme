@@ -1,10 +1,5 @@
 guard('helpers', {
 
-  // Display error in case of AJAX post failure
-  inlineError: function(html){
-    $('#error-container').html(html);
-  },
-
   // Increment unread counter when there is a new comment/post
   newContent: function (type, groupId, contentId) {
 
@@ -52,16 +47,7 @@ guard('helpers', {
     // Hide new content button
     $('#newcontent').hide();
   },
-
-  getFilename: function(fakepath) {
-    var filename = fakepath;
-    var lastIndex = filename.lastIndexOf("\\");
-    if(lastIndex >= 0) {
-      filename = filename.substring(lastIndex + 1);
-    }
-    return filename;
-  },
-
+  
   collapseHTML: function(shownLines, expanderLink){
 
     // Configuration
@@ -112,23 +98,6 @@ guard('helpers', {
 
   },
 
-  // If DOM element is in viewport.
-  elementInViewport: function(el){
-
-    var r, html;
-    if ( !el || 1 !== el.nodeType ) { return false; }
-    html = document.documentElement;
-    r = el.getBoundingClientRect();
-
-    return ( !!r
-      && r.bottom >= 0
-      && r.right >= 0
-      && r.top <= html.clientHeight
-      && r.left <= html.clientWidth
-    );
-
-  },
-
   replaceUserMentions: function (string, groupId)  {
     
     var full_names = this.findUserMentions(string, groupId);
@@ -167,40 +136,6 @@ guard('helpers', {
     
   },
 
-  formatSize: function (bytes, precision) {
-    precision = precision || 2;
-    var kilobyte = 1024;
-    var megabyte = kilobyte * 1024;
-    var gigabyte = megabyte * 1024;
-    var terabyte = gigabyte * 1024;
-
-    if ((bytes >= 0) && (bytes < kilobyte)) {
-      return bytes + ' B';
-
-    } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
-      return (bytes / kilobyte).toFixed(precision) + ' KB';
-
-    } else if ((bytes >= megabyte) && (bytes < gigabyte)) {
-      return (bytes / megabyte).toFixed(precision) + ' MB';
-
-    } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
-      return (bytes / gigabyte).toFixed(precision) + ' GB';
-
-    } else if (bytes >= terabyte) {
-      return (bytes / terabyte).toFixed(precision) + ' TB';
-
-    } else {
-      return bytes + ' B';
-    }
-  },
-
-  shortenString: function(string, maxChars) {
-
-    return string.substr(0, maxChars - 1) +
-    (string.length > maxChars ? '...' : '');
-
-  },
-
   resetFeedForm: function() {
 
      $('#feed-form').data('active', false);
@@ -211,18 +146,6 @@ guard('helpers', {
      $('#upload-box').removeClass('active');
      $('#upload-box').hide();
      $('ul#attachments').show();
-
-  },
-
-  getAndRender: function(template, url, callback, failure) {
-
-    var failure = failure || function(){};
-
-    $.getJSON(url, function (data) {
-      callback( Template.render(template, data) );
-    }).fail(function(){
-      callback( false );
-    });
 
   }
 

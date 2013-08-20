@@ -342,7 +342,7 @@ guard('socket', {
       if (data.action == 'request') {
 
         var sentence = ' would like to send you the following file: ';
-        var filename = asocial.helpers.getFilename(data.filename);
+        var filename = FileManager.getFilename(data.filename);
 
         Alert.show(data.sender_name + sentence + filename);
 

@@ -174,7 +174,7 @@ FileManager = {
 
     // Fill filesize
     box.find('span.filesize').text(
-      asocial.helpers.formatSize(file.size)
+      FileManager.formatSize(file.size)
     );
 
     // Delete/cancel upload event
@@ -318,6 +318,43 @@ FileManager = {
   reset: function () {
     $('.textarea-supplement-info').show();
     $('.textarea-supplement-file').addClass('hidden');
+  },
+  
+  
+  formatSize: function (bytes, precision) {
+    precision = precision || 2;
+    var kilobyte = 1024;
+    var megabyte = kilobyte * 1024;
+    var gigabyte = megabyte * 1024;
+    var terabyte = gigabyte * 1024;
+
+    if ((bytes >= 0) && (bytes < kilobyte)) {
+      return bytes + ' B';
+
+    } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
+      return (bytes / kilobyte).toFixed(precision) + ' KB';
+
+    } else if ((bytes >= megabyte) && (bytes < gigabyte)) {
+      return (bytes / megabyte).toFixed(precision) + ' MB';
+
+    } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
+      return (bytes / gigabyte).toFixed(precision) + ' GB';
+
+    } else if (bytes >= terabyte) {
+      return (bytes / terabyte).toFixed(precision) + ' TB';
+
+    } else {
+      return bytes + ' B';
+    }
+  },
+  
+  getFilename: function(fakepath) {
+    var filename = fakepath;
+    var lastIndex = filename.lastIndexOf("\\");
+    if(lastIndex >= 0) {
+      filename = filename.substring(lastIndex + 1);
+    }
+    return filename;
   }
 
 };

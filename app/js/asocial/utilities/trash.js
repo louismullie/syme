@@ -1,4 +1,3 @@
-
 /*
 uploadTransfer: function (file, transfer_id) {
 
