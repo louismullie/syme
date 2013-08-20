@@ -13,6 +13,66 @@ asocial.binders.add('groups', { main: function() {
     ]
   });
 
+  var sortToColumns = function(arr, cols) {
+
+    // Initialize results array with a level for each column
+    var results = [];
+
+    for(var i = 0; i < cols; i++){ results[i] = []; }
+
+    // Set current column counter
+    var currentCol = cols == 1 ? 0 : cols - 1;
+
+    // Distribute every element
+    _.each(arr, function(el) {
+
+      // Add element to current column
+      results[currentCol].push(el);
+
+      // Increment or reset currentCol
+      currentCol = currentCol + 1 >= cols ? 0 : currentCol + 1;
+
+    });
+
+    // Flatten and return
+    return _.flatten(results);
+
+  };
+
+  // Masonry disposition helper
+  var orderGroupCards = function(columns) {
+
+    // Get <li>s
+    var $ul = $('#groups ul'),
+        $li = $ul.children("li").not(':first-child');
+
+    // Store, remove and sort <li>s
+    var sortedLi = $li.detach().sort(function(a, b) {
+
+      // Get data-index of compared elements
+      a = parseInt( $(a).attr('data-index'), 0 );
+      b = parseInt( $(b).attr('data-index'), 0 );
+
+      // Order numerically
+      return a < b ? -1 : a > b ? 1 : 0;
+
+    });
+
+    // Append sorted <li>s
+    $ul.append(sortToColumns(sortedLi, columns));
+
+  };
+
+  enquire
+    // Small
+    .register("screen and (max-width:767px)", {
+      match : function() { orderGroupCards(1); }
+    })
+    // Medium
+    .register("screen and (min-width:768px)", {
+      match : function() { orderGroupCards(2); }
+    });
+
   // Timeago
   $('time.timeago').timeago();
 
@@ -45,13 +105,13 @@ asocial.binders.add('groups', { main: function() {
 
     // Prevent rapid creation of groups.
     if ($(this).data('active') == true) return;
-    
+
     // Mark pending group creation.
     $(this).data('active', true);
-    
+
     // Pass reference to self to subcontext.
     var $this = $(this);
-    
+
     var name = $(this).find('input[name="name"]').val();
 
     if ( name.length == 0 ) return;
@@ -65,38 +125,37 @@ asocial.binders.add('groups', { main: function() {
       success: function (group) {
 
         var userId =  CurrentSession.getUserId(), groupId = group.id;
-        
+
         var route = SERVER_URL + '/users/' + userId + '/groups/' + groupId;
 
         Crypto.createKeylist(group.id, function (encryptedKeyfile) {
 
           var currentUser = CurrentSession.getUser();
-          
+
           currentUser.updateKeyfile(encryptedKeyfile, function () {
-            
+
             Router.reload();
 
             $.encryptedAjax(route, {
-            
+
               type: 'PUT',
-            
+
               data: { ack_create: true },
-            
+
               success: function () {
-                
+
                 $this.data('active', false);
-                
+
               },
-            
+
               error: function () {
-                
                 Alert.show(
                   'Could not acknowledge group creation.');
-                
+
                 $this.data('active', false);
-                
+
               }
-            
+
             });
 
           });
@@ -121,25 +180,31 @@ asocial.binders.add('groups', { main: function() {
         message = 'Are you sure you want to delete this group ' +
                   'and all of its content? This is irreversible.' +
                   '<br>Type <b>delete</b> below to confirm.';
-    
+
     var $this = $(this);
+<<<<<<< HEAD
     
     Prompt.show(message, 
     
+=======
+
+    asocial.helpers.showPrompt(message,
+
+>>>>>>> b0a56d52be9fea0e0612c2bda688591cd1201069
     function (value) {
-      
+
       if (value != 'delete') return;
-      
+
       $.encryptedAjax(SERVER_URL + '/groups/' + groupId,
-      
+
         { type: 'DELETE',
 
         success: function (resp) {
 
           CurrentSession.groups.splice(CurrentSession.groups.indexOf(groupId), 1);
-          
+
           var user = CurrentSession.getUser();
-          
+
           user.deleteKeylist(groupId, function () {
             Notifications.reset();
             Notifications.fetch();
@@ -149,7 +214,7 @@ asocial.binders.add('groups', { main: function() {
         },
 
         error: function (response) {
-          
+
           if (response.status == 404) {
             Alert.show(
               'This group does not exist anymore.', {
@@ -160,19 +225,19 @@ asocial.binders.add('groups', { main: function() {
               onhide: function () { Router.reload(); }
             });
           }
-          
+
         }
-        
+
       });
-      
+
     },
-    
-    {  
+
+    {
       title: 'Delete group',
       submit: 'Ok',
       cancel: 'Cancel'
     });
-    
+
 
   });
 
@@ -197,15 +262,15 @@ asocial.binders.add('groups', { main: function() {
           $.encryptedAjax(route, { type: 'DELETE',
 
             success: function () {
-              
+
               var user = CurrentSession.getUser();
-              
+
               user.deleteKeylist(groupId, function () {
                 Notifications.reset();
                 Notifications.fetch();
                 Router.reload();
               });
-              
+
             },
 
             error: function () {
@@ -221,5 +286,5 @@ asocial.binders.add('groups', { main: function() {
 
   // Group pictures decryption
   $('.encrypted-background-image').trigger('decrypt');
-  
+
 } }); // asocial.binders.add();
