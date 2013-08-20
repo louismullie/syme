@@ -7,10 +7,7 @@ guard('asocial', {
   crypto:   asocial_crypto,
   socket:   asocial_socket,
   auth:     asocial_auth,
-  state:    asocial_state,
-  invite:   asocial_invite,
-  compat:   asocial_compat,
-  messages: asocial_messages
+  invite:   asocial_invite
 
 });
 
@@ -49,7 +46,7 @@ $(function(){
     asocial.binders.bind('global', false);
 
     // Trigger root.
-    if (asocial.compat.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
       Router.navigate('/');
     }
 

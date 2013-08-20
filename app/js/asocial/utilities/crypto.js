@@ -1,18 +1,7 @@
 Crypto = function (workerUrl) {
 
   var _this = this;
-
-  /*this.queueJob = function (job, successCb, errorCb) {
-
-    if (asocial.compat.inPhoneGap()) {
-      cordova.exec(successCb, errorCb, 'Crypto',
-        job.method, job.params);
-    } else {
-      this.workerPool.queueJob(job, successCb);
-    }
-
-  };*/
-
+  
   this.locked = false;
 
   this.onLockRelease = [];

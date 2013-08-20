@@ -120,7 +120,7 @@ Router = Backbone.Router.extend({
   error: function(error){
     
     Alert.show(
-      asocial.messages.errors.fatal,
+      Messages.errors.fatal,
       {
         title: 'Oops! Something went wrong.',
         onhide: asocial.auth.disconnect
@@ -198,8 +198,8 @@ Router = Backbone.Router.extend({
 
       } else {
 
-        asocial.state.feed.updatedPosts[groupId] = 0;
-        asocial.state.feed.updatedComments[groupId] = 0;
+        Syme.globals.updatedPosts[groupId] = 0;
+        Syme.globals.updatedComments[groupId] = 0;
         
         CurrentSession.setGroupId(groupId);
 

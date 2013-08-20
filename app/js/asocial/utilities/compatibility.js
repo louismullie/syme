@@ -1,5 +1,5 @@
-guard('compat', {
-
+Compatibility = {
+  
   inChromeExtension: function() {
 
     return (chrome && chrome.windows && chrome.windows.get &&
@@ -10,5 +10,5 @@ guard('compat', {
   inPhoneGap: function() {
     return typeof(PhoneGap) != 'undefined';
   }
-
-});
+  
+};

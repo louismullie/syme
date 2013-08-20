@@ -1,4 +1,4 @@
-guard('messages', {
+Messages = {
 
   app: {
     
@@ -19,6 +19,8 @@ guard('messages', {
   },
   
   auth: {
+    
+    disconnected: 'You have been disconnected'
     
   },
   
@@ -49,4 +51,4 @@ guard('messages', {
   
   }
   
-});
+};

@@ -3,9 +3,11 @@ guard('binders', {
   // Maybe should not use $.fn.binders
   // Use a local variable here instead.
   add: function(route, objectExtention) {
+    
     // Create namespace for binders.
     if(typeof($.fn.binders) === 'undefined')
       $.fn.binders = {};
+    
     // Create route object if it doesn't exist
     if(typeof($.fn.binders[route]) === 'undefined')
       $.fn.binders[route] = {};
@@ -72,7 +74,7 @@ guard('binders', {
       
       idleTime++;
 
-      if (asocial.compat.inChromeExtension()) {
+      if (Compatibility.inChromeExtension()) {
 
         chrome.storage.local.get('remember', function (setting) {
           

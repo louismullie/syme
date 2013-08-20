@@ -83,7 +83,7 @@ guard('invite', {
       error: function (response) {
         if (response.status == 404) {
           Alert.show(
-            asocial.messages.error.invitationNotFound);
+            Messages.error.invitationNotFound);
         } else {
           alert('Could not decline invitation request.');
         }

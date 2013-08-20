@@ -10,7 +10,7 @@ FileManager = {
     if (file.size / 1024 > 1024 * 25) {
 
       Alert.show(
-        asocial.messages.file.maxSize);
+        Messages.file.maxSize);
       
       asocial.helpers.resetFeedForm();
 

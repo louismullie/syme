@@ -10,11 +10,15 @@
 //= require ./socket
 //= require ./invite
 //= require ./auth
-//= require ./state
-//= require ./messages
-//= require ./compat
 //= require ./asocial
 //= require_tree ./models
 //= require_tree ./binders
 //= require_tree ./utilities
 //= require ./binders/global
+
+Syme = {
+  globals: {
+    updatedPosts: {},
+    updatedComments: {}
+  }
+};

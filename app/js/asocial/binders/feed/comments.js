@@ -91,7 +91,7 @@ asocial.binders.add('feed', { comments: function(){
                 
                 // Show error message.
                 Alert.show(
-                  asocial.messages.error.postingFailed);
+                  Messages.error.postingFailed);
                 
               }
               
@@ -109,7 +109,7 @@ asocial.binders.add('feed', { comments: function(){
           
           // Show error message.
           Alert.show(
-            asocial.messages.error.postingFailed);
+            Messages.error.postingFailed);
           
         }
         

@@ -2,7 +2,7 @@ guard('auth', {
 
   login: function(email, password, remember, success, fail, hack) {
 
-    if (asocial.compat.inChromeExtension())
+    if (Compatibility.inChromeExtension())
       chrome.storage.local.set({ 'remember':  remember });
 
     Backbone.Relational.store.reset();
@@ -52,7 +52,7 @@ guard('auth', {
 
                 $('meta[name="_csrf"]').attr('content', data.csrf);
 
-                var msg = asocial.messages.beta.warning;
+                var msg = Messages.beta.warning;
 
                 var sessionKey = Sc.toString(16);
                 
@@ -118,7 +118,7 @@ guard('auth', {
     var userId = CurrentSession.getUserId();
 
        // Reset notification counter.
-    if (asocial.compat.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
       chrome.browserAction.setBadgeText({ text: '' });
     }
 
@@ -139,7 +139,7 @@ guard('auth', {
     asocial.auth.logout();
 
     // Force disconnection
-    Alert.show('You have been disconnected', {
+    Alert.show(Messages.auth.disconnected, {
       title: 'Disconnected',
       submit: 'Log in',
       closable: false,

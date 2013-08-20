@@ -19,7 +19,7 @@ Session = function () {
     var version;
     
     // Get the application version.
-    if (asocial.compat.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
       version = chrome.app.getDetails().version;
     } else {
       version = asocial.version;
@@ -51,7 +51,7 @@ Session = function () {
 
           if (response.status == 409) {
 
-            var msg = asocial.messages.app.outdated;
+            var msg = Messages.app.outdated;
 
             Alert.show(msg, {
               closable: false, title: 'Please update Syme',
@@ -59,7 +59,7 @@ Session = function () {
 
           } else if (response.status == 502) {
 
-            var msg = asocial.messages.app.maintenance;
+            var msg = Messages.app.maintenance;
 
             Alert.show(msg, {
               closable: false, title: 'Oops!',
@@ -68,7 +68,7 @@ Session = function () {
 
           } else {
 
-            var msg = asocial.messages.app.connection;
+            var msg = Messages.app.connection;
 
             Alert.show(msg, {
               closable: false,
@@ -271,7 +271,7 @@ Session = function () {
     //var encryptedKey = sjcl.encrypt(
     //  this.passwordKey, this.key);
       
-    if (asocial.compat.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
 
       chrome.storage.local.set({
         'credentials':  { 
@@ -306,7 +306,7 @@ Session = function () {
     
     var passwordKey = this.passwordKey;
     
-    if (asocial.compat.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
 
       chrome.storage.local.get('credentials', function (cursor) {
         

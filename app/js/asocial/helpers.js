@@ -12,26 +12,26 @@ guard('helpers', {
     
     // Update respective counters
     if(type == "post"){
-      if (typeof(asocial.state.feed.updatedPosts[groupId]) == 'undefined')
+      if (typeof(Syme.globals.updatedPosts[groupId]) == 'undefined')
         return;
-      asocial.state.feed.updatedPosts[groupId] += 1;
+      Syme.globals.updatedPosts[groupId] += 1;
     } else if(type == "comment"){
       
       // Don't show new comment button if the group is not loaded.
-      if (typeof(asocial.state.feed.updatedComments[groupId]) == 'undefined')
+      if (typeof(Syme.globals.updatedComments[groupId]) == 'undefined')
         return;
       
       // Don't show new content button if updated comment is already visible.
       if ($('#' + contentId).length > 0)
         return;
       
-      asocial.state.feed.updatedComments[groupId] += 1;
+      Syme.globals.updatedComments[groupId] += 1;
     
     }
     
     // Update the counter with updated count
-    var total = asocial.state.feed.updatedPosts[groupId] +
-                asocial.state.feed.updatedComments[groupId];
+    var total = Syme.globals.updatedPosts[groupId] +
+                Syme.globals.updatedComments[groupId];
 
     // Show and update container
     newcontent.find('a span')
@@ -47,7 +47,7 @@ guard('helpers', {
     $('.post').removeClass('new-post');
 
     var groupId = CurrentSession.getGroupId();
-    asocial.state.feed.updatedPosts[groupId] = 0;
+    Syme.globals.updatedPosts[groupId] = 0;
 
     // Hide new content button
     $('#newcontent').hide();

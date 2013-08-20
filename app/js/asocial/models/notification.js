@@ -132,7 +132,7 @@ Notifications = (function(){
     });
 
     // Check if notification hasn't been displayed yet...
-    //if (asocial.compat.inChromeExtension() &&
+    //if (Compatibility.inChromeExtension() &&
     //   $('notification[id="' + data.id + '"]').length < 1) {
     //
     //  var notificationText = message.replace(/<(?:.|\n)*?>/gm, '');
@@ -206,7 +206,7 @@ Notifications = (function(){
       $('#notification-li').attr('data-badge', selector.length);
       
       // In a Chrome extension, update the title and badge count.
-      if (asocial.compat.inChromeExtension()) {
+      if (Compatibility.inChromeExtension()) {
 
         var count = selector.length == 0 ? '' : selector.length.toString();
          
