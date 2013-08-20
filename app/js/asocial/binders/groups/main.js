@@ -182,15 +182,9 @@ asocial.binders.add('groups', { main: function() {
                   '<br>Type <b>delete</b> below to confirm.';
 
     var $this = $(this);
-<<<<<<< HEAD
     
     Prompt.show(message, 
-    
-=======
-
-    asocial.helpers.showPrompt(message,
-
->>>>>>> b0a56d52be9fea0e0612c2bda688591cd1201069
+      
     function (value) {
 
       if (value != 'delete') return;
