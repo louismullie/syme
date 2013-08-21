@@ -11,7 +11,7 @@ asocial.binders.add('global', { decrypt: function() {
         groupId = post.data('group_id');
 
     var formatDecryptedText = function(decryptedText) {
-      
+
       // Retrieve the new key.
       if (decryptedText.error && decryptedText.error.missingKey) {
 
@@ -31,7 +31,7 @@ asocial.binders.add('global', { decrypt: function() {
         return done();
 
       }
-      
+
       // Format the text with Markdown, and make sure links open in new windows.
       var formattedText = marked(decryptedText).replace('<a', '<a target="_blank"');
 
@@ -57,17 +57,18 @@ asocial.binders.add('global', { decrypt: function() {
 
       // Format dynamic timestamps.
       $('time.timeago').timeago();
-      
+
       // Format comment textarea.
+      // KEEP THIS ONE
       $('textarea').autogrow();
-      
+
       done();
 
     };
-    
+
     // Decrypt, then format element
     if ($this.data('encrypted') == true) {
-      
+
       // Check that keys exist for current user.
       var userId = CurrentSession.getUserId();
       var message = JSON.parse($.base64.decode(text));
@@ -77,14 +78,14 @@ asocial.binders.add('global', { decrypt: function() {
         console.log('ERROR: Missing keys for current user.');
         formatDecryptedText('_This message could not be decrypted._');
       }
-      
+
       Crypto.decryptMessage(groupId, text, formatDecryptedText);
-      
+
     // Just format element.
     } else {
-      
+
       formatDecryptedText(text);
-      
+
     }
 
   });
@@ -103,9 +104,9 @@ asocial.binders.add('global', { decrypt: function() {
     if ( !keys ) return done();
 
     var callback = function(url) {
-      
+
       if (!url) return done();
-      
+
       // Set new src to master and slaves
       $this.add('.slave-avatar[data-user-id="' + user_id + '"]')
         .attr('src', url);
@@ -148,9 +149,9 @@ asocial.binders.add('global', { decrypt: function() {
     if ( !keys ) return done();
 
     var callback = function(url){
-      
+
       if (!url) return done();
-      
+
       // Set src to element
       $this.attr('src', url)
         .removeClass('.encrypted-' + type);

@@ -1,53 +1,68 @@
+/*
+ * Lightweight Textarea Autogrow
+ * Version 1.0
+ * Written by: Christophe Marois
+ *
+ * Using jQuery
+ *
+ * Instruction:
+ * -------------
+ * For the plugin to work accuratly, your textarea(s)
+ * must have a height and a line-height style specified, and
+ * both must have the same value. Also, the box-sizing (and
+ * its browser-specific counterparts) should be set to its
+ * default value, 'content-box'.
+ */
+
 $.fn.autogrow = function(){
 
-  this.filter('textarea').each(function() {
-    
-    if ($(this)[0].offsetHeight == 0) return;
-    
-    var $this = $(this),
+  // Bind update function to all possible events
+  // Note: the key to prevent flickering while keeping scrollbars
+  // for max-height is to bind the update function to 'scroll'
+  var handlers = 'focus keyup keydown scroll change cut paste';
 
-        minHeight = Math.abs($this.height()),
+  this.filter('textarea').each(function(){
 
-        shadow = $('<div></div>').css({
-            position:       'absolute',
-            top:            -10000,
-            left:           -10000,
-            width:          $(this).width(),
-            fontSize:       $this.css('fontSize'),
-            fontFamily:     $this.css('fontFamily'),
-            lineHeight:     $this.css('lineHeight'),
-            paddingTop:     $this.css('padding-top'),
-            paddingBottom:  $this.css('padding-bottom'),
-            borderTop:      $this.css('border-top'),
-            borderBottom:   $this.css('border-bottom'),
-            resize: 'none'
-        }).addClass('shadow').appendTo(document.body),
+    var $this = $(this);
 
-        update = function(){
-          var that = this;
+    var lineHeight = parseInt($this.css('line-height'), 10) ||
+      parseInt($this.css('font-size'), 10),
+        padding = parseInt($this.css('padding-top'), 10) +
+      parseInt($this.css('padding-bottom'), 10);
 
-          setTimeout(function(){
-            var val = that.value
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/&/g, '&amp;')
-              .replace(/\n/g, '<br/>&nbsp;');
+    var update = function(){
 
-            if ($.trim(val) === '') {
-              val = 'a';
-            }
+      // Set height to 0 to calculate scrollHeight;
+      // this should not produce flickering
+      $this.height(0);
 
-            shadow.html(val);
-            $(that).css('height', Math.max(shadow[0].offsetHeight, minHeight));
-          }, 0);
-        };
+      // Calculate line count from scrollHeight,
+      // padding and line-height
+      var lines = Math.floor( ( $this[0].scrollHeight - padding ) / lineHeight );
 
-    $this.change(update).keyup(update).keydown(update).focus(update).on('paste', update);
-    update.apply(this);
-    
-    $this.data('autogrow', true);
-    
+      // Set the textarea to correct height
+      $this.css('height', lines * lineHeight);
+
+    };
+
+    // Bind handlers to update action
+    $this.bind(handlers, update);
+
+    // Bind a 'autogrow.reset' event that clears
+    // and resizes the textarea
+    $this.bind('autogrow.reset', function(){
+      $this.val(''); update();
+    });
+
+    // Bind a 'autogrow.destroy' event that removes
+    // the plugin's effect on the element
+    $this.bind('autogrow.destroy', function(){
+      $this.unbind(handlers + ' autogrow.reset autogrow.destroy', update);
+    });
+
   });
 
+  // Chainability
   return this;
+
 };

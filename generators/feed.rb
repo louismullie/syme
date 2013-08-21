@@ -5,12 +5,14 @@ class FeedGenerator
     posts = generate_posts(posts, current_user, current_group)
     user = generate_user(current_user, current_group)
     users = generate_user_list(current_group, current_user)
+    mention_list = users.map{ |user| { id: user[:id], name: user[:full_name] } }.to_json
     invite = InvitationGenerator.generate_pending_invites(current_group, current_user)
     group = GroupGenerator.generate(current_group, current_user)
 
     {
       user: user,
       users: users,
+      mention_list: mention_list,
       posts: posts,
       group: group,
       invite: invite
@@ -23,7 +25,7 @@ class FeedGenerator
     membership = current_group.memberships
                   .find_by(user_id: current_user.id)
     avatar = membership.user_avatar
-    
+
     {
       id: current_user.id.to_s,
       is_admin: membership.is_at_least?(:admin),
@@ -34,31 +36,31 @@ class FeedGenerator
   end
 
   def self.generate_user_list(current_group, current_user)
-    
+
     user_list = current_group.users.map do |user|
-      
+
       # Skip current user
       next if user.id.to_s == current_user.id.to_s
-      
+
       membership = current_group.memberships.find_by(user_id: user.id)
       self.generate_user2(user, membership, current_user)
-      
+
     end.reject { |entry| entry.nil? }
-    
+
     # Prepend the current user to the group list
     current_membership = current_group.memberships.find_by(user_id: current_user.id)
     current_user = self.generate_user2(current_user, current_membership, current_user)
-    
+
     user_list.unshift(current_user)
-    
+
     user_list
-    
+
   end
 
   def self.generate_user2(user, membership, current_user)
-    
+
     avatar = membership.user_avatar
-    
+
     {
       id: user.id.to_s,
       is_current_user: current_user.id == user.id,
@@ -66,7 +68,7 @@ class FeedGenerator
       deletable: membership.deletable_by?(current_user),
       avatar: AvatarGenerator.generate(avatar, current_user)
     }
-    
+
   end
 
   def self.generate_posts(posts, current_user, current_group)

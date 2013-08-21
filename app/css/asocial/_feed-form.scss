@@ -102,16 +102,22 @@ form#feed-form {
 
     textarea {
       width: 100%;
-      min-height: $avatarPostSize; max-height: 200px;
-
-      @include box-sizing;
 
       margin: 0;
       padding: 10px;
       border: none;
 
-      font-size: .9em;
       font-weight: 400;
+
+      font-size: 14px;
+
+      // Textarea autogrow configuration
+      $lineHeight: 16px;
+
+      line-height:  $lineHeight;
+      min-height:   $lineHeight * 3;
+      max-height:   $lineHeight * 10;
+
     }
   }
 

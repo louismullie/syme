@@ -14,4 +14,23 @@ asocial.binders.add('feed', { shared: function(){
 
   });
 
+  // Mentions and autogrow
+  $('#main').on('format', 'textarea', function(e){
+
+    var mention_list = $('#mentioned_users').attr('data-list');
+
+    $(this).mentionsInput({
+      onDataRequest:function (mode, query, callback) {
+
+        var data = _.filter(mention_list, function(item) {
+          return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+        });
+
+        callback.call(this, data);
+
+      }
+    });
+
+  });
+
 } }); // asocial.binders.add();

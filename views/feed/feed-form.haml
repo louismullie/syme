@@ -26,7 +26,7 @@
 
   // Hidden encryption-related inputs
   %input#encrypted_content{ type: 'hidden', name: 'encrypted_content' }
-  %input#mentioned_users{ type: 'hidden', name: 'mentioned_users' }
+  %input#mentioned_users{ type: 'hidden', name: 'mentioned_users', :'data-list' => '{{mention_list}}' }
 
   // Hidden upload-related inputs
   %input#upload_id{ type: 'hidden', name: 'upload_id' }
