@@ -8,10 +8,9 @@
  * Instruction:
  * -------------
  * For the plugin to work accuratly, your textarea(s)
- * must have a height and a line-height style specified, and
+ * must have a line-height style specified, and
  * both must have the same value. Also, the box-sizing (and
- * its browser-specific counterparts) should be set to its
- * default value, 'content-box'.
+ * its browser-specific counterparts) should be set to 'border-box'
  */
 
 $.fn.autogrow = function(){
@@ -25,23 +24,26 @@ $.fn.autogrow = function(){
 
     var $this = $(this);
 
+    // Get sizes
     var lineHeight = parseInt($this.css('line-height'), 10) ||
       parseInt($this.css('font-size'), 10),
         padding = parseInt($this.css('padding-top'), 10) +
-      parseInt($this.css('padding-bottom'), 10);
+      parseInt($this.css('padding-bottom'), 10),
+        border = parseInt($this.css('border-top'), 10) +
+      parseInt($this.css('border-bottom'), 10);
 
     var update = function(){
 
       // Set height to 0 to calculate scrollHeight;
-      // this should not produce flickering
+      // it should be too fast to produce flickering
       $this.height(0);
 
       // Calculate line count from scrollHeight,
       // padding and line-height
-      var lines = Math.floor( ( $this[0].scrollHeight - padding ) / lineHeight );
+      var lines = Math.floor( ( $this[0].scrollHeight - padding - border ) / lineHeight );
 
       // Set the textarea to correct height
-      $this.css('height', lines * lineHeight);
+      $this.css('height', lines * lineHeight + padding + border);
 
     };
 

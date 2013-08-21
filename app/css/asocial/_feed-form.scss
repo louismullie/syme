@@ -104,7 +104,6 @@ form#feed-form {
       width: 100%;
 
       margin: 0;
-      padding: 10px;
       border: none;
 
       font-weight: 400;
@@ -113,10 +112,14 @@ form#feed-form {
 
       // Textarea autogrow configuration
       $lineHeight: 16px;
+      $padding: 10px;
 
+      @include box-sizing;
+
+      padding:      $padding;
       line-height:  $lineHeight;
-      min-height:   $lineHeight * 3;
-      max-height:   $lineHeight * 10;
+      min-height:   $padding * 2 + $lineHeight * 3; // Minimum lines
+      max-height:   $padding * 2 + $lineHeight * 10; // Maximum lines
 
     }
   }
