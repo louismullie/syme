@@ -90,8 +90,8 @@ asocial.binders.add('feed', { comments: function(){
                 $this.data('active', false);
                 
                 // Show error message.
-                Alert.show(
-                  Messages.error.postingFailed);
+                Syme.Alert.show(
+                  Syme.Messages.error.postingFailed);
                 
               }
               
@@ -108,8 +108,8 @@ asocial.binders.add('feed', { comments: function(){
           $this.data('active', false);
           
           // Show error message.
-          Alert.show(
-            Messages.error.postingFailed);
+          Syme.Alert.show(
+            Syme.Messages.error.postingFailed);
           
         }
         
@@ -126,7 +126,7 @@ asocial.binders.add('feed', { comments: function(){
           group      = CurrentSession.getGroupId(),
           route      = SERVER_URL + '/' + group + '/comment/delete';
 
-      Confirm.show(
+      Syme.Confirm.show(
         'Do you really want to delete this comment?',
         {
           closable: true,

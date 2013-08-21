@@ -56,7 +56,7 @@ var Invitation = Backbone.Model.extend({
     var groupId = inviteLink.data('invite-group_id');
     var request = inviteLink.data('invite-request');
 
-   Prompt.show('Enter your invitation key', function (token) {
+   Syme.Prompt.show('Enter your invitation key', function (token) {
     
       user.acceptInviteRequest(invitationId, request, token, function () {
         Notifications.fetch();
@@ -87,8 +87,8 @@ var Invitation = Backbone.Model.extend({
 
       error: function (response) {
         if (response.status == 404) {
-          Alert.show(
-            Messages.error.invitationNotFound);
+          Syme.Alert.show(
+            Syme.Messages.error.invitationNotFound);
         } else {
           alert('Could not decline invitation request.');
         }
@@ -111,12 +111,12 @@ var Invitation = Backbone.Model.extend({
         keylistId     = $this.data('invite-group_id');
 
     // Render confirmation modal
-    var confirm_modal = Template.render(
+    var confirm_modal = Syme.Template.render(
       'feed-modals-confirm', { name: name }
     );
 
     // Show confirmation modal
-    Modal.show(confirm_modal, {
+    Syme.Modal.show(confirm_modal, {
 
       closable: false,
       classes: 'modal-alert',
@@ -129,12 +129,12 @@ var Invitation = Backbone.Model.extend({
         //Proceed to confirmation
         user.confirmInviteRequest(keylistId, invitationId, inviteeId, accept, function () {
 
-          Modal.hide();
+          Syme.Modal.hide();
           Router.reload();
 
         }, function () {
 
-          Confirm.show(
+          Syme.Confirm.show(
           
             name + ' entered the wrong key.', {
             title: 'Wrong key',
@@ -150,7 +150,7 @@ var Invitation = Backbone.Model.extend({
 
                 var token = inviteInfos[0].request[1];
               
-                Alert.show(
+                Syme.Alert.show(
                   "You've sent a new invitation to <b>" + email + "</b>. <br />" +
                   "A new invitation key was created." +
                   "<br />The new key is: <b>" + token + "</b>", {

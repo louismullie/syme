@@ -21,7 +21,7 @@ asocial.binders.add('feed', { posts: function(){
           group      = CurrentSession.getGroupId(),
           route      = SERVER_URL + '/' + group + '/post/delete';
 
-      Confirm.show(
+      Syme.Confirm.show(
         'Do you really want to delete this post?',
         {
           closable: true,
@@ -112,7 +112,7 @@ asocial.binders.add('feed', { posts: function(){
       
       if (!url) return;
       
-      Lightbox.show(url);
+      Syme.Lightbox.show(url);
       
     });
 

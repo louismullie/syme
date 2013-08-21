@@ -105,7 +105,7 @@ function Uploader(file, options) {
 
     } else {
 
-      Alert.show('Bungee error.');
+      Syme.Alert.show('Bungee error.');
 
     }
   };

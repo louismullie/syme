@@ -148,7 +148,7 @@ asocial.binders.add('register', { main: function(){
 
               user.createKeyfile(keys.key2, function () {
                 
-                Auth.login(email, password, remember, function(derivedKey, sessionKey) {
+                Syme.Auth.login(email, password, remember, function(derivedKey, sessionKey) {
                   
                     CurrentSession = new Session();
 
@@ -164,7 +164,7 @@ asocial.binders.add('register', { main: function(){
             },
 
             error: function (model, response) {
-              Alert.show('Registration error.', { onhide: location.reload });
+              Syme.Alert.show('Registration error.', { onhide: location.reload });
             }
 
           });

@@ -22,7 +22,7 @@ asocial.binders.add('login', { main: function(){
         remember = $this.find('input[name="remember_me"]').prop("checked");
 
       // Login
-      Auth.login(email, password, remember, function(derivedKey, sessionKey) {
+      Syme.Auth.login(email, password, remember, function(derivedKey, sessionKey) {
 
         CurrentSession = new Session();
         

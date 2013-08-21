@@ -80,7 +80,7 @@ Router = Backbone.Router.extend({
   },
 
   logout: function() {
-    Auth.logout(function () {
+    Syme.Auth.logout(function () {
       window.location = '';
     });
   },
@@ -119,11 +119,11 @@ Router = Backbone.Router.extend({
 
   error: function(error){
     
-    Alert.show(
-      Messages.errors.fatal,
+    Syme.Alert.show(
+      Syme.Messages.errors.fatal,
       {
         title: 'Oops! Something went wrong.',
-        onhide: Auth.disconnect
+        onhide: Syme.Auth.disconnect
       }
     );
     
@@ -253,14 +253,14 @@ Router = Backbone.Router.extend({
       if(response.status == 401) {
 
         // User has been logged off.
-        Auth.disconnect();
+        Syme.Auth.disconnect();
 
       } else if (response.status == 404) {
 
         // Post or group doesn't exist
         $('#spinner').hide();
 
-        Alert.show(
+        Syme.Alert.show(
           "This content has been removed by its owner."
         );
 

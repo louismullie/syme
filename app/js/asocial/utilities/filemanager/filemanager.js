@@ -9,8 +9,8 @@ FileManager = {
 
     if (file.size / 1024 > 1024 * 25) {
 
-      Alert.show(
-        Messages.file.maxSize);
+      Syme.Alert.show(
+        Syme.Messages.file.maxSize);
       
       asocial.helpers.resetFeedForm();
 
@@ -174,7 +174,7 @@ FileManager = {
 
     // Fill filesize
     box.find('span.filesize').text(
-      FileManager.formatSize(file.size)
+      Syme.FileManager.formatSize(file.size)
     );
 
     // Delete/cancel upload event
@@ -193,18 +193,18 @@ FileManager = {
     $('ul#attachments').hide();
 
     // Upload file
-    if (FileManager.hasImageMime(file)) {
-      FileManager.uploadImage(file, progress, success);
+    if (Syme.FileManager.hasImageMime(file)) {
+      Syme.FileManager.uploadImage(file, progress, success);
     } else {
-      FileManager.uploadFile(file, progress, success);
+      Syme.FileManager.uploadFile(file, progress, success);
     }
 
   },
 
   selectAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    if (!FileManager.hasImageMime(file)) {
-      Alert.show('This is not an image!');
+    if (!Syme.FileManager.hasImageMime(file)) {
+      Syme.Alert.show('This is not an image!');
       return false;
     }
 
@@ -219,8 +219,8 @@ FileManager = {
 
   selectGroupAvatar: function (file, thumbnailCallback, uploadCallback) {
 
-    if (!FileManager.hasImageMime(file)) {
-      Alert.show('This is not an image!');
+    if (!Syme.FileManager.hasImageMime(file)) {
+      Syme.Alert.show('This is not an image!');
       return false;
     }
 

@@ -10,7 +10,7 @@ asocial.binders.add('feed', { main: function(){
     $('#feed-panel-column').show(0);
 
     // Breadcrumbs
-    Navbar.setBreadCrumb({
+    Syme.Navbar.setBreadCrumb({
       brand_only: false,
 
       elements: [

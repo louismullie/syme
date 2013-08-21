@@ -1,4 +1,4 @@
-Modal = {
+Syme.Modal = {
  
   show: function(html, options) {
 
@@ -35,12 +35,12 @@ Modal = {
 
       // Close on escape
       $(document).on('keydown', function(e){
-        if ( e.which == 27 ) Modal.hide();
+        if ( e.which == 27 ) Syme.Modal.hide();
       });
 
       // Close on outside click
       $('#responsive-modal').click(function(){
-        Modal.hide();
+        Syme.Modal.hide();
       });
 
       $('#responsive-modal div.container').click(function(e){
@@ -51,21 +51,21 @@ Modal = {
 
     // Submit on enter key
     $(document).on('keydown', function(e){
-      if ( e.which == 13 ) Modal.hide(true);
+      if ( e.which == 13 ) Syme.Modal.hide(true);
     });
 
     // Close on clicking a[role="close-modal"]
     $('#responsive-modal a[role="close-modal"]').click(function(e){
       e.preventDefault();
       if ( $(this).hasClass('disabled') ) return false;
-      Modal.hide();
+      Syme.Modal.hide();
     });
 
     // Submit on clicking a[role="submit-modal"]
     $('#responsive-modal a[role="submit-modal"]').click(function(e){
       e.preventDefault();
       if ( $(this).hasClass('disabled') ) return false;
-      Modal.hide(true);
+      Syme.Modal.hide(true);
     });
 
     // Submit on clicking a[role="submit-modal"]

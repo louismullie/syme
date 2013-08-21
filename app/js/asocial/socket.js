@@ -6,9 +6,9 @@ guard('socket', {
       
       var hangoutId = data.id;
       
-      Confirm.show(
+      Syme.Confirm.show(
         
-        Template.render('hangout'), 
+        Syme.Template.render('hangout'), 
         {
           title: 'Video chat with Louis Mullie',
           closable: false,
@@ -55,7 +55,7 @@ guard('socket', {
     },
     
     decline: function (data) {
-      Modal.show(data.recipient_name +
+      Syme.Modal.show(data.recipient_name +
         ' declined your request to video chat.');
     },
     
@@ -92,7 +92,7 @@ guard('socket', {
       $('#empty-group-notice').remove();
 
       // Render post with the data
-      var template = $(Template.render('feed-post', post.view));
+      var template = $(Syme.Template.render('feed-post', post.view));
 
       var owner = post.view.owner.id;
 
@@ -149,7 +149,7 @@ guard('socket', {
       $('textarea.autogrow').autogrow().removeClass('autogrow');
       
       // Append new comment
-      container.append(Template.render('feed-comment', data.view));
+      container.append(Syme.Template.render('feed-comment', data.view));
 
       // Decrypt
       asocial.crypto.batchDecrypt();
@@ -342,9 +342,9 @@ guard('socket', {
       if (data.action == 'request') {
 
         var sentence = ' would like to send you the following file: ';
-        var filename = FileManager.getFilename(data.filename);
+        var filename = Syme.FileManager.getFilename(data.filename);
 
-        Alert.show(data.sender_name + sentence + filename);
+        Syme.Alert.show(data.sender_name + sentence + filename);
 
         $.post(SERVER_URL + '/send/file/accept', {
           transfer_id: data.transfer_id, group_id: group
@@ -354,7 +354,7 @@ guard('socket', {
 
         var recipient = $('#' + data.recipient_id)
         var file = recipient.find('input[type="file"]')[0].files[0];
-        FileManager.uploadTransfer(file, data.transfer_id);
+        Syme.FileManager.uploadTransfer(file, data.transfer_id);
 
       } else if (data.action == 'start') {
 
@@ -372,13 +372,13 @@ guard('socket', {
         );
 
       } else if (data.action == 'refuse') {
-        Alert.show(data.reason);
+        Syme.Alert.show(data.reason);
       }
 
     },
 
     message: function (data) {
-      Alert.show(data.sender.name + ' sent message: ' + data.message);
+      Syme.Alert.show(data.sender.name + ' sent message: ' + data.message);
     }
 
   },

@@ -1,7 +1,7 @@
 asocial.binders.add('global', { main: function(){
 
   // Set the title for the document.
-  if (Compatibility.inChromeExtension()) {
+  if (Syme.Compatibility.inChromeExtension()) {
     document.title = "Syme";
   }
 

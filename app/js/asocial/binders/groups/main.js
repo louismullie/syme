@@ -4,7 +4,7 @@ asocial.binders.add('groups', { main: function() {
   $('#spinner').hide();
 
   // Breadcrumbs
-  Navbar.setBreadCrumb({
+  Syme.Navbar.setBreadCrumb({
     brand_only: true,
 
     elements: [
@@ -149,7 +149,7 @@ asocial.binders.add('groups', { main: function() {
               },
 
               error: function () {
-                Alert.show(
+                Syme.Alert.show(
                   'Could not acknowledge group creation.');
 
                 $this.data('active', false);
@@ -164,7 +164,7 @@ asocial.binders.add('groups', { main: function() {
       },
 
       error: function (error) {
-        Alert.show(
+        Syme.Alert.show(
           'Could not create group.');
       }
     });
@@ -183,7 +183,7 @@ asocial.binders.add('groups', { main: function() {
 
     var $this = $(this);
     
-    Prompt.show(message, 
+    Syme.Prompt.show(message, 
       
     function (value) {
 
@@ -210,12 +210,12 @@ asocial.binders.add('groups', { main: function() {
         error: function (response) {
 
           if (response.status == 404) {
-            Alert.show(
+            Syme.Alert.show(
               'This group does not exist anymore.', {
               onhide: function () { Router.reload(); }
             });
           } else {
-            Alert.show('Could not delete group', {
+            Syme.Alert.show('Could not delete group', {
               onhide: function () { Router.reload(); }
             });
           }
@@ -240,7 +240,7 @@ asocial.binders.add('groups', { main: function() {
 
     var groupId = $(this).data('group-id');
 
-    Confirm.show(
+    Syme.Confirm.show(
       'Do you really want to leave this group?',
       {
         closable: true,
@@ -268,7 +268,7 @@ asocial.binders.add('groups', { main: function() {
             },
 
             error: function () {
-              Alert.show('Could not leave group.');
+              Syme.Alert.show('Could not leave group.');
             }
 
           });

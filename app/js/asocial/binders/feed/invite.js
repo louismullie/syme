@@ -28,9 +28,9 @@ asocial.binders.add('feed', { invite: function() {
   // Add new user
   $('#main').on('click', 'a#add-user, a#add-user-first', function(){
 
-    var content = Template.render('feed-modals-invite');
+    var content = Syme.Template.render('feed-modals-invite');
 
-    Modal.show(content, {
+    Syme.Modal.show(content, {
 
       classes: 'modal-invite',
 
@@ -74,10 +74,10 @@ asocial.binders.add('feed', { invite: function() {
               log = _.omit(log, 'failed');
 
             // Compile success template with log
-            template = Template.render('feed-modals-invite-success', log);
+            template = Syme.Template.render('feed-modals-invite-success', log);
           
             // Show modal
-            Alert.show(template, {
+            Syme.Alert.show(template, {
               classes: 'modal-invite', title: 'Success',
               onsubmit: function () {
                 Router.reload();

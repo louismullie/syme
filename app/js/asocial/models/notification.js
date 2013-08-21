@@ -132,7 +132,7 @@ Notifications = (function(){
     });
 
     // Check if notification hasn't been displayed yet...
-    //if (Compatibility.inChromeExtension() &&
+    //if (Syme.Compatibility.inChromeExtension() &&
     //   $('notification[id="' + data.id + '"]').length < 1) {
     //
     //  var notificationText = message.replace(/<(?:.|\n)*?>/gm, '');
@@ -199,14 +199,14 @@ Notifications = (function(){
       if(notifications.length == 0) notifications = false;
 
       // Render all notifications into element
-      _this.$el.html( Template.render('notification',
+      _this.$el.html( Syme.Template.render('notification',
         { notifications: notifications }) );
 
       // Update notification count in the navbar badge.
       $('#notification-li').attr('data-badge', selector.length);
       
       // In a Chrome extension, update the title and badge count.
-      if (Compatibility.inChromeExtension()) {
+      if (Syme.Compatibility.inChromeExtension()) {
 
         var count = selector.length == 0 ? '' : selector.length.toString();
          
