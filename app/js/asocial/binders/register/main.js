@@ -148,7 +148,7 @@ asocial.binders.add('register', { main: function(){
 
               user.createKeyfile(keys.key2, function () {
                 
-                asocial.auth.login(email, password, remember, function(derivedKey, sessionKey) {
+                Auth.login(email, password, remember, function(derivedKey, sessionKey) {
                   
                     CurrentSession = new Session();
 

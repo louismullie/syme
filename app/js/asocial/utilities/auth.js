@@ -1,4 +1,4 @@
-guard('auth', {
+Auth = {
 
   login: function(email, password, remember, success, fail, hack) {
 
@@ -136,7 +136,7 @@ guard('auth', {
 
   disconnect: function () {
 
-    asocial.auth.logout();
+    Auth.logout();
 
     // Force disconnection
     Alert.show(Messages.auth.disconnected, {
@@ -150,4 +150,4 @@ guard('auth', {
 
   }
 
-});
+};

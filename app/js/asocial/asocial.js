@@ -5,9 +5,7 @@ guard('asocial', {
   helpers:  asocial_helpers,
   binders:  asocial_binders,
   crypto:   asocial_crypto,
-  socket:   asocial_socket,
-  auth:     asocial_auth,
-  invite:   asocial_invite
+  socket:   asocial_socket
 
 });
 

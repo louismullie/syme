@@ -132,7 +132,7 @@ asocial.binders.add('settings', { main: function(){
       type: 'DELETE',
 
       success: function () {
-        asocial.auth.disconnect();
+        Auth.disconnect();
       },
 
       error: function () {

@@ -2,12 +2,12 @@ asocial.binders.add('feed', { invite: function() {
 
   // Confirm user
   $('#main').on('click', '.invite-confirm', function(e) {
-    asocial.invite.confirmInvitationRequest($(this));
+    Invitation.confirmInvitationRequest($(this));
   });
 
   // Accept an invitation to join a group.
   $('#main').on('click', '.invite-delete', function (e) {
-    asocial.invite.cancelInvitationRequest($(this));
+    Invitation.cancelInvitationRequest($(this));
   });
 
   $('#main').on('click', '.invite-pending', function(e) {
@@ -66,7 +66,7 @@ asocial.binders.add('feed', { invite: function() {
           $this.find('a.modal-button').addClass('spinner');
 
           // Show confirmations and/or errors
-          asocial.invite.createInvitationRequest(emails, function(log){
+          Invitation.createInvitationRequest(emails, function(log){
 
             if ( _.size(log.failed) == 0 )
               // If failed is empty, remove it from log

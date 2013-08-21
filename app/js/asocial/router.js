@@ -80,7 +80,7 @@ Router = Backbone.Router.extend({
   },
 
   logout: function() {
-    asocial.auth.logout(function () {
+    Auth.logout(function () {
       window.location = '';
     });
   },
@@ -123,7 +123,7 @@ Router = Backbone.Router.extend({
       Messages.errors.fatal,
       {
         title: 'Oops! Something went wrong.',
-        onhide: asocial.auth.disconnect
+        onhide: Auth.disconnect
       }
     );
     
@@ -253,7 +253,7 @@ Router = Backbone.Router.extend({
       if(response.status == 401) {
 
         // User has been logged off.
-        asocial.auth.disconnect();
+        Auth.disconnect();
 
       } else if (response.status == 404) {
 

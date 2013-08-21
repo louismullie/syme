@@ -242,25 +242,25 @@ Notifications = (function(){
     acceptInvitation: function (e) {
       var $this = $(e.currentTarget);
       $('.popover').hide();
-      asocial.invite.acceptInvitationRequest($this);
+      Invitation.acceptInvitationRequest($this);
     },
 
     declineInvitation: function (e) {
       var $this = $(e.currentTarget);
       $('.popover').hide();
-      asocial.invite.cancelInvitationRequest($this);
+      Invitation.cancelInvitationRequest($this);
     },
 
     confirmInvitation: function (e) {
       var $this = $(e.currentTarget);
       $('.popover').hide();
-      asocial.invite.confirmInvitationRequest($this);
+      Invitation.confirmInvitationRequest($this);
     },
 
     cancelInvitation: function (e) {
       var $this = $(e.currentTarget);
       $('.popover').hide();
-      asocial.invite.cancelInvitationRequest($this);
+      Invitation.cancelInvitationRequest($this);
     }
 
   });

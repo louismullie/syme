@@ -341,11 +341,7 @@ var User = Backbone.RelationalModel.extend({
     var _this = this;
     
     this.set('keyfile', encryptedKeyfile);
-    
-    Crypto.getSerializedKeyfile(function (e) {
-      console.log("[Backbone] Updated key file", e);
-    });
-    
+
     this.save(null, {
       success: keyfileUpdatedCb,
       error: _this.userSaveError

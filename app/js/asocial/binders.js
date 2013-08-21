@@ -86,7 +86,7 @@ guard('binders', {
           clearInterval(idleInterval);
           
           // Disconnect the user.
-          asocial.auth.disconnect();
+          Auth.disconnect();
           
         });
 
