@@ -19,7 +19,7 @@ Session = function () {
     var version;
     
     // Get the application version.
-    if (Syme.Compatibility.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
       version = chrome.app.getDetails().version;
     } else {
       version = asocial.version;
@@ -51,26 +51,26 @@ Session = function () {
 
           if (response.status == 409) {
 
-            var msg = Syme.Messages.app.outdated;
+            var msg = Messages.app.outdated;
 
-            Syme.Alert.show(msg, {
+            Alert.show(msg, {
               closable: false, title: 'Please update Syme',
               onsubmit: function () { Router.reload(); } });
 
           } else if (response.status == 502) {
 
-            var msg = Syme.Messages.app.maintenance;
+            var msg = Messages.app.maintenance;
 
-            Syme.Alert.show(msg, {
+            Alert.show(msg, {
               closable: false, title: 'Oops!',
               onsubmit: function () { Router.reload(); }
             });
 
           } else {
 
-            var msg = Syme.Messages.app.connection;
+            var msg = Messages.app.connection;
 
-            Syme.Alert.show(msg, {
+            Alert.show(msg, {
               closable: false,
               title: 'No Internet connection',
               onsubmit: function () { Router.reload(); }
@@ -271,7 +271,7 @@ Session = function () {
     //var encryptedKey = sjcl.encrypt(
     //  this.passwordKey, this.key);
       
-    if (Syme.Compatibility.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
 
       chrome.storage.local.set({
         'credentials':  { 
@@ -306,7 +306,7 @@ Session = function () {
     
     var passwordKey = this.passwordKey;
     
-    if (Syme.Compatibility.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
 
       chrome.storage.local.get('credentials', function (cursor) {
         

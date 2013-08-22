@@ -136,7 +136,7 @@ var User = Backbone.RelationalModel.extend({
             {
               success: inviteAcceptedCb,
               error: function (error) {
-                Syme.Alert.show("This invitation does not exist anymore.");
+                Alert.show("This invitation does not exist anymore.");
               }
           });
           

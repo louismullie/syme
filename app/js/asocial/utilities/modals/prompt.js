@@ -1,4 +1,4 @@
-Syme.Prompt = {
+Prompt = {
 
   show: function(prompt, callback, options) {
 
@@ -23,10 +23,10 @@ Syme.Prompt = {
     };
 
     // Render content
-    var content = Syme.Template.render('modals-prompt',
+    var content = Template.render('modals-prompt',
       { content: prompt, closable: closable, title: title, submit: submit, cancel: cancel });
 
-    Syme.Modal.show(content, options);
+    Modal.show(content, options);
 
   }
 

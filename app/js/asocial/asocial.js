@@ -44,7 +44,7 @@ $(function(){
     asocial.binders.bind('global', false);
 
     // Trigger root.
-    if (Syme.Compatibility.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
       Router.navigate('/');
     }
 

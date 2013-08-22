@@ -1,4 +1,4 @@
-Syme.Messages = {
+Messages = {
 
   app: {
     

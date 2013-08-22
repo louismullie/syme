@@ -1,8 +1,8 @@
-Syme.Auth = {
+Auth = {
 
   login: function(email, password, remember, success, fail, hack) {
 
-    if (Syme.Compatibility.inChromeExtension())
+    if (Compatibility.inChromeExtension())
       chrome.storage.local.set({ 'remember':  remember });
 
     Backbone.Relational.store.reset();
@@ -52,11 +52,11 @@ Syme.Auth = {
 
                 $('meta[name="_csrf"]').attr('content', data.csrf);
 
-                var msg = Syme.Messages.beta.warning;
+                var msg = Messages.beta.warning;
 
                 var sessionKey = Sc.toString(16);
                 
-                Syme.Alert.show(msg, {
+                Alert.show(msg, {
                   
                   title: 'Beta warning',
                   onhide: function () { success(keys.key2, sessionKey); return true; }
@@ -118,7 +118,7 @@ Syme.Auth = {
     var userId = CurrentSession.getUserId();
 
        // Reset notification counter.
-    if (Syme.Compatibility.inChromeExtension()) {
+    if (Compatibility.inChromeExtension()) {
       chrome.browserAction.setBadgeText({ text: '' });
     }
 
@@ -136,10 +136,10 @@ Syme.Auth = {
 
   disconnect: function () {
 
-    Syme.Auth.logout();
+    Auth.logout();
 
     // Force disconnection
-    Syme.Alert.show(Syme.Messages.auth.disconnected, {
+    Alert.show(Messages.auth.disconnected, {
       title: 'Disconnected',
       submit: 'Log in',
       closable: false,

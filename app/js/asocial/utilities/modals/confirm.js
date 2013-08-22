@@ -1,4 +1,4 @@
-Syme.Confirm = {
+Confirm = {
 
   show: function(content, options) {
 
@@ -15,10 +15,10 @@ Syme.Confirm = {
     var cancel = typeof(options.cancel) === "undefined" ? 'Cancel' : options.cancel;
 
     // Render content
-    var content = Syme.Template.render('modals-confirm',
+    var content = Template.render('modals-confirm',
       { content: content, closable: closable, title: title, submit: submit, cancel: cancel });
 
-    Syme.Modal.show(content, options);
+    Modal.show(content, options);
 
   }
 

@@ -74,7 +74,7 @@ guard('binders', {
       
       idleTime++;
 
-      if (Syme.Compatibility.inChromeExtension()) {
+      if (Compatibility.inChromeExtension()) {
 
         chrome.storage.local.get('remember', function (setting) {
           
@@ -86,7 +86,7 @@ guard('binders', {
           clearInterval(idleInterval);
           
           // Disconnect the user.
-          Syme.Auth.disconnect();
+          Auth.disconnect();
           
         });
 

@@ -1,4 +1,4 @@
-Syme.Compatibility = {
+Compatibility = {
   
   inChromeExtension: function() {
 

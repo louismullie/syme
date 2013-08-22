@@ -12,7 +12,7 @@ asocial.binders.add('feed', { panel: function(){
     var trigger = $('#group-photo-edit');
 
     // Get filename
-    var filename = Syme.FileManager.getFilename($(this).val());
+    var filename = FileManager.getFilename($(this).val());
 
     // Return if filename is blank
     if (filename == '') return;
@@ -32,7 +32,7 @@ asocial.binders.add('feed', { panel: function(){
     };
 
     // Thumbnail and upload avatar
-    var started = Syme.FileManager.selectGroupAvatar(
+    var started = FileManager.selectGroupAvatar(
       // Filename
       $(this)[0].files[0],
 
@@ -69,7 +69,7 @@ asocial.binders.add('feed', { panel: function(){
 
     var userId = $(this).parent().attr('id');
 
-    Syme.Confirm.show(
+    Confirm.show(
       'Do you really want to delete this user from the group?',
       {
         closable: true,
@@ -92,7 +92,7 @@ asocial.binders.add('feed', { panel: function(){
 
             error: function (response) {
               if (response.status == 404) {
-                Syme.Alert.show(
+                Alert.show(
                   'This user has already left the group.');
               } else {
                 alert('Could not delete user.');

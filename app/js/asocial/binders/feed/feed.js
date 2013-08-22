@@ -83,7 +83,7 @@ asocial.binders.add('feed', { feed: function(){
             var post = posts[i];
 
             // Render HTML.
-            var html = Syme.Template.render('feed-post', post);
+            var html = Template.render('feed-post', post);
 
             // Append page
             $('#feed').data('pagesloaded', toload).append(html);

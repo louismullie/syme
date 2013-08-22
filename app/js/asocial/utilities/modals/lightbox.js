@@ -1,13 +1,13 @@
-Syme.Lightbox = {
+Lightbox = {
 
   show: function(url) {
 
     // Url is required to proceed
     if ( typeof(url) === "undefined" ) return false;
 
-    var template = Syme.Template.render('feed-modals-lightbox', { url: url });
+    var template = Template.render('feed-modals-lightbox', { url: url });
 
-    Syme.Modal.show(template, {
+    Modal.show(template, {
       classes: 'modal-lightbox',
 
       onshow: function() {

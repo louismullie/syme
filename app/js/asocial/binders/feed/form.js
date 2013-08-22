@@ -87,7 +87,7 @@ asocial.binders.add('feed', { form: function(){
             data: { content: encryptedMessage },
             
             error: function () {
-              Syme.Alert.show('Posting failed (PUT)');
+              Alert.show('Posting failed (PUT)');
             }
             
           });
@@ -97,7 +97,7 @@ asocial.binders.add('feed', { form: function(){
       },
 
       error: function (post) {
-        Syme.Alert.show('Posting failed (POST)');
+        Alert.show('Posting failed (POST)');
       }
 
     });
@@ -126,7 +126,7 @@ asocial.binders.add('feed', { form: function(){
       event.preventDefault();
       $(draghelper).hide();
       var file = event.originalEvent.dataTransfer.files[0];
-      Syme.FileManager.selectFile(file);
+      FileManager.selectFile(file);
     });
 
   // Trigger avatar changing
@@ -142,7 +142,7 @@ asocial.binders.add('feed', { form: function(){
   $('#upload_avatar').on('change', function() {
 
     // Get filename
-    var filename = Syme.FileManager.getFilename($(this).val());
+    var filename = FileManager.getFilename($(this).val());
 
     // Return if filename is blank
     if (filename == "") return;
@@ -167,7 +167,7 @@ asocial.binders.add('feed', { form: function(){
     };
 
     // Thumbnail and upload avatar
-    var started = Syme.FileManager.selectAvatar(
+    var started = FileManager.selectAvatar(
       // Filename
       $(this)[0].files[0],
 
@@ -197,6 +197,6 @@ asocial.binders.add('feed', { form: function(){
   });
 
   // Prepare file upload when the file is changed.
-  $('#upload_file').on('change', Syme.FileManager.selectFile);
+  $('#upload_file').on('change', FileManager.selectFile);
 
 } }); // asocial.binders.add();

@@ -4,7 +4,7 @@ asocial.binders.add('settings', { main: function(){
   $('#spinner').hide();
 
   // Breadcrumbs
-  Syme.Navbar.setBreadCrumb({
+  Navbar.setBreadCrumb({
     brand_only: true,
 
     elements: [
@@ -98,7 +98,7 @@ asocial.binders.add('settings', { main: function(){
       { success: function(model, response, options){
           callback( model.get('email') )
         }, error: function (model, response) {
-          Syme.Alert.show('This e-mail is already taken.');
+          Alert.show('This e-mail is already taken.');
           model.set('email', input.attr('placeholder')); // ??
           callback();
       }}
@@ -132,12 +132,12 @@ asocial.binders.add('settings', { main: function(){
       type: 'DELETE',
 
       success: function () {
-        Syme.Auth.disconnect();
+        Auth.disconnect();
       },
 
       error: function () {
         if (response.status == 404) {
-          Syme.Alert.show(
+          Alert.show(
             'This user has already left the group.');
         } else {
           alert('Could not delete user.');
