@@ -152,5 +152,15 @@ asocial.binders.add('feed', { feed: function(){
       .trigger('scroll');
 
   });
+  
+  // Prevent leaving if there's unsaved content
+  $(window).bind("beforeunload", function(e) {
+    
+    var unsavedContent = _.any($('textarea'),
+      function (textarea) { return textarea.value != ''; });
 
+    return unsavedContent ? Messages.error.unsavedContent : null;
+
+  });
+  
 } }); // asocial.binders.add();

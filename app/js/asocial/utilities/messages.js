@@ -47,7 +47,9 @@ Messages = {
     
     postingFailed: 'Posting failed (PUT)!',
     
-    invitationNotFound: 'This invitation does not exist anymore.'
+    invitationNotFound: 'This invitation does not exist anymore.',
+    
+    unsavedContent: 'You haven\'t finished your post yet. Do you want to leave without finishing?'
   
   }
   
