@@ -84,8 +84,10 @@ Rack::Mime::MIME_TYPES.merge!({
 require 'rack/csrf'
 
 use Rack::Csrf, skip: [
-    'POST:/users/current/sessions/current', 
-    'POST:/users/current/sessions'
+  # Allow registration without CSRF.
+  'POST:/users',
+  # Allow login without CSRF.
+  'POST:/users/current/sessions',
 ]
 
 require './app'
