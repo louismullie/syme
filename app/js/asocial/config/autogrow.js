@@ -29,9 +29,12 @@ $.fn.autogrow = function(){
       parseInt($this.css('font-size'), 10),
         padding = parseInt($this.css('padding-top'), 10) +
       parseInt($this.css('padding-bottom'), 10),
-        border = parseInt($this.css('border-top'), 10) +
-      parseInt($this.css('border-bottom'), 10);
+        border = parseInt($this.css('border-top-width'), 10) +
+      parseInt($this.css('border-bottom-width'), 10);
 
+    console.log($this, lineHeight, padding, border);
+
+    // Bind handlers events to update action
     var update = function(){
 
       // Set height to 0 to calculate scrollHeight;
@@ -40,27 +43,31 @@ $.fn.autogrow = function(){
 
       // Calculate line count from scrollHeight,
       // padding and line-height
-      var lines = Math.floor( ( $this[0].scrollHeight - padding - border ) / lineHeight );
+      var lines = Math.floor( ( $this[0].scrollHeight - padding ) / lineHeight );
+
+      console.log('lines', lines);
 
       // Set the textarea to correct height
-      $this.css('height', lines * lineHeight + padding + border);
+      $this.height(lines * lineHeight);
 
     };
-
-    // Bind handlers to update action
     $this.bind(handlers, update);
 
     // Bind a 'autogrow.reset' event that clears
     // and resizes the textarea
-    $this.bind('autogrow.reset', function(){
+    var reset = function() {
       $this.val(''); update();
-    });
+    };
+    $this.bind('autogrow.reset', reset);
 
     // Bind a 'autogrow.destroy' event that removes
     // the plugin's effect on the element
-    $this.bind('autogrow.destroy', function(){
-      $this.unbind(handlers + ' autogrow.reset autogrow.destroy', update);
-    });
+    var destroy = function(){
+      $this.unbind(handlers, update)
+           .unbind('autogrow.reset', reset)
+           .unbind('autogrow.destroy', destroy);
+    };
+    $this.bind('autogrow.destroy', destroy);
 
   });
 

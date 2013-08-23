@@ -276,7 +276,7 @@
         }
 
         .comment-box {
-          
+
           position: relative;
 
           border-bottom: 1px solid #ddd;
@@ -310,19 +310,19 @@
             font-size: 0.8em;
             line-height: 1.5em;
           }
-          
+
           a.time {
-            
+
             color: gray;
             font-weight: 400;
-            
+
           }
-          
+
           a.time:hover {
-            
+
             cursor: default;
             text-decoration: none;
-            
+
           }
 
           img.avatar {
@@ -402,16 +402,23 @@
       .comment-form {
         textarea {
           width: 100%;
-          min-height: .8em; max-height: 100px;
-          padding: 7px 10px;
-          margin: 0;
-
           @include box-sizing;
+
+          margin: 0;
           resize: none;
 
-          line-height: 1.5em;
-          font-size: .8em;
-          font-weight: 400;
+          font-size:    13px;
+          font-weight:  400;
+
+          // Textarea autogrow configuration
+          $lineHeight:  16px;
+          $padding:     7px;
+
+          padding:      #{$padding} 10px;
+          line-height:  $lineHeight;
+          height:       $padding * 2 + $lineHeight * 1 + 4; // Minimum lines + border
+          min-height:   $padding * 2 + $lineHeight * 1 + 4; // Minimum lines + border
+          max-height:   $padding * 2 + $lineHeight * 10;    // Maximum lines
         }
       }
     }
