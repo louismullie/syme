@@ -69,16 +69,26 @@ asocial.binders.add('feed', { invite: function() {
           Invitation.createInvitationRequest(emails, function(log){
             
             // If failed is empty, remove it from log.
-            if ( _.size(log.failed) == 0 )
+            if ( _.size(log.failed) == 0 ) {
+              
               log = _.omit(log, 'failed');
+              
+            // Otherwise, translate error to message.
+            } else {
+              
+              _.each(log.failed, function (value, key) {
+                log.failed[key] = Messages.error.invitationId[value];
+              });
 
+            }
+            
             // Compile success template with log
             var template = Template.render('feed-modals-invite-success', log);
             
             // Show modal
             Alert.show(template, {
               classes: 'modal-invite',
-              title: 'Success',
+              title: 'Invite people',
               onhide: function () {
                 Router.reload();
               }

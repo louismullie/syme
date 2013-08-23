@@ -49,7 +49,15 @@ Messages = {
     
     invitationNotFound: 'This invitation does not exist anymore.',
     
-    unsavedContent: 'You haven\'t finished your post yet. Do you want to leave without finishing?'
+    unsavedContent: 'You haven\'t finished your post yet. Do you want to leave without finishing?',
+    
+    invitation: {
+      
+      already_joined: 'already in the group',
+      already_invited: 'already accepted an invitation to this group',
+      own_email: 'this is your e-mail'
+      
+    }
   
   }
   
