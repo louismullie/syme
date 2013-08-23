@@ -77,7 +77,7 @@ asocial.binders.add('feed', { invite: function() {
             } else {
               
               _.each(log.failed, function (value, key) {
-                log.failed[key] = Messages.error.invitationId[value];
+                log.failed[key] = Messages.error.invitation[value];
               });
 
             }
