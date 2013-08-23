@@ -75,7 +75,7 @@ var User = Backbone.RelationalModel.extend({
     
     var _this = this;
     var invitation = new Invitation();
-    
+
     Crypto.createInviteRequests(keylistId, emails, function (inviteInfos) {
       
       var counter = emails.length;
@@ -90,7 +90,7 @@ var User = Backbone.RelationalModel.extend({
         
         _this.updateKeyfile(encryptedKeyfile, function () {
           
-          _.each(inviteInfos, function (inviteInfo) {
+          _.each(inviteInfos, function (inviteInfo, index) {
 
               var email = inviteInfo.alias,
                   request = inviteInfo.request;
@@ -105,8 +105,15 @@ var User = Backbone.RelationalModel.extend({
                   request: inviteRequest
                 },
                 {
+                  
                   success: inviteCreatedCbWrapper,
-                  error: inviteCreatedCbWrapper
+                  
+                  error: function (model, response) {
+                    var responseJson = JSON.parse(response.responseText);
+                    inviteInfos[index].error = responseJson.error;
+                    inviteCreatedCbWrapper();
+                  }
+                  
               });
           
           });

@@ -32,14 +32,24 @@ var Invitation = Backbone.Model.extend({
     var groupId = CurrentSession.getGroupId();
   
     var succeededInvitations = [];
+    
+    if (validatedEmails.length == 0)
+      return callback({ failed: failedInvitations });
   
     user.createInviteRequests(groupId, validatedEmails, function (inviteRequests) {
     
       _.each(inviteRequests, function (inviteRequestInfo) {
-        succeededInvitations.push({
-          email: inviteRequestInfo.alias,
-          token: inviteRequestInfo.request[1]
-        });
+        
+        if (inviteRequestInfo.error) {
+          var email = inviteRequestInfo.alias;
+          failedInvitations[email] = inviteRequestInfo.error;
+        } else {
+          succeededInvitations.push({
+            email: inviteRequestInfo.alias,
+            token: inviteRequestInfo.request[1]
+          });
+        }
+        
       });
     
       callback({ succeeded: succeededInvitations, failed: failedInvitations });

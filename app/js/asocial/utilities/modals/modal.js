@@ -1,7 +1,7 @@
 Modal = {
  
   show: function(html, options) {
-
+    
     var options  = typeof(options)          === "undefined" ? {} : options;
 
     // Options

@@ -67,21 +67,18 @@ asocial.binders.add('feed', { invite: function() {
 
           // Show confirmations and/or errors
           Invitation.createInvitationRequest(emails, function(log){
-
+            
+            // If failed is empty, remove it from log.
             if ( _.size(log.failed) == 0 )
-              // If failed is empty, remove it from log
-              // for templating purposes
               log = _.omit(log, 'failed');
 
             // Compile success template with log
-            template = Template.render('feed-modals-invite-success', log);
-          
+            var template = Template.render('feed-modals-invite-success', log);
+            
             // Show modal
             Alert.show(template, {
-              classes: 'modal-invite', title: 'Success',
-              onsubmit: function () {
-                Router.reload();
-              },
+              classes: 'modal-invite',
+              title: 'Success',
               onhide: function () {
                 Router.reload();
               }

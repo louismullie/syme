@@ -38,7 +38,7 @@ post '/invitations', auth: [] do
     error 400, 'missing_params'
   end
   
-  @group = @user.groups.find(invitation.group_id)
+  group = @user.groups.find(invitation.group_id)
   
   # Cleanup the e-mail.
   email = invitation.email
@@ -51,13 +51,22 @@ post '/invitations', auth: [] do
     error 400, 'own_email'
   end
   
-  if @group.users.where(email: email).any?
+  # Disallow inviting someone who is in the group.
+  if group.users.where(email: email).any?
     error 400, 'already_joined'
+  end
+  
+  # Allow multiple people inviting the same user
+  # to a group, but not if the invitee has already
+  # accepted one of the invitations.
+  if group.invitations.where(email: email)
+     .any? { |invitation| invitation.state > 1 }
+    error 400, 'already_invited'
   end
   
   token = SecureRandom.uuid
 
-  invitation = @group.invitations.create!(
+  invitation = group.invitations.create!(
     inviter_id: @user.id.to_s,
     privileges: :none, token: token,
     request: invitation.request,
