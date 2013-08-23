@@ -88,12 +88,27 @@ put '/invitations', auth: [] do
   
   if params.accept && invitation.state == 1
     
+    # Add the accept request to the invitation.
     invitation.accept = params.accept
-    invitation.state = 2
-    invitation.save!
     
+    # Bump the invitation state to pending confirm.
+    invitation.state = 2
+    
+    invitation.save! # Save the invitation.
+    
+    # Track the invitation accepted event.
     track @user, 'User accepted invitation'
     
+    # Get a list of other invitations to this group.
+    other_invitations =
+      invitation.group.invitations
+      .excludes(id: invitation.id)
+      .where(email: @user.email)
+    
+    # Destroy all other invitations to the group.
+    other_invitations.destroy_all
+    
+    # Send an e-mail to inviter requesting confirmation.
     request_confirm(invitation)
     
   elsif params.integrate && params.distribute &&
