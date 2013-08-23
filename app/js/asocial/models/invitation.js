@@ -55,9 +55,11 @@ var Invitation = Backbone.Model.extend({
     var invitationId = inviteLink.data('invite-id');
     var groupId = inviteLink.data('invite-group_id');
     var request = inviteLink.data('invite-request');
+    var inviterName = inviteLink.data('invite-inviter_name');
+    var message = 'Enter the key ' + inviterName + ' has sent you:';
 
-   Prompt.show('Enter your invitation key', function (token) {
-    
+    Prompt.show(message, function (token) {
+
       user.acceptInviteRequest(invitationId, request, token, function () {
         Notifications.fetch();
         Router.reload();
