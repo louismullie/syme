@@ -1,7 +1,7 @@
 Modal = {
- 
+
   show: function(html, options) {
-    
+
     var options  = typeof(options)          === "undefined" ? {} : options;
 
     // Options
@@ -61,18 +61,18 @@ Modal = {
       Modal.hide();
     });
 
-    // Submit on clicking a[role="submit-modal"]
+    // Modal submit on clicking a[role="submit-modal"]
     $('#responsive-modal a[role="submit-modal"]').click(function(e){
       e.preventDefault();
       if ( $(this).hasClass('disabled') ) return false;
       Modal.hide(true);
     });
 
-    // Submit on clicking a[role="submit-modal"]
-    $('#responsive-modal a[role="submit"]').click(function(e){
+    // Form submit on clicking a[role="submit"]
+    $('#responsive-modal a[role="submit"]').click(function(e){ alert('clicked');
       e.preventDefault();
-      if ( $(this).hasClass('disabled') ) return false;
-      $('#responsive-modal form').submit();
+      if ( !$(this).hasClass('disabled') )
+        $('#responsive-modal form').submit();
     });
 
     // Callback
@@ -112,5 +112,5 @@ Modal = {
     document.ontouchmove = function(e) { return true; }
 
   }
-   
+
 };

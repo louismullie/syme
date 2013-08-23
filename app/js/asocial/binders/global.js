@@ -65,29 +65,29 @@ asocial.binders.add('global', { main: function(){
     if( !$(this).hasClass('disabled') )
       $(this).closest('form').submit();
   });
-  
+
   $(document).on('click', '.clear-notifications', function (e) {
-    
+
     var userId = CurrentSession.getUserId();
     var url = SERVER_URL + '/users/' + userId + '/notifications';
-    
+
     $.encryptedAjax(url, {
-      
+
       type: 'DELETE',
-      
+
       success: function () {
         Notifications.reset();
         Notifications.fetch();
       },
-      
+
       error: function () {
         alert('Could not clear notifications.');
       }
-      
+
     });
-    
+
   });
-  
+
   // Background image decryption
   $(document).on('decrypt', '.encrypted-background-image', function(e, done){
 
@@ -101,9 +101,9 @@ asocial.binders.add('global', { main: function(){
     if ( !keys ) return done();
 
     var callback = function(url) {
-      
+
       if (!url) return done();
-      
+
       $this.css("background-image", "url('" + url + "')");
 
       // Set as decrypted

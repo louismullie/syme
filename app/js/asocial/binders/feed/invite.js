@@ -45,29 +45,31 @@ asocial.binders.add('feed', { invite: function() {
         // Initial textarea autosizing
         $('textarea.autogrow')
           .autogrow().removeClass('autogrow');
-        
-        // Bind form action directly, to avoid event persistance
-        $('#responsive-modal form').submit(function(e){
 
-          var $this = $(this);
+        // Bind form action directly, to avoid event persistance
+        $('#responsive-modal a.modal-button').bind('click', function(e){
+
+          e.preventDefault();
+
+          var $form = $('#responsive-modal form');
 
           // Return if event is locked
-          if($this.data('active')) return false;
+          if($form.data('active')) return false;
 
-          var emails = $this.find('textarea[name="emails"]').val();
+          var emails = $form.find('textarea[name="emails"]').val();
 
           // Return if textarea is blank
           if(!emails) return false;
 
           // Lock form
-          $this.data('active', true);
+          $form.data('active', true);
 
           // Show spinner
-          $this.find('a.modal-button').addClass('spinner');
+          $form.find('a.modal-button').addClass('spinner');
 
           // Show confirmations and/or errors
           Invitation.createInvitationRequest(emails, function(log){
-            
+
             // If failed is empty, remove it from log.
             if ( _.size(log.failed) == 0 ) {
               
@@ -84,7 +86,7 @@ asocial.binders.add('feed', { invite: function() {
             
             // Compile success template with log
             var template = Template.render('feed-modals-invite-success', log);
-            
+
             // Show modal
             Alert.show(template, {
               classes: 'modal-invite',

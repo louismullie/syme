@@ -32,8 +32,6 @@ $.fn.autogrow = function(){
         border = parseInt($this.css('border-top-width'), 10) +
       parseInt($this.css('border-bottom-width'), 10);
 
-    console.log($this, lineHeight, padding, border);
-
     // Bind handlers events to update action
     var update = function(){
 
@@ -44,8 +42,6 @@ $.fn.autogrow = function(){
       // Calculate line count from scrollHeight,
       // padding and line-height
       var lines = Math.floor( ( $this[0].scrollHeight - padding ) / lineHeight );
-
-      console.log('lines', lines);
 
       // Set the textarea to correct height
       $this.height(lines * lineHeight);
