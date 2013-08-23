@@ -68,11 +68,22 @@ asocial.binders.add('global', { main: function(){
   
   $(document).on('click', '.clear-notifications', function (e) {
     
-    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/notifications';
+    var userId = CurrentSession.getUserId();
+    var url = SERVER_URL + '/users/' + userId + '/notifications';
     
-    $.encryptedAjax(url, { type: 'DELETE',
-      success: function () { Notifications.reset(); Notifications.fetch(); },
-      error: function () { alert('Could not create notifications.'); }
+    $.encryptedAjax(url, {
+      
+      type: 'DELETE',
+      
+      success: function () {
+        Notifications.reset();
+        Notifications.fetch();
+      },
+      
+      error: function () {
+        alert('Could not clear notifications.');
+      }
+      
     });
     
   });
