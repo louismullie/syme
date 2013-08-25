@@ -99,6 +99,9 @@ asocial.binders.add('register', { main: function(){
   // Registering mode
   $('#auth').on('submit', '#register-form', function(e) {
 
+    if (Compatibility.inChromeExtension())
+      chrome.storage.local.set({ 'hasRegistered':  true });
+    
     e.preventDefault();
 
     var $this = $(this);

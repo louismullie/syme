@@ -2,8 +2,10 @@ Auth = {
 
   login: function(email, password, remember, success, fail, hack) {
 
-    if (Compatibility.inChromeExtension())
+    if (Compatibility.inChromeExtension()) {
       chrome.storage.local.set({ 'remember':  remember });
+      chrome.storage.local.set({ 'hasRegistered':  true });
+    }
 
     Backbone.Relational.store.reset();
 

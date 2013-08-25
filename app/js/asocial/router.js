@@ -55,17 +55,38 @@ Router = Backbone.Router.extend({
   /* ROOT */
 
   root: function() {
+    
+    // Helper function to navigate to a given route.
+    var navigate = function (route) {
+      Router.navigate(route, { trigger: true, replace: true });
+    }
+    
+    // Verify if the user is currently authenticated or not.
     this.authenticate(
+      
+      // If the user is authenticated, go to groups page.
       function() {
-        // If there is a user, go to groups
-        var route = '/users/' + CurrentSession.getUserId() + '/groups';
-        Router.navigate(route, { trigger: true, replace: true });
+        var userId = CurrentSession.getUserId();
+        navigate('/users/' + userId + '/groups');
       },
 
+      // If the user is not authenticated, show login or register.
       function(){
-        // Otherwise, go to register
-        Router.navigate('/login', { trigger: true, replace: true });
+      
+        // Choose whether to go to login or register based on history.
+        if (Compatibility.inChromeExtension()) {
+          
+          chrome.storage.local.get('hasRegistered', function (setting) {
+            navigate(setting.hasRegistered ? 'login' : 'register');
+          });
+        
+        // If in development mode, always go to login for convenience.
+        } else {
+          navigate('login');
+        }
+        
       }
+      
     );
   },
 
