@@ -38,15 +38,15 @@ Session = function () {
           _this.passwordKey = data.password_key;
           
           _this.fetchUser(data, function () {
-            
-            _this.retrieveCredentials(callback);
+        
+            _this.retrieveCredentials(callback, callback);
             
           });
           
         },
 
         error: function (response) {
-
+          
           if (response.status == 401) return callback();
 
           if (response.status == 409) {
@@ -299,7 +299,7 @@ Session = function () {
   };
 
   this.retrieveCredentials = function (success, error) {
-
+    
     var _this = this;
     
     var error = error || function (){ Router.navigate('login') };
@@ -333,7 +333,7 @@ Session = function () {
     } else {
       
       var encryptedPassword = sessionStorage.password;
-          //encryptedKey = sessionStorage.sessionKey;
+          //encryptedKey = sessionStoragce.sessionKey;
 
      try {
 
