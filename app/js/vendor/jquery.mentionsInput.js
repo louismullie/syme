@@ -2,6 +2,7 @@
  * Mentions Input
  * Version 1.5
  * Written by: Kenneth Auchenberg
+ * Edited by: Christophe Marois (use custom textarea autosizer)
  *
  * Copyright (c) 2012 - Citrix Systems, Inc.
  *
@@ -141,7 +142,7 @@
 
       // Elastic textareas, internal setting for the Dispora guys
       if( this.settings.elastic ) {
-        this.elmInputBox.elastic();
+        this.elmInputBox.autogrow();
       }
     },
 

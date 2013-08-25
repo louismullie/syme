@@ -7,30 +7,30 @@ $.ajaxSetup({
 });
 
 $.encryptedAjax = function (url, options) {
-  
+
   /*
   options.data = options.data || {};
-  
+
   var data = JSON.stringify(options.data);
-  
+
   var sessionKey = CurrentSession.getSessionKey();
-  
+
   var encryptedData = sjcl.encrypt(sessionKey, data);
-  
+
   options.data = { encrypted: true, data: encryptedData };
-  
+
   var success = options.success || function () {};
-  
+
   options.success = function (jsonResponse) {
 
     var txtResponse = JSON.stringify(jsonResponse);
     var decryptedResponse = sjcl.decrypt(sessionKey, txtResponse);
     success(JSON.parse(decryptedResponse));
-    
+
   };*/
-  
+
   $.ajax(url, options);
-  
+
 };
 
 // Creating custom :external selector - remove?
@@ -44,11 +44,11 @@ $.fn.batchDecrypt = function(callback){
   // Initialize variables
   var $this     = this,
       callback  = callback || function(){},
-      decryptCounter   = 0,
+      decryptCounter = 0,
       startTime = new Date;
 
   var incrementCounter = function(e){
-    
+
     decryptCounter++;
 
     // Call callback if all elements are done,
@@ -65,7 +65,7 @@ $.fn.batchDecrypt = function(callback){
 
   // Trigger decrypt, then wait for callback
   $this.trigger('decrypt', incrementCounter);
-  
+
   return $this;
 
 }

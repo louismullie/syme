@@ -17,12 +17,19 @@ asocial.binders.add('feed', { shared: function(){
   // Mentions and autogrow
   $('#main').on('format', 'textarea', function(e){
 
-    var mention_list = $('#mentioned_users').attr('data-list');
+    // Get list in the form [*{ id: string, name: string }]
+    var mentionList = $.parseJSON( $('#mentioned_users').attr('data-list') );
+
+    // Omit current user
+    var currentUserId = CurrentSession.getUserId();
+    mentionList = _.reject(mentionList, function (user) {
+      return user.id == currentUserId;
+    });
 
     $(this).mentionsInput({
       onDataRequest:function (mode, query, callback) {
 
-        var data = _.filter(mention_list, function(item) {
+        var data = _.filter(mentionList, function(item) {
           return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
         });
 
