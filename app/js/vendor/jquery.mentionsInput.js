@@ -1,12 +1,11 @@
 /*
  * Mentions Input
- * Version 1.5
- * Written by: Kenneth Auchenberg
- * Edited by: Christophe Marois (use custom textarea autosizer)
+ * Version ???
+ * Originally by: Kenneth Auchenberg (git @auchenberg)
+ * Original version: 1.0.2
+ * Edited by: Christophe Marois (git @christophemarois)
  *
- * Copyright (c) 2012 - Citrix Systems, Inc.
- *
- * Using underscore.js
+ * Requires underscore.js
  *
  * License: MIT License - http://www.opensource.org/licenses/mit-license.php
  */
@@ -14,56 +13,35 @@
 (function ($, _, undefined) {
 
   // Settings
-  var KEY = { BACKSPACE : 8, TAB : 9, RETURN : 13, ESC : 27, LEFT : 37, UP : 38, RIGHT : 39, DOWN : 40, SPACE : 32, HOME : 36, END : 35 }; // Keys "enum"
+  var KEY = { BACKSPACE : 8, TAB : 9, RETURN : 13, ESC : 27, LEFT : 37, UP : 38, RIGHT : 39, DOWN : 40, COMMA : 188, SPACE : 32, HOME : 36, END : 35 }; // Keys "enum"
   var defaultSettings = {
-    triggerChar               : '@',
-    onDataRequest             : $.noop,
-    minChars                  : 2,
-    showAvatars               : true,
-    elastic                   : true,
-    insertSpaceAfterMention   : false,
-    resetOnInitialize         : false,
-    templates                 : {
-      wrapper: function(obj){
-          var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-          with(obj||{}){
-          __p+='<div class=\"mentions-input-box\"></div>';
-          }
-          return __p;
-      },
-      mentionsOverlay: function(obj){
-        var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-        with(obj||{}){
-        __p+='<div class=\"mentions\"><div></div></div>';
-        }
-        return __p;
-      },
-      mentionItemSyntax: function(obj){
-        var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-        with(obj||{}){
-        __p+='@['+
-        ((__t=( value ))==null?'':__t)+
-        ']('+
-        ((__t=( type ))==null?'':__t)+
-        ':'+
-        ((__t=( id ))==null?'':__t)+
-        ')';
-        }
-        return __p;
-      },
-      mentionItemHighlight: function(obj){
-        var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-        with(obj||{}){
-        __p+='<strong><span>'+
-        ((__t=( value ))==null?'':__t)+
-        '</span></strong>';
-        }
-        return __p;
-      }
+    triggerChar   : '@',
+    onDataRequest : $.noop,
+    minChars      : 2,
+    showAvatars   : true,
+    elastic       : true,
+    classes       : {
+      autoCompleteItemActive : "active"
+    },
+    templates     : {
+      wrapper                    : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<div class=\"mentions-input-box\"></div>';}return __p;},
+      autocompleteList           : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<div class=\"mentions-autocomplete-list\"></div>';}return __p;},
+      autocompleteListItem       : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<li data-ref-id=\"'+((__t=( id ))==null?'':__t)+'\" data-ref-type=\"'+((__t=( type ))==null?'':__t)+'\" data-display=\"'+((__t=( display ))==null?'':__t)+'\">'+((__t=( content ))==null?'':__t)+'</li>';}return __p;},
+      autocompleteListItemAvatar : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<img src=\"'+((__t=( avatar ))==null?'':__t)+'\" />';}return __p;},
+      autocompleteListItemIcon   : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<div class=\"icon '+((__t=( icon ))==null?'':__t)+'\"></div>';}return __p;},
+      mentionsOverlay            : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<div class=\"mentions\"><div></div></div>';}return __p;},
+      mentionItemSyntax          : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='@['+((__t=( value ))==null?'':__t)+']('+((__t=( type ))==null?'':__t)+':'+((__t=( id ))==null?'':__t)+')';}return __p;},
+      mentionItemHighlight       : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<strong><span>'+((__t=( value ))==null?'':__t)+'</span></strong>';}return __p;}
     }
   };
 
   var utils = {
+    highlightTerm    : function (value, term) {
+      if (!term && !term.length) {
+        return value;
+      }
+      return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
+    },
     setCaratPosition : function (domNode, caretPos) {
       if (domNode.createTextRange) {
         var range = domNode.createTextRange();
@@ -78,172 +56,116 @@
         }
       }
     },
-
     rtrim: function(string) {
       return string.replace(/\s+$/,"");
     }
   };
 
-
   var MentionsInput = function (settings) {
 
-    _.bindAll(this, 'onInputBoxKeyDown', 'onInputBoxKeyPress', 'onInputBoxInput', 'onInputBoxClick', 'onInputBoxBlur', 'resetBuffer', 'getMentions', 'val');
+    // Initialize variables
 
-    this.elmInputWrapper  = null;
-    this.elmWrapperBox  = null;
-    this.elmMentionsOverlay = null;
+    var domInput, $inputBox, $inputWrapper, $autocompleteList, $wrapperBox, $mentionsOverlay, $activeAutoCompleteItem;
+    var mentionsCollection = [];
+    var autocompleteItemCollection = {};
+    var inputBuffer = [];
+    var currentDataQuery;
 
-    this.autoCompleter = null;
-    this.mentionsCollection = [];
-    this.inputBuffer = [];
-    this.currentDataQuery = '';
+    // Get settings
 
-    this.initialize.apply(this, arguments);
-  };
+    settings = $.extend(true, {}, defaultSettings, settings );
 
-  _.extend(MentionsInput.prototype, {
+    function initTextarea() {
 
-    initialize : function(settings, domTarget) {
+      $inputBox = $(domInput);
 
-      this.settings = settings;
+      // If
+      if ($inputBox.attr('data-mentions-input') == 'true') return;
 
-      this.elmInputBox = $(domTarget);
+      $inputWrapper = $inputBox.parent();
+      $wrapperBox = $(settings.templates.wrapper());
+      $inputBox.wrapAll($wrapperBox);
+      $wrapperBox = $inputWrapper.find('> div');
 
-      this.initTextarea();
-      this.initMentionsOverlay();
-      this.initAutocomplete();
-
-      if( this.settings.resetOnInitialize ) {
-        this.resetInput();
-      }
-
-      if( this.settings.prefillMention ) {
-        this.addMention( this.settings.prefillMention );
-      }
-    },
-
-    initAutocomplete : function() {
-      this.autoCompleter = new this.settings.autoCompleter();
-      this.autoCompleter.initialize( this, this.elmWrapperBox );
-    },
-
-    initTextarea : function() {
-
-      this.elmInputWrapper = this.elmInputBox.parent();
-      this.elmWrapperBox = $( this.settings.templates.wrapper() );
-      this.elmInputBox.wrapAll( this.elmWrapperBox );
-      this.elmWrapperBox = this.elmInputWrapper.find('> div');
-
-      this.elmInputBox.bind('keydown.mentionsInput', this.onInputBoxKeyDown);
-      this.elmInputBox.bind('keypress.mentionsInput', this.onInputBoxKeyPress);
-      this.elmInputBox.bind('input.mentionsInput', this.onInputBoxInput);
-      this.elmInputBox.bind('click.mentionsInput', this.onInputBoxClick);
-      this.elmInputBox.bind('blur.mentionsInput', this.onInputBoxBlur);
+      $inputBox.attr('data-mentions-input', 'true');
+      $inputBox.bind('keydown', onInputBoxKeyDown);
+      $inputBox.bind('keypress', onInputBoxKeyPress);
+      $inputBox.bind('input', onInputBoxInput);
+      $inputBox.bind('click', onInputBoxClick);
+      $inputBox.bind('blur', onInputBoxBlur);
 
       // Elastic textareas, internal setting for the Dispora guys
-      if( this.settings.elastic ) {
-        this.elmInputBox.autogrow();
+      if( settings.elastic ) {
+        $inputBox.autogrow();
       }
-    },
 
-    initMentionsOverlay : function() {
+    }
 
-      // Contruct element
-      elmMentionsOverlay = $(settings.templates.mentionsOverlay());
+    function initAutocomplete() {
+      $autocompleteList = $(settings.templates.autocompleteList());
+      $autocompleteList.appendTo($wrapperBox);
+      $autocompleteList.delegate('li', 'mousedown', onAutoCompleteItemClick);
+    }
 
-      // Copy CSS properties to inner <div>
-      var cssHash = {};
-      var cssProperties = ['lineHeight', 'fontSize', 'fontFamily', 'fontWeight'];
-      var i = cssProperties.length;
-      while (i--) {
-        cssHash[ cssProperties[i].toString() ] = elmInputBox.css( cssProperties[i].toString() );
-      }
-      elmMentionsOverlay.find('div').css( cssHash );
+    function initMentionsOverlay() {
+      $mentionsOverlay = $(settings.templates.mentionsOverlay());
+      $mentionsOverlay.prependTo($wrapperBox);
+    }
 
-      // Append to wrapper
-      elmMentionsOverlay.prependTo(elmWrapperBox);
-    },
+    function updateValues() {
+      var syntaxMessage = getInputBoxValue();
 
-    _doSearch: function(query) {
-      var self = this;
+      _.each(mentionsCollection, function (mention) {
 
-      if (query && query.length && query.length >= this.settings.minChars) {
-        this.autoCompleter.loading();
+        // Default mention type to 'id'
+        mention.type = mention.type || 'id';
 
-        this.settings.onDataRequest.call(this, 'search', query, function (autoCompleteData) {
-
-          // Filter items that has already been mentioned
-          var mentionValues = _.pluck(self.mentionsCollection, 'value');
-
-          autoCompleteData = _.reject(autoCompleteData, function (item) {
-            return _.include(mentionValues, item.name);
-          });
-
-          self.autoCompleter.populate(autoCompleteData, query);
-
-        });
-      } else {
-        this.autoCompleter.hide();
-      }
-    },
-
-    hideAutoComplete : function() {
-      this.autoCompleter.hide();
-    },
-
-    updateValues: function() {
-      var self = this;
-      var syntaxMessage = this.getInputBoxValue();
-
-      _.each(this.mentionsCollection, function (mention) {
-        var textSyntax = self.settings.templates.mentionItemSyntax(mention);
+        var textSyntax = settings.templates.mentionItemSyntax(mention);
         syntaxMessage = syntaxMessage.replace(mention.value, textSyntax);
+
       });
 
-      var mentionText = _.escape( syntaxMessage );
+      var mentionText = _.escape(syntaxMessage);
 
-      _.each(this.mentionsCollection, function (mention) {
+      _.each(mentionsCollection, function (mention) {
 
-        var formattedMention = _.extend({}, mention, {value: _.escape( mention.value )});
-        var textSyntax = self.settings.templates.mentionItemSyntax(formattedMention);
-        var textHighlight = self.settings.templates.mentionItemHighlight(formattedMention);
+        // Default mention type to 'id'
+        mention.type = mention.type || 'id';
+
+        var formattedMention = _.extend({}, mention, {value: _.escape(mention.value)});
+        var textSyntax = settings.templates.mentionItemSyntax(formattedMention);
+        var textHighlight = settings.templates.mentionItemHighlight(formattedMention);
 
         mentionText = mentionText.replace(textSyntax, textHighlight);
+
       });
 
       mentionText = mentionText.replace(/\n/g, '<br />');
       mentionText = mentionText.replace(/ {2}/g, '&nbsp; ');
 
-      this.messageText = syntaxMessage;
-      this.elmMentionsOverlay.find('div').html(mentionText);
-    },
+      $inputBox.data('messageText', syntaxMessage);
+      $mentionsOverlay.find('div').html(mentionText);
+    }
 
-    resetBuffer: function() {
-      this.inputBuffer = [];
-    },
+    function resetBuffer() {
+      inputBuffer = [];
+    }
 
-    resetInput: function() {
-      this.elmInputBox.val('');
-      this.mentionsCollection = [];
-      this.updateValues();
-    },
+    function updateMentionsCollection() {
+      var inputText = getInputBoxValue();
 
-    updateMentionsCollection: function() {
-      var inputText = this.getInputBoxValue();
-
-      this.mentionsCollection = _.reject(this.mentionsCollection, function (mention, index) {
+      mentionsCollection = _.reject(mentionsCollection, function (mention, index) {
         return !mention.value || inputText.indexOf(mention.value) == -1;
       });
+      mentionsCollection = _.compact(mentionsCollection);
+    }
 
-      this.mentionsCollection = _.compact(this.mentionsCollection);
-    },
+    function addMention(mention) {
 
-    addMention: function(mention) {
-
-      var currentMessage = this.getInputBoxValue();
+      var currentMessage = getInputBoxValue();
 
       // Using a regex to figure out positions
-      var regex = new RegExp("\\" + this.settings.triggerChar + currentDataQuery, "gi");
+      var regex = new RegExp("\\" + settings.triggerChar + currentDataQuery, "gi");
       regex.exec(currentMessage);
 
       var startCaretPosition = regex.lastIndex - currentDataQuery.length - 1;
@@ -251,207 +173,280 @@
 
       var start = currentMessage.substr(0, startCaretPosition);
       var end = currentMessage.substr(currentCaretPosition, currentMessage.length);
-      var startEndIndex = (start + mention.value).length;
+      var startEndIndex = (start + mention.value).length + 1;
 
-      if( this.settings.insertSpaceAfterMention ) {
-        startEndIndex = startEndIndex + 1;
-      }
-
-      this.mentionsCollection.push(mention);
+      mentionsCollection.push(mention);
 
       // Cleaning before inserting the value, otherwise auto-complete would be triggered with "old" inputbuffer
-      this.currentDataQuery = '';
-      this.resetBuffer();
-      this.hideAutoComplete();
+      resetBuffer();
+      currentDataQuery = '';
+      hideAutoComplete();
 
       // Mentions & syntax message
-      var updatedMessageText = start + mention.value;
-      if( this.settings.insertSpaceAfterMention ) {
-        updatedMessageText = updatedMessageText+ ' ';
-      }
-      updatedMessageText = updatedMessageText + end;
-
-      this.elmInputBox.val(updatedMessageText);
-      this.updateValues();
+      var updatedMessageText = start + mention.value + end;
+      $inputBox.val(updatedMessageText);
+      updateValues();
 
       // Set correct focus and selection
-      this.elmInputBox.focus();
+      $inputBox.focus();
+      utils.setCaratPosition($inputBox[0], startEndIndex);
+    }
 
-      utils.setCaratPosition( this.elmInputBox[0], startEndIndex );
-    },
+    function getInputBoxValue() {
+      return $.trim($inputBox.val());
+    }
 
-    getInputBoxValue: function() {
-      return this.elmInputBox.val();
-    },
+    function onAutoCompleteItemClick(e) {
+      var elmTarget = $(this);
+      var mention = autocompleteItemCollection[elmTarget.attr('data-uid')];
 
-    // Event handlers
-    onInputBoxClick: function(e) {
-      this.resetBuffer();
-    },
+      addMention(mention);
 
-    onInputBoxBlur: function(e) {
-      this.hideAutoComplete();
-    },
+      return false;
+    }
 
-    onInputBoxInput: function(e) {
+    function onInputBoxClick(e) {
+      resetBuffer();
+    }
 
-      this.updateValues();
-      this.updateMentionsCollection();
+    function onInputBoxBlur(e) {
+      hideAutoComplete();
+    }
 
-      var triggerCharIndex = _.lastIndexOf( this.inputBuffer, this.settings.triggerChar );
+    function onInputBoxInput(e) {
+      updateValues();
+      updateMentionsCollection();
 
-      if (triggerCharIndex === 0) {
-        currentDataQuery = this.inputBuffer.slice(triggerCharIndex + 1).join('');
+      var triggerCharIndex = _.lastIndexOf(inputBuffer, settings.triggerChar);
+      if (triggerCharIndex > -1) {
+        currentDataQuery = inputBuffer.slice(triggerCharIndex + 1).join('');
         currentDataQuery = utils.rtrim(currentDataQuery);
 
-        _.defer(_.bind( this._doSearch , this, currentDataQuery));
-      } else {
-        this.hideAutoComplete();
+        _.defer(_.bind(doSearch, this, currentDataQuery));
       }
-    },
+    }
 
-    onInputBoxKeyPress: function(e) {
+    function onInputBoxKeyPress(e) {
       if(e.keyCode !== KEY.BACKSPACE) {
         var typedValue = String.fromCharCode(e.which || e.keyCode);
-        this.inputBuffer.push(typedValue);
+        inputBuffer.push(typedValue);
       }
-    },
+    }
 
-    onInputBoxKeyDown: function(e) {
+    function onInputBoxKeyDown(e) {
 
       // This also matches HOME/END on OSX which is CMD+LEFT, CMD+RIGHT
-      if (e.keyCode == KEY.LEFT || e.keyCode == KEY.RIGHT || e.keyCode == KEY.HOME || e.keyCode == KEY.END ) {
+      if (e.keyCode == KEY.LEFT || e.keyCode == KEY.RIGHT || e.keyCode == KEY.HOME || e.keyCode == KEY.END) {
         // Defer execution to ensure carat pos has changed after HOME/END keys
-        _.defer( this.resetBuffer );
+        _.defer(resetBuffer);
 
         // IE9 doesn't fire the oninput event when backspace or delete is pressed. This causes the highlighting
         // to stay on the screen whenever backspace is pressed after a highlighed word. This is simply a hack
         // to force updateValues() to fire when backspace/delete is pressed in IE9.
         if (navigator.userAgent.indexOf("MSIE 9") > -1) {
-          _.defer( this.updateValues );
+          _.defer(updateValues);
         }
 
         return;
-      }
-
-      // Special handling for space, since we want to reset buffer on space, but only when autocompleter is hidden
-      if ( e.keyCode == KEY.SPACE ) {
-
-        if ( this.autoCompleter.isVisible() ) {
-          // Allow spaces when autcompleter is visible
-          return;
-        }
-
-        _.defer( this.resetBuffer );
-      }
-
-      if ( e.keyCode == KEY.RETURN ) {
-        _.defer( this.resetBuffer );
       }
 
       if (e.keyCode == KEY.BACKSPACE) {
-        this.inputBuffer = this.inputBuffer.slice(0, -1 + this.inputBuffer.length); // Can't use splice, not available in IE
+        inputBuffer = inputBuffer.slice(0, -1 + inputBuffer.length); // Can't use splice, not available in IE
         return;
       }
 
-      if (e.keyCode == KEY.TAB) {
-        var autocompleteItem = this.autoCompleter.getSelectedItem();
+      if (!$autocompleteList.is(':visible')) {
+        return true;
+      }
 
-        if(autocompleteItem) {
-          this.addMention( autocompleteItem );
+      switch (e.keyCode) {
+        case KEY.UP:
+        case KEY.DOWN:
+          var elmCurrentAutoCompleteItem = null;
+          if (e.keyCode == KEY.DOWN) {
+            if ($activeAutoCompleteItem && $activeAutoCompleteItem.length) {
+              elmCurrentAutoCompleteItem = $activeAutoCompleteItem.next();
+            } else {
+              elmCurrentAutoCompleteItem = $autocompleteList.find('li').first();
+            }
+          } else {
+            elmCurrentAutoCompleteItem = $($activeAutoCompleteItem).prev();
+          }
+
+          if (elmCurrentAutoCompleteItem.length) {
+            selectAutoCompleteItem(elmCurrentAutoCompleteItem);
+          }
+
           return false;
-        }
+
+        case KEY.RETURN:
+        case KEY.TAB:
+          if ($activeAutoCompleteItem && $activeAutoCompleteItem.length) {
+            $activeAutoCompleteItem.trigger('mousedown');
+            return false;
+          }
+
+          break;
       }
 
       return true;
-    },
+    }
 
-    // External methods
-    val : function (callback) {
-      var value = this.mentionsCollection.length ? this.messageText : this.getInputBoxValue();
-      callback.call(this, value);
-    },
+    function hideAutoComplete() {
+      $activeAutoCompleteItem = null;
+      $autocompleteList.empty().hide();
+    }
 
-    reset : function () {
-      resetInput();
-    },
+    function selectAutoCompleteItem(elmItem) {
+      elmItem.addClass(settings.classes.autoCompleteItemActive);
+      elmItem.siblings().removeClass(settings.classes.autoCompleteItemActive);
 
-    getMentions : function (callback) {
-      if (!_.isFunction(callback)) {
+      $activeAutoCompleteItem = elmItem;
+    }
+
+    function populateDropdown(query, results) {
+      $autocompleteList.show();
+
+      // Filter items that has already been mentioned
+      var mentionValues = _.pluck(mentionsCollection, 'value');
+      results = _.reject(results, function (item) {
+        return _.include(mentionValues, item.name);
+      });
+
+      if (!results.length) {
+        hideAutoComplete();
         return;
       }
 
-      callback.call(this, this.mentionsCollection);
-    }
-  });
+      $autocompleteList.empty();
+      var elmDropDownList = $("<ul>").appendTo($autocompleteList).hide();
 
-  // Exposing mentionsInput on jQuery-object
+      _.each(results, function (item, index) {
+        var itemUid = _.uniqueId('mention_');
+
+        autocompleteItemCollection[itemUid] = _.extend({}, item, {value: item.name});
+
+        var elmListItem = $(settings.templates.autocompleteListItem({
+          'id'      : _.escape(item.id),
+          'display' : _.escape(item.name),
+          'type'    : _.escape(item.type),
+          'content' : utils.highlightTerm(_.escape((item.name)), query)
+        })).attr('data-uid', itemUid);
+
+        if (index === 0) {
+          selectAutoCompleteItem(elmListItem);
+        }
+
+        if (settings.showAvatars) {
+          var elmIcon;
+
+          if (item.avatar) {
+            elmIcon = $(settings.templates.autocompleteListItemAvatar({ avatar : item.avatar }));
+          } else {
+            elmIcon = $(settings.templates.autocompleteListItemIcon({ icon : item.icon }));
+          }
+          elmIcon.prependTo(elmListItem);
+        }
+        elmListItem = elmListItem.appendTo(elmDropDownList);
+      });
+
+      $autocompleteList.show();
+      elmDropDownList.show();
+    }
+
+    function doSearch(query) {
+      if (query && query.length && query.length >= settings.minChars) {
+        settings.onDataRequest.call(this, 'search', query, function (responseData) {
+          populateDropdown(query, responseData);
+        });
+      } else {
+        hideAutoComplete();
+      }
+    }
+
+    function resetInput() {
+      $inputBox.val('');
+      mentionsCollection = [];
+      updateValues();
+    }
+
+    // Public methods
+    return {
+      init : function (domTarget) {
+
+        domInput = domTarget;
+
+        initTextarea();
+        initAutocomplete();
+        initMentionsOverlay();
+        resetInput();
+
+        if( settings.prefillMention ) {
+          addMention( settings.prefillMention );
+        }
+
+      },
+
+      val : function (callback) {
+        if (!_.isFunction(callback)) {
+          return;
+        }
+
+        var value = mentionsCollection.length ? $inputBox.data('messageText') : getInputBoxValue();
+        callback.call(this, value);
+      },
+
+      reset : function () {
+        resetInput();
+      },
+
+      getMentions : function (callback) {
+        if (!_.isFunction(callback)) {
+          return;
+        }
+
+        callback.call(this, mentionsCollection);
+      }
+    };
+  };
+
   $.fn.mentionsInput = function (method, settings) {
 
+    // Store arguments to use them inside the each loop
     var outerArguments = arguments;
 
-    if (typeof method === 'object' || !method) {
+    // If first argument is an object, it's in fact
+    // the 'settings' argument. Shift it left.
+    if (typeof method === 'object' || !method)
       settings = method;
-    }
 
-    settings = $.extend(true, {}, defaultSettings, settings );
+    this.filter('textarea').each(function () {
 
-    if( !settings.autoCompleter ) {
-      settings.autoCompleter = $.fn.mentionsInput.defaultAutocompleterProxy;
-    }
-
-    return this.each(function () {
-      var instance = $.data(this, 'mentionsInput') || $.data(this, 'mentionsInput', new MentionsInput(settings, this));
+      // If mentionsInput hasn't been initialized on the current
+      // element, instance it in the 'mentionsInput' DOM data
+      var instance = $.data(this, 'mentionsInput') ||
+        $.data(this, 'mentionsInput', new MentionsInput(settings));
 
       if (_.isFunction(instance[method])) {
+        // If 'method' is a function, call it with every argument to
+        // its right as the function arguments
         return instance[method].apply(this, Array.prototype.slice.call(outerArguments, 1));
+
+      } else if (typeof method === 'object' || !method) {
+        // If method is in fact the 'settings' argument, call the
+        // 'init' function, as settings has already been passed to it.
+        return instance.init.call(this, this);
+
+      } else {
+        // If first argument is nor a function, nor an object,
+        // throw an error.
+        $.error('Method ' + method + ' does not exist');
       }
+
     });
+
+    return this;
+
   };
-
-  // Exposing defaultAutocompleterProxy on jQuery-object
-  $.fn.mentionsInput.defaultAutocompleterProxy = function () {
-    _.extend(this, {
-      initialize: function(mentionsInput, elmWrapperBox) {
-        var self = this;
-        this.autoCompleter = new SimpleAutoCompleter(elmWrapperBox, {});
-
-        this.autoCompleter.onItemSelected.progress(function(item) {
-          mentionsInput.addMention( self.format(item) );
-        });
-      },
-
-      getSelectedItem: function() {
-        var item = this.autoCompleter.getActiveItemData();
-        return this.format(item);
-      },
-
-      isVisible: function() {
-        return this.autoCompleter.isVisible();
-      },
-
-      hide: function() {
-        this.autoCompleter.hide();
-      },
-
-      format: function(item) {
-        return {
-          value:  item.name,
-          id:     item.id,
-          type:   item.type
-        };
-      },
-
-      populate: function() {
-        this.autoCompleter.populate.apply( this.autoCompleter, _.toArray(arguments) );
-      },
-
-      loading: $.noop
-   });
-  };
-
-  // Exposing defaultAutocompleterProxy on jQuery-object
-  $.fn.mentionsInput.defaultSettings = defaultSettings;
-
 
 })(jQuery, _);

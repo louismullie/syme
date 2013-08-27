@@ -20,11 +20,11 @@ asocial.binders.add('feed', { shared: function(){
     // Get list in the form [*{ id: string, name: string }]
     var mentionList = $.parseJSON( $('#mentioned_users').attr('data-list') );
 
-    // Omit current user
-    var currentUserId = CurrentSession.getUserId();
-    mentionList = _.reject(mentionList, function (user) {
-      return user.id == currentUserId;
-    });
+    // Reject current user from list
+    // var currentUserId = CurrentSession.getUserId();
+    // mentionList = _.reject(mentionList, function (user) {
+    //   return user.id == currentUserId;
+    // });
 
     $(this).mentionsInput({
       onDataRequest:function (mode, query, callback) {

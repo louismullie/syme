@@ -100,6 +100,11 @@ form#feed-form {
       margin-top: $marginTop - $arrowSize - $borderSize;
     }
 
+    // Textarea autogrow and mentions configuration
+    $fontSize: 14px;
+    $lineHeight: 20px;
+    $padding: 10px;
+
     textarea {
       width: 100%;
 
@@ -108,19 +113,20 @@ form#feed-form {
 
       font-weight: 400;
 
-      font-size: 14px;
-
-      // Textarea autogrow configuration
-      $lineHeight: 16px;
-      $padding: 10px;
+      font-size: $fontSize;
 
       @include box-sizing;
 
       padding:      $padding;
       line-height:  $lineHeight;
       min-height:   $padding * 2 + $lineHeight * 3; // Minimum lines
-      max-height:   $padding * 2 + $lineHeight * 10; // Maximum lines
 
+    }
+
+    .mentions {
+      font-weight: 400;
+      font-size: $fontSize;
+      line-height:  $lineHeight;
     }
   }
 
