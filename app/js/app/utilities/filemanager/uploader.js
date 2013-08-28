@@ -145,13 +145,13 @@ function Uploader(file, options) {
 
     });
 
-    Crypto.generateRandomKeys(function (key) {
+    Syme.Crypto.generateRandomKeys(function (key) {
       
       _this.key = key;
 
-      var keylistId = CurrentSession.getGroupId(); // unsafe!
+      var keylistId = Syme.CurrentSession.getGroupId(); // unsafe!
       
-      Crypto.encryptMessage(keylistId, key, function (encryptedMessage) {
+      Syme.Crypto.encryptMessage(keylistId, key, function (encryptedMessage) {
         
         var fd = new FormData();
         

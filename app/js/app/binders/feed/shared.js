@@ -1,4 +1,4 @@
-Binders.add('feed', { shared: function(){
+Syme.Binders.add('feed', { shared: function(){
 
   // Likes
   $('#main').on('click', '.like-action', function(e){
@@ -7,7 +7,7 @@ Binders.add('feed', { shared: function(){
         comment_id  = $(this).closest('.comment-box').attr('id'),
         type        = comment_id ? 'comment' : 'post',
         op          = $(this).hasClass('active') ? 'delete' : 'create',
-        group       = CurrentSession.getGroupId(),
+        group       = Syme.CurrentSession.getGroupId(),
         route       = SERVER_URL + '/' + group + '/' + type + '/like/' + op;
 
     $.post(route, { post_id: post_id, comment_id: comment_id });
@@ -21,7 +21,7 @@ Binders.add('feed', { shared: function(){
     var mentionList = $.parseJSON( $('#mentioned_users').attr('data-list') );
 
     // Reject current user from list
-    // var currentUserId = CurrentSession.getUserId();
+    // var currentUserId = Syme.CurrentSession.getUserId();
     // mentionList = _.reject(mentionList, function (user) {
     //   return user.id == currentUserId;
     // });
@@ -40,17 +40,4 @@ Binders.add('feed', { shared: function(){
 
   });
 
-  // Form feed textarea formatting (should stay here because
-  // of dependency order)
-  $('#feed-form textarea').trigger('format');
-
-  // Reset textarea
-  $('#main').on('reset', 'textarea', function(e){
-    $(this)
-      // Clear and reset height
-      .val('').trigger('autogrow.reset')
-      // Remove mentions
-      .parent().find('.mentions div').html('');
-  });
-
-} }); // Binders.add();
+} }); // Syme.Binders.add();

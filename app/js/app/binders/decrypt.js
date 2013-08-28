@@ -1,4 +1,4 @@
-Binders.add('global', { decrypt: function() {
+Syme.Binders.add('global', { decrypt: function() {
 
   // Post and comment decryption
   $(document).on('decrypt', '.encrypted', function(e, done){
@@ -17,16 +17,16 @@ Binders.add('global', { decrypt: function() {
 
         var missingKey = decryptedText.error.missingKey
 
-        var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' +
+        var url = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() + '/groups/' +
             missingKey.groupId + '/invitations/' + missingKey.userId;
         
         $.getJSON(url,
 
           function (addUserRequest) {
 
-            var user = CurrentSession.getUser();
+            var user = Syme.CurrentSession.getUser();
             user.addUsersRequest([addUserRequest],
-              function () { Router.reload(); });
+              function () { Syme.Router.reload(); });
 
           }
           
@@ -40,7 +40,7 @@ Binders.add('global', { decrypt: function() {
       var formattedText = marked(decryptedText).replace('<a', '<a target="_blank"');
 
       // Create a jQuery wrapper around markdown'd decrypted text
-      var $content = $( Helpers.replaceUserMentions(formattedText, groupId) );
+      var $content = $( Syme.Helpers.replaceUserMentions(formattedText, groupId) );
 
       // Put commenter name and comment tools in first paragraph of comment
       $content.filter('p:first-child').prepend(
@@ -54,7 +54,7 @@ Binders.add('global', { decrypt: function() {
         .removeClass('encrypted').addClass('collapsable');
 
       // Collapse long posts.
-      Helpers.collapseHTML(5, 'Read more');
+      Syme.Helpers.collapseHTML(5, 'Read more');
 
       // Embed rich media content.
       $this.find('.post-content').oembed();
@@ -73,7 +73,7 @@ Binders.add('global', { decrypt: function() {
     if ($this.data('encrypted') == true) {
 
       // Check that keys exist for current user.
-      var userId = CurrentSession.getUserId();
+      var userId = Syme.CurrentSession.getUserId();
       var message = JSON.parse($.base64.decode(text));
 
       // Throw exception if they don't.
@@ -82,7 +82,7 @@ Binders.add('global', { decrypt: function() {
         formatDecryptedText('_This message could not be decrypted._');
       }
 
-      Crypto.decryptMessage(groupId, text, formatDecryptedText);
+      Syme.Crypto.decryptMessage(groupId, text, formatDecryptedText);
 
     } else {
 
@@ -99,7 +99,7 @@ Binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || function(){};
 
-    var group_id  = CurrentSession.getGroupId(),
+    var group_id  = Syme.CurrentSession.getGroupId(),
         user_id   = $this.attr('data-user-id'),
         avatar_id = $this.attr('data-avatar-id'),
         keys      = $this.attr('data-keys');

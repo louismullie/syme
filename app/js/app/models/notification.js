@@ -24,15 +24,15 @@ Notifications = (function(){
 
       if (!action) throw 'Undefined notification action.';
 
-      var type = Messages.notifications.types[action];
+      var type = Syme.Messages.notifications.types[action];
 
       if (!type) throw 'Undefined notification type' + action;
 
-      var resources = Messages.notifications.resources;
+      var resources = Syme.Messages.notifications.resources;
 
       var link = sprintf(resources[type.resource], {
 
-        current_id: CurrentSession.getUserId(),
+        current_id: Syme.CurrentSession.getUserId(),
         group_id: data.group_id,
         post_id: data.post_id,
         comment_id: data.comment_id
@@ -84,7 +84,7 @@ Notifications = (function(){
       if(notifications.length == 0) notifications = false;
 
       // Render all notifications into element
-      _this.$el.html( Template.render('notification',
+      _this.$el.html( Syme.Template.render('notification',
         { notifications: notifications }) );
       
       // Update notification count in title, navbar and extension badge.
@@ -144,10 +144,10 @@ Notifications = (function(){
   var Collection = Backbone.Collection.extend({
     model: Model,
 
-    // Call this when the DOM is loaded and CurrentSession is available
+    // Call this when the DOM is loaded and Syme.CurrentSession is available
     start: function(){
       
-      var userId = CurrentSession.getUserId();
+      var userId = Syme.CurrentSession.getUserId();
       this.url = SERVER_URL + "/users/" + userId + "/notifications";
       this.view.setElement( $('#notifications-content') );
 
@@ -163,10 +163,10 @@ Notifications = (function(){
       document.title = title;
 
       // Update notification count in the navbar badge.
-      $('#notification-li').attr('data-badge', selector.length);
+      $('#notification-li').attr('data-badge', count);
 
       // Update notification count in extension bar.
-      if (Compatibility.inChromeExtension()) {
+      if (Syme.Compatibility.inChromeExtension()) {
   
         var formattedCount = count == 0 ? '' : count.toString();
 
@@ -181,7 +181,7 @@ Notifications = (function(){
     hideBadge: function () {
       
       // Reset notification counter.
-      if (Compatibility.inChromeExtension()) {
+      if (Syme.Compatibility.inChromeExtension()) {
         chrome.browserAction.setBadgeText({ text: '' });
       }
       

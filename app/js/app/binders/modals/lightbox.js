@@ -1,3 +1,3 @@
-Binders.add('modals', { lightbox: function(){
+Syme.Binders.add('modals', { lightbox: function(){
 
-} }); // Binders.add();
+} }); // Syme.Binders.add();

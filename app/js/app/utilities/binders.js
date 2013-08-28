@@ -1,4 +1,4 @@
-Binders = {
+Syme.Binders = {
 
   // Maybe should not use $.fn.binders
   // Use a local variable here instead.
@@ -50,7 +50,7 @@ Binders = {
     }
 
     // Start idleTimeout if logged in
-    if(CurrentSession.initialized) this.idleTimeout();
+    if(Syme.CurrentSession.initialized) this.idleTimeout();
 
   },
 
@@ -74,7 +74,7 @@ Binders = {
       
       idleTime++;
 
-      if (Compatibility.inChromeExtension()) {
+      if (Syme.Compatibility.inChromeExtension()) {
 
         chrome.storage.local.get('remember', function (setting) {
           
@@ -86,7 +86,7 @@ Binders = {
           clearInterval(idleInterval);
           
           // Disconnect the user.
-          Auth.disconnect();
+          Syme.Auth.disconnect();
           
         });
 

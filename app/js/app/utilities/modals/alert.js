@@ -13,7 +13,7 @@ Alert = {
     var title  = typeof(options.title) === "undefined" ? 'Error' : options.title;
     var submit = typeof(options.submit) === "undefined" ? 'OK' : options.submit;
 
-    var content = Template.render('modals-alert',
+    var content = Syme.Template.render('modals-alert',
       { title: title, content: content, submit: submit, closable: closable });
 
     Modal.show(content, options);

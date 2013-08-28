@@ -108,9 +108,9 @@ function Downloader(id, keys, options) {
 
     });
 
-    var groupId = this.options.group || CurrentSession.getGroupId();
+    var groupId = this.options.group || Syme.CurrentSession.getGroupId();
     
-    Crypto.decryptMessage(groupId, this.keys, function (key) {
+    Syme.Crypto.decryptMessage(groupId, this.keys, function (key) {
       
       _this.key = key;
       xhr.open("GET", fileUrl);

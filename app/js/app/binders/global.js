@@ -1,4 +1,4 @@
-Binders.add('global', { main: function(){
+Syme.Binders.add('global', { main: function(){
 
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
@@ -64,7 +64,7 @@ Binders.add('global', { main: function(){
 
   $(document).on('click', '.clear-notifications', function (e) {
 
-    var userId = CurrentSession.getUserId();
+    var userId = Syme.CurrentSession.getUserId();
     var url = SERVER_URL + '/users/' + userId + '/notifications';
 
     $.encryptedAjax(url, {
@@ -113,4 +113,4 @@ Binders.add('global', { main: function(){
 
   });
 
-} }); // Binders.add();
+} }); // Syme.Binders.add();

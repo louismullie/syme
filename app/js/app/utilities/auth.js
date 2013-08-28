@@ -1,4 +1,4 @@
-Auth = {
+Syme.Auth = {
   
   register: function (email, password, fullName, remember, registrationError) {
     
@@ -14,14 +14,14 @@ Auth = {
 
         var verifierSalt = srp.randomHexSalt();
         
-        Crypto.deriveKeys(password, verifierSalt, function (keys) {
+        Syme.Crypto.deriveKeys(password, verifierSalt, function (keys) {
 
           srp.password = keys.key1;
           
           var verifierBn = srp.calculateV(verifierSalt);
           var verifierHex = verifierBn.toString(16);
           
-          CurrentSession.setCsrfToken(response.csrf);
+          Syme.CurrentSession.setCsrfToken(response.csrf);
 
           model.save({
 
@@ -36,13 +36,13 @@ Auth = {
 
               user.createKeyfile(keys.key2, function () {
                 
-                Auth.login(email, password, remember, function(derivedKey, sessionKey) {
+                Syme.Auth.login(email, password, remember, function(derivedKey, sessionKey) {
                   
-                    CurrentSession = new Session();
+                    Syme.CurrentSession = new Syme.Session();
 
-                    CurrentSession.initializeWithModelPasswordAndKey(
+                    Syme.CurrentSession.initializeWithModelPasswordAndKey(
                       user, keys.key2, sessionKey, remember, function () {
-                        Router.navigate('', { trigger: true, replace: true });
+                        Syme.Router.navigate('', { trigger: true, replace: true });
                  
                   });
 
@@ -51,7 +51,7 @@ Auth = {
               });
             },
 
-            error: Router.error
+            error: Syme.Router.error
 
           });
         });
@@ -75,7 +75,7 @@ Auth = {
   
   login: function(email, password, remember, success, fail, hack) {
 
-    if (Compatibility.inChromeExtension()) {
+    if (Syme.Compatibility.inChromeExtension()) {
       chrome.storage.local.set({ 'remember':  remember });
       chrome.storage.local.set({ 'hasRegistered':  true });
     }
@@ -101,7 +101,7 @@ Auth = {
           var salt = data.salt;
           var sessionId = data.session_id;
 
-          Crypto.deriveKeys(password, salt, function (keys) {
+          Syme.Crypto.deriveKeys(password, salt, function (keys) {
 
             srp.password = keys.key1;
 
@@ -114,7 +114,7 @@ Auth = {
 
             var params = { M: M.toString(16), remember: remember };
 
-            CurrentSession.setCsrfToken(data.csrf);
+            Syme.CurrentSession.setCsrfToken(data.csrf);
 
             $.ajax(SERVER_URL + '/users/current/sessions/' + sessionId, {
 
@@ -125,9 +125,9 @@ Auth = {
 
                if (data.status == 'ok') {
 
-                CurrentSession.setCsrfToken(data.csrf);
+                Syme.CurrentSession.setCsrfToken(data.csrf);
 
-                var msg = Messages.beta.warning;
+                var msg = Syme.Messages.beta.warning;
 
                 var sessionKey = Sc.toString(16);
                 
@@ -144,8 +144,8 @@ Auth = {
                 if (hack) {
 
                   Backbone.Relational.store.reset();
-                  CurrentSession = {};
-                  Router.navigate('login');
+                  Syme.CurrentSession = {};
+                  Syme.Router.navigate('login');
 
                 } else {
 
@@ -155,7 +155,7 @@ Auth = {
 
               } else {
 
-                Router.error();
+                Syme.Router.error();
 
               }
 
@@ -187,7 +187,7 @@ Auth = {
 
   logout: function (callback) {
     
-    var userId = CurrentSession.getUserId();
+    var userId = Syme.CurrentSession.getUserId();
 
     Notifications.clearBadge();
 
@@ -199,7 +199,7 @@ Auth = {
       type: 'DELETE',
       
       success: function () {
-        CurrentSession = {};
+        Syme.CurrentSession = {};
         callback();
       }
       
@@ -209,15 +209,15 @@ Auth = {
 
   disconnect: function () {
 
-    Auth.logout(function () {
+    Syme.Auth.logout(function () {
       
       // Force disconnection
-      Alert.show(Messages.auth.disconnected, {
+      Alert.show(Syme.Messages.auth.disconnected, {
         title: 'Disconnected',
         submit: 'Log in',
         closable: false,
         onhide: function(){
-          Router.navigate('/');
+          Syme.Router.navigate('/');
         }
       });
 

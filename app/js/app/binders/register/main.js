@@ -1,4 +1,4 @@
-Binders.add('register', { main: function(){
+Syme.Binders.add('register', { main: function(){
 
   // Focus on first input[type="text"]
   $(document).find('input[type="text"]').first().focus();
@@ -101,7 +101,7 @@ Binders.add('register', { main: function(){
 
     var $this = $(this);
     
-    if (Compatibility.inChromeExtension())
+    if (Syme.Compatibility.inChromeExtension())
       chrome.storage.local.set({ 'hasRegistered':  true });
     
     e.preventDefault();
@@ -117,7 +117,7 @@ Binders.add('register', { main: function(){
         fullName  = $this.find('input[name="full_name"]').val(),
         remember  = $this.find('input[name="remember_me"]').prop("checked");
     
-    Auth.register(email, password, fullName, remember, function (error) {
+    Syme.Auth.register(email, password, fullName, remember, function (error) {
       $('#auth').trigger('registrationError', error);
     });
     
@@ -128,7 +128,7 @@ Binders.add('register', { main: function(){
     
     var $this = $(this);
 
-    var errorMessage = Messages.error.registration[error];
+    var errorMessage = Syme.Messages.error.registration[error];
 
     // Find the relevant field to edit given error type.
     var errorField = { 'email_taken': 'email' }[error];

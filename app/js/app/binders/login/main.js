@@ -1,4 +1,4 @@
-Binders.add('login', { main: function(){
+Syme.Binders.add('login', { main: function(){
 
   // Focus on first input[type="text"]
   $(document).find('input[type="text"]').first().focus();
@@ -22,13 +22,13 @@ Binders.add('login', { main: function(){
         remember = $this.find('input[name="remember_me"]').prop("checked");
 
       // Login
-      Auth.login(email, password, remember, function(derivedKey, sessionKey) {
+      Syme.Auth.login(email, password, remember, function(derivedKey, sessionKey) {
 
-        CurrentSession = new Session();
+        Syme.CurrentSession = new Syme.Session();
         
-        CurrentSession.initializeWithPasswordAndKey(
+        Syme.CurrentSession.initializeWithPasswordAndKey(
           derivedKey, sessionKey, remember, function () {
-            Router.navigate('/users/' + CurrentSession.getUserId() +
+            Syme.Router.navigate('/users/' + Syme.CurrentSession.getUserId() +
             '/groups', { trigger: true, replace: true });
         });
 

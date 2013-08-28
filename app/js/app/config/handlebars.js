@@ -84,11 +84,11 @@ Handlebars.registerHelper("debug", function(optionalValue) {
 });
 
 Handlebars.registerHelper("current_user_id", function() {
-  return CurrentSession.getUserId();
+  return Syme.CurrentSession.getUserId();
 });
 
 Handlebars.registerHelper("current_group_id", function() {
-  return CurrentSession.getGroupId();
+  return Syme.CurrentSession.getGroupId();
 });
 
 Handlebars.registerHelper("foreach",function(arr,options) {

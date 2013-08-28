@@ -1,10 +1,10 @@
-Binders.add('settings', { main: function(){
+Syme.Binders.add('settings', { main: function(){
 
   // Hide spinner
   $('#spinner').hide();
 
   // Breadcrumbs
-  Navbar.setBreadCrumb({
+  Syme.Navbar.setBreadCrumb({
     brand_only: true,
 
     elements: [
@@ -43,7 +43,7 @@ Binders.add('settings', { main: function(){
         .val('');
     };
 
-    CurrentSession.getUser().save(
+    Syme.CurrentSession.getUser().save(
       { full_name: val },
       { success: function(model, response, options){
         callback( model.attributes.full_name )
@@ -93,7 +93,7 @@ Binders.add('settings', { main: function(){
       
     };
 
-    CurrentSession.getUser().save(
+    Syme.CurrentSession.getUser().save(
       { email: val },
       { success: function(model, response, options){
           callback( model.get('email') )
@@ -127,12 +127,12 @@ Binders.add('settings', { main: function(){
     if(!!$(this).data('active')) return false;
     $(this).data('active', true);
 
-    $.encryptedAjax(SERVER_URL + '/users/' + CurrentSession.getUserId(), {
+    $.encryptedAjax(SERVER_URL + '/users/' + Syme.CurrentSession.getUserId(), {
 
       type: 'DELETE',
 
       success: function () {
-        Auth.disconnect();
+        Syme.Auth.disconnect();
       },
 
       error: function () {
@@ -156,4 +156,4 @@ Binders.add('settings', { main: function(){
 
   // Delete form
 
-} }); // Binders.add();
+} }); // Syme.Binders.add();

@@ -1,4 +1,4 @@
-Router = Backbone.Router.extend({
+Syme.Router = Backbone.Router.extend({
 
   /* RULES */
 
@@ -58,7 +58,7 @@ Router = Backbone.Router.extend({
     
     // Helper function to navigate to a given route.
     var navigate = function (route) {
-      Router.navigate(route, { trigger: true, replace: true });
+      Syme.Router.navigate(route, { trigger: true, replace: true });
     }
     
     // Verify if the user is currently authenticated or not.
@@ -66,7 +66,7 @@ Router = Backbone.Router.extend({
       
       // If the user is authenticated, go to groups page.
       function() {
-        var userId = CurrentSession.getUserId();
+        var userId = Syme.CurrentSession.getUserId();
         navigate('/users/' + userId + '/groups');
       },
 
@@ -74,7 +74,7 @@ Router = Backbone.Router.extend({
       function(){
       
         // Choose whether to go to login or register based on history.
-        if (Compatibility.inChromeExtension()) {
+        if (Syme.Compatibility.inChromeExtension()) {
           
           chrome.storage.local.get('hasRegistered', function (setting) {
             navigate(setting.hasRegistered ? 'login' : 'register');
@@ -101,7 +101,7 @@ Router = Backbone.Router.extend({
   },
 
   logout: function() {
-    Auth.logout(function () {
+    Syme.Auth.logout(function () {
       window.location = '';
     });
   },
@@ -141,10 +141,10 @@ Router = Backbone.Router.extend({
   error: function(error){
     
     Alert.show(
-      Messages.errors.fatal,
+      Syme.Messages.errors.fatal,
       {
         title: 'Oops! Something went wrong.',
-        onhide: Auth.disconnect
+        onhide: Syme.Auth.disconnect
       }
     );
     
@@ -163,7 +163,7 @@ Router = Backbone.Router.extend({
 
       this.authenticate(
         function () {
-          Router.notfound();
+          Syme.Router.notfound();
         }, function () {
           _this.renderStaticPage(template)
       });
@@ -187,7 +187,7 @@ Router = Backbone.Router.extend({
     $('body').html(view);
 
     // Binders
-    Binders.bind(template);
+    Syme.Binders.bind(template);
 
 
   },
@@ -207,14 +207,14 @@ Router = Backbone.Router.extend({
 
     this.authenticate(function(){
 
-      var user = CurrentSession.getUser();
+      var user = Syme.CurrentSession.getUser();
 
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
       if(!groupId) {
         
         user.getAllGroupUpdates(function () {
-          Router.renderDynamicTemplate(template, specificBinders);
+          Syme.Router.renderDynamicTemplate(template, specificBinders);
         });
 
       } else {
@@ -222,10 +222,10 @@ Router = Backbone.Router.extend({
         Syme.globals.updatedPosts[groupId] = 0;
         Syme.globals.updatedComments[groupId] = 0;
         
-        CurrentSession.setGroupId(groupId);
+        Syme.CurrentSession.setGroupId(groupId);
 
         user.getAllGroupUpdates(function () {
-          Router.renderDynamicTemplate(template, specificBinders);
+          Syme.Router.renderDynamicTemplate(template, specificBinders);
         });
 
       }
@@ -233,7 +233,7 @@ Router = Backbone.Router.extend({
     }, function() {
 
       // If there is no user, go back to register
-      Router.navigate('/register', {
+      Syme.Router.navigate('/register', {
         trigger: true, replace: true });
 
     });
@@ -256,7 +256,7 @@ Router = Backbone.Router.extend({
       success: function (data) {
 
         // First pageload: initiate logged in template
-        if( !$('#main').length ) Router.renderLoggedInTemplate();
+        if( !$('#main').length ) Syme.Router.renderLoggedInTemplate();
 
         // Render template
         var view = Handlebars.compileTemplate(template, data);
@@ -265,7 +265,7 @@ Router = Backbone.Router.extend({
         $('#main').html(view);
 
         // Binders
-        Binders.bind(template, true, specific_binders);
+        Syme.Binders.bind(template, true, specific_binders);
 
       },
       
@@ -274,7 +274,7 @@ Router = Backbone.Router.extend({
       if(response.status == 401) {
 
         // User has been logged off.
-        Auth.disconnect();
+        Syme.Auth.disconnect();
 
       } else if (response.status == 404) {
 
@@ -288,7 +288,7 @@ Router = Backbone.Router.extend({
       } else {
 
         // Fatal error
-        Router.error();
+        Syme.Router.error();
 
       }
     }});
@@ -303,13 +303,13 @@ Router = Backbone.Router.extend({
     Notifications.start();
 
     // Initialize socket.
-    Socket.listen();
+    Syme.Socket.listen();
   },
 
   authenticate: function(success, failure) {
 
     // If there is already a session, success
-    if (CurrentSession && CurrentSession.initialized) {
+    if (Syme.CurrentSession && Syme.CurrentSession.initialized) {
       return success();
     } else {
       return failure();

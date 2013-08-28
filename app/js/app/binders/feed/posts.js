@@ -1,4 +1,4 @@
-Binders.add('feed', { posts: function(){
+Syme.Binders.add('feed', { posts: function(){
 
   // Delete post/comment toggling
   $('#main').on({
@@ -18,7 +18,7 @@ Binders.add('feed', { posts: function(){
   $('#main').on('click', '.post-header a.post-delete', function() {
 
       var post_id    = $(this).closest('.post').attr('id'),
-          group      = CurrentSession.getGroupId(),
+          group      = Syme.CurrentSession.getGroupId(),
           route      = SERVER_URL + '/' + group + '/post/delete';
 
       Confirm.show(
@@ -125,7 +125,7 @@ Binders.add('feed', { posts: function(){
         comment_id  = $(this).closest('.comment-box').attr('id'),
         type        = comment_id ? 'comment' : 'post',
         op          = $(this).hasClass('active') ? 'delete' : 'create',
-        group       = CurrentSession.getGroupId(),
+        group       = Syme.CurrentSession.getGroupId(),
         route       = SERVER_URL + '/' + group + '/' + type + '/like/' + op;
 
     $.post(route, { post_id: post_id, comment_id: comment_id });
@@ -133,4 +133,4 @@ Binders.add('feed', { posts: function(){
   });
 
 
-} }); // Binders.add();
+} }); // Syme.Binders.add();

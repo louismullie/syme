@@ -28,8 +28,8 @@ var Invitation = Backbone.Model.extend({
     validatedEmails = _.uniq(validatedEmails);
 
     // Submit invite
-    var user = CurrentSession.getUser();
-    var groupId = CurrentSession.getGroupId();
+    var user = Syme.CurrentSession.getUser();
+    var groupId = Syme.CurrentSession.getGroupId();
   
     var succeededInvitations = [];
     
@@ -60,7 +60,7 @@ var Invitation = Backbone.Model.extend({
 
   acceptInvitationRequest: function (inviteLink) {
 
-    var user = CurrentSession.getUser();
+    var user = Syme.CurrentSession.getUser();
 
     var invitationId = inviteLink.data('invite-id');
     var groupId = inviteLink.data('invite-group_id');
@@ -72,7 +72,7 @@ var Invitation = Backbone.Model.extend({
 
       user.acceptInviteRequest(invitationId, request, token, function () {
         Notifications.fetch();
-        Router.reload();
+        Syme.Router.reload();
         $('.popover').hide();
       });
 
@@ -82,7 +82,7 @@ var Invitation = Backbone.Model.extend({
 
   cancelInvitationRequest: function (inviteLink) {
 
-    var userId = CurrentSession.getUserId();
+    var userId = Syme.CurrentSession.getUserId();
     var groupId = inviteLink.data('invite-group_id');
     var invitationId = inviteLink.data('invite-id');
 
@@ -93,14 +93,14 @@ var Invitation = Backbone.Model.extend({
 
       success: function () {
         Notifications.fetch();
-        Router.reload();
+        Syme.Router.reload();
         $('.popover').hide();
       },
 
       error: function (response) {
         if (response.status == 404) {
           Alert.show(
-            Messages.error.invitationNotFound);
+            Syme.Messages.error.invitationNotFound);
         } else {
           alert('Could not decline invitation request.');
         }
@@ -119,11 +119,11 @@ var Invitation = Backbone.Model.extend({
         accept        = $this.data('invite-accept'),
         email         = $this.data('invite-email'),
         name          = $this.data('invite-invitee_full_name'),
-        user          = CurrentSession.getUser(),
+        user          = Syme.CurrentSession.getUser(),
         keylistId     = $this.data('invite-group_id');
 
     // Render confirmation modal
-    var confirm_modal = Template.render(
+    var confirm_modal = Syme.Template.render(
       'feed-modals-confirm', { name: name }
     );
 
@@ -142,7 +142,7 @@ var Invitation = Backbone.Model.extend({
         user.confirmInviteRequest(keylistId, invitationId, inviteeId, accept, function () {
 
           Modal.hide();
-          Router.reload();
+          Syme.Router.reload();
 
         }, function () {
 
@@ -168,7 +168,7 @@ var Invitation = Backbone.Model.extend({
                   "<br />The new key is: <b>" + token + "</b>", {
                     title: 'Invitation sent',
                     onsubmit: function () {
-                      Router.reload();
+                      Syme.Router.reload();
                     }
                 });
 

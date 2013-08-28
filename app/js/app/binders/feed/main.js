@@ -1,27 +1,27 @@
-Binders.add('feed', { main: function(){
+Syme.Binders.add('feed', { main: function(){
 
   // Fix (hide) awful chrome bug part 1
   $('#feed-panel-column').hide();
 
   // Initial decryption
-  Crypto.batchDecrypt(function(){
+  Syme.Crypto.batchDecrypt(function(){
 
     // Fix (hide) awful chrome bug part 2
     $('#feed-panel-column').show(0);
 
     // Breadcrumbs
-    Navbar.setBreadCrumb({
+    Syme.Navbar.setBreadCrumb({
       brand_only: false,
 
       elements: [
         { title: 'Groups',
-          href: 'users/' + CurrentSession.getUserId() + '/groups' },
+          href: 'users/' + Syme.CurrentSession.getUserId() + '/groups' },
 
         { title: $('#feed').data('group-name'),
-          href: 'users/' + CurrentSession.getUserId() + '/groups/' + CurrentSession.getGroupId() }
+          href: 'users/' + Syme.CurrentSession.getUserId() + '/groups/' + Syme.CurrentSession.getGroupId() }
       ]
     });
 
   });
   
-} }); // Binders.add();
+} }); // Syme.Binders.add();

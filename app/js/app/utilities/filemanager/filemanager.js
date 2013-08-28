@@ -6,7 +6,7 @@ FileManager = {
 
       if (save) {
         
-        Crypto.decryptMessage(group, keys, function (key) {
+        Syme.Crypto.decryptMessage(group, keys, function (key) {
           
           var reader = new FileReader();
 
@@ -33,7 +33,7 @@ FileManager = {
 
     var download = function (id, keys, group) {
 
-      var group = group || CurrentSession.getGroupId();
+      var group = group || Syme.CurrentSession.getGroupId();
       var baseUrl = SERVER_URL + '/' + group + '/file/';
 
       var downloader = new Downloader(id, keys, {
@@ -70,7 +70,7 @@ FileManager = {
 
             var data = me.value;
             
-            Crypto.decryptMessage(data.groupId,  keys, function (key) {
+            Syme.Crypto.decryptMessage(data.groupId,  keys, function (key) {
               
               var decrypted = sjcl.decrypt(key, data.content);
               var blob = ThumbPick.prototype.dataURItoBlob(decrypted);
@@ -92,14 +92,14 @@ FileManager = {
     var progress = progress || function () {};
     var success = success || function () {};
 
-    var group = CurrentSession.getGroupId();
+    var group = Syme.CurrentSession.getGroupId();
 
     if (file.size / 1024 > 1024 * 25) {
 
       Alert.show(
-        Messages.file.maxSize);
+        Syme.Messages.file.maxSize);
       
-      Helpers.resetFeedForm();
+      Syme.Helpers.resetFeedForm();
 
       return false;
 
@@ -411,7 +411,7 @@ FileManager = {
 
       if (save) {
         
-        Crypto.decryptMessage(group, keys, function (key) {
+        Syme.Crypto.decryptMessage(group, keys, function (key) {
           
           var reader = new FileReader();
 
@@ -438,7 +438,7 @@ FileManager = {
 
     var download = function (id, keys, group) {
 
-      var group = group || CurrentSession.getGroupId();
+      var group = group || Syme.CurrentSession.getGroupId();
       var baseUrl = SERVER_URL + '/' + group + '/file/';
 
       var downloader = new Downloader(id, keys, {
@@ -475,7 +475,7 @@ FileManager = {
 
             var data = me.value;
             
-            Crypto.decryptMessage(data.groupId,  keys, function (key) {
+            Syme.Crypto.decryptMessage(data.groupId,  keys, function (key) {
               
               var decrypted = sjcl.decrypt(key, data.content);
               var blob = ThumbPick.prototype.dataURItoBlob(decrypted);

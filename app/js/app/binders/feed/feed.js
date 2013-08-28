@@ -1,4 +1,4 @@
-Binders.add('feed', { feed: function(){
+Syme.Binders.add('feed', { feed: function(){
 
   // Form feed focus color
   $('#textarea-holder textarea').on({
@@ -13,13 +13,13 @@ Binders.add('feed', { feed: function(){
   // Unread button
   $('#main').on('click', '#newcontent a', function(e){
 
-    if(Socket.globals.updatedComments > 0){
+    if(Syme.Socket.globals.updatedComments > 0){
       // If there are new comments, reset feed
       // to reorder the bump sorting.
-      Router.reload();
+      Syme.Router.reload();
     } else {
       // If there are only new post, append them.
-      Helpers.showUnreadPosts();
+      Syme.Helpers.showUnreadPosts();
     }
 
   });
@@ -64,10 +64,10 @@ Binders.add('feed', { feed: function(){
       // Add optional year and month to request
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
-
+      
       $('#load-more').show();
-
-      $.post(SERVER_URL + '/' + CurrentSession.getGroupId() + '/page', request, function(data){
+      
+      $.post(SERVER_URL + '/' + Syme.CurrentSession.getGroupId() + '/page', request, function(data){
 
         var lastPage = data.last_page,
             posts    = data.posts;
@@ -83,46 +83,50 @@ Binders.add('feed', { feed: function(){
             var post = posts[i];
 
             // Render HTML.
-            var html = Template.render('feed-post', post);
+            var html = Syme.Template.render('feed-post', post);
 
             // Append page
             $('#feed').data('pagesloaded', toload).append(html);
 
           }
-
+          
           if (lastPage) {
-
+            
             // If all pages are loaded, disable infinite scrolling
             $(window).data('infinite-scroll-done', true);
-
+            
             // Please Chris, look at this
             $('#feed .post').last().css({ 'border-bottom': 'none' });
-
+            
             // Decrypt new content
-            Crypto.batchDecrypt(function () {
+            Syme.Crypto.batchDecrypt(function () {
               $('#load-more').hide();
             });
 
           } else {
-
+            
             // Please Chris, look at this
             $('#feed .post').last().css({ 'border-bottom': '1px solid #ddd' });
-
+            
 
             // Decrypt new content
-            Crypto.batchDecrypt(function () {
+            Syme.Crypto.batchDecrypt(function () {
               $('#load-more').show();
             });
 
           }
 
+          // Textarea autosizing
+          $('textarea.autogrow')
+            .autogrow().removeClass('autogrow');
+
         } else {
 
           // No more pages to load
           $(window).data('infinite-scroll-done', true);
-
+          
           $('#load-more').hide();
-
+          
         }
 
       }).complete(function(){
@@ -148,15 +152,15 @@ Binders.add('feed', { feed: function(){
       .trigger('scroll');
 
   });
-
+  
   // Prevent leaving if there's unsaved content
   $(window).bind("beforeunload", function(e) {
-
+    
     var unsavedContent = _.any($('textarea'),
       function (textarea) { return textarea.value != ''; });
 
-    return unsavedContent ? Messages.error.unsavedContent : null;
+    return unsavedContent ? Syme.Messages.error.unsavedContent : null;
 
   });
-
-} }); // Binders.add();
+  
+} }); // Syme.Binders.add();

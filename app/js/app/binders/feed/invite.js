@@ -1,4 +1,4 @@
-Binders.add('feed', { invite: function() {
+Syme.Binders.add('feed', { invite: function() {
 
   // Confirm user
   $('#main').on('click', '.invite-confirm', function(e) {
@@ -16,10 +16,10 @@ Binders.add('feed', { invite: function() {
 
     var invitationId  = $this.data('invite-id'),
         email         = $this.data('invite-email'),
-        user          = CurrentSession.getUser(),
-        keylistId     = CurrentSession.getGroupId();
+        user          = Syme.CurrentSession.getUser(),
+        keylistId     = Syme.CurrentSession.getGroupId();
 
-    Crypto.getInvitationToken(keylistId, email, function (token) {
+    Syme.Crypto.getInvitationToken(keylistId, email, function (token) {
        prompt('Invitation token for ' + email, token);
     });
 
@@ -28,7 +28,7 @@ Binders.add('feed', { invite: function() {
   // Add new user
   $('#main').on('click', 'a#add-user, a#add-user-first', function(){
 
-    var content = Template.render('feed-modals-invite');
+    var content = Syme.Template.render('feed-modals-invite');
 
     Modal.show(content, {
 
@@ -42,8 +42,9 @@ Binders.add('feed', { invite: function() {
 
       onshow: function() {
 
-        // Textarea autogrow
-        $('textarea').autogrow().removeClass('autogrow');
+        // Initial textarea autosizing
+        $('textarea.autogrow')
+          .autogrow().removeClass('autogrow');
 
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal a.modal-button').bind('click', function(e){
@@ -71,27 +72,27 @@ Binders.add('feed', { invite: function() {
 
             // If failed is empty, remove it from log.
             if ( _.size(log.failed) == 0 ) {
-
+              
               log = _.omit(log, 'failed');
-
+              
             // Otherwise, translate error to message.
             } else {
-
+              
               _.each(log.failed, function (value, key) {
-                log.failed[key] = Messages.error.invitation[value];
+                log.failed[key] = Syme.Messages.error.invitation[value];
               });
 
             }
-
+            
             // Compile success template with log
-            var template = Template.render('feed-modals-invite-success', log);
+            var template = Syme.Template.render('feed-modals-invite-success', log);
 
             // Show modal
             Alert.show(template, {
               classes: 'modal-invite',
               title: 'Invite people',
               onhide: function () {
-                Router.reload();
+                Syme.Router.reload();
               }
             });
 
@@ -105,4 +106,4 @@ Binders.add('feed', { invite: function() {
 
   });
 
-} }); // Binders.add();
+} }); // Syme.Binders.add();

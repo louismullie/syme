@@ -1,4 +1,4 @@
-Binders.add('feed', { form: function(){
+Syme.Binders.add('feed', { form: function(){
 
   /* AJAX for feed form */
   $('#main').on('submit', '#feed-form', function(e){
@@ -49,8 +49,8 @@ Binders.add('feed', { form: function(){
     $form.data('active', true);
 
     // Encrypt the message and write the content to the file.
-    var groupId = CurrentSession.getGroupId(),
-        userId = CurrentSession.getUserId();
+    var groupId = Syme.CurrentSession.getGroupId(),
+        userId = Syme.CurrentSession.getUserId();
 
     var url = SERVER_URL + '/users/' + userId +
               '/groups/' + groupId + '/posts';
@@ -62,7 +62,7 @@ Binders.add('feed', { form: function(){
       data: {
 
         upload_id: $form.find('input[name="upload_id"]').val(),
-        mentioned_users: Helpers.findUserMentions(message, groupId)
+        mentioned_users: Syme.Helpers.findUserMentions(message, groupId)
       },
 
       success: function(post){
@@ -72,7 +72,7 @@ Binders.add('feed', { form: function(){
         post.content = message;
         post.encrypted = false;
         
-        Socket.create.post({ view: post });
+        Syme.Socket.create.post({ view: post });
 
         // Unlock form
         $form.data('active', false);
@@ -85,7 +85,7 @@ Binders.add('feed', { form: function(){
         // Reset textarea
         $textarea.trigger('reset');
 
-        Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+        Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
           $.encryptedAjax(url + '/' + post.id, {
 
@@ -180,10 +180,10 @@ Binders.add('feed', { form: function(){
 
       // Thumnail callback
       function(url) {
-        $('img.user-avatar[data-user-id="' + CurrentSession.getUserId() + '"]')
+        $('img.user-avatar[data-user-id="' + Syme.CurrentSession.getUserId() + '"]')
           .attr('src', url);
 
-        $('.slave-avatar[data-user-id="' + CurrentSession.getUserId() + '"]').trigger('sync');
+        $('.slave-avatar[data-user-id="' + Syme.CurrentSession.getUserId() + '"]').trigger('sync');
       },
 
       // Success callback
@@ -206,4 +206,4 @@ Binders.add('feed', { form: function(){
   // Prepare file upload when the file is changed.
   $('#upload_file').on('change', FileManager.selectFile);
 
-} }); // Binders.add();
+} }); // Syme.Binders.add();

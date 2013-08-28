@@ -1,4 +1,4 @@
-Helpers = {
+Syme.Helpers = {
 
   // Increment unread counter when there is a new comment/post
   newContent: function (type, groupId, contentId) {
@@ -41,7 +41,7 @@ Helpers = {
     // Show hidden posts
     $('.post').removeClass('new-post');
 
-    var groupId = CurrentSession.getGroupId();
+    var groupId = Syme.CurrentSession.getGroupId();
     Syme.globals.updatedPosts[groupId] = 0;
 
     // Hide new content button
@@ -103,7 +103,7 @@ Helpers = {
     var full_names = this.findUserMentions(string, groupId);
 
     // Add the current user to the list of other group members.
-    full_names.push(CurrentSession.getUser().get('full_name'));
+    full_names.push(Syme.CurrentSession.getUser().get('full_name'));
 
     $.each(full_names, function (i, full_name) {
 
@@ -122,7 +122,7 @@ Helpers = {
   findUserMentions: function (string, groupId)  {
 
     var full_names = [];
-    var user_list = CurrentSession.getGroupMembers(groupId);
+    var user_list = Syme.CurrentSession.getGroupMembers(groupId);
 
     $.each(user_list, function (i, user) {
 

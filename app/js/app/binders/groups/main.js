@@ -1,15 +1,15 @@
-Binders.add('groups', { main: function() {
+Syme.Binders.add('groups', { main: function() {
 
   // Hide spinner
   $('#spinner').hide();
 
   // Breadcrumbs
-  Navbar.setBreadCrumb({
+  Syme.Navbar.setBreadCrumb({
     brand_only: true,
 
     elements: [
       { title: 'Groups',
-        href: 'users/' + CurrentSession.getUserId() + '/groups' }
+        href: 'users/' + Syme.CurrentSession.getUserId() + '/groups' }
     ]
   });
 
@@ -124,17 +124,17 @@ Binders.add('groups', { main: function() {
 
       success: function (group) {
 
-        var userId =  CurrentSession.getUserId(), groupId = group.id;
+        var userId =  Syme.CurrentSession.getUserId(), groupId = group.id;
 
         var route = SERVER_URL + '/users/' + userId + '/groups/' + groupId;
 
-        Crypto.createKeylist(group.id, function (encryptedKeyfile) {
+        Syme.Crypto.createKeylist(group.id, function (encryptedKeyfile) {
 
-          var currentUser = CurrentSession.getUser();
+          var currentUser = Syme.CurrentSession.getUser();
 
           currentUser.updateKeyfile(encryptedKeyfile, function () {
 
-            Router.reload();
+            Syme.Router.reload();
 
             $.encryptedAjax(route, {
 
@@ -195,14 +195,14 @@ Binders.add('groups', { main: function() {
 
         success: function (resp) {
 
-          CurrentSession.groups.splice(CurrentSession.groups.indexOf(groupId), 1);
+          Syme.CurrentSession.groups.splice(Syme.CurrentSession.groups.indexOf(groupId), 1);
 
-          var user = CurrentSession.getUser();
+          var user = Syme.CurrentSession.getUser();
 
           user.deleteKeylist(groupId, function () {
             Notifications.reset();
             Notifications.fetch();
-            Router.navigate();
+            Syme.Router.navigate();
           });
 
         },
@@ -212,11 +212,11 @@ Binders.add('groups', { main: function() {
           if (response.status == 404) {
             Alert.show(
               'This group does not exist anymore.', {
-              onhide: function () { Router.reload(); }
+              onhide: function () { Syme.Router.reload(); }
             });
           } else {
             Alert.show('Could not delete group', {
-              onhide: function () { Router.reload(); }
+              onhide: function () { Syme.Router.reload(); }
             });
           }
 
@@ -250,19 +250,19 @@ Binders.add('groups', { main: function() {
 
         onsubmit: function(){
 
-          var route = SERVER_URL + '/users/' + CurrentSession.getUserId() +
-          '/groups/' + groupId + '/memberships/' + CurrentSession.getUserId();
+          var route = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() +
+          '/groups/' + groupId + '/memberships/' + Syme.CurrentSession.getUserId();
 
           $.encryptedAjax(route, { type: 'DELETE',
 
             success: function () {
 
-              var user = CurrentSession.getUser();
+              var user = Syme.CurrentSession.getUser();
 
               user.deleteKeylist(groupId, function () {
                 Notifications.reset();
                 Notifications.fetch();
-                Router.reload();
+                Syme.Router.reload();
               });
 
             },
@@ -281,4 +281,4 @@ Binders.add('groups', { main: function() {
   // Group pictures decryption
   $('.encrypted-background-image').trigger('decrypt');
 
-} }); // Binders.add();
+} }); // Syme.Binders.add();

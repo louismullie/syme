@@ -1,4 +1,4 @@
-Crypto = function (workerUrl) {
+Syme.Crypto = function (workerUrl) {
 
   var _this = this;
   
@@ -189,7 +189,7 @@ Crypto = function (workerUrl) {
 
   this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
 
-    Crypto.executeJobWithoutLock({
+    Syme.Crypto.executeJobWithoutLock({
       method: 'getEncryptedKeyfile'
     }, function (message) {
       encryptedKeyfileCb(message);
@@ -200,7 +200,7 @@ Crypto = function (workerUrl) {
   // Development only!
   this.getSerializedKeyfile = function (keyfileCb) {
 
-    Crypto.executeJobWithoutLock({
+    Syme.Crypto.executeJobWithoutLock({
 
       method: 'getSerializedKeyfile'
 
@@ -214,7 +214,7 @@ Crypto = function (workerUrl) {
     var _this = this;
 
     // Generate keylist for group.
-    Crypto.executeJobWithLock({
+    Syme.Crypto.executeJobWithLock({
 
       method: 'createKeylist',
       params: [keylistId]
@@ -231,7 +231,7 @@ Crypto = function (workerUrl) {
     var _this = this;
 
     // Delete a keylist.
-    Crypto.executeJobWithLock({
+    Syme.Crypto.executeJobWithLock({
 
       method: 'deleteKeylist',
       params: [keylistId]
@@ -245,7 +245,7 @@ Crypto = function (workerUrl) {
 
   this.createInviteRequests = function (keylistId, userAliases, inviteCreatedCb) {
 
-    Crypto.executeJobWithLock({
+    Syme.Crypto.executeJobWithLock({
 
       method: 'createInviteRequests',
       params: [keylistId, userAliases]
@@ -256,7 +256,7 @@ Crypto = function (workerUrl) {
 
   this.acceptInviteRequest = function (inviteRequest, token, inviteAcceptedCb) {
 
-    Crypto.executeJobWithLock({
+    Syme.Crypto.executeJobWithLock({
 
       method: 'acceptInviteRequest',
       params: [inviteRequest, token]
@@ -267,7 +267,7 @@ Crypto = function (workerUrl) {
 
   this.confirmInviteRequest = function (keylistId, inviteeId, inviteRequest, keysJson, inviteAcceptedCb) {
 
-    Crypto.executeJobWithLock({
+    Syme.Crypto.executeJobWithLock({
 
       method: 'confirmInviteRequest',
       params: [keylistId, inviteeId, inviteRequest, keysJson]
@@ -278,7 +278,7 @@ Crypto = function (workerUrl) {
 
   this.completeInviteRequest = function (completeRequest, inviteCompletedCb) {
 
-    Crypto.executeJobWithLock({
+    Syme.Crypto.executeJobWithLock({
 
       method: 'completeInviteRequest',
       params: [completeRequest]
@@ -289,7 +289,7 @@ Crypto = function (workerUrl) {
 
   this.transferKeysRequest = function(keylistId, userId, keys, transferKeysCb) {
 
-    Crypto.executeJobWithLock({
+    Syme.Crypto.executeJobWithLock({
 
       method: 'transferKeysRequest',
       params: [keylistId, userId, keys]
@@ -300,7 +300,7 @@ Crypto = function (workerUrl) {
 
   this.addUsersRequest = function(addUsersRequest, addedUsersCb) {
 
-    Crypto.executeJobWithLock({
+    Syme.Crypto.executeJobWithLock({
 
       method: 'addUsersRequest',
       params: [addUsersRequest]
@@ -313,7 +313,7 @@ Crypto = function (workerUrl) {
 
     var _this = this;
 
-    Crypto.workerPool.broadcastJob({
+    Syme.Crypto.workerPool.broadcastJob({
 
       method: 'initializeKeyfile',
       params: [userId, password, encKeyfile]
@@ -326,7 +326,7 @@ Crypto = function (workerUrl) {
 
   this.encryptMessage = function(keylistId, message, encryptedMessageCb) {
 
-    Crypto.executeJobWithoutLock({
+    Syme.Crypto.executeJobWithoutLock({
 
       method: 'encryptMessage',
       params: [keylistId, message]
@@ -337,7 +337,7 @@ Crypto = function (workerUrl) {
 
   this.decryptMessage = function (keylistId, message, decryptedMessageCb) {
 
-    Crypto.executeJobWithoutLock({
+    Syme.Crypto.executeJobWithoutLock({
 
       method: 'decryptMessage',
       params: [keylistId, message]
@@ -348,19 +348,19 @@ Crypto = function (workerUrl) {
 
   this.uploadChunk = function (chunkInfo, uploadedChunkCb) {
 
-    Crypto.executeJobWithoutLock(chunkInfo, uploadedChunkCb);
+    Syme.Crypto.executeJobWithoutLock(chunkInfo, uploadedChunkCb);
 
   };
 
   this.downloadChunk = function (chunkInfo, downloadedChunkCb) {
 
-    Crypto.executeJobWithoutLock(chunkInfo, downloadedChunkCb);
+    Syme.Crypto.executeJobWithoutLock(chunkInfo, downloadedChunkCb);
 
   };
 
   this.generateRandomKeys = function(generatedKeysCb) {
 
-    Crypto.executeJobWithoutLock({
+    Syme.Crypto.executeJobWithoutLock({
 
       method: 'generateRandomHex',
       params: [256]
@@ -371,7 +371,7 @@ Crypto = function (workerUrl) {
   
   this.deriveKeys = function(password, salt, generatedKeysCb) {
 
-    Crypto.executeJobWithoutLock({
+    Syme.Crypto.executeJobWithoutLock({
 
       method: 'deriveKeys',
       params: [password, salt]
@@ -382,7 +382,7 @@ Crypto = function (workerUrl) {
   
   this.getInvitationToken = function (keylistId, userAlias, invitationTokenCb) {
     
-    Crypto.executeJobWithoutLock({
+    Syme.Crypto.executeJobWithoutLock({
 
       method: 'getInvitationToken',
       params: [keylistId, userAlias]
@@ -417,4 +417,4 @@ Crypto = function (workerUrl) {
 
 };
 
-Crypto = new Crypto('workers/app.js');
+Syme.Crypto = new Syme.Crypto('workers/app.js');

@@ -1,4 +1,4 @@
-Session = function () {
+Syme.Session = function () {
 
   var _this = this;
   
@@ -25,7 +25,7 @@ Session = function () {
     var version;
     
     // Get the application version.
-    if (Compatibility.inChromeExtension()) {
+    if (Syme.Compatibility.inChromeExtension()) {
       version = chrome.app.getDetails().version;
     } else {
       version = Syme.version;
@@ -57,29 +57,29 @@ Session = function () {
 
           if (response.status == 409) {
 
-            var msg = Messages.app.outdated;
+            var msg = Syme.Messages.app.outdated;
 
             Alert.show(msg, {
               closable: false, title: 'Please update Syme',
-              onsubmit: function () { Router.reload(); } });
+              onsubmit: function () { Syme.Router.reload(); } });
 
           } else if (response.status == 502) {
 
-            var msg = Messages.app.maintenance;
+            var msg = Syme.Messages.app.maintenance;
 
             Alert.show(msg, {
               closable: false, title: 'Oops!',
-              onsubmit: function () { Router.reload(); }
+              onsubmit: function () { Syme.Router.reload(); }
             });
 
           } else {
 
-            var msg = Messages.app.connection;
+            var msg = Syme.Messages.app.connection;
 
             Alert.show(msg, {
               closable: false,
               title: 'No Internet connection',
-              onsubmit: function () { Router.reload(); }
+              onsubmit: function () { Syme.Router.reload(); }
             });
 
           }
@@ -115,7 +115,7 @@ Session = function () {
     
     this.passwordKey = data.password_key;
     
-    CurrentSession.setCsrfToken(data.csrf);
+    Syme.CurrentSession.setCsrfToken(data.csrf);
 
     _this.groups = data.groups;
     _this.groupMembers = data.group_members;
@@ -149,7 +149,7 @@ Session = function () {
     var _this = this;
     
     var initializeKeyfile = function (password) {
-      Crypto.initializeKeyfile(
+      Syme.Crypto.initializeKeyfile(
         _this.user.get('id'), password,
         _this.user.get('keyfile'),
         callback
@@ -293,7 +293,7 @@ Session = function () {
     //var encryptedKey = sjcl.encrypt(
     //  this.passwordKey, this.key);
       
-    if (Compatibility.inChromeExtension()) {
+    if (Syme.Compatibility.inChromeExtension()) {
 
       chrome.storage.local.set({
         'credentials':  { 
@@ -324,11 +324,11 @@ Session = function () {
     
     var _this = this;
     
-    var error = error || function (){ Router.navigate('login') };
+    var error = error || function (){ Syme.Router.navigate('login') };
     
     var passwordKey = this.passwordKey;
     
-    if (Compatibility.inChromeExtension()) {
+    if (Syme.Compatibility.inChromeExtension()) {
 
       chrome.storage.local.get('credentials', function (cursor) {
         

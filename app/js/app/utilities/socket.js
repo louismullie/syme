@@ -1,4 +1,4 @@
-Socket = {
+Syme.Socket = {
 
   hangout: {
 
@@ -8,7 +8,7 @@ Socket = {
 
       Confirm.show(
 
-        Template.render('hangout'),
+        Syme.Template.render('hangout'),
         {
           title: 'Video chat with Louis Mullie',
           closable: false,
@@ -71,7 +71,7 @@ Socket = {
 
     distribute: function (data) {
 
-      var user = CurrentSession.getUser();
+      var user = Syme.CurrentSession.getUser();
       var groupId = data.group_id;
       var callback = function () {};
 
@@ -92,15 +92,15 @@ Socket = {
       $('#empty-group-notice').remove();
 
       // Render post with the data
-      var template = $(Template.render('feed-post', post.view));
+      var template = $(Syme.Template.render('feed-post', post.view));
 
       var owner = post.view.owner.id;
 
       // If the post owner isn't the user.
-      if (owner != CurrentSession.getUserId()) {
+      if (owner != Syme.CurrentSession.getUserId()) {
 
         // Increment unread_posts variable
-        Helpers.newContent('post', post.view.group_id);
+        Syme.Helpers.newContent('post', post.view.group_id);
 
         template.addClass('new-post');
       }
@@ -109,7 +109,7 @@ Socket = {
       template.insertAfter($('#newcontent'));
 
       // Decrypt
-      Crypto.batchDecrypt();
+      Syme.Crypto.batchDecrypt();
 
     },
 
@@ -117,7 +117,7 @@ Socket = {
 
       // If related post doesn't exist, increment new content
       if(!$('#' + data.target).length)
-        return Helpers.newContent('comment', data.view.group_id);
+        return Syme.Helpers.newContent('comment', data.view.group_id);
     
       // Just return if the comment has already been displayed.
       if ($('#' + data.view.id).length > 0) return;
@@ -141,10 +141,10 @@ Socket = {
       }
 
       // Append new comment
-      container.append(Template.render('feed-comment', data.view));
+      container.append(Syme.Template.render('feed-comment', data.view));
 
       // Decrypt
-      Crypto.batchDecrypt();
+      Syme.Crypto.batchDecrypt();
 
       // Reset comment count counter
       post.find('[partial="feed-comment-count"]')
@@ -155,17 +155,17 @@ Socket = {
     notification: function(data){
 
       // Refresh if on group UI and invite state changes.
-      if (!Router.insideGroup() && (
+      if (!Syme.Router.insideGroup() && (
           data.action == 'invite_confirm' ||
           data.action == 'invite_request' ||
           data.action == 'invite_cancel'))
-        Router.reload();
+        Syme.Router.reload();
 
       // Refresh if inside group and invite state changes.
-      if (Router.insideGroup() &&
+      if (Syme.Router.insideGroup() &&
           data.action == 'invite_accept' &&
-          CurrentSession.getGroupId() == data.group_id)
-        Router.reload();
+          Syme.CurrentSession.getGroupId() == data.group_id)
+        Syme.Router.reload();
 
       Notifications.add(data);
 
@@ -174,12 +174,12 @@ Socket = {
     user: function (data) {
 
       // Force all clients to reload to get new public key
-      Router.reload();
+      Syme.Router.reload();
 
     },
 
     group: function (data) {
-      CurrentSession.getUser().refreshKeyfile(Router.reload);
+      Syme.CurrentSession.getUser().refreshKeyfile(Syme.Router.reload);
     }
   },
 
@@ -242,7 +242,7 @@ Socket = {
       // If post is on the page yet
       if($('#' + data.target).length > 0){
 
-        var group = CurrentSession.getGroupId();
+        var group = Syme.CurrentSession.getGroupId();
         var url = SERVER_URL + '/' + group + '/post/lastof/';
 
         $.get(url + $('#feed').data('pagesloaded'),
@@ -313,9 +313,9 @@ Socket = {
       Notifications.reset();
       Notifications.fetch();
 
-      if (Router.insideGroup() &&
-          CurrentSession.getGroupId() == groupId);
-        Router.navigate('');
+      if (Syme.Router.insideGroup() &&
+          Syme.CurrentSession.getGroupId() == groupId);
+        Syme.Router.navigate('');
 
       return;
 
@@ -327,7 +327,7 @@ Socket = {
     file: function (data) {
 
       // var buffers = {};
-      var group = CurrentSession.getGroupId();
+      var group = Syme.CurrentSession.getGroupId();
 
       if (data.action == 'request') {
 
@@ -381,14 +381,12 @@ Socket = {
 
     // Check corresponding function existence
     if(!this[data.action][data.model]){
-      throw 'Socket.' + data.action +
+      throw 'Syme.Socket.' + data.action +
             '.' + data.model + '() doesn\'t exist';
       return false;
     }
 
     // Call it and pass the relevant data to it
-    // Example: given operation = "delete" and model = "like", we call:
-    // Socket.delete.like(data.data)
     this[data.action][data.model](data.data);
 
   },
@@ -409,7 +407,7 @@ Socket = {
          document.eventSource.readyState != 1) {
 
         document.eventSource = new EventSource(SERVER_URL + '/users/' +
-        CurrentSession.getUserId() + '/stream');
+        Syme.CurrentSession.getUserId() + '/stream');
 
         document.eventSource.onmessage = function(e) {
 

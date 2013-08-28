@@ -1,4 +1,4 @@
-Binders.add('feed', { panel: function(){
+Syme.Binders.add('feed', { panel: function(){
 
   // Group photo edit button action
   $('#group-photo-edit').click(function(e){
@@ -79,15 +79,15 @@ Binders.add('feed', { panel: function(){
 
         onsubmit: function(){
 
-          var route = SERVER_URL + '/users/' + CurrentSession.getUserId() +
-          '/groups/' + CurrentSession.getGroupId() + '/memberships/' + userId;
+          var route = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() +
+          '/groups/' + Syme.CurrentSession.getGroupId() + '/memberships/' + userId;
 
           $.encryptedAjax(route, { type: 'DELETE',
 
             success: function () {
               Notifications.reset();
               Notifications.fetch();
-              Router.reload();
+              Syme.Router.reload();
             },
 
             error: function (response) {
@@ -131,4 +131,4 @@ Binders.add('feed', { panel: function(){
   //  
   //});
   
-} }); // Binders.add();
+} }); // Syme.Binders.add();

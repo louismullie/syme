@@ -23,7 +23,7 @@ Prompt = {
     };
 
     // Render content
-    var content = Template.render('modals-prompt',
+    var content = Syme.Template.render('modals-prompt',
       { content: prompt, closable: closable, title: title, submit: submit, cancel: cancel });
 
     Modal.show(content, options);

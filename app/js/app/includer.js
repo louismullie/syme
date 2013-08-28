@@ -1,10 +1,9 @@
-//= require ./constants
-//= require_directory ./templates
-//= require_directory ./config
+//= require ./headers
+//= require_tree ./templates
+//= require_tree ./config
 //= require_tree ./models
 //= require_tree ./utilities
 //= require_tree ./binders
-//= require ./binders/global
 
 // Register all Handlebars templates.
 $.each(Handlebars.templates, function (name, template) {
@@ -14,7 +13,7 @@ $.each(Handlebars.templates, function (name, template) {
 $(function(){
 
   // Set the title for the document.
-  if (Compatibility.inChromeExtension()) {
+  if (Syme.Compatibility.inChromeExtension()) {
     document.title = "Syme";
   }
 
@@ -28,24 +27,24 @@ $(function(){
     // Hide popovers
     $('.popover').hide();
 
-    Router.navigate( $(this).attr('href') );
+    Syme.Router.navigate( $(this).attr('href') );
   });
 
   // Initialize router
-  Router = new Router;
+  Syme.Router = new Syme.Router();
 
-  CurrentSession = new Session();
+  Syme.CurrentSession = new Syme.Session();
 
-  CurrentSession.initialize(function () {
+  Syme.CurrentSession.initialize(function () {
 
     Backbone.history.start({ pushState: true });
 
     // Bind global binders
-    Binders.bind('global', false);
+    Syme.Binders.bind('global', false);
 
     // Trigger root.
-    if (Compatibility.inChromeExtension()) {
-      Router.navigate('/');
+    if (Syme.Compatibility.inChromeExtension()) {
+      Syme.Router.navigate('/');
     }
 
   }, function () { alert('Session failed!'); });

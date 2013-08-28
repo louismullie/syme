@@ -2,7 +2,7 @@
 $.ajaxSetup({
   
   beforeSend: function(xhr) {
-    var token = CurrentSession.getCsrfToken();
+    var token = Syme.CurrentSession.getCsrfToken();
     xhr.setRequestHeader('X_CSRF_TOKEN', token);
   }
   
@@ -15,7 +15,7 @@ $.encryptedAjax = function (url, options) {
 
   var data = JSON.stringify(options.data);
 
-  var sessionKey = CurrentSession.getSessionKey();
+  var sessionKey = Syme.CurrentSession.getSessionKey();
 
   var encryptedData = sjcl.encrypt(sessionKey, data);
 

@@ -45,7 +45,7 @@ var User = Backbone.RelationalModel.extend({
 
     var _this = this, email = this.get('email');
 
-    Crypto.initializeKeyfile(email, password, null, function (encryptedKeyfile) {
+    Syme.Crypto.initializeKeyfile(email, password, null, function (encryptedKeyfile) {
       _this.updateKeyfile(encryptedKeyfile, keyfileCreatedCb);
     });
   
@@ -55,7 +55,7 @@ var User = Backbone.RelationalModel.extend({
 
     var _this = this;
     
-    Crypto.createKeylist(keylistId, function (encryptedKeyfile) {
+    Syme.Crypto.createKeylist(keylistId, function (encryptedKeyfile) {
       _this.updateKeyfile(encryptedKeyfile, keylistCreatedCb);
     });
     
@@ -65,7 +65,7 @@ var User = Backbone.RelationalModel.extend({
     
     var _this = this;
     
-    Crypto.deleteKeylist(keylistId, function (encryptedKeyfile) {
+    Syme.Crypto.deleteKeylist(keylistId, function (encryptedKeyfile) {
       _this.updateKeyfile(encryptedKeyfile, keylistDeletedCb);
     });
     
@@ -76,7 +76,7 @@ var User = Backbone.RelationalModel.extend({
     var _this = this;
     var invitation = new Invitation();
 
-    Crypto.createInviteRequests(keylistId, emails, function (inviteInfos) {
+    Syme.Crypto.createInviteRequests(keylistId, emails, function (inviteInfos) {
       
       var counter = emails.length;
 
@@ -86,7 +86,7 @@ var User = Backbone.RelationalModel.extend({
           inviteCreatedCb(inviteInfos);
       };
       
-      Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+      Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
         
         _this.updateKeyfile(encryptedKeyfile, function () {
           
@@ -132,9 +132,9 @@ var User = Backbone.RelationalModel.extend({
     var invitation = new Invitation();
     invitation.set('id', invitationId);
 
-    Crypto.acceptInviteRequest(request, token, function (inviteRequest) {
+    Syme.Crypto.acceptInviteRequest(request, token, function (inviteRequest) {
       
-      Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+      Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
         
         _this.updateKeyfile(encryptedKeyfile, function () {
           
@@ -163,16 +163,16 @@ var User = Backbone.RelationalModel.extend({
     invitation.set('id', invitationId);
     
    
-   var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' + keylistId + '/keys';
+   var url = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() + '/groups/' + keylistId + '/keys';
   
     $.getJSON(url, function (keysJson) {
     
-      Crypto.confirmInviteRequest(keylistId, inviteeId, inviteRequest, keysJson, function (inviteRequestJson) {
+      Syme.Crypto.confirmInviteRequest(keylistId, inviteeId, inviteRequest, keysJson, function (inviteRequestJson) {
         
           if (inviteRequestJson.error)
             return errorCb();
           
-          Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+          Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
             
             _this.updateKeyfile(encryptedKeyfile, function () {
                 
@@ -202,7 +202,7 @@ var User = Backbone.RelationalModel.extend({
     var invitation = new Invitation();
     invitation.set('id', invitationId);
     
-    Crypto.completeInviteRequest(completeRequest, function () { // This causes the error
+    Syme.Crypto.completeInviteRequest(completeRequest, function () { // This causes the error
         
         var acknowledgement = { invitation_id: invitationId };
         
@@ -211,7 +211,7 @@ var User = Backbone.RelationalModel.extend({
           {
             success: function () {
               
-              Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+              Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
                 
                 _this.updateKeyfile(encryptedKeyfile, function () {
                   _this.acknowledgeIntegrate(groupId, acknowledgement, inviteCompletedCb);
@@ -230,9 +230,9 @@ var User = Backbone.RelationalModel.extend({
     
     var _this = this;
     
-    Crypto.addUsersRequest(addUsersRequest, function (acknowledgements) {
+    Syme.Crypto.addUsersRequest(addUsersRequest, function (acknowledgements) {
       
-      Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
+      Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
 
         _this.updateKeyfile(encryptedKeyfile, function () {
           
@@ -248,7 +248,7 @@ var User = Backbone.RelationalModel.extend({
   
   acknowledgeIntegrate: function(groupId, acknowledgement, acknowledgedCb) {
     
-    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' +
+    var url = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() + '/groups/' +
               groupId + '/invitations/acknowledge';
 
     var data = { integrate: acknowledgement };
@@ -264,7 +264,7 @@ var User = Backbone.RelationalModel.extend({
   
   acknowledgeDistribute: function (acknowledgements, acknowledgedCb) {
     
-    var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + 
+    var url = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() + 
               '/invitations/acknowledge';
     
     var data = { distribute: acknowledgements };
@@ -305,7 +305,7 @@ var User = Backbone.RelationalModel.extend({
           
           // Update the group member list.
           if (updates.members) {
-            CurrentSession.setGroupMembers(updates.members); 
+            Syme.CurrentSession.setGroupMembers(updates.members); 
           }
 
           if (updates.integrate) {
@@ -367,9 +367,9 @@ var User = Backbone.RelationalModel.extend({
       
       success: function (user) {
         
-        CurrentSession.retrieveCredentials(function (credentials) {
+        Syme.CurrentSession.retrieveCredentials(function (credentials) {
           
-          Crypto.initializeKeyfile(
+          Syme.Crypto.initializeKeyfile(
             user.id, credentials.password,
             user.keyfile, refreshedKeyfileCb
           );
