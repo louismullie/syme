@@ -1,4 +1,4 @@
-asocial.binders.add('global', { decrypt: function() {
+Binders.add('global', { decrypt: function() {
 
   // Post and comment decryption
   $(document).on('decrypt', '.encrypted', function(e, done){

@@ -187,7 +187,7 @@ Router = Backbone.Router.extend({
     $('body').html(view);
 
     // Binders
-    asocial.binders.bind(template);
+    Binders.bind(template);
 
 
   },
@@ -265,7 +265,7 @@ Router = Backbone.Router.extend({
         $('#main').html(view);
 
         // Binders
-        asocial.binders.bind(template, true, specific_binders);
+        Binders.bind(template, true, specific_binders);
 
       },
       

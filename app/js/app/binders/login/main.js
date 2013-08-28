@@ -1,4 +1,4 @@
-asocial.binders.add('login', { main: function(){
+Binders.add('login', { main: function(){
 
   // Focus on first input[type="text"]
   $(document).find('input[type="text"]').first().focus();

@@ -1,4 +1,4 @@
-asocial.binders.add('global', { main: function(){
+Binders.add('global', { main: function(){
 
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
@@ -113,4 +113,4 @@ asocial.binders.add('global', { main: function(){
 
   });
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

@@ -1,4 +1,4 @@
-asocial.binders.add('groups', { invite: function() {
+Binders.add('groups', { invite: function() {
 
   // Accept an invitation to join a group.
   $('#main').on('click', '.invite-link[data-invite-state="1"]', function (e) {
@@ -6,4 +6,4 @@ asocial.binders.add('groups', { invite: function() {
     Invitation.acceptInvitationRequest($(this));
   });
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

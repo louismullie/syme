@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { panel: function(){
+Binders.add('feed', { panel: function(){
 
   // Group photo edit button action
   $('#group-photo-edit').click(function(e){
@@ -131,4 +131,4 @@ asocial.binders.add('feed', { panel: function(){
   //  
   //});
   
-} }); // asocial.binders.add();
+} }); // Binders.add();

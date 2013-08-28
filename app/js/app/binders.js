@@ -1,4 +1,4 @@
-guard('binders', {
+Binders = {
 
   // Maybe should not use $.fn.binders
   // Use a local variable here instead.
@@ -105,4 +105,4 @@ guard('binders', {
 
   }
 
-});
+};

@@ -1,4 +1,4 @@
-asocial.binders.add('groups', { main: function() {
+Binders.add('groups', { main: function() {
 
   // Hide spinner
   $('#spinner').hide();
@@ -281,4 +281,4 @@ asocial.binders.add('groups', { main: function() {
   // Group pictures decryption
   $('.encrypted-background-image').trigger('decrypt');
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

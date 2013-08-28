@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { posts: function(){
+Binders.add('feed', { posts: function(){
 
   // Delete post/comment toggling
   $('#main').on({
@@ -133,4 +133,4 @@ asocial.binders.add('feed', { posts: function(){
   });
 
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

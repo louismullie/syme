@@ -1,4 +1,4 @@
-asocial.binders.add('register', { main: function(){
+Binders.add('register', { main: function(){
 
   // Focus on first input[type="text"]
   $(document).find('input[type="text"]').first().focus();

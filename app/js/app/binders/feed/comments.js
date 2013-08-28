@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { comments: function(){
+Binders.add('feed', { comments: function(){
 
   // Open comment box
   $('#main').on('click', 'a.comment-action', function(){
@@ -165,4 +165,4 @@ asocial.binders.add('feed', { comments: function(){
     });
   });
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

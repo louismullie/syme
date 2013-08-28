@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { shared: function(){
+Binders.add('feed', { shared: function(){
 
   // Likes
   $('#main').on('click', '.like-action', function(e){
@@ -40,4 +40,4 @@ asocial.binders.add('feed', { shared: function(){
 
   });
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

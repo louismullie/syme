@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { form: function(){
+Binders.add('feed', { form: function(){
 
   // Form feed textarea autosizing
   $('#feed-form textarea').autogrow();
@@ -199,4 +199,4 @@ asocial.binders.add('feed', { form: function(){
   // Prepare file upload when the file is changed.
   $('#upload_file').on('change', FileManager.selectFile);
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

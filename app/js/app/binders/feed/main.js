@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { main: function(){
+Binders.add('feed', { main: function(){
 
   // Fix (hide) awful chrome bug part 1
   $('#feed-panel-column').hide();
@@ -24,4 +24,4 @@ asocial.binders.add('feed', { main: function(){
 
   });
   
-} }); // asocial.binders.add();
+} }); // Binders.add();

@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { invite: function() {
+Binders.add('feed', { invite: function() {
 
   // Confirm user
   $('#main').on('click', '.invite-confirm', function(e) {
@@ -106,4 +106,4 @@ asocial.binders.add('feed', { invite: function() {
 
   });
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

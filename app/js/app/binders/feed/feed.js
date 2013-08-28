@@ -1,4 +1,4 @@
-asocial.binders.add('feed', { feed: function(){
+Binders.add('feed', { feed: function(){
 
   // Form feed focus color
   $('#textarea-holder textarea').on({
@@ -163,4 +163,4 @@ asocial.binders.add('feed', { feed: function(){
 
   });
   
-} }); // asocial.binders.add();
+} }); // Binders.add();

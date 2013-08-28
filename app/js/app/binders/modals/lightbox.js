@@ -1,3 +1,3 @@
-asocial.binders.add('modals', { lightbox: function(){
+Binders.add('modals', { lightbox: function(){
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

@@ -1,4 +1,4 @@
-asocial.binders.add('settings', { main: function(){
+Binders.add('settings', { main: function(){
 
   // Hide spinner
   $('#spinner').hide();
@@ -156,4 +156,4 @@ asocial.binders.add('settings', { main: function(){
 
   // Delete form
 
-} }); // asocial.binders.add();
+} }); // Binders.add();

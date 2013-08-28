@@ -58,7 +58,7 @@ $(function(){
     Backbone.history.start({ pushState: true });
 
     // Bind global binders
-    asocial.binders.bind('global', false);
+    Binders.bind('global', false);
 
     // Trigger root.
     if (Compatibility.inChromeExtension()) {
