@@ -88,7 +88,7 @@ Notifications = (function(){
         { notifications: notifications }) );
       
       // Update notification count in title, navbar and extension badge.
-      Notifications.showCount(selector.length);
+      Notifications.showBadge(selector.length);
 
     },
 

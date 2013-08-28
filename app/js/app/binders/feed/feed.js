@@ -13,13 +13,13 @@ Binders.add('feed', { feed: function(){
   // Unread button
   $('#main').on('click', '#newcontent a', function(e){
 
-    if(asocial.socket.updatedComments > 0){
+    if(Socket.globals.updatedComments > 0){
       // If there are new comments, reset feed
       // to reorder the bump sorting.
       Router.reload();
     } else {
       // If there are only new post, append them.
-      asocial.helpers.showUnreadPosts();
+      Helpers.showUnreadPosts();
     }
 
   });
@@ -99,7 +99,7 @@ Binders.add('feed', { feed: function(){
             $('#feed .post').last().css({ 'border-bottom': 'none' });
             
             // Decrypt new content
-            asocial.crypto.batchDecrypt(function () {
+            Crypto.batchDecrypt(function () {
               $('#load-more').hide();
             });
 
@@ -110,7 +110,7 @@ Binders.add('feed', { feed: function(){
             
 
             // Decrypt new content
-            asocial.crypto.batchDecrypt(function () {
+            Crypto.batchDecrypt(function () {
               $('#load-more').show();
             });
 

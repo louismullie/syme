@@ -1,5 +1,92 @@
 FileManager = {
 
+  getFile: function (id, keys, callback, group) {
+
+    var display = function(id, blob, keys, save) {
+
+      if (save) {
+        
+        Crypto.decryptMessage(group, keys, function (key) {
+          
+          var reader = new FileReader();
+
+          reader.onload = function(event){
+            
+            var base64 = sjcl.encrypt(key, event.target.result);
+            
+            store.save({ key: id, value: {
+              groupId: group, content: base64 }});
+              
+          };
+        
+          reader.readAsDataURL(blob);
+
+        });
+
+      }
+
+      var url = URL.createObjectURL(blob);
+
+      callback(url);
+
+    };
+
+    var download = function (id, keys, group) {
+
+      var group = group || CurrentSession.getGroupId();
+      var baseUrl = SERVER_URL + '/' + group + '/file/';
+
+      var downloader = new Downloader(id, keys, {
+        baseUrl: baseUrl, group: group });
+
+      downloader.start(
+        function() {},
+        function(blob) {
+          display(id, blob, keys, true);
+        }, function () {
+          callback(false)
+        });
+      
+
+    };
+
+    var store = new Lawnchair(
+
+      {
+        adapter: 'indexed-db',
+        name: 'asocial' //,
+        //storage: 'PERSISTENT'
+      },
+
+      function(store) {
+
+        store.get(id, function(me) {
+
+          if (typeof(me) == "undefined" || !me.value.groupId) {
+
+            download(id, keys, group);
+
+          } else {
+
+            var data = me.value;
+            
+            Crypto.decryptMessage(data.groupId,  keys, function (key) {
+              
+              var decrypted = sjcl.decrypt(key, data.content);
+              var blob = ThumbPick.prototype.dataURItoBlob(decrypted);
+              
+              display(id, blob, false);
+
+            });
+            
+          }
+          
+        });
+
+    });
+
+  },
+  
   upload: function(file, data, progress, success) {
 
     var progress = progress || function () {};
@@ -12,7 +99,7 @@ FileManager = {
       Alert.show(
         Messages.file.maxSize);
       
-      asocial.helpers.resetFeedForm();
+      Helpers.resetFeedForm();
 
       return false;
 
@@ -318,7 +405,95 @@ FileManager = {
   },
   
   
+  getFile: function (id, keys, callback, group) {
+
+    var display = function(id, blob, keys, save) {
+
+      if (save) {
+        
+        Crypto.decryptMessage(group, keys, function (key) {
+          
+          var reader = new FileReader();
+
+          reader.onload = function(event){
+            
+            var base64 = sjcl.encrypt(key, event.target.result);
+            
+            store.save({ key: id, value: {
+              groupId: group, content: base64 }});
+              
+          };
+        
+          reader.readAsDataURL(blob);
+
+        });
+
+      }
+
+      var url = URL.createObjectURL(blob);
+
+      callback(url);
+
+    };
+
+    var download = function (id, keys, group) {
+
+      var group = group || CurrentSession.getGroupId();
+      var baseUrl = SERVER_URL + '/' + group + '/file/';
+
+      var downloader = new Downloader(id, keys, {
+        baseUrl: baseUrl, group: group });
+
+      downloader.start(
+        function() {},
+        function(blob) {
+          display(id, blob, keys, true);
+        }, function () {
+          callback(false)
+        });
+      
+
+    };
+
+    var store = new Lawnchair(
+
+      {
+        adapter: 'indexed-db',
+        name: 'asocial' //,
+        //storage: 'PERSISTENT'
+      },
+
+      function(store) {
+
+        store.get(id, function(me) {
+
+          if (typeof(me) == "undefined" || !me.value.groupId) {
+
+            download(id, keys, group);
+
+          } else {
+
+            var data = me.value;
+            
+            Crypto.decryptMessage(data.groupId,  keys, function (key) {
+              
+              var decrypted = sjcl.decrypt(key, data.content);
+              var blob = ThumbPick.prototype.dataURItoBlob(decrypted);
+              
+              display(id, blob, false);
+
+            });
+            
+          }
+          
+        });
+
+    });
+
+  },
+  
   formatSize: function (bytes, precision) {
+    
     precision = precision || 2;
     var kilobyte = 1024;
     var megabyte = kilobyte * 1024;

@@ -1,27 +1,18 @@
-//= require ./locales
+//= require ./constants
 //= require_directory ./templates
-//= require ./guard
 //= require_directory ./config
+//= require_tree ./models
+//= require_tree ./utilities
+//= require_tree ./binders
+//= require ./binders/global
 
-//= require ./crypto
-//= require ./helpers
-//= require ./session
-//= require ./router
-//= require ./binders
-//= require ./socket
-
-guard('asocial', {
-  
-  version: '0.1.4',
-
-  helpers:  asocial_helpers,
-  binders:  asocial_binders,
-  crypto:   asocial_crypto,
-  socket:   asocial_socket
-
-});
-
-SERVER_URL = window.location.origin;
+Syme = {
+  globals: {
+    updatedPosts: {},
+    updatedComments: {}
+  },
+  version: '0.1.4'
+};
 
 // Register all Handlebars templates.
 $.each(Handlebars.templates, function (name, template) {
@@ -68,15 +59,3 @@ $(function(){
   }, function () { alert('Session failed!'); });
 
 });
-
-//= require_tree ./models
-//= require_tree ./binders
-//= require_tree ./utilities
-//= require ./binders/global
-
-Syme = {
-  globals: {
-    updatedPosts: {},
-    updatedComments: {}
-  }
-};

@@ -1,4 +1,4 @@
-guard('helpers', {
+Helpers = {
 
   // Increment unread counter when there is a new comment/post
   newContent: function (type, groupId, contentId) {
@@ -149,4 +149,4 @@ guard('helpers', {
 
   }
 
-});
+};

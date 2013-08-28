@@ -66,7 +66,7 @@ Binders.add('feed', { form: function(){
       data: {
   
         upload_id: $form.find('input[name="upload_id"]').val(),
-        mentioned_users: asocial.helpers.findUserMentions(message, groupId)
+        mentioned_users: Helpers.findUserMentions(message, groupId)
         
       },
 
@@ -75,8 +75,8 @@ Binders.add('feed', { form: function(){
         post.content = message;
         post.encrypted = false;
 
-        asocial.socket.create.post({ view: post });
-        asocial.helpers.resetFeedForm();
+        Socket.create.post({ view: post });
+        Helpers.resetFeedForm();
         
         Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 

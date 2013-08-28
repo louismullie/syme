@@ -1,4 +1,4 @@
-guard('socket', {
+Socket = {
 
   hangout: {
     
@@ -61,7 +61,7 @@ guard('socket', {
     
     start: function (data) {
       
-      asocial.hangout.start(data);
+      Syme.Hangout.start(data);
       
     }
   
@@ -100,7 +100,7 @@ guard('socket', {
       if (owner != CurrentSession.getUserId()) {
 
         // Increment unread_posts variable
-        asocial.helpers.newContent('post', post.view.group_id);
+        Helpers.newContent('post', post.view.group_id);
 
         template.addClass('new-post');
       }
@@ -109,7 +109,7 @@ guard('socket', {
       template.insertAfter($('#newcontent'));
 
       // Decrypt
-      asocial.crypto.batchDecrypt();
+      Crypto.batchDecrypt();
 
       // Autogrow comment textarea
       $('textarea.autogrow').autogrow().removeClass('autogrow');
@@ -122,7 +122,7 @@ guard('socket', {
       
       // If related post doesn't exist, increment new content
       if(!$('#' + data.target).length)
-        return asocial.helpers.newContent('comment', data.view.group_id);
+        return Helpers.newContent('comment', data.view.group_id);
   
       // Just return if the comment has already been displayed.
       if ($('#' + data.view.id).length > 0) return;
@@ -152,7 +152,7 @@ guard('socket', {
       container.append(Template.render('feed-comment', data.view));
 
       // Decrypt
-      asocial.crypto.batchDecrypt();
+      Crypto.batchDecrypt();
 
       // Reset comment count counter
       post.find('[partial="feed-comment-count"]')
@@ -391,14 +391,14 @@ guard('socket', {
 
     // Check corresponding function existence
     if(!this[data.action][data.model]){
-      throw 'asocial.socket.' + data.action +
+      throw 'Socket.' + data.action +
             '.' + data.model + '() doesn\'t exist';
       return false;
     }
 
     // Call it and pass the relevant data to it
     // Example: given operation = "delete" and model = "like", we call:
-    // asocial.socket.delete.like(data.data)
+    // Socket.delete.like(data.data)
     this[data.action][data.model](data.data);
 
   },
@@ -452,4 +452,4 @@ guard('socket', {
 
   }
 
-});
+};

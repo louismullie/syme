@@ -55,7 +55,7 @@ Binders.add('feed', { posts: function(){
     var filename = link.data('attachment-filename');
     var keys      = link.data('attachment-keys');
 
-    asocial.crypto.getFile(id, keys, function (url) {
+    FileManager.getFile(id, keys, function (url) {
 
       if (!url) return progress.remove();
       
@@ -106,7 +106,7 @@ Binders.add('feed', { posts: function(){
     var filename = $(this).data('attachment-filename');
     var keys      = $(this).data('attachment-keys');
 
-    asocial.crypto.getFile(id, keys, function (url) {
+    FileManager.getFile(id, keys, function (url) {
       
       clearTimeout(spinner); $('#spinner').hide();
       

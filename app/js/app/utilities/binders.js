@@ -3,7 +3,7 @@ Binders = {
   // Maybe should not use $.fn.binders
   // Use a local variable here instead.
   add: function(route, objectExtention) {
-    
+
     // Create namespace for binders.
     if(typeof($.fn.binders) === 'undefined')
       $.fn.binders = {};

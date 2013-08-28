@@ -4,7 +4,7 @@ Binders.add('feed', { main: function(){
   $('#feed-panel-column').hide();
 
   // Initial decryption
-  asocial.crypto.batchDecrypt(function(){
+  Crypto.batchDecrypt(function(){
 
     // Fix (hide) awful chrome bug part 2
     $('#feed-panel-column').show(0);

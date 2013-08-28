@@ -5,6 +5,64 @@ Crypto = function (workerUrl) {
   this.locked = false;
 
   this.onLockRelease = [];
+  
+  this.batchDecrypt = function(callback, collection){
+
+    // Default callback
+    var callback = callback || function(){};
+
+    // Cleanup / fix
+    if (ONE_PAGE_VIEW) {
+      $.each($('.comment-hidden'), function (ind, comment) {
+        $(comment).removeClass('comment-hidden');
+      });
+    }
+    
+    // Default collection
+    var collection = collection || $([
+
+      // Feed elements
+      '.encrypted:not(.comment-hidden)',
+      '.encrypted-image:not([data-decrypted="true"])',
+      '.encrypted-audio:not([data-decrypted="true"])',
+      '.encrypted-video:not([data-decrypted="true"])',
+
+      // User avatars
+      '.user-avatar:not([data-decrypted="true"])'
+
+    ].join(','));
+
+    if (collection.length == 0)
+      return;
+
+    // Show spinner
+    $('#spinner').show();
+
+    // Initial decryption
+    collection.batchDecrypt(function(elapsedTime){
+
+      // Sync slave avatars
+      $('.slave-avatar').trigger('sync');
+
+      // Remove hidden class on posts
+      $('.post').removeClass('hidden');
+
+      // Textarea autosizing
+      $('textarea.autogrow').autogrow();
+
+      // Hide spinner
+      $('#spinner').hide();
+
+      /*console.log(
+        'Done decrypting collection of ' + this.length +
+        ' items in ' + elapsedTime/1000 + 's', $(this)
+      );*/
+
+      callback.call(this);
+
+    });
+
+  };
 
   this.executeJobWithLock = function (job, successCb) {
     

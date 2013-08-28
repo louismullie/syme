@@ -44,7 +44,7 @@ Binders.add('feed', { comments: function(){
                 groupId    + '/posts/' + postId   + '/comments';
     
       // Get the users who were mentioned in the message.
-      var mentions = asocial.helpers.findUserMentions(message, groupId);
+      var mentions = Helpers.findUserMentions(message, groupId);
 
       // Post the comment.
       $.encryptedAjax(url, {
@@ -65,7 +65,7 @@ Binders.add('feed', { comments: function(){
           comment.encrypted = false;
           
           // Create and display comment.
-          asocial.socket.create.comment({
+          Socket.create.comment({
             target: postId, view: comment
           });
           
@@ -151,7 +151,7 @@ Binders.add('feed', { comments: function(){
     // Show hidden comments
     collection.find('.encrypted.comment-hidden').removeClass('comment-hidden');
 
-    asocial.crypto.batchDecrypt(function(){
+    Crypto.batchDecrypt(function(){
 
       // Show comments
       collection.removeClass('comment-hidden');

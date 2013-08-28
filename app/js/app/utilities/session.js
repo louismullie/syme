@@ -28,7 +28,7 @@ Session = function () {
     if (Compatibility.inChromeExtension()) {
       version = chrome.app.getDetails().version;
     } else {
-      version = asocial.version;
+      version = Syme.version;
     }
     
     try {

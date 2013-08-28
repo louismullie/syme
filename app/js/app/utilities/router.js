@@ -303,7 +303,7 @@ Router = Backbone.Router.extend({
     Notifications.start();
 
     // Initialize socket.
-    asocial.socket.listen();
+    Socket.listen();
   },
 
   authenticate: function(success, failure) {

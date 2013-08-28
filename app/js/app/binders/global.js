@@ -109,7 +109,7 @@ Binders.add('global', { main: function(){
     }
 
     // Decrypt and place background-image
-    asocial.crypto.getFile(image_id, keys, callback, group_id);
+    FileManager.getFile(image_id, keys, callback, group_id);
 
   });
 
