@@ -67,7 +67,10 @@ Syme.Binders.add('feed', { feed: function(){
 
       $('#load-more').show();
 
-      $.post(SERVER_URL + '/' + Syme.CurrentSession.getGroupId() + '/page', request, function(data){
+      var groupId = Syme.CurrentSession.getGroupId();
+      var url = SERVER_URL + '/' + groupId + '/page';
+      
+      $.post(url, request, function(data){
 
         var lastPage = data.last_page,
             posts    = data.posts;

@@ -68,6 +68,19 @@ Syme.Messages = {
   
   },
   
+  modals: {
+    
+    confirm: {
+      deleteUser: {
+        title: 'Delete user',
+        message: 'Do you really want to delete this user from the group?',
+        submit: 'Delete',
+        cancel: 'Cancel'
+      }
+    }
+    
+  },
+  
   notifications: {
     
     resources: {

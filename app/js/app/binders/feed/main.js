@@ -8,18 +8,25 @@ Syme.Binders.add('feed', { main: function(){
 
     // Fix (hide) awful chrome bug part 2
     $('#feed-panel-column').show(0);
-
-    // Breadcrumbs
+    
+    var userId = Syme.CurrentSession.getUserId(),
+        groupId = Syme.CurrentSession.getGroupId();
+    
+    var groupsUrl = 'users/' + userId + '/groups';
+    var currentGroupUrl = groupsUrl + '/' + groupId;
+    
+    var currentGroupName = $('#feed').data('group-name');
+    
+    // Set navigation bar breadcrumb.
     Syme.Navbar.setBreadCrumb({
+      
       brand_only: false,
-
+      
       elements: [
-        { title: 'Groups',
-          href: 'users/' + Syme.CurrentSession.getUserId() + '/groups' },
-
-        { title: $('#feed').data('group-name'),
-          href: 'users/' + Syme.CurrentSession.getUserId() + '/groups/' + Syme.CurrentSession.getGroupId() }
+        { title: 'Groups', href: groupsUrl },
+        { title: currentGroupName, href: currentGroupUrl }
       ]
+      
     });
 
   });

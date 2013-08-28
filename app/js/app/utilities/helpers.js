@@ -36,7 +36,7 @@ Syme.Helpers = {
   },
 
   // Show unread posts
-  showUnreadPosts: function(data){
+  showUnreadPosts: function(){
 
     // Show hidden posts
     $('.post').removeClass('new-post');

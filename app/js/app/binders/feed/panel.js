@@ -67,20 +67,28 @@ Syme.Binders.add('feed', { panel: function(){
   // Delete user
   $('#main').on('click', '.user-delete', function (e) {
 
-    var userId = $(this).parent().attr('id');
-
+    var deleteUserId = $(this).parent().attr('id');
+    
+    var currentUserId = Syme.CurrentSession.getUserId(),
+        currentGroupId = Syme.CurrentSession.getGroupId();
+    
+    var modal = Syme.Messages.modals.confirm.deleteUser;
+    
     Confirm.show(
-      'Do you really want to delete this user from the group?',
+      
+      modal.message,
+      
       {
         closable: true,
-        title: 'Delete user',
-        submit: 'Delete',
-        cancel: 'Cancel',
+        
+        title: modal.title,
+        submit: modal.submit,
+        cancel: modal.cancel,
 
         onsubmit: function(){
 
-          var route = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() +
-          '/groups/' + Syme.CurrentSession.getGroupId() + '/memberships/' + userId;
+          var route = SERVER_URL + '/users/' + currentUserId + '/groups/' + 
+                      currentGroupId  + '/memberships/' + deleteUserId;
 
           $.encryptedAjax(route, { type: 'DELETE',
 
