@@ -1,5 +1,78 @@
 Auth = {
+  
+  register: function (email, password, fullName, remember, registrationError) {
+    
+    var user = new User();
+    
+    var srp = new SRPClient(email);
 
+    user.save(
+
+      { email: email, full_name: fullName },
+
+      { success: function (model, response) {
+
+        var verifierSalt = srp.randomHexSalt();
+        
+        Crypto.deriveKeys(password, verifierSalt, function (keys) {
+
+          srp.password = keys.key1;
+          
+          var verifierBn = srp.calculateV(verifierSalt);
+          var verifierHex = verifierBn.toString(16);
+          
+          $('meta[name="_csrf"]').attr('content', response.csrf);
+
+          model.save({
+
+            verifier: new Verifier({
+              content: verifierHex,
+              salt: verifierSalt
+            })
+
+            }, {
+
+            success: function (model, response) {
+
+              user.createKeyfile(keys.key2, function () {
+                
+                Auth.login(email, password, remember, function(derivedKey, sessionKey) {
+                  
+                    CurrentSession = new Session();
+
+                    CurrentSession.initializeWithModelPasswordAndKey(
+                      user, keys.key2, sessionKey, remember, function () {
+                        Router.navigate('', { trigger: true, replace: true });
+                 
+                  });
+
+                }, function () { alert('An error has occurred!'); }, true);
+                
+              });
+            },
+
+            error: Router.error
+
+          });
+        });
+
+      },
+
+      error: function (model, response) {
+
+        var textResponse = response.responseText;
+        var jsonResponse = JSON.parse(textResponse);
+        
+        registrationError(jsonResponse.error);
+        
+        return null;
+        
+      }
+    
+    });
+
+  },
+  
   login: function(email, password, remember, success, fail, hack) {
 
     if (Compatibility.inChromeExtension()) {

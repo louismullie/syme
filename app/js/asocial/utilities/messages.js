@@ -42,6 +42,12 @@ Messages = {
   
   error: {
     
+    registration: {
+    
+      email_taken: 'This e-mail is already taken.'
+      
+    },
+    
     fatal: 'An error has occured. We\'ve been notified ' +
            'and we\'ll address this as soon as possible.',
     

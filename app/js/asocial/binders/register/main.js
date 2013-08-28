@@ -99,123 +99,86 @@ asocial.binders.add('register', { main: function(){
   // Registering mode
   $('#auth').on('submit', '#register-form', function(e) {
 
+    var $this = $(this);
+    
     if (Compatibility.inChromeExtension())
       chrome.storage.local.set({ 'hasRegistered':  true });
     
     e.preventDefault();
 
-    var $this = $(this);
-
     // Lock event
     if( !!$this.data('active') ) { return false } else { $this.data('active', true) };
 
     // Spinner
-    $('a[role="submit"]').addClass('loading');
+    $this.trigger('showSpinner', true);
 
     var email     = $this.find('input[name="email"]').val(),
         password  = $this.find('input[name="password"]').val(),
         fullName  = $this.find('input[name="full_name"]').val(),
         remember  = $this.find('input[name="remember_me"]').prop("checked");
-
-    var user = new User();
     
-    var srp = new SRPClient(email);
-
-    user.save(
-
-      { email: email, full_name: fullName },
-
-      { success: function (model, response) {
-
-        var verifierSalt = srp.randomHexSalt();
-        
-        Crypto.deriveKeys(password, verifierSalt, function (keys) {
-
-          srp.password = keys.key1;
-          
-          var verifierBn = srp.calculateV(verifierSalt);
-          var verifierHex = verifierBn.toString(16);
-           $('meta[name="_csrf"]').attr('content', response.csrf);
-
-
-          model.save({
-
-            verifier: new Verifier({
-              content: verifierHex,
-              salt: verifierSalt
-            })
-
-            }, {
-
-            success: function (model, response) {
-
-              user.createKeyfile(keys.key2, function () {
-                
-                Auth.login(email, password, remember, function(derivedKey, sessionKey) {
-                  
-                    CurrentSession = new Session();
-
-                    CurrentSession.initializeWithModelPasswordAndKey(
-                      user, keys.key2, sessionKey, remember, function () {
-                        Router.navigate('', { trigger: true, replace: true });
-                 
-                  });
-
-                }, function () { alert('An error has occurred!'); }, true);
-                
-              });
-            },
-
-            error: function (model, response) {
-              Alert.show('Registration error.', { onhide: location.reload });
-            }
-
-          });
-        });
-
-      },
-
-      error: function (model, response) {
-
-        var jsonResponse = JSON.parse(response.responseText);
-        var error = jsonResponse.error;
-
-        var errorType = {
-
-          email_taken: {
-            field: "email",
-            message: "This email is already taken"
-          }
-
-        }[error];
-
-        // Console if there's no error message
-        if( !errorType ) throw "No error message for" + error;
-
-        // Set container as closest .validation-container
-        var container = $('input[name="' + errorType.field + '"]')
-          .closest('div.validation-container');
-
-        // Get message box
-        var box = container.find('div.validation-message').length == 0
-          // If message box doesn't exist, create it
-          ? $('<div class="validation-message" />').appendTo(container)
-          // If it exists, select it
-          : container.find('div.validation-message').attr('data-related-input', errorType.field);
-
-        // Fill message in box
-        box.html( errorType['message'] );
-
-        // Unlock event
-        $this.data('submit-failed', true).data('active', false);
-
-        // Spinner
-        $('a[role="submit"]').removeClass('loading');
-
-      } } // success
-
-    );
-
+    Auth.register(email, password, fullName, remember, function (error) {
+      $('#auth').trigger('registrationError', error);
+    });
+    
   });
 
+  // Registration error
+  $('#auth').on('registrationError', function (e, error) {
+    
+    var $this = $(this);
+
+    var errorMessage = Messages.error.registration[error];
+
+    // Find the relevant field to edit given error type.
+    var errorField = { 'email_taken': 'email' }[error];
+
+    // Verify the message and field were properly found.
+    if(!errorMessage || !errorField)
+      throw "Missing message or field for error.";
+
+    // Set container as closest .validation-container
+    var $container = $this.find('input[name="' + errorField + '"]')
+                          .closest('div.validation-container');
+    
+    // Get message box
+    var $box, $message = $container.find('div.validation-message');
+    
+    // If box does not exist
+    if ($message.length == 0) {
+      // Create the box
+      var $box = $('<div class="validation-message" />').appendTo($container);
+    } else {
+      // Add the relevat field
+      var $box = $container.find('div.validation-message')
+        .attr('data-related-input', errorField);
+    }
+    
+    // Fill message in box
+    $box.html( errorMessage );
+
+    // Unlock event
+    $this.data('submit-failed', true)
+         .data('active', false);
+
+    // Release spinner
+    $this.trigger('showSpinner', false);
+    
+    return null;
+
+  });
+  
+  $('#auth').on('showSpinner', function (e, show) {
+    
+    var $this = $(this);
+    
+    var submitButton = $this.find('a[role="submit"]');
+    
+    if (show == true) submitButton.addClass('loading');
+    if (show == false) submitButton.removeClass('loading');
+    
+    return null;
+    
+  });
+  
 }});

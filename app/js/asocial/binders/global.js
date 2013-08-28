@@ -1,12 +1,8 @@
 asocial.binders.add('global', { main: function(){
 
-  // Set the title for the document.
-  if (Compatibility.inChromeExtension()) {
-    document.title = "Syme";
-  }
-
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
+    
     e.stopPropagation();
 
     // Get container from attributes

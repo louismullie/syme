@@ -18,6 +18,11 @@ $.each(Handlebars.templates, function (name, template) {
 
 $(function(){
 
+  // Set the title for the document.
+  if (Compatibility.inChromeExtension()) {
+    document.title = "Syme";
+  }
+
   // Bind a[hbs] to router
   $(document).on('click', 'a[hbs]', function(e){
     e.preventDefault();
