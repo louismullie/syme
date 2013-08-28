@@ -14,9 +14,9 @@ function Uploader(file, options) {
   this.options.baseUrl    = options.baseUrl    || '/file/';
   this.options.workerPath = options.workerPath || 'workers/';
   this.options.numWorkers = options.numWorkers || 4;
-  this.options.chunkSize  = options.chunkSize  ||
-                            1 * 1024 * 1024;
-
+  this.options.chunkSize  = options.chunkSize  || 1 * 1024 * 1024;
+  this.options.csrfToken  = options.csrfToken  || '';
+  
   this.reader = new FileReader();
   this.workers = [];
   this.blob = null;
@@ -166,11 +166,8 @@ function Uploader(file, options) {
           fd.append(key, data[key].toString());
         }
         
-        var csrf = document.querySelector('meta[name="_csrf"]');
-        var token = csrf ? csrf.content : '';
-
         xhr.open('POST', _this.options.baseUrl + 'upload/create');
-        xhr.setRequestHeader('X_CSRF_TOKEN', token);
+        xhr.setRequestHeader('X_CSRF_TOKEN', _this.options.csrfToken);
 
         xhr.send(fd);
         
@@ -211,13 +208,10 @@ function Uploader(file, options) {
 
     var appendUrl = this.options.baseUrl + 'upload/append';
 
-    var csrf = document.querySelector('meta[name="_csrf"]');
-    var token = csrf ? csrf.content : '';
-    
     this.workerPool.queueJob({
       pass: pass, worker: worker,
       data: data, id: this.uploadId,
-      url: appendUrl, csrf: token,
+      url: appendUrl, csrf: this.options.csrfToken,
       chunks: _this.numChunks
     }, this);
 

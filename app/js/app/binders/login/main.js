@@ -22,9 +22,9 @@ Syme.Binders.add('login', { main: function(){
         remember = $this.find('input[name="remember_me"]').prop("checked");
 
       // Login
-      Syme.Auth.login(email, password, remember, function(derivedKey, sessionKey) {
+      Syme.Auth.login(email, password, remember, function(derivedKey, csrfToken, sessionKey) {
 
-        Syme.CurrentSession = new Syme.Session();
+        Syme.CurrentSession = new Syme.Session(csrfToken);
         
         Syme.CurrentSession.initializeWithPasswordAndKey(
           derivedKey, sessionKey, remember, function () {

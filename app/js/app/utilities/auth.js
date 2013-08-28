@@ -37,9 +37,9 @@ Syme.Auth = {
 
               user.createKeyfile(keys.key2, function () {
                 
-                Syme.Auth.login(email, password, remember, function(derivedKey, sessionKey) {
+                Syme.Auth.login(email, password, remember, function(derivedKey, csrfToken, sessionKey) {
                   
-                    Syme.CurrentSession = new Syme.Session();
+                    Syme.CurrentSession = new Syme.Session(csrfToken);
 
                     Syme.CurrentSession.initializeWithModelPasswordAndKey(
                       user, keys.key2, sessionKey, remember, function () {
@@ -123,17 +123,21 @@ Syme.Auth = {
               success: function (data) {
 
                if (data.status == 'ok') {
-
-                Syme.CurrentSession.setCsrfToken(data.csrf);
-
+                
                 var msg = Syme.Messages.beta.warning;
 
+                var derivedKey = keys.key2;
+                var csrfToken = data.csrf;
                 var sessionKey = Sc.toString(16);
                 
                 Alert.show(msg, {
                   
                   title: 'Beta warning',
-                  onhide: function () { success(keys.key2, sessionKey); return true; }
+                  
+                  onhide: function () {
+                    success(derivedKey, csrfToken, sessionKey);
+                    return true;
+                  }
 
                 });
 

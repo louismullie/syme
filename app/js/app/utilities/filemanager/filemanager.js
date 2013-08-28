@@ -35,9 +35,10 @@ FileManager = {
 
       var group = group || Syme.CurrentSession.getGroupId();
       var baseUrl = SERVER_URL + '/' + group + '/file/';
-
+      var csrfToken = Syme.CurrentSession.getCsrfToken();
+      
       var downloader = new Downloader(id, keys, {
-        baseUrl: baseUrl, group: group });
+        baseUrl: baseUrl, group: group, csrfToken: csrfToken });
 
       downloader.start(
         function() {},
@@ -106,9 +107,14 @@ FileManager = {
     } else {
 
       var baseUrl = SERVER_URL + '/' + group + '/file/';
-      var uploadOptions = { data: data, baseUrl: baseUrl };
+      var csrfToken = Syme.CurrentSession.getCsrfToken();
+      
+      var uploadOptions = {
+        data: data, baseUrl: baseUrl,
+        csrfToken: csrfToken
+      };
 
-      uploader = new Uploader(file, uploadOptions);
+      var uploader = new Uploader(file, uploadOptions);
 
       uploader.start(progress, success);
 
@@ -440,9 +446,10 @@ FileManager = {
 
       var group = group || Syme.CurrentSession.getGroupId();
       var baseUrl = SERVER_URL + '/' + group + '/file/';
-
+      var csrfToken = Syme.CurrentSession.getCsrfToken();
+      
       var downloader = new Downloader(id, keys, {
-        baseUrl: baseUrl, group: group });
+        baseUrl: baseUrl, group: group, csrfToken: csrfToken });
 
       downloader.start(
         function() {},

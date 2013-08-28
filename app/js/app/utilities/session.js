@@ -1,4 +1,4 @@
-Syme.Session = function () {
+Syme.Session = function (csrfToken) {
 
   var _this = this;
   
@@ -11,7 +11,7 @@ Syme.Session = function () {
   this.password = null;
   this.passwordKey = null;
   
-  this.csrfToken = null;
+  this.csrfToken = csrfToken;
   
   this.remember = null;
   this.initialized = false;

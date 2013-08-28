@@ -348,6 +348,7 @@ Syme.Socket = {
 
       } else if (data.action == 'start') {
 
+        // Deprecated calling form
         var downloader = new Downloader(
           data.upload.id, data.upload.key
         );
