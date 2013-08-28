@@ -6,16 +6,47 @@ Syme.Router = Backbone.Router.extend({
   
   navigate: function (fragment, options) {
 
-    var history = Backbone.history;
+    var _this = this;
+    
+    // Verify if unsaved content is present.
+    var unsavedContent = _.any($('textarea'),
+      function (textarea) { return textarea.value != ''; });
+
+    // Show confirm modal if unsaved content exists.
+    if (unsavedContent) {
+      
+      Confirm.show(
+        
+        Syme.Messages.error.unsavedContent,
+        {
+          closable: true,
+          title: 'Confirm Navigation',
+          submit: 'Leave this page',
+          cancel: 'Stay on this page',
+
+          onsubmit: function(){
+            _this.doNavigate(fragment, options);
+          }
+          
+        }
+      );
+      
+    } else {
+      this.doNavigate(fragment, options);
+    }
+
+  },
+  
+  doNavigate: function (fragment, options) {
     
     // Set fragment
-    fragment = history.getFragment( fragment || '' );
+    fragment = Backbone.history.getFragment( fragment || '' );
     
     this.currentRoute = fragment;
     
     // Override pushstate and load url directly
-    history.loadUrl(fragment);
-
+    Backbone.history.loadUrl(fragment);
+    
   },
   
   insideGroup: function () {
