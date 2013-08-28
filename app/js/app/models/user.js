@@ -1,19 +1,9 @@
 // Our basic Todo model has text, order, and done attributes.
-var User = Backbone.RelationalModel.extend({
+var User = Backbone.Model.extend({
 
   idAttribute: "id",
   url: SERVER_URL + '/users',
-
-  relations: [
-  {
-    type: Backbone.HasOne,
-    key: 'verifier',
-    relatedModel: 'Verifier',
-    reverseRelation: {
-      key: 'user'
-    }
-  }],
-
+  
   /*
   sync: function(method, model, options) {
     

@@ -11,28 +11,29 @@ Syme.Auth = {
       { email: email, full_name: fullName },
 
       { success: function (model, response) {
-
-        var verifierSalt = srp.randomHexSalt();
         
-        Syme.Crypto.deriveKeys(password, verifierSalt, function (keys) {
+        // Set CSRF token for second step of authentication.
+        Syme.CurrentSession.setCsrfToken(response.csrf);
+        
+        // Generate a salt to derive keys from the password.
+        var credentialSalt = srp.randomHexSalt();
+        
+        // Derive authentication and keyfile encryption keys from password.
+        Syme.Crypto.deriveKeys(password, credentialSalt, function (keys) {
 
           srp.password = keys.key1;
           
-          var verifierBn = srp.calculateV(verifierSalt);
-          var verifierHex = verifierBn.toString(16);
+          // Calculate the SRP verifier and convert to hex.
+          var verifierBn = srp.calculateV(credentialSalt);
           
-          Syme.CurrentSession.setCsrfToken(response.csrf);
+          // Convert the SRP verifier to hexadecimal form.
+          var verifierHex = verifierBn.toString(16);
 
-          model.save({
-
-            verifier: new Verifier({
-              content: verifierHex,
-              salt: verifierSalt
-            })
-
-            }, {
-
-            success: function (model, response) {
+          model.save(
+            
+            { verifier: { content: verifierHex, salt: credentialSalt } },
+            
+            { success: function (model, response) {
 
               user.createKeyfile(keys.key2, function () {
                 
@@ -79,8 +80,6 @@ Syme.Auth = {
       chrome.storage.local.set({ 'remember':  remember });
       chrome.storage.local.set({ 'hasRegistered':  true });
     }
-
-    Backbone.Relational.store.reset();
 
     var srp = new SRPClient(email);
 
@@ -143,7 +142,6 @@ Syme.Auth = {
                 // Non-deterministic Heisenbug with login
                 if (hack) {
 
-                  Backbone.Relational.store.reset();
                   Syme.CurrentSession = {};
                   Syme.Router.navigate('login');
 
@@ -189,7 +187,7 @@ Syme.Auth = {
     
     var userId = Syme.CurrentSession.getUserId();
 
-    Notifications.clearBadge();
+    Notifications.hideBadge();
 
     var url = SERVER_URL + '/users/' + 
               userId + '/sessions/current';
