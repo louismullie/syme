@@ -53,4 +53,25 @@ Syme.Binders.add('feed', { shared: function(){
       .parent().find('.mentions div').html('');
   });
 
+  // Get textarea value with mentions markup along with mention list.
+  // Calls callback({ text: string, mentioned_users: [ *id (string) ] })
+  $('#main').on('getMentionsMarkup', 'textarea', function(e, callback){
+
+    var $this = $(this);
+
+    $this.mentionsInput('val', function(text) {
+      $this.mentionsInput('getMentions', function(mentioned_users) {
+
+        // Keep ids only
+        var mentioned_users = _.map(mentioned_users, function(mentioned_user){
+          return mentioned_user.id;
+        })
+
+        callback({ text: text, mentioned_users: mentioned_users});
+
+      });
+    });
+
+  });
+
 } }); // Binders.add();

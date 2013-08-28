@@ -1,18 +1,19 @@
 Syme.Binders.add('feed', { form: function(){
 
-  /* AJAX for feed form */
+  /* Feed form */
+
   $('#main').on('submit', '#feed-form', function(e){
 
     e.preventDefault();
 
     var $form     = $(this),
+        upload_id = $form.find('input[name="upload_id"]').val(),
         $textarea = $form.find('textarea');
 
-    // Get the message from the textarea and
-    // allow hashtags despite markdown by escaping #
-    var message = $textarea.val().replace('#', '\\#');
+    var groupId   = Syme.CurrentSession.getGroupId(),
+        userId    = Syme.CurrentSession.getUserId();
 
-    // If a file is uploading, indicate to wait
+    // If a file is uploading, indicate to wait and prevent posting
     if( $('#upload-box').hasClass('active') ) {
 
       // If indication already exists, return
@@ -39,77 +40,85 @@ Syme.Binders.add('feed', { form: function(){
 
       }, 3 * 1000);
 
+      return;
+
     }
 
     // If there isn't a post or uploaded file, don't submit the form
-    if(!message.trim() && !$('#upload_id').val()) return;
+    if(!$textarea.val().trim() && !upload_id) return;
 
     // Lock event
     if($form.data('active')) return false;
     $form.data('active', true);
 
-    // Encrypt the message and write the content to the file.
-    var groupId = Syme.CurrentSession.getGroupId(),
-        userId = Syme.CurrentSession.getUserId();
+    // Begin posting once we get the async mentions.
+    var postWithMentions = function(mentions_data){
 
-    var url = SERVER_URL + '/users/' + userId +
-              '/groups/' + groupId + '/posts';
+      var url = SERVER_URL + '/users/' + userId + '/groups/' + groupId + '/posts';
 
-    $.encryptedAjax(url, {
+      $.encryptedAjax(url, {
 
-      type: 'POST',
+        type: 'POST',
 
-      data: {
+        data: {
+          upload_id: upload_id,
+          mentioned_users: mentions_data.mentioned_users
+        },
 
-        upload_id: $form.find('input[name="upload_id"]').val(),
-        mentioned_users: Syme.Helpers.findUserMentions(message, groupId)
-      },
+        success: function(post){
 
-      success: function(post){
+          // Get the message with mentions markup and
+          // allow hashtags despite markdown by escaping #
+          var message = mentions_data.text.replace('#', '\\#');
 
-        // Show post directly by sending the
-        // unencrypted post by self-socket update
-        post.content = message;
-        post.encrypted = false;
-        
-        Syme.Socket.create.post({ view: post });
+          // Show post directly by sending the
+          // unencrypted post by self-socket update
+          post.content = message;
+          post.encrypted = false;
 
-        // Reset uploads & attachments
-        $form.find('#upload_id').val('');
-        $form.find('#upload-box').removeClass('active').hide();
-        $form.find('ul#attachments').show();
+          Syme.Socket.create.post({ view: post });
 
-        // Reset textarea
-        $textarea.trigger('reset');
+          // Reset uploads & attachments
+          $form.find('#upload_id').val('');
+          $form.find('#upload-box').removeClass('active').hide();
+          $form.find('ul#attachments').show();
 
-        Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
+          // Reset textarea
+          $textarea.trigger('reset');
 
-          $.encryptedAjax(url + '/' + post.id, {
+          Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
-            type: 'PUT',
+            $.encryptedAjax(url + '/' + post.id, {
 
-            data: { content: encryptedMessage },
+              type: 'PUT',
 
-            success: function () {
-              // Unlock form
-              $form.data('active', false);
-            },
+              data: { content: encryptedMessage },
 
-            error: function () {
-              Alert.show('Posting failed (PUT)');
-            }
+              success: function () {
+                // Unlock form
+                $form.data('active', false);
+              },
+
+              error: function () {
+                Alert.show('Posting failed (PUT)');
+              }
+
+            });
 
           });
 
-        });
+        },
 
-      },
+        error: function (post) {
+          Alert.show('Posting failed (POST)');
+        }
 
-      error: function (post) {
-        Alert.show('Posting failed (POST)');
-      }
+      });
 
-    });
+    };
+
+    // Get the async mentions
+    $textarea.trigger('getMentionsMarkup', postWithMentions);
 
   });
 
