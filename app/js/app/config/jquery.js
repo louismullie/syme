@@ -48,18 +48,24 @@ $.fn.batchDecrypt = function(callback){
       callback  = callback || function(){},
       decryptCounter = 0,
       startTime = new Date;
-
+  
+  var numElements = $this.length;
+  
   var incrementCounter = function(e){
-
+  
     decryptCounter++;
-
+    
+    var progress = decryptCounter / numElements;
+    NProgress.set(progress);
+    
     // Call callback if all elements are done,
     // passing back $this and elapsed time
-    if(decryptCounter == $this.length){
+    if(decryptCounter == numElements){
 
       var endTime     = new Date,
           elapsedTime = endTime - startTime;
-
+      
+      NProgress.done();
       callback.call($this, elapsedTime);
 
     }
