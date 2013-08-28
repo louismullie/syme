@@ -11,37 +11,37 @@ Binders.add('feed', { comments: function(){
   // Create comment
   $('#main').on('keydown', '.comment-form textarea', function(e){
 
-    var $this = $(this);
+    var $textarea = $(this);
 
     if (e.which == 13 && !e.shiftKey) { // Enter key, but not Shift+Enter
 
       e.preventDefault();
 
       // Return if a comment is being posted.
-      if ($this.data('active') == true) return;
+      if ($textarea.data('active') == true) return;
 
-      var related_post    = $(this).closest('.post'),
-          related_post_id = related_post.attr('id'),
-          post_encrypted  = related_post.data('encrypted'),
-          textarea        = related_post.find('textarea');
+      var $related_post     = $(this).closest('.post'),
+          related_post_id   = $related_post.attr('id'),
+          post_encrypted    = $related_post.data('encrypted'),
+          $textarea         = $related_post.find('textarea');
 
       // If textarea is empty, do not submit form
-      if(!textarea.val().trim()) return;
+      if(!$textarea.val().trim()) return;
 
       // Lock the comment textarea while posting.
-      $this.data('active', true);
+      $textarea.data('active', true);
 
       // Allow hashtags despite markdown by escaping.
-      var message = textarea.val().replace('#', '\\#');
+      var message = $textarea.val().replace('#', '\\#');
 
-      var groupId = CurrentSession.getGroupId()
-          userId = CurrentSession.getUserId(),
-          user   = CurrentSession.getUser(),
-          postId = related_post_id;
+      var groupId = CurrentSession.getGroupId(),
+          userId  = CurrentSession.getUserId(),
+          user    = CurrentSession.getUser(),
+          postId  = related_post_id;
 
 
       var url = SERVER_URL + '/users/' + userId + '/groups/' +
-                groupId    + '/posts/' + postId   + '/comments';
+                groupId    + '/posts/' + postId + '/comments';
 
       // Get the users who were mentioned in the message.
       var mentions = Helpers.findUserMentions(message, groupId);
@@ -58,16 +58,18 @@ Binders.add('feed', { comments: function(){
         success: function (comment) {
 
           // Clear textarea and resize it
-          textarea.val('').change();
+          $textarea.val('').change();
 
-          // Shim comment message.
+          // Show comment directly by sending the
+          // unencrypted post by self-socket update
           comment.content = message;
           comment.encrypted = false;
-
-          // Create and display comment.
           Socket.create.comment({
             target: postId, view: comment
           });
+
+          // Reset textarea
+          $textarea.trigger('reset');
 
           Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
@@ -78,16 +80,14 @@ Binders.add('feed', { comments: function(){
               data: { content: encryptedMessage },
 
               success: function () {
-
-                // Unlock comment textare.
-                $this.data('active', false);
-
+                // Unlock form.
+                $textarea.data('active', false);
               },
 
               error: function () {
 
                 // Unlock comment textare.
-                $this.data('active', false);
+                $textarea.data('active', false);
 
                 // Show error message.
                 Alert.show(
@@ -105,7 +105,7 @@ Binders.add('feed', { comments: function(){
         error: function () {
 
           // Unlock comment textare.
-          $this.data('active', false);
+          $textarea.data('active', false);
 
           // Show error message.
           Alert.show(
