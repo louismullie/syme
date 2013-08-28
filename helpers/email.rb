@@ -28,7 +28,7 @@ def send_beta_invite(email, token)
   <p>Do you have any questions or comments? We'd love to hear from you. Don’t hesitate to get in touch by replying to this email.</p>
   <p>Sincerely,</p>
   <p>The Syme Team</p>
-  <p>Jon, Chris and Louis</p>
+  
   <p><a href='http://www.getsyme.com'>www.getsyme.com</a></p>"
 
   send_email_to(email, subject, message)
@@ -51,7 +51,7 @@ def send_beta_welcome(email, token)
   <p>Sincerely,</p>
 
   <p>The Syme Team</p>
-  <p>Jon, Chris and Louis</p>
+  
   <p><a href='http://www.getsyme.com'>www.getsyme.com</a></p>
 
   <p>Get in touch: <a href='mailto:team@getsyme.com'>Email</a> |
@@ -97,7 +97,7 @@ def send_invite(email, token)
 
   <p>Sincerely,</p><br />
   <p>The Syme Team</p>
-  <p>Jon, Chris and Louis</p>
+  
   <p><a href='http://www.getsyme.com'>www.getsyme.com</a></p>
   "
 
@@ -110,7 +110,7 @@ def send_invite(email, token)
 
   <p>Sincerely,</p><br />
   <p>The Syme Team</p>
-  <p>Jon, Chris and Louis</p>
+  
   <p><a href='http://www.getsyme.com'>www.getsyme.com</a></p>
   "
 
@@ -136,7 +136,7 @@ def request_confirm(invite)
 
   <p>Sincerely,</p><br/>
   <p>The Syme Team</p>
-  <p>Jon, Chris and Louis</p>
+  
   <p><a href='http://www.getsyme.com'>www.getsyme.com</a></p>
 "
 
@@ -161,7 +161,7 @@ All you need to do is log on to your account to start sharing.</p>
 
 <p>Sincerely,</p><br />
 <p>The Syme Team</p>
-<p>Jon, Chris and Louis</p>
+
 <p><a href='http://www.getsyme.com'>www.getsyme.com</a></p>
 "
 
