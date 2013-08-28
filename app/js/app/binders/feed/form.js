@@ -74,9 +74,6 @@ Syme.Binders.add('feed', { form: function(){
         
         Syme.Socket.create.post({ view: post });
 
-        // Unlock form
-        $form.data('active', false);
-
         // Reset uploads & attachments
         $form.find('#upload_id').val('');
         $form.find('#upload-box').removeClass('active').hide();
@@ -92,6 +89,11 @@ Syme.Binders.add('feed', { form: function(){
             type: 'PUT',
 
             data: { content: encryptedMessage },
+
+            success: function () {
+              // Unlock form
+              $form.data('active', false);
+            },
 
             error: function () {
               Alert.show('Posting failed (PUT)');

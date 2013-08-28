@@ -10,31 +10,31 @@ Syme.Binders.add('feed', { comments: function(){
 
   // Create comment
   $('#main').on('keydown', '.comment-form textarea', function(e){
-    
-    var $this = $(this);
+
+    var $textarea = $(this);
     
     if (e.which == 13 && !e.shiftKey) { // Enter key, but not Shift+Enter
 
       e.preventDefault();
       
       // Return if a comment is being posted.
-      if ($this.data('active') == true) return;
-      
-      var related_post    = $(this).closest('.post'),
-          related_post_id = related_post.attr('id'),
-          post_encrypted  = related_post.data('encrypted'),
-          textarea        = related_post.find('textarea');
+      if ($textarea.data('active') == true) return;
+
+      var $related_post     = $(this).closest('.post'),
+          related_post_id   = $related_post.attr('id'),
+          post_encrypted    = $related_post.data('encrypted'),
+          $textarea         = $related_post.find('textarea');
 
       // If textarea is empty, do not submit form
-      if(!textarea.val().trim()) return;
-      
+      if(!$textarea.val().trim()) return;
+
       // Lock the comment textarea while posting.
-      $this.data('active', true);
+      $textarea.data('active', true);
 
       // Allow hashtags despite markdown by escaping.
-      var message = textarea.val().replace('#', '\\#');
+      var message = $textarea.val().replace('#', '\\#');
 
-      var groupId = Syme.CurrentSession.getGroupId()
+      var groupId = Syme.CurrentSession.getGroupId(),
           userId = Syme.CurrentSession.getUserId(),
           user   = Syme.CurrentSession.getUser(),
           postId = related_post_id;
@@ -58,19 +58,22 @@ Syme.Binders.add('feed', { comments: function(){
         success: function (comment) {
 
           // Clear textarea and resize it
-          textarea.val('').change();
-          
-          // Shim comment message.
+          $textarea.val('').change();
+
+          // Show comment directly by sending the
+          // unencrypted post by self-socket update
           comment.content = message;
           comment.encrypted = false;
           
-          // Create and display comment.
           Syme.Socket.create.comment({
             target: postId, view: comment
           });
-          
+
+          // Reset textarea
+          $textarea.trigger('reset');
+
           Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
-            
+
             $.encryptedAjax(url + '/' + comment.id, {
               
               type: 'PUT',
@@ -79,15 +82,14 @@ Syme.Binders.add('feed', { comments: function(){
               
               success: function () {
                 
-                // Unlock comment textare.
-                $this.data('active', false);
+                // Unlock form.
+                $textarea.data('active', false);
                 
               },
               
               error: function () {
                 
-                // Unlock comment textare.
-                $this.data('active', false);
+                $textarea.data('active', false);
                 
                 // Show error message.
                 Alert.show(
@@ -104,9 +106,9 @@ Syme.Binders.add('feed', { comments: function(){
         
         error: function () {
           
-          // Unlock comment textare.
-          $this.data('active', false);
-          
+          // Unlock comment textarea.
+          $textarea.data('active', false);
+
           // Show error message.
           Alert.show(
             Syme.Messages.error.postingFailed);
