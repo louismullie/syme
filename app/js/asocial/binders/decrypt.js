@@ -17,16 +17,20 @@ asocial.binders.add('global', { decrypt: function() {
 
         var missingKey = decryptedText.error.missingKey
 
-        $.getJSON(SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' +
-          missingKey.groupId + '/invitations/' + missingKey.userId,
+        var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' +
+            missingKey.groupId + '/invitations/' + missingKey.userId;
+        
+        $.getJSON(url,
 
-        function (addUserRequest) {
+          function (addUserRequest) {
 
-          var user = CurrentSession.getUser();
-          user.addUsersRequest([addUserRequest],
-            function () { Router.reload(); });
+            var user = CurrentSession.getUser();
+            user.addUsersRequest([addUserRequest],
+              function () { Router.reload(); });
 
-        });
+          }
+          
+        );
 
         return done();
 

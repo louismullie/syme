@@ -1,9 +1,11 @@
 // CSRF token
 $.ajaxSetup({
+  
   beforeSend: function(xhr) {
-    var token = $('meta[name="_csrf"]').attr('content');
+    var token = CurrentSession.getCsrfToken();
     xhr.setRequestHeader('X_CSRF_TOKEN', token);
   }
+  
 });
 
 $.encryptedAjax = function (url, options) {

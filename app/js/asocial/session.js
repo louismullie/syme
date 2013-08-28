@@ -4,12 +4,18 @@ Session = function () {
   
   this.user = null;
   this.userId = null;
+  
   this.groups = null;
   this.groupId = null;
+  
   this.password = null;
   this.passwordKey = null;
+  
+  this.csrfToken = null;
+  
   this.remember = null;
   this.initialized = false;
+  
   this.key = null;
   
   this.initialize = function (callback) {
@@ -109,7 +115,7 @@ Session = function () {
     
     this.passwordKey = data.password_key;
     
-    $('meta[name="_csrf"]').attr('content', data.csrf);
+    CurrentSession.setCsrfToken(data.csrf);
 
     _this.groups = data.groups;
     _this.groupMembers = data.group_members;
@@ -243,6 +249,7 @@ Session = function () {
   };
   */
   
+  /* FOR DELETION */ /* FOR DELETION */ /* FOR DELETION */
   this.getGroupMembers = function (groupId) {
     
     if (!this.groupMembers || !this.groupMembers[groupId]) {
@@ -255,11 +262,26 @@ Session = function () {
     
   };
   
+  /* FOR DELETION */ /* FOR DELETION */ /* FOR DELETION */
   this.setGroupMembers = function (groupId) {
     
     this.groupMembers = groupId;
 
     return null;
+    
+  };
+  
+  this.setCsrfToken = function (csrfToken) {
+    
+    if (!csrfToken) throw 'Invalid CSRF token.'
+    
+    this.csrfToken = csrfToken;
+    
+  };
+  
+  this.getCsrfToken = function () {
+  
+    return this.csrfToken;
     
   };
   

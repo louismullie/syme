@@ -21,7 +21,7 @@ Auth = {
           var verifierBn = srp.calculateV(verifierSalt);
           var verifierHex = verifierBn.toString(16);
           
-          $('meta[name="_csrf"]').attr('content', response.csrf);
+          CurrentSession.setCsrfToken(response.csrf);
 
           model.save({
 
@@ -114,7 +114,7 @@ Auth = {
 
             var params = { M: M.toString(16), remember: remember };
 
-            $('meta[name="_csrf"]').attr('content', data.csrf);
+            CurrentSession.setCsrfToken(data.csrf);
 
             $.ajax(SERVER_URL + '/users/current/sessions/' + sessionId, {
 
@@ -125,7 +125,7 @@ Auth = {
 
                if (data.status == 'ok') {
 
-                $('meta[name="_csrf"]').attr('content', data.csrf);
+                CurrentSession.setCsrfToken(data.csrf);
 
                 var msg = Messages.beta.warning;
 
