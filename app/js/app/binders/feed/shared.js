@@ -40,4 +40,17 @@ Syme.Binders.add('feed', { shared: function(){
 
   });
 
-} }); // Syme.Binders.add();
+  // Form feed textarea formatting (should stay here because
+  // of dependency order)
+  $('#feed-form textarea').trigger('format');
+
+  // Reset textarea
+  $('#main').on('reset', 'textarea', function(e){
+    $(this)
+      // Clear and reset height
+      .val('').trigger('autogrow.reset')
+      // Remove mentions
+      .parent().find('.mentions div').html('');
+  });
+
+} }); // Binders.add();
