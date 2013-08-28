@@ -95,12 +95,13 @@ Syme.Binders.add('feed', { form: function(){
               data: { content: encryptedMessage },
 
               success: function () {
-                // Unlock form
                 $form.data('active', false);
               },
 
               error: function () {
-                Alert.show('Posting failed (PUT)');
+                // PUT failed
+                Alert.show(Syme.Messages.error.postingFailed);
+                $form.data('active', false);
               }
 
             });
@@ -110,7 +111,8 @@ Syme.Binders.add('feed', { form: function(){
         },
 
         error: function (post) {
-          Alert.show('Posting failed (POST)');
+          // POST failed
+          Alert.show(Syme.Messages.error.postingFailed);
         }
 
       });
