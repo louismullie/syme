@@ -42,9 +42,8 @@ asocial.binders.add('feed', { invite: function() {
 
       onshow: function() {
 
-        // Initial textarea autosizing
-        $('textarea.autogrow')
-          .autogrow().removeClass('autogrow');
+        // Textarea autogrow
+        $('textarea').autogrow().removeClass('autogrow');
 
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal a.modal-button').bind('click', function(e){
@@ -72,18 +71,18 @@ asocial.binders.add('feed', { invite: function() {
 
             // If failed is empty, remove it from log.
             if ( _.size(log.failed) == 0 ) {
-              
+
               log = _.omit(log, 'failed');
-              
+
             // Otherwise, translate error to message.
             } else {
-              
+
               _.each(log.failed, function (value, key) {
                 log.failed[key] = Messages.error.invitation[value];
               });
 
             }
-            
+
             // Compile success template with log
             var template = Template.render('feed-modals-invite-success', log);
 

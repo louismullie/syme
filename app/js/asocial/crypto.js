@@ -3,7 +3,7 @@ guard('crypto', {
   batchDecrypt: function(callback, collection){
 
     // Default callback
-    var callback = callback || function(){};
+    var callback = callback || $.noop;
 
     // Cleanup / fix
     if (ONE_PAGE_VIEW) {
@@ -11,7 +11,7 @@ guard('crypto', {
         $(comment).removeClass('comment-hidden');
       });
     }
-    
+
     // Default collection
     var collection = collection || $([
 
@@ -41,9 +41,6 @@ guard('crypto', {
       // Remove hidden class on posts
       $('.post').removeClass('hidden');
 
-      // Textarea autosizing
-      $('textarea.autogrow').autogrow();
-
       // Hide spinner
       $('#spinner').hide();
 
@@ -63,20 +60,20 @@ guard('crypto', {
     var display = function(id, blob, keys, save) {
 
       if (save) {
-        
+
         Crypto.decryptMessage(group, keys, function (key) {
-          
+
           var reader = new FileReader();
 
           reader.onload = function(event){
-            
+
             var base64 = sjcl.encrypt(key, event.target.result);
-            
+
             store.save({ key: id, value: {
               groupId: group, content: base64 }});
-              
+
           };
-        
+
           reader.readAsDataURL(blob);
 
         });
@@ -104,7 +101,7 @@ guard('crypto', {
         }, function () {
           callback(false)
         });
-      
+
 
     };
 
@@ -127,18 +124,18 @@ guard('crypto', {
           } else {
 
             var data = me.value;
-            
+
             Crypto.decryptMessage(data.groupId,  keys, function (key) {
-              
+
               var decrypted = sjcl.decrypt(key, data.content);
               var blob = ThumbPick.prototype.dataURItoBlob(decrypted);
-              
+
               display(id, blob, false);
 
             });
-            
+
           }
-          
+
         });
 
     });

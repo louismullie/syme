@@ -24,6 +24,9 @@ $.fn.autogrow = function(){
 
     var $this = $(this);
 
+    if ( $this.data('autogrow') ) return;
+    $this.data('autogrow', true);
+
     // Get sizes
     var lineHeight = parseInt($this.css('line-height'), 10) ||
       parseInt($this.css('font-size'), 10),
@@ -61,7 +64,8 @@ $.fn.autogrow = function(){
     var destroy = function(){
       $this.unbind(handlers, update)
            .unbind('autogrow.reset', reset)
-           .unbind('autogrow.destroy', destroy);
+           .unbind('autogrow.destroy', destroy)
+           .data('autogrow', false);
     };
     $this.bind('autogrow.destroy', destroy);
 

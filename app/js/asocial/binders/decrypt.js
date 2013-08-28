@@ -6,9 +6,9 @@ asocial.binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || function(){};
 
-    var post    = $this.closest('.post'),
-        text    = $this.text().replace(/^\s+|\s+$/g, ''),
-        groupId = post.data('group_id');
+    var $post     = $this.closest('.post'),
+        text      = $this.text().replace(/^\s+|\s+$/g, ''),
+        groupId   = $post.data('group_id');
 
     var formatDecryptedText = function(decryptedText) {
 
@@ -36,16 +36,16 @@ asocial.binders.add('global', { decrypt: function() {
       var formattedText = marked(decryptedText).replace('<a', '<a target="_blank"');
 
       // Create a jQuery wrapper around markdown'd decrypted text
-      var content = $( asocial.helpers.replaceUserMentions(formattedText, groupId) );
+      var $content = $( asocial.helpers.replaceUserMentions(formattedText, groupId) );
 
       // Put commenter name and comment tools in first paragraph of comment
-      content.filter('p:first-child').prepend(
+      $content.filter('p:first-child').prepend(
         $this.closest('.comment-box').find('a.commenter-name')
       );
 
       $this
         // Output decrypted content
-        .html( content )
+        .html( $content )
         // Transform the .encrypted into .collapsable
         .removeClass('encrypted').addClass('collapsable');
 
@@ -53,14 +53,13 @@ asocial.binders.add('global', { decrypt: function() {
       asocial.helpers.collapseHTML(5, 'Read more');
 
       // Embed rich media content.
-      $('.post-content').oembed();
+      $this.find('.post-content').oembed();
 
       // Format dynamic timestamps.
-      $('time.timeago').timeago();
+      $this.find('time.timeago').timeago();
 
       // Format comment textarea.
-      // KEEP THIS ONE
-      $('textarea').autogrow();
+      $post.find('textarea').trigger('format');
 
       done();
 
@@ -81,9 +80,9 @@ asocial.binders.add('global', { decrypt: function() {
 
       Crypto.decryptMessage(groupId, text, formatDecryptedText);
 
-    // Just format element.
     } else {
 
+      // If element not encrypted, just format it.
       formatDecryptedText(text);
 
     }

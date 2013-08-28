@@ -400,6 +400,11 @@
       }
 
       .comment-form {
+        // Textarea autogrow and mentions configuration
+        $fontSize:    13px;
+        $lineHeight:  16px;
+        $padding:     7px;
+
         textarea {
           width: 100%;
           @include box-sizing;
@@ -407,18 +412,20 @@
           margin: 0;
           resize: none;
 
-          font-size:    13px;
+          font-size:    $fontSize;
           font-weight:  400;
-
-          // Textarea autogrow configuration
-          $lineHeight:  16px;
-          $padding:     7px;
 
           padding:      #{$padding} 10px;
           line-height:  $lineHeight;
           height:       $padding * 2 + $lineHeight * 1 + 4; // Minimum lines + border
           min-height:   $padding * 2 + $lineHeight * 1 + 4; // Minimum lines + border
-          max-height:   $padding * 2 + $lineHeight * 10;    // Maximum lines
+        }
+
+        .mentions {
+          font-weight:  400;
+          font-size:    $fontSize;
+          line-height:  $lineHeight;
+          top: -1px; left: 2px;
         }
       }
     }

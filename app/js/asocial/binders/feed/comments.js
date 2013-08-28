@@ -4,22 +4,22 @@ asocial.binders.add('feed', { comments: function(){
   $('#main').on('click', 'a.comment-action', function(){
 
     $(this).closest('.post').find('textarea')
-      .removeClass('hidden').autogrow().focus();
-    
+      .removeClass('hidden').focus();
+
   });
 
   // Create comment
   $('#main').on('keydown', '.comment-form textarea', function(e){
-    
+
     var $this = $(this);
-    
+
     if (e.which == 13 && !e.shiftKey) { // Enter key, but not Shift+Enter
 
       e.preventDefault();
-      
+
       // Return if a comment is being posted.
       if ($this.data('active') == true) return;
-      
+
       var related_post    = $(this).closest('.post'),
           related_post_id = related_post.attr('id'),
           post_encrypted  = related_post.data('encrypted'),
@@ -27,7 +27,7 @@ asocial.binders.add('feed', { comments: function(){
 
       // If textarea is empty, do not submit form
       if(!textarea.val().trim()) return;
-      
+
       // Lock the comment textarea while posting.
       $this.data('active', true);
 
@@ -38,81 +38,81 @@ asocial.binders.add('feed', { comments: function(){
           userId = CurrentSession.getUserId(),
           user   = CurrentSession.getUser(),
           postId = related_post_id;
-      
-      
-      var url = SERVER_URL + '/users/' + userId + '/groups/' + 
+
+
+      var url = SERVER_URL + '/users/' + userId + '/groups/' +
                 groupId    + '/posts/' + postId   + '/comments';
-    
+
       // Get the users who were mentioned in the message.
       var mentions = asocial.helpers.findUserMentions(message, groupId);
 
       // Post the comment.
       $.encryptedAjax(url, {
-        
+
         type: 'POST',
-        
+
         data: {
           mentioned_users: mentions
         },
-        
+
         success: function (comment) {
 
           // Clear textarea and resize it
           textarea.val('').change();
-          
+
           // Shim comment message.
           comment.content = message;
           comment.encrypted = false;
-          
+
           // Create and display comment.
           asocial.socket.create.comment({
             target: postId, view: comment
           });
-          
+
           Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
-            
+
             $.encryptedAjax(url + '/' + comment.id, {
-              
+
               type: 'PUT',
-              
+
               data: { content: encryptedMessage },
-              
+
               success: function () {
-                
+
                 // Unlock comment textare.
                 $this.data('active', false);
-                
+
               },
-              
+
               error: function () {
-                
+
                 // Unlock comment textare.
                 $this.data('active', false);
-                
+
                 // Show error message.
                 Alert.show(
                   Messages.error.postingFailed);
-                
+
               }
-              
-              
+
+
             });
-            
+
           });
-          
+
         },
-        
+
         error: function () {
-          
+
           // Unlock comment textare.
           $this.data('active', false);
-          
+
           // Show error message.
           Alert.show(
             Messages.error.postingFailed);
-          
+
         }
-        
+
       });
 
     }

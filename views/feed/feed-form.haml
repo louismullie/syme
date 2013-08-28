@@ -16,16 +16,11 @@
   #drag-helper
     %p Drag & Drop files here
 
-  // Progress bar (hidden for now)
-  .progress.progress-striped.active.hidden
-    #progress_bar.bar
-
   // Textarea
   #textarea-holder
     %textarea{ name: 'content', maxlength: '5000', placeholder: "What's happening?" }
 
   // Hidden encryption-related inputs
-  %input#encrypted_content{ type: 'hidden', name: 'encrypted_content' }
   %input#mentioned_users{ type: 'hidden', name: 'mentioned_users', :'data-list' => '{{mention_list}}' }
 
   // Hidden upload-related inputs

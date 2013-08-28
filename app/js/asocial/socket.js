@@ -1,22 +1,22 @@
 guard('socket', {
 
   hangout: {
-    
+
     create: function (data) {
-      
+
       var hangoutId = data.id;
-      
+
       Confirm.show(
-        
-        Template.render('hangout'), 
+
+        Template.render('hangout'),
         {
           title: 'Video chat with Louis Mullie',
           closable: false,
           submit: 'Accept',
           cancel: 'Decline',
-          
+
           onsubmit: function () {
-            
+
             $.ajax('/hangouts', {
               type: 'PUT',
               data: {
@@ -28,16 +28,16 @@ guard('socket', {
               error: function () {
                 alert('Could not accept hangout!');
               }
-              
+
             });
-            
+
           },
-          
+
           onhide: function () {
-            
+
             $.ajax('/hangouts', {
               type: 'PUT',
-              data: { 
+              data: {
                 hangout_id: hangoutId,
                 accept: false
               },
@@ -45,28 +45,28 @@ guard('socket', {
               error: function () {
                 alert('Could not decline hangout!');
               }
-              
+
             });
-            
+
           }
-          
+
       });
-      
+
     },
-    
+
     decline: function (data) {
       Modal.show(data.recipient_name +
         ' declined your request to video chat.');
     },
-    
+
     start: function (data) {
-      
+
       asocial.hangout.start(data);
-      
+
     }
-  
+
   },
-  
+
   invitation: {
 
     distribute: function (data) {
@@ -87,7 +87,7 @@ guard('socket', {
 
       // Just return if the post has already been displayed.
       if ($('#' + post.view.id).length > 0) return;
-      
+
       // Remove empty group notice if there is one
       $('#empty-group-notice').remove();
 
@@ -111,19 +111,14 @@ guard('socket', {
       // Decrypt
       asocial.crypto.batchDecrypt();
 
-      // Autogrow comment textarea
-      $('textarea.autogrow').autogrow().removeClass('autogrow');
-      
-      return null;
-
     },
 
     comment: function(data){
-      
+
       // If related post doesn't exist, increment new content
       if(!$('#' + data.target).length)
         return asocial.helpers.newContent('comment', data.view.group_id);
-  
+
       // Just return if the comment has already been displayed.
       if ($('#' + data.view.id).length > 0) return;
 
@@ -144,10 +139,7 @@ guard('socket', {
         showmore_count.html(container.find('.comment-hidden').length);
 
       }
-      
-      // Autogrow comment textarea
-      $('textarea.autogrow').autogrow().removeClass('autogrow');
-      
+
       // Append new comment
       container.append(Template.render('feed-comment', data.view));
 
@@ -157,8 +149,6 @@ guard('socket', {
       // Reset comment count counter
       post.find('[partial="feed-comment-count"]')
         .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
-      
-      return null;
 
     },
 
@@ -170,13 +160,13 @@ guard('socket', {
           data.action == 'invite_request' ||
           data.action == 'invite_cancel'))
         Router.reload();
-      
+
       // Refresh if inside group and invite state changes.
-      if (Router.insideGroup() && 
+      if (Router.insideGroup() &&
           data.action == 'invite_accept' &&
           CurrentSession.getGroupId() == data.group_id)
         Router.reload();
-      
+
       Notifications.add(data);
 
     },
@@ -208,13 +198,13 @@ guard('socket', {
       // Update list of names and counter
       target.find('[partial="feed-like-count"]').first()
         .renderHbsTemplate({ likeable: data.view });
-      
+
     },
 
     notification: function(data){
 
       var notification = Notifications.get(data.id);
-      
+
       if (notification) notification.set(data);
 
     },
@@ -315,20 +305,20 @@ guard('socket', {
     notification: function (data) {
       Notifications.fetch();
     },
-    
+
     group: function (data) {
-      
+
       var groupId = data.id;
-      
+
       Notifications.reset();
       Notifications.fetch();
-      
+
       if (Router.insideGroup() &&
           CurrentSession.getGroupId() == groupId);
         Router.navigate('');
-      
+
       return;
-      
+
     }
   },
 

@@ -1,27 +1,24 @@
 asocial.binders.add('feed', { form: function(){
 
-  // Form feed textarea autosizing
-  $('#feed-form textarea').autogrow();
-
   /* AJAX for feed form */
   $('#main').on('submit', '#feed-form', function(e){
 
     e.preventDefault();
 
-    var $this = $(this);
+    var $form     = $(this),
+        $textarea = $form.find('textarea');
 
-    // Get the message from the textarea.
-    var message = $this.find('textarea').val()
-                  .replace('#', '\\#');
-    // Allow hashtags despite markdown by escaping #
+    // Get the message from the textarea and
+    // allow hashtags despite markdown by escaping #
+    var message = $textarea.val().replace('#', '\\#');
 
     // If a file is uploading, indicate to wait
     if( $('#upload-box').hasClass('active') ) {
 
       // If indication already exists, return
-      if( $this.find('.validation-container').length ) return;
+      if( $form.find('.validation-container').length ) return;
 
-      $this.find('#textarea-holder').after(
+      $form.find('#textarea-holder').after(
         '<div class="validation-container">' +
           '<div class="validation-message no-arrow">' +
             'Please wait for your files to finish uploading ' +
@@ -33,7 +30,7 @@ asocial.binders.add('feed', { form: function(){
       // Auto hide indication
       setTimeout(function(){
 
-        var container = $this.find('.validation-container');
+        var container = $form.find('.validation-container');
 
         // Hide indication
         container.transition({ opacity: 0 }, 200);
@@ -48,12 +45,11 @@ asocial.binders.add('feed', { form: function(){
     if(!message.trim() && !$('#upload_id').val()) return;
 
     // Lock event
-    if($this.data('active')) return false;
-    $this.data('active', true);
+    if($form.data('active')) return false;
+    $form.data('active', true);
 
     // Encrypt the message and write the content to the file.
-    var $form   = $(this),
-        groupId = CurrentSession.getGroupId(),
+    var groupId = CurrentSession.getGroupId(),
         userId = CurrentSession.getUserId();
 
     var url = SERVER_URL + '/users/' + userId +
@@ -64,36 +60,47 @@ asocial.binders.add('feed', { form: function(){
       type: 'POST',
 
       data: {
-  
+
         upload_id: $form.find('input[name="upload_id"]').val(),
         mentioned_users: asocial.helpers.findUserMentions(message, groupId)
-        
+
       },
 
       success: function(post){
 
+        // Show post directly by sending the
+        // unencrypted post by self-socket update
         post.content = message;
         post.encrypted = false;
-
         asocial.socket.create.post({ view: post });
-        asocial.helpers.resetFeedForm();
-        
+
+        // Unlock form
+        $form.data('active', false);
+
+        // Reset uploads & attachments
+        $form.find('#upload_id').val('');
+        $form.find('#upload-box').removeClass('active').hide();
+        $form.find('ul#attachments').show();
+
+        // Reset textarea
+        $textarea.trigger('reset');
+
         Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
           $.encryptedAjax(url + '/' + post.id, {
-            
+
             type: 'PUT',
-            
+
             data: { content: encryptedMessage },
-            
+
             error: function () {
               Alert.show('Posting failed (PUT)');
             }
-            
+
           });
-          
+
         });
-        
+
       },
 
       error: function (post) {

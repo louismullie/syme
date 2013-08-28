@@ -4,26 +4,26 @@ guard('helpers', {
   newContent: function (type, groupId, contentId) {
 
     var newcontent = $('#newcontent');
-    
+
     // Update respective counters
     if(type == "post"){
       if (typeof(Syme.globals.updatedPosts[groupId]) == 'undefined')
         return;
       Syme.globals.updatedPosts[groupId] += 1;
     } else if(type == "comment"){
-      
+
       // Don't show new comment button if the group is not loaded.
       if (typeof(Syme.globals.updatedComments[groupId]) == 'undefined')
         return;
-      
+
       // Don't show new content button if updated comment is already visible.
       if ($('#' + contentId).length > 0)
         return;
-      
+
       Syme.globals.updatedComments[groupId] += 1;
-    
+
     }
-    
+
     // Update the counter with updated count
     var total = Syme.globals.updatedPosts[groupId] +
                 Syme.globals.updatedComments[groupId];
@@ -47,7 +47,7 @@ guard('helpers', {
     // Hide new content button
     $('#newcontent').hide();
   },
-  
+
   collapseHTML: function(shownLines, expanderLink){
 
     // Configuration
@@ -65,9 +65,9 @@ guard('helpers', {
 
       // If the current div needs collapsing
       if( $(this).height() > maxHeight) {
-        
+
         if ($(this).find('iframe').length > 0) return;
-        
+
         $(this)
           // Collapse it
           .addClass('collapsed')
@@ -99,53 +99,40 @@ guard('helpers', {
   },
 
   replaceUserMentions: function (string, groupId)  {
-    
+
     var full_names = this.findUserMentions(string, groupId);
-    
+
     // Add the current user to the list of other group members.
     full_names.push(CurrentSession.getUser().get('full_name'));
-    
+
     $.each(full_names, function (i, full_name) {
-      
+
       var mention = '@' + full_name;
-      
+
       string = string.replace(mention,
       "<a href='#' class='userTag'>" +
         mention + "</a>");
-      
+
     });
-    
+
     return string;
-    
+
   },
 
   findUserMentions: function (string, groupId)  {
-    
+
     var full_names = [];
     var user_list = CurrentSession.getGroupMembers(groupId);
-    
+
     $.each(user_list, function (i, user) {
-      
+
       if (string.indexOf('@' + user) !== -1) {
         full_names.push(user);
       }
-      
+
     });
-    
+
     return full_names;
-    
-  },
-
-  resetFeedForm: function() {
-
-     $('#feed-form').data('active', false);
-     $('#feed-form textarea').val('').css({ height: 'auto' });
-     $('#feed-form #upload_id').val('');
-     $('#feed-form #encrypted_content').val('');
-     $('#feed-form #mentioned_users').val('');
-     $('#upload-box').removeClass('active');
-     $('#upload-box').hide();
-     $('ul#attachments').show();
 
   }
 

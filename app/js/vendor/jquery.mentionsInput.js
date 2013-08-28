@@ -15,9 +15,9 @@
   // Settings
   var KEY = { BACKSPACE : 8, TAB : 9, RETURN : 13, ESC : 27, LEFT : 37, UP : 38, RIGHT : 39, DOWN : 40, COMMA : 188, SPACE : 32, HOME : 36, END : 35 }; // Keys "enum"
   var defaultSettings = {
-    triggerChar   : '@',
+    triggerChar   : ' ',
     onDataRequest : $.noop,
-    minChars      : 2,
+    minChars      : 3,
     showAvatars   : true,
     elastic       : true,
     classes       : {
@@ -79,8 +79,8 @@
 
       $inputBox = $(domInput);
 
-      // If
-      if ($inputBox.attr('data-mentions-input') == 'true') return;
+      if ($inputBox.attr('data-mentions-input') == 'true')
+        return;
 
       $inputWrapper = $inputBox.parent();
       $wrapperBox = $(settings.templates.wrapper());
@@ -183,7 +183,7 @@
       hideAutoComplete();
 
       // Mentions & syntax message
-      var updatedMessageText = start + mention.value + end;
+      var updatedMessageText = start + ' ' + mention.value + end;
       $inputBox.val(updatedMessageText);
       updateValues();
 
@@ -423,13 +423,13 @@
     this.filter('textarea').each(function () {
 
       // If mentionsInput hasn't been initialized on the current
-      // element, instance it in the 'mentionsInput' DOM data
+      // element, instanciate it in the 'mentionsInput' DOM data
       var instance = $.data(this, 'mentionsInput') ||
         $.data(this, 'mentionsInput', new MentionsInput(settings));
 
       if (_.isFunction(instance[method])) {
-        // If 'method' is a function, call it with every argument to
-        // its right as the function arguments
+        // If 'method' is a function, call it with every argument
+        // following it as the function arguments
         return instance[method].apply(this, Array.prototype.slice.call(outerArguments, 1));
 
       } else if (typeof method === 'object' || !method) {
