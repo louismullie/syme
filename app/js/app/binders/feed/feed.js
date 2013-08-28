@@ -64,9 +64,9 @@ Binders.add('feed', { feed: function(){
       // Add optional year and month to request
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
-      
+
       $('#load-more').show();
-      
+
       $.post(SERVER_URL + '/' + CurrentSession.getGroupId() + '/page', request, function(data){
 
         var lastPage = data.last_page,
@@ -89,25 +89,25 @@ Binders.add('feed', { feed: function(){
             $('#feed').data('pagesloaded', toload).append(html);
 
           }
-          
+
           if (lastPage) {
-            
+
             // If all pages are loaded, disable infinite scrolling
             $(window).data('infinite-scroll-done', true);
-            
+
             // Please Chris, look at this
             $('#feed .post').last().css({ 'border-bottom': 'none' });
-            
+
             // Decrypt new content
             Crypto.batchDecrypt(function () {
               $('#load-more').hide();
             });
 
           } else {
-            
+
             // Please Chris, look at this
             $('#feed .post').last().css({ 'border-bottom': '1px solid #ddd' });
-            
+
 
             // Decrypt new content
             Crypto.batchDecrypt(function () {
@@ -116,17 +116,13 @@ Binders.add('feed', { feed: function(){
 
           }
 
-          // Textarea autosizing
-          $('textarea.autogrow')
-            .autogrow().removeClass('autogrow');
-
         } else {
 
           // No more pages to load
           $(window).data('infinite-scroll-done', true);
-          
+
           $('#load-more').hide();
-          
+
         }
 
       }).complete(function(){
@@ -152,15 +148,15 @@ Binders.add('feed', { feed: function(){
       .trigger('scroll');
 
   });
-  
+
   // Prevent leaving if there's unsaved content
   $(window).bind("beforeunload", function(e) {
-    
+
     var unsavedContent = _.any($('textarea'),
       function (textarea) { return textarea.value != ''; });
 
     return unsavedContent ? Messages.error.unsavedContent : null;
 
   });
-  
+
 } }); // Binders.add();
