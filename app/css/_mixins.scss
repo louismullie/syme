@@ -91,10 +91,6 @@
   }
 }
 
-@mixin asocial-shadow($opacity: 0.8){
-  @include box-shadow(0 0 1px rgba(0, 0, 0, $opacity));
-}
-
 @mixin inclined-stripes($color: gray, $size: 50px, $stripeColor: rgba(255, 255, 255, .2)){
 
   @include background-size($size $size);

@@ -20,7 +20,7 @@ it:
   # Initialize
   initialize:
     text:
-      1: "Welcome to asocial."
+      1: "Welcome to Syme."
       2: "If you see this text, it means that you\'ve set up asocial correctly and that it connects to the mongo database."
       3: "In order to log you in to asocial, the system will create a temporary user with administrative rights. You will then be able to change that username and password in the <b>Administration Panel</b>."
       4: "The temporary credentials will be <code>admin</code> and <code>"

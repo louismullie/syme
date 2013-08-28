@@ -1,7 +1,7 @@
 require 'rvm/capistrano'
 
 # Application configuration.
-set :application, 'asocial'
+set :application, 'syme'
 
 # Server login configuration.
 set :user, 'web'

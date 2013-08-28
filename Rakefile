@@ -11,8 +11,8 @@ namespace :extensions do
     
     # Compile and copy assets to extension directory.
     assets_path = Syme::Application.settings.assets_path
-    js_path = File.join(assets_path, 'asocial.js')
-    css_path = File.join(assets_path, 'asocial.css')
+    js_path = File.join(assets_path, 'app.js')
+    css_path = File.join(assets_path, 'app.css')
 
     FileUtils.mkdir_p('.extension/assets')
     FileUtils.cp(js_path, '.extension/assets')
@@ -41,11 +41,11 @@ namespace :extensions do
     FileUtils.cp_r(chrome_files, '.extension')
     
     # Edit SERVER_URL to poll remote server.
-    File.open('.extension/assets/asocial.js') do |file|
+    File.open('.extension/assets/app.js') do |file|
       contents = file.read
       contents.gsub!(/SERVER_URL[\s]*=[\s]*window\.location\.origin;/,
                     'SERVER_URL="https://getsyme.com:81";')
-      File.open('.extension/assets/asocial.js', "w+") { |f| f.write(contents) }
+      File.open('.extension/assets/app.js', "w+") { |f| f.write(contents) }
     end
 
   end
@@ -64,9 +64,9 @@ namespace :assets do
   task :compile_js do
     
     sprockets = Syme::Application.settings.sprockets
-    asset     = sprockets['asocial.js']
+    asset     = sprockets['app.js']
     outpath   = Syme::Application.settings.assets_path
-    outfile   = Pathname.new(outpath).join('asocial.js')
+    outfile   = Pathname.new(outpath).join('app.js')
  
     FileUtils.mkdir_p outfile.dirname
 
@@ -80,9 +80,9 @@ namespace :assets do
   task :compile_css do
     
     sprockets = Syme::Application.settings.sprockets
-    asset     = sprockets['asocial.css']
+    asset     = sprockets['app.css']
     outpath   = Syme::Application.settings.assets_path
-    outfile   = Pathname.new(outpath).join('asocial.css')
+    outfile   = Pathname.new(outpath).join('app.css')
  
     FileUtils.mkdir_p outfile.dirname
  
