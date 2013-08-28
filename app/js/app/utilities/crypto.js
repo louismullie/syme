@@ -359,4 +359,4 @@ Crypto = function (workerUrl) {
 
 };
 
-Crypto = new Crypto('workers/asocial.js');
+Crypto = new Crypto('workers/app.js');

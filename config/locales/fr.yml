@@ -20,7 +20,7 @@ fr:
   # Initialize
   initialize:
     text:
-      1: "Bienvenue sur asocial."
+      1: "Bienvenue sur Syme."
       2: "Si vous voyez ce message, cela signifie que vous avez configuré asocial correctement et qu'il se connecte à la base de données mongo."
       3: "Pour vous connecter à asocial, le système créera un utilisateur temporaire avec des droits administratifs. Vous pourrez ensuite changer son nom d'utilisateur et son mot de passe dans le  <b>Panneau d'administration</b>."
       4: "Vos informations de connections temporaires seront <code>admin</code> et <code>"

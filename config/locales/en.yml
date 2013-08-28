@@ -31,7 +31,7 @@ en:
     secret: Secret
 
   initialize:
-    welcome: "Welcome to asocial."
+    welcome: "Welcome to Syme."
     explanation: "Please enter a username and a password."
     create_user: Create User
 

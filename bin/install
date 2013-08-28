@@ -56,12 +56,12 @@ echo "Installing Redis, a key-value database ..."
 
 echo "Installing Syme ..."
 
-  successfully git clone git@github.com:louismullie/asocial.git
-  successfully cd asocial
+  successfully git clone git@github.com:louismullie/syme.git
+  successfully cd syme
   successfully bundle install
 
 echo "Starting Syme ..."
 
   # export rvmsudo_secure_path=1
-  # rvmsudo bundle exec foreman export launchd /etc/launchd.conf -f ./Procfile -a asocial -u `whoami` -l ./logs
+  # rvmsudo bundle exec foreman export launchd /etc/launchd.conf -f ./Procfile -a syme -u `whoami` -l ./logs
   successfully foreman start

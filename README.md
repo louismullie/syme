@@ -23,8 +23,8 @@ sudo brew install nginx haproxy memcached redis mongodb
 **Install Syme**
 
 ```
-git clone git@github.com:louismullie/asocial.git
-cd asocial
+git clone git@github.com:louismullie/syme.git
+cd syme
 bundle install
 ```
 

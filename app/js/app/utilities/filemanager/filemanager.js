@@ -81,10 +81,7 @@ FileManager = {
     };
 
     img.onerror = function () {
-      _this.reset();
-      asocial.socket.create.error(
-        { message: 'Corrupt image file.' }
-      );
+      _this.reset(); alert('Corrupt image file.');
     };
 
     img.src = URL.createObjectURL(file);
