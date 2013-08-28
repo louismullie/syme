@@ -19,7 +19,7 @@ Binders.add('global', { decrypt: function() {
 
         var url = SERVER_URL + '/users/' + CurrentSession.getUserId() + '/groups/' +
             missingKey.groupId + '/invitations/' + missingKey.userId;
-        
+
         $.getJSON(url,
 
           function (addUserRequest) {
@@ -29,7 +29,7 @@ Binders.add('global', { decrypt: function() {
               function () { Router.reload(); });
 
           }
-          
+
         );
 
         return done();
@@ -60,7 +60,7 @@ Binders.add('global', { decrypt: function() {
       $this.find('.post-content').oembed();
 
       // Format dynamic timestamps.
-      $this.find('time.timeago').timeago();
+      $post.find('time.timeago').timeago();
 
       // Format comment textarea.
       $post.find('textarea').trigger('format');
