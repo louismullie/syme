@@ -180,47 +180,47 @@ Auth = {
       } else {
         fail('server');
       }
-
-
+      
     }});
 
   },
 
   logout: function (callback) {
-
-    var callback = callback || function () {};
-
+    
     var userId = CurrentSession.getUserId();
 
-       // Reset notification counter.
-    if (Compatibility.inChromeExtension()) {
-      chrome.browserAction.setBadgeText({ text: '' });
-    }
+    Notifications.clearBadge();
 
-    var url = SERVER_URL + '/users/' + userId + '/sessions/current';
+    var url = SERVER_URL + '/users/' + 
+              userId + '/sessions/current';
 
     $.ajax(url, {
+      
       type: 'DELETE',
+      
       success: function () {
         CurrentSession = {};
         callback();
       }
+      
     });
 
   },
 
   disconnect: function () {
 
-    Auth.logout();
+    Auth.logout(function () {
+      
+      // Force disconnection
+      Alert.show(Messages.auth.disconnected, {
+        title: 'Disconnected',
+        submit: 'Log in',
+        closable: false,
+        onhide: function(){
+          Router.navigate('/');
+        }
+      });
 
-    // Force disconnection
-    Alert.show(Messages.auth.disconnected, {
-      title: 'Disconnected',
-      submit: 'Log in',
-      closable: false,
-      onhide: function(){
-        Router.navigate('/');
-      }
     });
 
   }

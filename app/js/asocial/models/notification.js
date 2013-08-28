@@ -201,24 +201,9 @@ Notifications = (function(){
       // Render all notifications into element
       _this.$el.html( Template.render('notification',
         { notifications: notifications }) );
-
-      // Update notification count in the navbar badge.
-      $('#notification-li').attr('data-badge', selector.length);
       
-      // In a Chrome extension, update the title and badge count.
-      if (Compatibility.inChromeExtension()) {
-
-        var count = selector.length == 0 ? '' : selector.length.toString();
-         
-         // Update notification count in the Chrome action badge.
-        chrome.browserAction.setBadgeText({ text: count });
-        chrome.browserAction.setBadgeBackgroundColor({color: '#ff0011'});
-
-        // Update notification count in the document title.
-        var title = (count == '' ? 'Syme' : '(' + count + ') Syme');
-        document.title = title;
-
-      }
+      // Update notification count in title, navbar and extension badge.
+      Notifications.showCount(selector.length);
 
     },
 
@@ -283,7 +268,40 @@ Notifications = (function(){
 
       // Fetch notifications
       this.fetch({ reset: true });
+    },
+    
+    // Show notification count in title, navbar and browser bar badges.
+    showBadge: function (count) {
+       
+      // Update notification count in the document title.
+      var title = (count == '' ? 'Syme' : '(' + count + ') Syme');
+      document.title = title;
+
+      // Update notification count in the navbar badge.
+      $('#notification-li').attr('data-badge', selector.length);
+
+      // Update notification count in extension bar.
+      if (Compatibility.inChromeExtension()) {
+  
+        var formattedCount = count == 0 ? '' : count.toString();
+
+        chrome.browserAction.setBadgeBackgroundColor({color: '#ff0011'});
+        chrome.browserAction.setBadgeText({ text: formattedCount });
+
+      }
+
+    },
+    
+    // Hide badge in extension bar.
+    hideBadge: function () {
+      
+      // Reset notification counter.
+      if (Compatibility.inChromeExtension()) {
+        chrome.browserAction.setBadgeText({ text: '' });
+      }
+      
     }
+    
   });
 
   // Build self-referring MVC
