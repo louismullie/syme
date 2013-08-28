@@ -6,14 +6,6 @@
 //= require_tree ./binders
 //= require ./binders/global
 
-Syme = {
-  globals: {
-    updatedPosts: {},
-    updatedComments: {}
-  },
-  version: '0.1.4'
-};
-
 // Register all Handlebars templates.
 $.each(Handlebars.templates, function (name, template) {
   Handlebars.registerPartial(name.slice(1), template);
