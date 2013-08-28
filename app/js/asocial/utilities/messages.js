@@ -66,6 +66,109 @@ Messages = {
       
     }
   
+  },
+  
+  notifications: {
+    
+    resources: {
+      groups:  'users/%(current_id)s/groups',
+      group:   'users/%(current_id)s/groups/%(group_id)s',
+      post:    'users/%(current_id)s/groups/%(group_id)s/posts/%(post_id)s',
+      comment: 'users/%(current_id)s/groups/%(group_id)s/posts/%(post_id)s'
+    },
+    
+    types: {
+
+      // Posts
+
+      new_post: {
+        message: '%(actors)s posted in %(group_name)s.',
+        resource: "post"
+      },
+
+      // Comments
+
+      comment_on_own_post: {
+        message: '%(actors)s commented on your %(resource)s in %(group_name)s.',
+        resource: "post"
+      },
+
+      comment_on_same_post: {
+        message: '%(actors)s commented on the same %(resource)s as you in %(group_name)s.',
+        resource: "post"
+      },
+
+      // Likes
+
+      like_on_post: {
+        message: '%(actors)s liked your %(resource)s in %(group_name)s.',
+        resource: "post"
+      },
+
+      like_on_comment: {
+        message: '%(actors)s liked your %(resource)s in %(group_name)s.',
+        resource: "comment"
+      },
+
+      // Mentions
+
+      mention_in_post: {
+        message: '%(actors)s mentioned you in a %(resource)s in %(group_name)s.',
+        resource: "post"
+      },
+
+      mention_in_comment: {
+        message: '%(actors)s mentioned you in a %(resource)s in %(group_name)s.',
+        resource: "comment"
+      },
+
+      // Picture updates
+
+      group_picture_update: {
+        message: "%(actors)s changed the group picture in %(resource)s.",
+        resource: "group"
+      },
+
+      // Invitation/Confirmation
+
+      invite_request: {
+        message: '%(actors)s invited you to join %(group_name)s.',
+        resource: "groups"
+      },
+
+      new_group_user: {
+        message: '%(actors)s joined %(resource)s.',
+        resource: "group"
+      },
+
+
+      invite_accept: {
+        message: '%(actors)s accepted your invite to %(resource)s.',
+        resource: "group"
+      },
+
+      invite_confirm: {
+        message: '%(actors)s granted you access to %(resource)s.',
+        resource: "group"
+      },
+    
+      invite_cancel: {
+        message: '%(actors)s canceled your invitation to %(resource)s.',
+        resource: "group"
+      },
+    
+      invite_decline: {
+        message: '%(actors)s declined your invitation to %(resource)s.',
+        resource: "group"
+      },
+
+      // Destructive operations
+      leave_group: {
+        message: '%(actors)s left %(resource)s',
+        resource: "group"
+      }
+
+    }
   }
   
 };
