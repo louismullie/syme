@@ -8,7 +8,7 @@ Crypto = {
     
     this.password = password;
     this.userId = userId;
-    
+
     this.keyfile = new Keyfile(userId, password, encKeyfile);
     return null;
     
