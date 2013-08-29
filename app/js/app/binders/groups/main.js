@@ -126,17 +126,19 @@ Syme.Binders.add('groups', { main: function() {
 
         var userId =  Syme.CurrentSession.getUserId(), groupId = group.id;
 
-        var route = SERVER_URL + '/users/' + userId + '/groups/' + groupId;
-
         Syme.Crypto.createKeylist(group.id, function (encryptedKeyfile) {
 
           var currentUser = Syme.CurrentSession.getUser();
 
           currentUser.updateKeyfile(encryptedKeyfile, function () {
 
-            Syme.Router.reload();
+            var route = 'users/' + userId + '/groups/' + groupId;
 
-            $.encryptedAjax(route, {
+            Syme.Router.navigate(route);
+            
+            var url = SERVER_URL + '/' + route;
+            
+            $.encryptedAjax(url, {
 
               type: 'PUT',
 
