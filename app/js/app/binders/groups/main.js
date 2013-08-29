@@ -1,7 +1,7 @@
 Syme.Binders.add('groups', { main: function() {
 
   // Hide spinner
-  $('#spinner').hide();
+  NProgress.done();
 
   // Breadcrumbs
   Syme.Navbar.setBreadCrumb({

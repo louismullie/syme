@@ -99,16 +99,15 @@ Syme.Binders.add('feed', { posts: function(){
   // Shortcut for image attachment links
   $('#main').on('click', 'a.image-download', function() {
 
-    // Show mofo spinner
-    var spinner = setTimeout(function () { $('#spinner').show(); }, 500);
-
+    NProgress.start();
+    
     var id       = $(this).data('attachment-id');
     var filename = $(this).data('attachment-filename');
     var keys      = $(this).data('attachment-keys');
 
     FileManager.getFile(id, keys, function (url) {
       
-      clearTimeout(spinner); $('#spinner').hide();
+      NProgress.done();
       
       if (!url) return;
       

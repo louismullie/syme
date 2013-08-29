@@ -36,7 +36,7 @@ Syme.Crypto = function (workerUrl) {
       return;
 
     // Show spinner
-    $('#spinner').show();
+    NProgress.start();
 
     // Initial decryption
     collection.batchDecrypt(function(elapsedTime){
@@ -51,7 +51,7 @@ Syme.Crypto = function (workerUrl) {
       $('textarea.autogrow').autogrow();
 
       // Hide spinner
-      $('#spinner').hide();
+      NProgress.done();
 
       /*console.log(
         'Done decrypting collection of ' + this.length +

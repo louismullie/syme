@@ -235,7 +235,7 @@ Syme.Router = Backbone.Router.extend({
     $('#navbar-breadcrumbs').html('');
 
     // Show spinner
-    $('#spinner').show();
+    NProgress.start();
 
     var _this = this;
 
@@ -313,7 +313,7 @@ Syme.Router = Backbone.Router.extend({
       } else if (response.status == 404) {
 
         // Post or group doesn't exist
-        $('#spinner').hide();
+        NProgress.done();
 
         Alert.show(
           "This content has been removed by its owner."
