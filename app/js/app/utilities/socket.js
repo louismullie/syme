@@ -85,6 +85,9 @@ Syme.Socket = {
 
     post: function(post){
 
+      // Don't display a post in the wrong group
+      if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
+      
       // Just return if the post has already been displayed.
       if ($('#' + post.view.id).length > 0) return;
 
