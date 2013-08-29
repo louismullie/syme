@@ -4,7 +4,7 @@ Syme.Binders.add('global', { decrypt: function() {
   $(document).on('decrypt', '.encrypted', function(e, done){
 
     var $this = $(this),
-        done  = done || function(){};
+        done  = done || $.noop;
 
     var $post     = $this.closest('.post'),
         text      = $this.text().replace(/^\s+|\s+$/g, ''),
@@ -51,7 +51,7 @@ Syme.Binders.add('global', { decrypt: function() {
       });
 
       // Format the text with Markdown, and make sure links open in new windows.
-      $content.filter('a:not([href="#"])').attr('target', '_blank');
+      $content.find('a:not([href="#"])').attr('target', '_blank');
 
       // Put commenter name and comment tools in first paragraph of comment
       $content.filter('p:first-child').prepend(
@@ -108,7 +108,7 @@ Syme.Binders.add('global', { decrypt: function() {
   $(document).on('decrypt', '.user-avatar', function(e, done) {
 
     var $this = $(this),
-        done  = done || function(){};
+        done  = done || $.noop;
 
     var group_id  = Syme.CurrentSession.getGroupId(),
         user_id   = $this.attr('data-user-id'),
@@ -140,7 +140,7 @@ Syme.Binders.add('global', { decrypt: function() {
   $(document).on('sync', '.slave-avatar', function(){
 
     var $this = $(this),
-        done  = done || function(){};
+        done  = done || $.noop;
 
     var user_id     = $this.attr('data-user-id'),
         master      = $('.user-avatar[data-user-id="' + user_id + '"]');
@@ -153,7 +153,7 @@ Syme.Binders.add('global', { decrypt: function() {
   $(document).on('decrypt', '.encrypted-image, .encrypted-video, .encrypted-audio', function(e, done){
 
     var $this = $(this),
-        done  = done || function(){};
+        done  = done || $.noop;
 
     var media_id = $this.attr('data-attachment-id'),
         keys     = $this.attr('data-attachment-keys'),

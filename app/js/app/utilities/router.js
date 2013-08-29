@@ -3,20 +3,20 @@ Syme.Router = Backbone.Router.extend({
   /* RULES */
 
   currentRoute: '',
-  
+
   navigate: function (fragment, options) {
 
     var _this = this;
-    
+
     // Verify if unsaved content is present.
     var unsavedContent = _.any($('textarea'),
       function (textarea) { return textarea.value != ''; });
 
     // Show confirm modal if unsaved content exists.
     if (unsavedContent) {
-      
+
       Confirm.show(
-        
+
         Syme.Messages.error.unsavedContent,
         {
           closable: true,
@@ -27,35 +27,38 @@ Syme.Router = Backbone.Router.extend({
           onsubmit: function(){
             _this.doNavigate(fragment, options);
           }
-          
+
         }
       );
-      
+
     } else {
       this.doNavigate(fragment, options);
     }
 
   },
-  
+
   doNavigate: function (fragment, options) {
-    
+
     // Set fragment
     fragment = Backbone.history.getFragment( fragment || '' );
-    
+
     this.currentRoute = fragment;
-    
+
     // Override pushstate and load url directly
     Backbone.history.loadUrl(fragment);
-    
+
+    // Scroll to top
+    window.scrollTo(0,0);
+
   },
-  
+
   insideGroup: function () {
-    
+
     var bits = this.currentRoute.split('/');
     return bits[bits.length-1] != 'groups';
-    
+
   },
-  
+
   routes: {
 
     /* Root */
@@ -86,15 +89,15 @@ Syme.Router = Backbone.Router.extend({
   /* ROOT */
 
   root: function() {
-    
+
     // Helper function to navigate to a given route.
     var navigate = function (route) {
       Syme.Router.navigate(route, { trigger: true, replace: true });
     }
-    
+
     // Verify if the user is currently authenticated or not.
     this.authenticate(
-      
+
       // If the user is authenticated, go to groups page.
       function() {
         var userId = Syme.CurrentSession.getUserId();
@@ -103,21 +106,21 @@ Syme.Router = Backbone.Router.extend({
 
       // If the user is not authenticated, show login or register.
       function(){
-      
+
         // Choose whether to go to login or register based on history.
         if (Syme.Compatibility.inChromeExtension()) {
-          
+
           chrome.storage.local.get('hasRegistered', function (setting) {
             navigate(setting.hasRegistered ? 'login' : 'register');
           });
-        
+
         // If in development mode, always go to login for convenience.
         } else {
           navigate('login');
         }
-        
+
       }
-      
+
     );
   },
 
@@ -148,16 +151,16 @@ Syme.Router = Backbone.Router.extend({
   },
 
   userGroup: function(user_id, group_id) {
-    
+
     ONE_PAGE_VIEW = false; // FIX
-    
+
     this.loadDynamicPage('feed', group_id);
   },
 
   userGroupPost: function(user_id, group_id, post_id) {
-    
+
     ONE_PAGE_VIEW = true; // FIX
-    
+
     this.loadDynamicPage('feed', group_id,
       // Specific binders
       ['comments', 'posts', 'main', 'panel', 'shared', 'invite']);
@@ -170,7 +173,7 @@ Syme.Router = Backbone.Router.extend({
   },
 
   error: function(error){
-    
+
     Alert.show(
       Syme.Messages.errors.fatal,
       {
@@ -178,7 +181,7 @@ Syme.Router = Backbone.Router.extend({
         onhide: Syme.Auth.disconnect
       }
     );
-    
+
   },
 
   /* HELPERS */
@@ -230,7 +233,7 @@ Syme.Router = Backbone.Router.extend({
 
     // Clear breadcrumbs
     $('#navbar-breadcrumbs').html('');
-    
+
     // Show spinner
     $('#spinner').show();
 
@@ -243,7 +246,7 @@ Syme.Router = Backbone.Router.extend({
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
       if(!groupId) {
-        
+
         user.getAllGroupUpdates(function () {
           Syme.Router.renderDynamicTemplate(template, specificBinders);
         });
@@ -252,7 +255,7 @@ Syme.Router = Backbone.Router.extend({
 
         Syme.globals.updatedPosts[groupId] = 0;
         Syme.globals.updatedComments[groupId] = 0;
-        
+
         Syme.CurrentSession.setGroupId(groupId);
 
         user.getAllGroupUpdates(function () {
@@ -275,15 +278,15 @@ Syme.Router = Backbone.Router.extend({
 
     // Get current URL
     var url = SERVER_URL + '/' + Backbone.history.fragment;
-    
+
     // Temporary fix while Backbone sync isnt encrypted
     var fn = template == 'settings' ? $.ajax : $.encryptedAjax;
-    
+
     // Retrieve data
     fn(url, {
-      
+
       type: 'GET',
-      
+
       success: function (data) {
 
         // First pageload: initiate logged in template
@@ -299,7 +302,7 @@ Syme.Router = Backbone.Router.extend({
         Syme.Binders.bind(template, true, specific_binders);
 
       },
-      
+
       error: function(response){
 
       if(response.status == 401) {
