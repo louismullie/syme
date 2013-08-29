@@ -22,10 +22,10 @@ Syme.Binders.add('feed', { comments: function(){
           post_encrypted    = $related_post.data('encrypted'),
           $textarea         = $related_post.find('textarea');
 
-      var groupId = Syme.CurrentSession.getGroupId(),
-          userId  = Syme.CurrentSession.getUserId(),
-          user    = Syme.CurrentSession.getUser(),
-          postId  = related_post_id;
+      var groupId           = Syme.CurrentSession.getGroupId(),
+          userId            = Syme.CurrentSession.getUserId(),
+          user              = Syme.CurrentSession.getUser(),
+          postId            = related_post_id;
 
       // If textarea is empty, do not submit form
       if(!$textarea.val().trim()) return;

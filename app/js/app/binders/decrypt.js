@@ -36,11 +36,22 @@ Syme.Binders.add('global', { decrypt: function() {
 
       }
 
-      // Format the text with Markdown, and make sure links open in new windows.
-      var formattedText = marked(decryptedText).replace('<a', '<a target="_blank"');
+      // Create a jQuery wrapper around markdown'd text
+      var $content = $( marked(decryptedText) );
 
-      // Create a jQuery wrapper around markdown'd decrypted text
-      var $content = $( Syme.Helpers.replaceUserMentions(formattedText, groupId) );
+      // Replace mentions
+      $content.find('a[href^="id:"]').each(function(){
+        // Get the part after the 'id:'
+        var id = $(this).attr('href').split(':')[1];
+
+        // Add class, remove link and add data
+        $(this).addClass('mentioned-user')
+               .attr('href', '#')
+               .attr('data-mentioned-user-id', id);
+      });
+
+      // Format the text with Markdown, and make sure links open in new windows.
+      $content.filter('a:not([href="#"])').attr('target', '_blank');
 
       // Put commenter name and comment tools in first paragraph of comment
       $content.filter('p:first-child').prepend(

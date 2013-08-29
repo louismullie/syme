@@ -96,44 +96,6 @@ Syme.Helpers = {
 
     });
 
-  },
-
-  replaceUserMentions: function (string, groupId)  {
-
-    var full_names = this.findUserMentions(string, groupId);
-
-    // Add the current user to the list of other group members.
-    full_names.push(Syme.CurrentSession.getUser().get('full_name'));
-
-    $.each(full_names, function (i, full_name) {
-
-      var mention = '@' + full_name;
-
-      string = string.replace(mention,
-      "<a href='#' class='userTag'>" +
-        mention + "</a>");
-
-    });
-
-    return string;
-
-  },
-
-  findUserMentions: function (string, groupId)  {
-
-    var full_names = [];
-    var user_list = Syme.CurrentSession.getGroupMembers(groupId);
-
-    $.each(user_list, function (i, user) {
-
-      if (string.indexOf('@' + user) !== -1) {
-        full_names.push(user);
-      }
-
-    });
-
-    return full_names;
-
   }
 
 };

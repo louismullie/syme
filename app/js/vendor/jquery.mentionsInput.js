@@ -30,7 +30,7 @@
       autocompleteListItemAvatar : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<img src=\"'+((__t=( avatar ))==null?'':__t)+'\" />';}return __p;},
       autocompleteListItemIcon   : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<div class=\"icon '+((__t=( icon ))==null?'':__t)+'\"></div>';}return __p;},
       mentionsOverlay            : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<div class=\"mentions\"><div></div></div>';}return __p;},
-      mentionItemSyntax          : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='@['+((__t=( value ))==null?'':__t)+']('+((__t=( type ))==null?'':__t)+':'+((__t=( id ))==null?'':__t)+')';}return __p;},
+      mentionItemSyntax          : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='['+((__t=( value ))==null?'':__t)+']('+((__t=( type ))==null?'':__t)+':'+((__t=( id ))==null?'':__t)+')';}return __p;},
       mentionItemHighlight       : function(obj){var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};with(obj||{}){__p+='<strong><span>'+((__t=( value ))==null?'':__t)+'</span></strong>';}return __p;}
     }
   };
