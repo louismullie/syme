@@ -137,7 +137,7 @@ Syme.Binders.add('groups', { main: function() {
           currentUser.updateKeyfile(encryptedKeyfile, function () {
 
             var targetGroupRoute = Syme.Url.join(
-              'users', userId, groups, groupId);
+              'users', userId, 'groups', groupId);
             
             var updateGroupUrl = Syme.Url
               .fromBase(targetGroupRoute);

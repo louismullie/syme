@@ -90,7 +90,7 @@ Syme.Binders.add('feed', { panel: function(){
           var deleteUserUrl = Syme.Url.fromCurrentGroup(
             'memberships', deleteUserId);
           
-          $.encryptedAjax(route, { 
+          $.encryptedAjax(deleteUserUrl, { 
             
             type: 'DELETE',
 

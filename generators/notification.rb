@@ -21,6 +21,7 @@ class NotificationGenerator
     if notification.group_name && notification.group_id
       group_name = notification.group_name
       group_id = notification.group_id
+      group = Group.where(id: group_id).first
     else
       # OLD API - to MIGRATE
       # Want to completely denormalize the group.
@@ -35,8 +36,9 @@ class NotificationGenerator
     
     # If all the users have been deleted, or the group
     # does not exist, flag the notification as invalid.
-    is_exception = notification.action.to_s == :delete_group
-    if actors.empty? || (group_name.nil? && !is_exception)
+    # An exception is "group has been deleted" notifications.
+    if actors.empty? || (group.nil? && notification.action != :delete_group)
+      notification.destroy
       return { id: notification.id.to_s, invalid: true }
     end
     
