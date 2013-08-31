@@ -54,9 +54,9 @@ Syme.Binders.add('feed', { form: function(){
     // Begin posting once we get the async mentions.
     var postWithMentions = function(mentions_data){
 
-      var url = SERVER_URL + '/users/' + userId + '/groups/' + groupId + '/posts';
-
-      $.encryptedAjax(url, {
+      var createPostUrl = Syme.Url.fromCurrentGroup('posts');
+      
+      $.encryptedAjax(createPostUrl, {
 
         type: 'POST',
 
@@ -88,7 +88,9 @@ Syme.Binders.add('feed', { form: function(){
 
           Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
-            $.encryptedAjax(url + '/' + post.id, {
+            var updatePostUrl = Syme.Url.join(createPostUrl, post.id);
+            
+            $.encryptedAjax(updatePostUrl, {
 
               type: 'PUT',
 

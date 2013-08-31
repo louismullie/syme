@@ -353,6 +353,12 @@ Syme.Router = Backbone.Router.extend({
 
   reload: function () {
     Backbone.history.loadUrl(Backbone.history.fragment);
+  },
+  
+  reset: function () {
+    Notifications.reset();
+    Notifications.fetch();
+    this.reload();
   }
 
 });

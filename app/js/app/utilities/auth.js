@@ -195,7 +195,9 @@ Syme.Auth = {
 
     var url = SERVER_URL + '/users/' + 
               userId + '/sessions/current';
-
+        
+    var url = Syme.Url('users:current', 'group:current');
+  
     $.ajax(url, {
       
       type: 'DELETE',

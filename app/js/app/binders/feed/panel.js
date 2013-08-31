@@ -87,10 +87,12 @@ Syme.Binders.add('feed', { panel: function(){
 
         onsubmit: function(){
 
-          var route = SERVER_URL + '/users/' + currentUserId + '/groups/' + 
-                      currentGroupId  + '/memberships/' + deleteUserId;
-
-          $.encryptedAjax(route, { type: 'DELETE',
+          var deleteUserUrl = Syme.Url.fromCurrentGroup(
+            'memberships', deleteUserId);
+          
+          $.encryptedAjax(route, { 
+            
+            type: 'DELETE',
 
             success: function () {
               Notifications.reset();

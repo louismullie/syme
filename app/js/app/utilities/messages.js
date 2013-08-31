@@ -71,14 +71,34 @@ Syme.Messages = {
   modals: {
     
     confirm: {
+      
       deleteUser: {
         title: 'Delete user',
         message: 'Do you really want to delete this user from the group?',
         submit: 'Delete',
         cancel: 'Cancel'
+      },
+      
+      deleteGroup: {
+        title: 'Delete group',
+        message: 'Are you sure you want to delete this group ' +
+                  'and all of its content? This is irreversible.' +
+                  '<br>Type <b>delete</b> below to confirm.',
+        submit: 'Delete',
+        cancel: 'Cancel'
+        
+      },
+      
+      leaveGroup: {
+
+        message: 'Do you really want to leave this group?',
+        title: 'Leave group',
+        submit: 'Leave',
+        cancel: 'Cancel'
+
       }
+      
     }
-    
   },
   
   notifications: {
@@ -179,6 +199,11 @@ Syme.Messages = {
       leave_group: {
         message: '%(actors)s left %(resource)s',
         resource: "group"
+      },
+      
+      delete_group: {
+        message: '%(actors)s deleted %(resource)s',
+        resource: 'group'
       }
 
     }

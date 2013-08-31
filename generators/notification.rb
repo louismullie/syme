@@ -18,14 +18,25 @@ class NotificationGenerator
       User.find(id).full_name
     end.join_english
 
-    group = begin
-      Group.find(notification.group_id)
-    rescue Mongoid::Errors::DocumentNotFound
+    if notification.group_name && notification.group_id
+      group_name = notification.group_name
+      group_id = notification.group_id
+    else
+      # OLD API - to MIGRATE
+      # Want to completely denormalize the group.
+      group = begin
+        Group.find(notification.group_id)
+      rescue Mongoid::Errors::DocumentNotFound
+      end
+      group_name = group.name
+      group_id = group.id.to_s
+      # END OLD API - to MIGRATE
     end
     
     # If all the users have been deleted, or the group
     # does not exist, flag the notification as invalid.
-    if actors.empty? || group.nil?
+    is_exception = notification.action.to_s == :delete_group
+    if actors.empty? || (group_name.nil? && !is_exception)
       return { id: notification.id.to_s, invalid: true }
     end
     
@@ -35,13 +46,13 @@ class NotificationGenerator
       comment_id: notification.comment_id.to_s,
       action:     notification.action.to_s,
       read:       notification.read,
-      group:      group.name,
-      group_id:   group.id.to_s,
+      group:      group_name,
+      group_id:   group_id,
       actors:     actors,
       created_at: notification.created_at
         .strftime("%d/%m/%Y at %H:%M")
     }
-
+=begin
     if !notification.actor_ids.empty?
 
       avatar_user_id = notification.actor_ids.first
@@ -57,7 +68,7 @@ class NotificationGenerator
       }) if membership # user may not have a membership yet
 
     end
-    
+=end
     if notification.invitation
       g_notification[:invitation] =
         notification.invitation
