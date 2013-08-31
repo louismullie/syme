@@ -13,7 +13,7 @@ Syme.Binders.add('feed', { feed: function(){
   // Unread button
   $('#main').on('click', '#newcontent a', function(e){
 
-    if(Syme.Socket.globals.updatedComments > 0){
+    if(Syme.globals.updatedComments > 0){
       // If there are new comments, reset feed
       // to reorder the bump sorting.
       Syme.Router.reload();

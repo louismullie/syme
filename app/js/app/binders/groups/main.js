@@ -103,63 +103,74 @@ Syme.Binders.add('groups', { main: function() {
 
     e.preventDefault();
 
-    // Prevent rapid creation of groups.
-    if ($(this).data('active') == true) return;
-
-    // Mark pending group creation.
-    $(this).data('active', true);
-
     // Pass reference to self to subcontext.
     var $this = $(this);
 
-    var name = $(this).find('input[name="name"]').val();
+    // Get the name for the group to be created.
+    var name = $this.find('input[name="name"]').val();
 
+    // If the name is empty, do nothing.
     if ( name.length == 0 ) return;
 
-    var group = {  name: name };
+    // Prevent rapid creation of groups.
+    if ($this.data('active') == true) return;
 
+    // Mark pending group creation.
+    $this.data('active', true);
+
+    // Build the URL for the group creation API call.
     var createGroupUrl = Syme.Url.fromGroup();
     
+    // Create a new empty group on the server.
     $.encryptedAjax(createGroupUrl, {
       
       type: 'POST',
       
-      data: group,
+      data: {  name: name },
 
+      // Callback when group creation has succeeded.
       success: function (group) {
 
-        var userId =  Syme.CurrentSession.getUserId(), groupId = group.id;
+        // Get the group ID from the AJAX response.
+        var groupId = group.id;
 
+        // Create the keylist 
         Syme.Crypto.createKeylist(group.id, function (encryptedKeyfile) {
 
+          // Get the user modal from the current session.
           var currentUser = Syme.CurrentSession.getUser();
 
+          // Encrypt the keyfile and update it on the server.
           currentUser.updateKeyfile(encryptedKeyfile, function () {
 
-            var targetGroupRoute = Syme.Url.join(
-              'users', userId, 'groups', groupId);
+            // Get the current user's ID from the current session.
+            var userId = Syme.CurrentSession.getUserId();
             
-            var updateGroupUrl = Syme.Url
-              .fromBase(targetGroupRoute);
+            // Build the target route for redirection after group creation.
+            var targetGroupRoute = Syme.Url.join('users', userId, 'groups', groupId);
             
+            // Build the URL for the group creation acknowledgement API call.
+            var updateGroupUrl = Syme.Url.fromBase(targetGroupRoute);
+            
+            // Acknowledge that group was successfully created in keyfile.
             $.encryptedAjax(updateGroupUrl, {
 
               type: 'PUT',
 
               data: { ack_create: true },
 
+              // Callback when group creation acknowledgement succeeds.
               success: function () {
 
                 Syme.Router.navigate(targetGroupRoute);
-
                 $this.data('active', false);
 
               },
 
-              error: function () {
-                Alert.show(
-                  'Could not acknowledge group creation.');
-
+              // Callback when group creation acknowledgement fails.
+              error: function (response) {
+                
+                Syme.Error.ajaxError(response, 'acknowledge', 'group');
                 $this.data('active', false);
 
               }
@@ -169,12 +180,14 @@ Syme.Binders.add('groups', { main: function() {
           });
 
         });
+        
       },
 
-      error: function (error) {
-        Alert.show(
-          'Could not create group.');
+      // Callback when group creation failed.
+      error: function (response) {
+        Syme.Error.ajaxError(response, 'create', 'group');
       }
+      
     });
 
   });
