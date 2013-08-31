@@ -1,10 +1,14 @@
 Syme.Binders.add('feed', { comments: function(){
 
   // Open comment box
-  $('#main').on('click', 'a.comment-action', function(){
+  $('#main').on('click', 'a.comment-action, a#comment-count', function(){
 
-    $(this).closest('.post').find('textarea')
-      .removeClass('hidden').autogrow().focus();
+    // Show comment box if it is hidden
+    $(this).closest('.post').find('.post-comments')
+      .removeClass('no-comments')
+      // Focus on comment textarea
+      .find('textarea')
+        .focus();
 
   });
 
@@ -133,24 +137,24 @@ Syme.Binders.add('feed', { comments: function(){
   // Show more comments
   $('#main').on('click', '.show-more a', function(e){
 
-    var $this       = $(this),
-        collection  = $this.closest('.comments').find('.comment-hidden');
-
-    // Show hidden comments
-    collection.find('.encrypted.comment-hidden').removeClass('comment-hidden');
+    var $collection       = $(this).closest('.comments')
+        $hidden_comments  = $collection.find('.comment-box.hidden');
 
     Syme.Crypto.batchDecrypt(function(){
 
-      // Show comments
-      collection.removeClass('comment-hidden');
+      // Show comment box and textarea if they are hidden
+      $collection.removeClass('no-comments');
 
-      // Add expanded state
-      $this.parent().data('expanded', true);
+      // Show decrypted comments
+      $hidden_comments.removeClass('hidden');
 
-      // Hide show more link
-      $this.parent().addClass('hidden');
+      $collection.find('.show-more')
+        // Add expanded state
+        .data('expanded', true)
+        // Hide show more link
+        .addClass('hidden');
 
-    });
+    }, $hidden_comments.find('.encrypted'));
   });
 
 } }); // Syme.Binders.add();

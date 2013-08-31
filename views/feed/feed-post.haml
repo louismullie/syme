@@ -57,5 +57,5 @@
           %span{ partial: 'feed-comment-count' }
             {{> feed-comment-count.hbs}}
 
-    .post-comments
+    %div{ class: 'post-comments {{#unless has_comments}}no-comments{{/unless}}' }
       {{> feed-comments.hbs}}

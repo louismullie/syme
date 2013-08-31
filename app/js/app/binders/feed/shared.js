@@ -21,10 +21,10 @@ Syme.Binders.add('feed', { shared: function(){
     var mentionList = $.parseJSON( $('#mentioned_users').attr('data-list') );
 
     // Reject current user from list
-    // var currentUserId = Syme.CurrentSession.getUserId();
-    // mentionList = _.reject(mentionList, function (user) {
-    //   return user.id == currentUserId;
-    // });
+    var currentUserId = Syme.CurrentSession.getUserId();
+    mentionList = _.reject(mentionList, function (user) {
+      return user.id == currentUserId;
+    });
 
     $(this).mentionsInput({
       onDataRequest:function (mode, query, callback) {

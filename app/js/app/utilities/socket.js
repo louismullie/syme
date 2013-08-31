@@ -60,9 +60,9 @@ Syme.Socket = {
     },
 
     start: function (data) {
-      
+
       Syme.Hangout.start(data);
-    
+
     }
 
   },
@@ -87,7 +87,7 @@ Syme.Socket = {
 
       // Don't display a post in the wrong group
       if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
-      
+
       // Just return if the post has already been displayed.
       if ($('#' + post.view.id).length > 0) return;
 
@@ -121,37 +121,43 @@ Syme.Socket = {
       // If related post doesn't exist, increment new content
       if(!$('#' + data.target).length)
         return Syme.Helpers.newContent('comment', data.view.group_id);
-    
+
       // Just return if the comment has already been displayed.
       if ($('#' + data.view.id).length > 0) return;
 
-      var post               = $('#' + data.target),
-          container          = post.find('.comments'),
-          showmore           = container.find('.show-more'),
-          showmore_count     = showmore.find('span'),
-          displayed_comments = container.find('.comment-box').not('.comment-hidden');
+      var $post              = $('#' + data.target),
+          $commentContainer  = $post.find('.comments'),
+          $showmoreContainer = $commentContainer.find('.show-more'),
+          $displayedComments = $commentContainer.find('.comment-box').not('.hidden');
+
+      // Show textarea if it was hidden
+      $commentContainer.removeClass('no-comments');
 
       // If comments are still collapsed and they are full
-      if( !showmore.data('expanded') && displayed_comments.length >= 3 ){
+      if( !$showmoreContainer.data('expanded') && $displayedComments.length >= 3 ){
 
         // Hide first displayed comment
-        displayed_comments.first().addClass('comment-hidden');
+        $displayedComments.first().addClass('hidden');
 
-        // Show and increment showmore counter
-        showmore.removeClass('hidden');
-        showmore_count.html(container.find('.comment-hidden').length);
+        // Show showmore
+        $showmoreContainer.removeClass('hidden');
+
+        // Update count
+        $showmoreContainer.find('span')
+          .html( $commentContainer.find('.comment-box.hidden').length );
 
       }
 
       // Append new comment
-      container.append(Syme.Template.render('feed-comment', data.view));
+      var commentTemplate = Syme.Template.render('feed-comment', data.view);
+      $commentContainer.append( commentTemplate );
 
       // Decrypt
       Syme.Crypto.batchDecrypt();
 
-      // Reset comment count counter
-      post.find('[partial="feed-comment-count"]')
-        .renderHbsTemplate({ comment_count: post.find('.comment-box').length });
+      // Update comment count counter
+      $post.find('[partial="feed-comment-count"]')
+        .renderHbsTemplate({ comment_count: $post.find('.comment-box').length });
 
     },
 
@@ -259,49 +265,62 @@ Syme.Socket = {
 
     comment: function(data){
 
-      var comment           = $('#' + data.target),
-          comment_container = comment.closest('.comments'),
-          comments          = comment_container.find('.comment-box');
+      var $comment            = $('#' + data.target),
+          $commentContainer   = $comment.closest('.comments');
 
       // Remove comment
-      comment.remove();
+      $comment.remove();
 
-      // Update and create collections after removal of comment
-      var comments        = comments.not('#' + data.target),
-          comments_hidden = comments.filter('.comment-hidden'),
-          showmore        = comment_container.find('.show-more'),
-          showmore_count  = showmore.find('span');
+      // Create collections after removal of comment
+      var $comments           = $commentContainer.find('.comment-box'),
+          $commentsHidden     = $comments.filter('.hidden'),
+          $showmoreContainer  = $commentContainer.find('.show-more');
 
       // If comments are still collapsed
-      if(showmore.is(':visible')){
+      if($showmoreContainer.is(':visible')){
 
         // If the removed comment was visible
-        if(comments.not('.comment-hidden').length < 3){
+        if($comments.not('.hidden').length < 3){
+
           // Make the last hidden comment visible
-          comments_hidden.last().removeClass('comment-hidden');
+          var $lastComment = $commentsHidden.last();
+
+          // Decrypt it
+          Syme.Crypto.batchDecrypt(function(){
+            // Show it when decrypted
+            $lastComment.removeClass('hidden');
+          }, $lastComment.find('.encrypted'));
 
           // Update hidden comments collection
-          comments_hidden = comments.filter('.comment-hidden');
+          $commentsHidden = $comments.filter('.hidden');
+
         }
 
         // If there are still hidden comments
-        if(comments_hidden.length){
+        if($commentsHidden.length){
           // Update show-more
-          showmore_count.html(comments_hidden.length);
+          $showmoreContainer.find('span')
+            .html($commentsHidden.length);
         }else{
           // Otherwise, hide show-more
-          showmore.addClass('hidden');
+          $showmoreContainer.addClass('hidden');
         }
 
       } else {
-        if(comments.length <= 3) {
-          showmore.data('expanded', false);
+
+        if($comments.length <= 3) {
+          $showmore.data('expanded', false);
         }
+
+      }
+
+      if($comments.length <= 0) {
+        $commentContainer.addClass('no-comments');
       }
 
       // Reset comment count counter
-      comment_container.closest('.post').find('[partial="feed-comment-count"]')
-        .renderHbsTemplate({ comment_count: comments.length });
+      $commentContainer.closest('.post').find('[partial="feed-comment-count"]')
+        .renderHbsTemplate({ comment_count: $comments.length });
 
     },
 

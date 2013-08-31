@@ -10,7 +10,7 @@ class PostGenerator
 
     current_key = post.key_for_user(current_user)
     deletable = post.deletable_by?(current_user)
-    
+
     content = Base64.strict_encode64({
       message: post.content,
       keys: {
@@ -18,7 +18,7 @@ class PostGenerator
       },
       senderId: post.owner.id.to_s
     }.to_json)
-    
+
     attachment = AttachmentGenerator.generate(post, current_user)
 
     {
@@ -42,7 +42,7 @@ class PostGenerator
       attachment: attachment,
 
       encrypted: true,
-      
+
       # Likes and likers.
       likeable: LikeGenerator.generate(post, current_user),
 
@@ -64,8 +64,8 @@ class PostGenerator
 
       result = CommentGenerator.generate(comment, current_user)
       result.merge({
-        hidden: (i < post.complete_comments.count -
-        CommentsPerThread) ? 'comment-hidden' : ''
+        hidden: (i < post.complete_comments.count - CommentsPerThread) ?
+          'hidden' : ''
       })
 
     end
@@ -84,9 +84,9 @@ class PostGenerator
 
     membership = post.group.memberships.find_by(
       user_id: post.owner.id)
-    
+
     avatar = membership.user_avatar
-    
+
     {
       id: post.owner.id.to_s,
       user: post.owner,

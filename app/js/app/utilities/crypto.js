@@ -1,11 +1,11 @@
 Syme.Crypto = function (workerUrl) {
 
   var _this = this;
-  
+
   this.locked = false;
 
   this.onLockRelease = [];
-  
+
   this.batchDecrypt = function(callback, collection){
 
     // Default callback
@@ -17,12 +17,12 @@ Syme.Crypto = function (workerUrl) {
         $(comment).removeClass('comment-hidden');
       });
     }
-    
+
     // Default collection
     var collection = collection || $([
 
       // Feed elements
-      '.encrypted:not(.comment-hidden)',
+      '.encrypted:not(.hidden)',
       '.encrypted-image:not([data-decrypted="true"])',
       '.encrypted-audio:not([data-decrypted="true"])',
       '.encrypted-video:not([data-decrypted="true"])',
@@ -65,7 +65,7 @@ Syme.Crypto = function (workerUrl) {
   };
 
   this.executeJobWithLock = function (job, successCb) {
-    
+
     var successCb = successCb || function () {};
     this.executeJob(true, job, successCb);
 
@@ -368,7 +368,7 @@ Syme.Crypto = function (workerUrl) {
     }, generatedKeysCb);
 
   };
-  
+
   this.deriveKeys = function(password, salt, generatedKeysCb) {
 
     Syme.Crypto.executeJobWithoutLock({
@@ -379,20 +379,20 @@ Syme.Crypto = function (workerUrl) {
     }, generatedKeysCb);
 
   };
-  
+
   this.getInvitationToken = function (keylistId, userAlias, invitationTokenCb) {
-    
+
     Syme.Crypto.executeJobWithoutLock({
 
       method: 'getInvitationToken',
       params: [keylistId, userAlias]
 
     }, invitationTokenCb);
-    
+
   };
-  
+
   var _this = this;
-  
+
   this.seedRandom = function () {
 
     _this.workerPool.scatterJob({

@@ -265,7 +265,9 @@
       padding-left: 1em;
       border-left: 3px solid #ddd;
 
-      &.collapsed { display: none; }
+      &.no-comments {
+        display: none;
+      }
 
       .comments {
 
@@ -405,6 +407,8 @@
         $lineHeight:  16px;
         $padding:     7px;
 
+        $originalHeight: $padding * 2 + $lineHeight + 4; // 4 is border
+
         textarea {
           width: 100%;
           @include box-sizing;
@@ -417,8 +421,8 @@
 
           padding:      #{$padding} 10px;
           line-height:  $lineHeight;
-          height:       $padding * 2 + $lineHeight * 1 + 4; // Minimum lines + border
-          min-height:   $padding * 2 + $lineHeight * 1 + 4; // Minimum lines + border
+          height:       $originalHeight;
+          min-height:   $originalHeight;
         }
 
         .mentions {

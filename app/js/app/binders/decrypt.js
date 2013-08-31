@@ -15,7 +15,7 @@ Syme.Binders.add('global', { decrypt: function() {
       // Retrieve the new key.
       if (decryptedText.error && decryptedText.error.missingKey) {
 
-        var missingKey = decryptedText.error.missingKey
+        var missingKey = decryptedText.error.missingKey;
 
         var url = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() + '/groups/' +
             missingKey.groupId + '/invitations/' + missingKey.userId;
@@ -62,7 +62,7 @@ Syme.Binders.add('global', { decrypt: function() {
         // Output decrypted content
         .html( $content )
         // Transform the .encrypted into .collapsable
-        .removeClass('encrypted').addClass('collapsable');
+        .removeClass('encrypted hidden').addClass('collapsable');
 
       // Collapse long posts.
       Syme.Helpers.collapseHTML(5, 'Read more');
