@@ -118,8 +118,12 @@ Syme.Binders.add('groups', { main: function() {
 
     var group = {  name: name };
 
-    $.encryptedAjax(SERVER_URL + '/groups', {
+    var createGroupUrl = Syme.Url.fromGroup();
+    
+    $.encryptedAjax(createGroupUrl, {
+      
       type: 'POST',
+      
       data: group,
 
       success: function (group) {
@@ -132,19 +136,21 @@ Syme.Binders.add('groups', { main: function() {
 
           currentUser.updateKeyfile(encryptedKeyfile, function () {
 
-            var route = 'users/' + userId + '/groups/' + groupId;
-
-            Syme.Router.navigate(route);
+            var targetGroupRoute = Syme.Url.join(
+              'users', userId, 'groups', groupId);
             
-            var url = SERVER_URL + '/' + route;
+            var updateGroupUrl = Syme.Url
+              .fromBase(targetGroupRoute);
             
-            $.encryptedAjax(url, {
+            $.encryptedAjax(updateGroupUrl, {
 
               type: 'PUT',
 
               data: { ack_create: true },
 
               success: function () {
+
+                Syme.Router.navigate(targetGroupRoute);
 
                 $this.data('active', false);
 
@@ -178,29 +184,43 @@ Syme.Binders.add('groups', { main: function() {
 
     e.preventDefault();
 
-    var groupId = $(this).data('group-id'),
-        message = 'Are you sure you want to delete this group ' +
-                  'and all of its content? This is irreversible.' +
-                  '<br>Type <b>delete</b> below to confirm.';
+    var groupId = $(this).data('group-id');
+    
+    var modal = Syme.Messages.modals.confirm.deleteGroup;
 
     var $this = $(this);
     
-    Prompt.show(message, 
+    Prompt.show(modal.message, 
       
     function (value) {
 
+      // If user did not enter the right confirmation
+      // token (i.e. "delete"), do nothing and return.
       if (value != 'delete') return;
 
-      $.encryptedAjax(SERVER_URL + '/groups/' + groupId,
+      // Get current user id from session.
+      var userId = Syme.CurrentSession.getUserId();
+      
+      // Build API url to call to delete group.
+      var deleteGroupUrl = Syme.Url.fromGroup(groupId);
+      
+      // Delete group on server, then do further cleanup.
+      $.encryptedAjax(deleteGroupUrl, {
+        
+        // DELETE /users/userId/groups/groupId
+        type: 'DELETE',
 
-        { type: 'DELETE',
+        // Callback when group deletion succeeded.
+        success: function (response) {
 
-        success: function (resp) {
+          // Remove groups from current session.
+          Syme.CurrentSession.groups.splice(
+            Syme.CurrentSession.groups.indexOf(groupId), 1);
 
-          Syme.CurrentSession.groups.splice(Syme.CurrentSession.groups.indexOf(groupId), 1);
-
+          // Get object representing the current user.
           var user = Syme.CurrentSession.getUser();
 
+          // Delete the keylist from the user's keyfile.
           user.deleteKeylist(groupId, function () {
             Notifications.reset();
             Notifications.fetch();
@@ -208,31 +228,15 @@ Syme.Binders.add('groups', { main: function() {
           });
 
         },
-
+        
+        // Callback when group deletion failed.
         error: function (response) {
-
-          if (response.status == 404) {
-            Alert.show(
-              'This group does not exist anymore.', {
-              onhide: function () { Syme.Router.reload(); }
-            });
-          } else {
-            Alert.show('Could not delete group', {
-              onhide: function () { Syme.Router.reload(); }
-            });
-          }
-
+          Syme.Error.ajaxError(response, 'delete', 'group');
         }
 
       });
 
-    },
-
-    {
-      title: 'Delete group',
-      submit: 'Ok',
-      cancel: 'Cancel'
-    });
+    }, modal);
 
 
   });
@@ -241,41 +245,44 @@ Syme.Binders.add('groups', { main: function() {
   $('#main').on('click', '.leave-group', function (e) {
 
     var groupId = $(this).data('group-id');
-
-    Confirm.show(
-      'Do you really want to leave this group?',
+    var userId = Syme.CurrentSession.getUserId();
+    var modal = Syme.Messages.modals.confirm.leaveGroup;
+    
+    Confirm.show(modal.message,
+      
       {
+        
         closable: true,
-        title: 'Leave group',
-        submit: 'Leave',
-        cancel: 'Cancel',
+        title: modal.title,
+        submit: modal.submit,
+        cancel: modal.cancel,
 
         onsubmit: function(){
 
-          var route = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() +
-          '/groups/' + groupId + '/memberships/' + Syme.CurrentSession.getUserId();
+          var baseUrl = Syme.Url.fromGroup(groupId);
+          
+          var deleteMembershipUrl = Syme.Url.join(
+            baseUrl, 'memberships', userId);
+          
+          $.encryptedAjax(deleteMembershipUrl, {
+            
+            type: 'DELETE',
 
-          $.encryptedAjax(route, { type: 'DELETE',
-
+            // Callback when membership deletion succeeded.
             success: function () {
-
               var user = Syme.CurrentSession.getUser();
-
-              user.deleteKeylist(groupId, function () {
-                Notifications.reset();
-                Notifications.fetch();
-                Syme.Router.reload();
-              });
-
+              user.deleteKeylist(groupId, Syme.Router.reset);
             },
 
-            error: function () {
-              Alert.show('Could not leave group.');
+            // Callback when membership deletion failed.
+            error: function (response) {
+              Syme.Error.ajaxError(response, 'leave', 'group');
             }
 
           });
 
         }
+        
       }
     );
   });

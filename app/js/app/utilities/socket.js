@@ -316,7 +316,7 @@ Syme.Socket = {
       Notifications.reset();
       Notifications.fetch();
 
-      if (Syme.Router.insideGroup() &&
+      if (Syme.Router.insideGroup() && 
           Syme.CurrentSession.getGroupId() == groupId);
         Syme.Router.navigate('');
 
@@ -383,14 +383,14 @@ Syme.Socket = {
 
   receiveUpdate: function(data){
 
-    // Check corresponding function existence
+    // Check that the relevant handler exists.
     if(!this[data.action][data.model]){
       throw 'Syme.Socket.' + data.action +
             '.' + data.model + '() doesn\'t exist';
       return false;
     }
 
-    // Call it and pass the relevant data to it
+    // Call it and pass the relevant data to it.
     this[data.action][data.model](data.data);
 
   },

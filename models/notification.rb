@@ -10,6 +10,7 @@ class Notification
   field :post_id,    type: String
   field :comment_id, type: String
   field :group_id,   type: String
+  field :group_name, type: String
   field :action,     type: String
   field :invitation, type: Hash
   
@@ -19,7 +20,7 @@ class Notification
   
   # Attribute protections.
   attr_readonly   :post_id, :comment_id, :action
-  attr_accessible :actor_ids, :post_id, :group_id,
+  attr_accessible :actor_ids, :post_id, :group_id, :group_name,
                   :comment_id, :action, :read, :invitation
   
 end

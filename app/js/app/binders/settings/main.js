@@ -127,22 +127,23 @@ Syme.Binders.add('settings', { main: function(){
     if(!!$(this).data('active')) return false;
     $(this).data('active', true);
 
-    $.encryptedAjax(SERVER_URL + '/users/' + Syme.CurrentSession.getUserId(), {
+    var deleteUserUrl = Syme.Url.fromCurrentUser();
+    
+    $.encryptedAjax(deleteUserUrl, {
 
       type: 'DELETE',
 
+      // Callback when account deletion succeeded.
       success: function () {
         Syme.Auth.disconnect();
       },
 
-      error: function () {
-        if (response.status == 404) {
-          Alert.show(
-            'This user has already left the group.');
-        } else {
-          alert('Could not delete user.');
-        }
-    }});
+      // Callback when account deletion succeeded.
+      error: function (response) {
+        Syme.Error.ajaxError(response, 'delete', 'group member');
+      }
+      
+    });
 
   });
 

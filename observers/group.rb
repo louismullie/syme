@@ -16,8 +16,8 @@ class GroupObserver < Mongoid::Observer
   
   def after_destroy(group)
     
-    MagicBus::Publisher.broadcast(group, :delete,
-      :group, { id: group.id.to_s} )
+    MagicBus::Publisher.broadcast(
+    group, :delete, :group, { id: group.id.to_s} )
     
   end
 

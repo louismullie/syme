@@ -86,10 +86,14 @@ var Invitation = Backbone.Model.extend({
     var groupId = inviteLink.data('invite-group_id');
     var invitationId = inviteLink.data('invite-id');
 
-    var url = SERVER_URL + '/users/' + userId +
-      '/groups/' + groupId + '/invitations/' + invitationId;
-
-    $.encryptedAjax(url, { type: 'DELETE',
+    var baseUrl = Syme.Url.fromGroup(groupId);
+    
+    var cancelInvitationUrl = Syme.Url.join(
+      baseUrl, 'invitations', invitationId);
+    
+    $.encryptedAjax(cancelInvitationUrl, {
+      
+      type: 'DELETE',
 
       success: function () {
         Notifications.fetch();
@@ -97,13 +101,9 @@ var Invitation = Backbone.Model.extend({
         $('.popover').hide();
       },
 
+      // Callback when invite cancel failed.
       error: function (response) {
-        if (response.status == 404) {
-          Alert.show(
-            Syme.Messages.error.invitationNotFound);
-        } else {
-          alert('Could not decline invitation request.');
-        }
+        Syme.Error.ajaxError(response, 'cancel', 'invitation');
       }
 
     });

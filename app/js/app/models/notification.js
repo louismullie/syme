@@ -18,7 +18,7 @@ Notifications = (function(){
       }, this);
     },
     
-    generateNotificationText: function () {
+    generateNotificationText: function (data) {
   
       var action = data.action;
 
@@ -68,6 +68,7 @@ Notifications = (function(){
       var notifications = _.map(notifications, function(notification){
 
         notification = notification.attributes;
+        
         var data = _this.generateNotificationText(notification);
 
         return _.extend(notification, {
