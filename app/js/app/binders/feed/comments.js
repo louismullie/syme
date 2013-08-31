@@ -22,9 +22,8 @@ Syme.Binders.add('feed', { comments: function(){
           post_encrypted    = $related_post.data('encrypted'),
           $textarea         = $related_post.find('textarea');
 
-      var groupId           = Syme.CurrentSession.getGroupId(),
-          userId            = Syme.CurrentSession.getUserId(),
-          user              = Syme.CurrentSession.getUser(),
+      var user              = Syme.CurrentSession.getUser(),
+          groupId           = Syme.CurrentSession.getGroupId(),
           postId            = related_post_id;
 
       // If textarea is empty, do not submit form
@@ -37,10 +36,9 @@ Syme.Binders.add('feed', { comments: function(){
       // Begin posting once we get the async mentions.
       var commentWithMentions = function(mentions_data){
 
-        var url = SERVER_URL + '/users/' + userId + '/groups/' +
-                  groupId    + '/posts/' + postId   + '/comments';
+        var createCommentUrl = Syme.Url.fromCurrentGroup('posts', postId, 'comments');
 
-        $.encryptedAjax(url, {
+        $.encryptedAjax(createCommentUrl, {
 
           type: 'POST',
 
@@ -68,7 +66,9 @@ Syme.Binders.add('feed', { comments: function(){
 
             Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
-              $.encryptedAjax(url + '/' + comment.id, {
+              var updateCommentUrl = Syme.Url.join(createCommentUrl, comment.id);
+              
+              $.encryptedAjax(updateCommentUrl, {
 
                 type: 'PUT',
 

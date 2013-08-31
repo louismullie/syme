@@ -46,7 +46,7 @@ get '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
 
 end
 
-post '/groups', auth: [] do
+post '/users/:user_id/groups', auth: [] do |_|
 
   encrypted = params.dup
   params = decrypt_params(encrypted)
@@ -100,10 +100,11 @@ end
 # Set group avatar.
 post '/:group_id/avatar', auth: [] do
 
-  group_id, avatar_id = params[:group_id], params[:avatar_id]
-  @group = Group.find(group_id)
-
-  @group.avatar_id = avatar_id
+  group_id = params[:group_id]
+  avatar_id = params[:avatar_id]
+  
+  group = Group.find(group_id)
+  group.avatar_id = avatar_id
 
   track @user, 'User changed the group avatar'
 
@@ -111,10 +112,27 @@ post '/:group_id/avatar', auth: [] do
 
 end
 
-delete '/groups/:id', auth: [] do |id|
+delete '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
 
-  group = Group.find(id)
-
+  # Find the group to delete.
+  group = begin
+    Group.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'group_not_found'
+  end
+  
+  # Find the current user's group membership.
+  membership = group.memberships.
+    where(user_id: @user.id.to_s).first
+  
+  # Verify the user is authorized to delete the group.
+  if !membership || !membership.is_at_least?(:admin)
+    error 403, 'unauthorized'
+  end
+  
+  # Delete all notifications related to this group.
+  # Some users may not be full members yet, so we
+  # need to iterate over all users (inefficient).
   User.all.each do |user|
 
     notifications = user.notifications
@@ -123,15 +141,36 @@ delete '/groups/:id', auth: [] do |id|
     notifications.destroy_all
 
   end
-
+  
+  # Delete all invitations related to this group.
   group.invitations.each do |invitation|
     invitation.destroy
   end
 
+  # Notify group members of group deletion.
+  group.users.each do |user|
+    
+    # Don't notify the person deleting.
+    next if user.id == @user.id
+    
+    actor_ids = [@user.id.to_s]
+    
+    user.notify({
+      action: :delete_group,
+      create: { actor_ids: actor_ids }
+    }, group)
+    
+    user.save!
+
+  end
+
+  # Finally, destroy the group for good.
   group.destroy
 
+  # Track the number of group deletions.
   track @user, 'User deleted group'
-
-  { status: 'ok' }.to_json
+  
+  # Return an empty response with code 200.
+  empty_response
 
 end

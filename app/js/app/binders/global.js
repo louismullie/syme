@@ -64,10 +64,9 @@ Syme.Binders.add('global', { main: function(){
 
   $(document).on('click', '.clear-notifications', function (e) {
 
-    var userId = Syme.CurrentSession.getUserId();
-    var url = SERVER_URL + '/users/' + userId + '/notifications';
-
-    $.encryptedAjax(url, {
+    var deleteNotificationsUrl = Syme.Url.fromCurrentUser('notifications');
+    
+    $.encryptedAjax(deleteNotificationsUrl, {
 
       type: 'DELETE',
 
