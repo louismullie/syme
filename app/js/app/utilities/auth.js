@@ -193,12 +193,9 @@ Syme.Auth = {
 
     Notifications.hideBadge();
 
-    var url = SERVER_URL + '/users/' + 
-              userId + '/sessions/current';
-        
-    var url = Syme.Url('users:current', 'group:current');
+    var deleteSessionUrl = Syme.Url.fromCurrentUser('sessions', 'current');
   
-    $.ajax(url, {
+    $.ajax(deleteSessionUrl, {
       
       type: 'DELETE',
       

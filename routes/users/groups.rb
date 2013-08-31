@@ -46,7 +46,7 @@ get '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
 
 end
 
-post '/groups', auth: [] do
+post '/users/:user_id/groups', auth: [] do |_|
 
   encrypted = params.dup
   params = decrypt_params(encrypted)
@@ -100,10 +100,11 @@ end
 # Set group avatar.
 post '/:group_id/avatar', auth: [] do
 
-  group_id, avatar_id = params[:group_id], params[:avatar_id]
-  @group = Group.find(group_id)
-
-  @group.avatar_id = avatar_id
+  group_id = params[:group_id]
+  avatar_id = params[:avatar_id]
+  
+  group = Group.find(group_id)
+  group.avatar_id = avatar_id
 
   track @user, 'User changed the group avatar'
 
@@ -113,13 +114,20 @@ end
 
 delete '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
 
-  # Find the group within the user's group.
+  # Find the group to delete.
   group = begin
-    @user.groups.find(group_id)
-  # Return a 404 if the group is not found
-  # (may exist but doesn't belong to the user.)
-  rescue
+    Group.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
     error 404, 'group_not_found'
+  end
+  
+  # Find the current user's group membership.
+  membership = group.memberships.
+    where(user_id: @user.id.to_s).first
+  
+  # Verify the user is authorized to delete the group.
+  if !membership || !membership.is_at_least?(:admin)
+    error 403, 'unauthorized'
   end
   
   # Delete all notifications related to this group.

@@ -185,6 +185,7 @@ Syme.Binders.add('groups', { main: function() {
     e.preventDefault();
 
     var groupId = $(this).data('group-id');
+    
     var modal = Syme.Messages.modals.confirm.deleteGroup;
 
     var $this = $(this);
