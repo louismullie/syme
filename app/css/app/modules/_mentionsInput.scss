@@ -73,24 +73,26 @@
 
       li {
         background-color: #fff;
-        padding: 0 5px;
+        padding: 5px 10px;
         margin: 0;
         width: auto;
         border-bottom: 1px solid #eee;
-        height: 26px;
-        line-height: 26px;
         overflow: hidden;
         cursor: pointer;
         list-style: none;
         white-space: nowrap;
 
+        font-size: .9em;
+        font-weight: normal;
+
         &:last-child {
-          border-radius: 5px;
+          border-bottom-right-radius: 3px;
+          border-bottom-left-radius: 3px;
         }
 
         &:hover,
         &.active {
-          background-color: #f2f2f2;
+          background-color: mix(white, #d8dfea, 50%);
         }
 
         > img,
@@ -111,7 +113,7 @@
         }
 
         b {
-          background: #ffff99;
+          background: $bodyBackgroundColor2;
           font-weight: normal;
         }
 
