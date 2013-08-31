@@ -155,10 +155,10 @@ Syme.Binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || $.noop;
 
-    var media_id = $this.attr('data-attachment-id'),
+    var mediaId = $this.attr('data-attachment-id'),
         keys     = $this.attr('data-attachment-keys'),
         type     = $this.attr('data-attachment-type'),
-        group_id = $this.attr('data-attachment-group');
+        groupId = $this.attr('data-attachment-group');
 
     if ( !keys ) return done();
 
@@ -175,9 +175,9 @@ Syme.Binders.add('global', { decrypt: function() {
 
       done();
     };
-
+    
     // Decrypt and place media
-    FileManager.getFile(media_id, keys, callback, group_id);
+    FileManager.getFile(mediaId, keys, callback, groupId);
 
   });
 

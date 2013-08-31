@@ -32,8 +32,9 @@ FileManager = {
     };
 
     var download = function (id, keys, group) {
-
+      
       var group = group || Syme.CurrentSession.getGroupId();
+
       var baseUrl = SERVER_URL + '/' + group + '/file/';
       var csrfToken = Syme.CurrentSession.getCsrfToken();
       

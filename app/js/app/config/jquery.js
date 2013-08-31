@@ -2,8 +2,12 @@
 $.ajaxSetup({
   
   beforeSend: function(xhr) {
-    var token = Syme.CurrentSession.getCsrfToken();
-    xhr.setRequestHeader('X_CSRF_TOKEN', token);
+    try {
+      var token = Syme.CurrentSession.getCsrfToken();
+      xhr.setRequestHeader('X_CSRF_TOKEN', token);
+    } catch (error) {
+      console.log('Session not initialized.');
+    }
   }
   
 });

@@ -187,36 +187,71 @@ Syme.Auth = {
 
   },
 
+  /*
+   * Deletes the server-side session, then clears
+   * the session on the client and passes execution
+   * to the supplied callback function (if any).
+   */
   logout: function (callback) {
     
-    var userId = Syme.CurrentSession.getUserId();
-
-    Notifications.hideBadge();
-
+    // Build the URL 
     var deleteSessionUrl = Syme.Url.fromCurrentUser('sessions', 'current');
   
+    // Hide notifications badges.
+    Notifications.hideBadge();
+
+    // Log out by deleting the session on the server.
     $.ajax(deleteSessionUrl, {
       
       type: 'DELETE',
       
+      // Callback when session deletion succeeds.
       success: function () {
+        
+        // Clear client session object.
+        delete Syme.CurrentSession;
         Syme.CurrentSession = {};
+        
+        // Pass execution to success callback.
         callback();
+        
+      },
+      
+      // Callback when session deletion fails.
+      error: function (response) {
+        
+        // We're already logged out.
+        if (response.status == 403) {
+          callback();
+        // Otherwise show an error.
+        } else {
+          Syme.Error.ajaxError(response, 'delete', 'session');
+        }
+        
       }
       
     });
 
   },
 
+  /*
+   * Logs the client out, then shows a modal
+   * indicating the client has been disconnected.
+   */ 
   disconnect: function () {
 
+    var modal = Syme.Messages.modals.alert.disconnect;
+    
     Syme.Auth.logout(function () {
       
-      // Force disconnection
-      Alert.show(Syme.Messages.auth.disconnected, {
-        title: 'Disconnected',
-        submit: 'Log in',
+      Alert.show(modal.message, {
+        
+        title: modal.title,
+        submit: modal.submit,
+        
         closable: false,
+        
+        // Return to root page on hide.
         onhide: function(){
           Syme.Router.navigate('/');
         }

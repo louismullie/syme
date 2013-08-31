@@ -18,12 +18,6 @@ Syme.Messages = {
                  "and try again."
   },
   
-  auth: {
-    
-    disconnected: 'You have been disconnected'
-    
-  },
-  
   beta: {
     
     warning: 'Syme is currently in an early beta phase. ' +
@@ -95,6 +89,18 @@ Syme.Messages = {
         title: 'Leave group',
         submit: 'Leave',
         cancel: 'Cancel'
+
+      }
+      
+    },
+    
+    alert: {
+      
+      disconnected: {
+
+        message: 'You have been disconnected',
+        title: 'Disconnected',
+        submit: 'Log in'
 
       }
       
