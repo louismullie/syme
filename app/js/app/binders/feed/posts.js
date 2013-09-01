@@ -101,17 +101,17 @@ Syme.Binders.add('feed', { posts: function(){
 
     NProgress.showSpinner();
     
-    var id       = $(this).data('attachment-id');
-    var filename = $(this).data('attachment-filename');
-    var keys      = $(this).data('attachment-keys');
-    var group    = $(this).data('attachment-group');
+    var id        = $(this).data('attachment-id'),
+        filename  = $(this).data('attachment-filename'),
+        keys      = $(this).data('attachment-keys'),
+        group     = $(this).data('attachment-group');
     
     var callback = function (url) {
       
       NProgress.hideSpinner();
 
       if (!url) return;
-      
+
       Lightbox.show(url);
       
     };
