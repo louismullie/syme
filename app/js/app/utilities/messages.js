@@ -75,9 +75,7 @@ Syme.Messages = {
       
       deleteGroup: {
         title: 'Delete group',
-        message: 'Are you sure you want to delete this group ' +
-                  'and all of its content? This is irreversible.' +
-                  '<br>Type <b>delete</b> below to confirm.',
+        message: '<b>Warning.</b> Deleting your account is irreversible. Doing so will delete all data associated to your account, including all your posts and every group you have created.',
         submit: 'Delete',
         cancel: 'Cancel'
         
@@ -206,7 +204,7 @@ Syme.Messages = {
         resource: "group"
       },
       
-      // Destructive operations - DO NOT LINK
+      // Destructive operations - DO NOT LI
       delete_group: {
         message: '%(actors)s deleted %(resource)s',
         resource: 'group'
