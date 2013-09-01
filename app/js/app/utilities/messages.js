@@ -75,7 +75,9 @@ Syme.Messages = {
       
       deleteGroup: {
         title: 'Delete group',
-        message: '<b>Warning.</b> Deleting your account is irreversible. Doing so will delete all data associated to your account, including all your posts and every group you have created.',
+        message: 'Are you sure you want to delete this group ' +
+                 'and all of its content? This is irreversible.' +
+                 '<br>Type <b>delete</b> below to confirm.',
         submit: 'Delete',
         cancel: 'Cancel'
         
