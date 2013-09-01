@@ -211,8 +211,8 @@ function Uploader(file, options) {
     this.workerPool.queueJob({
       pass: pass, worker: worker,
       data: data, id: this.uploadId,
-      url: appendUrl, csrf: this.options.csrfToken,
-      chunks: _this.numChunks
+      url: appendUrl, chunks: _this.numChunks,
+      csrf: this.options.csrfToken
     }, this);
 
     delete chunk;
