@@ -99,21 +99,24 @@ Syme.Binders.add('feed', { posts: function(){
   // Shortcut for image attachment links
   $('#main').on('click', 'a.image-download', function() {
 
-    NProgress.start();
+    NProgress.showSpinner();
     
     var id       = $(this).data('attachment-id');
     var filename = $(this).data('attachment-filename');
     var keys      = $(this).data('attachment-keys');
+    var group    = $(this).data('attachment-group');
+    
+    var callback = function (url) {
+      
+      NProgress.hideSpinner();
 
-    FileManager.getFile(id, keys, function (url) {
-      
-      NProgress.done();
-      
       if (!url) return;
       
       Lightbox.show(url);
       
-    });
+    };
+    
+    FileManager.getFile(id, keys, callback, group);
 
   });
 

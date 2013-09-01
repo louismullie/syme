@@ -163,6 +163,20 @@
     return NProgress.inc(Math.random() * Settings.trickleRate);
   };
 
+  NProgress.showSpinner = function () {
+    
+    var $el = NProgress.render();
+    $el.find('[role="spinner"]').show();
+    
+  };
+  
+  NProgress.hideSpinner = function () {
+    
+    var $el = NProgress.render();
+    $el.find('[role="spinner"]').hide();
+    
+  };
+  
   /**
    * (Internal) renders the progress bar markup based on the `template`
    * setting.
@@ -176,14 +190,16 @@
       .html(Settings.template);
 
     var perc = fromStart ? '-100' : toBarPerc(NProgress.status || 0);
-
+    
+    $el.find('[role="bar"]').show();
+    
     $el.find('[role="bar"]').css({
       transition: 'all 0 linear',
       transform: 'translate3d('+perc+'%,0,0)'
     });
 
     if (!Settings.showSpinner)
-      $el.find('[role="spinner"]').remove();
+      $el.find('[role="spinner"]').hide();
 
     $el.appendTo(document.body);
 

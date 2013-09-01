@@ -67,7 +67,9 @@ Syme.Binders.add('feed', { comments: function(){
 
             // Reset textarea
             $textarea.trigger('reset');
-
+            
+            NProgress.showSpinner();
+            
             Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
               var updateCommentUrl = Syme.Url.join(createCommentUrl, comment.id);
@@ -79,12 +81,18 @@ Syme.Binders.add('feed', { comments: function(){
                 data: { content: encryptedMessage },
 
                 success: function () {
+                  
+                  NProgress.hideSpinner();
+                  
                   $textarea.data('active', false);
+                  
                 },
 
                 error: function () {
+                  
                   // PUT failed
                   Alert.show(Syme.Messages.error.postingFailed);
+                  NProgress.hideSpinner();
                   $textarea.data('active', false);
                 }
 

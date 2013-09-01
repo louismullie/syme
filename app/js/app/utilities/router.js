@@ -234,9 +234,6 @@ Syme.Router = Backbone.Router.extend({
     // Clear breadcrumbs
     $('#navbar-breadcrumbs').html('');
 
-    // Show spinner
-    NProgress.start();
-
     var _this = this;
 
     this.authenticate(function(){

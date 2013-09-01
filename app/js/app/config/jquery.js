@@ -52,9 +52,12 @@ $.fn.batchDecrypt = function(callback){
       callback  = callback || function(){},
       decryptCounter = 0,
       startTime = new Date;
-  
+
+  // Show spinner
+  NProgress.start();
+
   var numElements = $this.length;
-  
+
   var incrementCounter = function(e){
   
     decryptCounter++;

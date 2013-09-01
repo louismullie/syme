@@ -90,7 +90,7 @@ Syme.Socket = {
 
       // Just return if the post has already been displayed.
       if ($('#' + post.view.id).length > 0) return;
-
+      
       // Remove empty group notice if there is one
       $('#empty-group-notice').remove();
 

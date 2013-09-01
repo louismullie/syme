@@ -98,16 +98,20 @@ Syme.Binders.add('register', { main: function(){
 
   // Registering mode
   $('#auth').on('submit', '#register-form', function(e) {
-
+    
     var $this = $(this);
     
     if (Syme.Compatibility.inChromeExtension())
       chrome.storage.local.set({ 'hasRegistered':  true });
     
     e.preventDefault();
-
+    
     // Lock event
-    if( !!$this.data('active') ) { return false } else { $this.data('active', true) };
+    if( $this.data('active') ) {
+      return false;
+    } else {
+      $this.data('active', true);
+    };
 
     // Spinner
     $this.trigger('showSpinner', true);
@@ -116,7 +120,7 @@ Syme.Binders.add('register', { main: function(){
         password  = $this.find('input[name="password"]').val(),
         fullName  = $this.find('input[name="full_name"]').val(),
         remember  = $this.find('input[name="remember_me"]').prop("checked");
-    
+
     Syme.Auth.register(email, password, fullName, remember, function (error) {
       $('#auth').trigger('registrationError', error);
     });
@@ -158,9 +162,9 @@ Syme.Binders.add('register', { main: function(){
     $box.html( errorMessage );
 
     // Unlock event
-    $this.data('submit-failed', true)
-         .data('active', false);
-
+    $this.data('submit-failed', true);
+    $this.find('#register-form').data('active', false);
+    
     // Release spinner
     $this.trigger('showSpinner', false);
     

@@ -1,0 +1,1 @@
+NProgress.settings.showSpinner = false;
