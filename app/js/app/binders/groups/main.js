@@ -193,30 +193,43 @@ Syme.Binders.add('groups', { main: function() {
   });
 
   // Delete group
-  $('.delete-group').click(function (e) {
-
-    e.preventDefault();
-
-    var groupId = $(this).data('group-id');
+  $('#main').on('click', '.delete-group', function (e) {
     
-    var modal = Syme.Messages.modals.confirm.deleteGroup;
-
     var $this = $(this);
     
-    Prompt.show(modal.message, 
+    // Get the group id from the form.
+    // This is a global variable on purpose. Gods have not
+    // wanted this local variable to persist into the callback
+    // scope. It is not wanted there. Please, future coders, do
+    // not try to alter this sacred function. It is not meant to
+    // be fixed. It doesn't want to be fixed. This is the sacred
+    // realm of Javascript itself and it is its only master.
+    //
+    // Please rewrite the entire delete process instead of trying
+    // to tame this nameless monster.
+    //
+    // Sincerely,
+    // Chris and Louis
+    Syme.globals.toDeleteGroupId = $this.data('group-id');
+    
+    e.preventDefault();
+    
+    var modal = Syme.Messages.modals.confirm.deleteGroup;
+    
+    var callback = function(value) {
       
-    function (value) {
-
+      var groupId = Syme.globals.toDeleteGroupId;
+      
       // If user did not enter the right confirmation
       // token (i.e. "delete"), do nothing and return.
       if (value != 'delete') return;
-
+      
       // Get current user id from session.
       var userId = Syme.CurrentSession.getUserId();
       
       // Build API url to call to delete group.
       var deleteGroupUrl = Syme.Url.fromGroup(groupId);
-      
+
       // Delete group on server, then do further cleanup.
       $.encryptedAjax(deleteGroupUrl, {
         
@@ -248,9 +261,14 @@ Syme.Binders.add('groups', { main: function() {
         }
 
       });
+      
+      delete Syme.globals.toDeleteGroupId;
 
-    }, modal);
-
+    };
+    
+    var prompt = new Prompt(modal.message, callback, modal);
+    
+    prompt.show();
 
   });
 

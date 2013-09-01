@@ -68,7 +68,7 @@ var Invitation = Backbone.Model.extend({
     var inviterName = inviteLink.data('invite-inviter_name');
     var message = 'Enter the key ' + inviterName + ' has sent you:';
 
-    Prompt.show(message, function (token) {
+    var prompt = new Prompt(message, function (token) {
 
       user.acceptInviteRequest(invitationId, request, token, function () {
         Notifications.fetch();
@@ -77,6 +77,8 @@ var Invitation = Backbone.Model.extend({
       });
 
     }, { title: 'Accept invitation', closable: false });
+    
+    prompt.show();
 
   },
 
