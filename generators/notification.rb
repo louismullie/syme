@@ -36,8 +36,11 @@ class NotificationGenerator
     
     # If all the users have been deleted, or the group
     # does not exist, flag the notification as invalid.
+    
     # An exception is "group has been deleted" notifications.
-    if actors.empty? || (group.nil? && notification.action != :delete_group)
+    valid_exception = notification.action == 'delete_group'
+  
+    if actors.empty? || (group.nil? && !valid_exception)
       notification.destroy
       return { id: notification.id.to_s, invalid: true }
     end

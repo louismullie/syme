@@ -75,7 +75,8 @@ Notifications = (function(){
           message: data.message,
           link: notification.action == 'invite_request' ||
                 notification.action == 'invite_accept'  ||
-                notification.action == 'invite_cancel'
+                notification.action == 'invite_cancel'  ||
+                notification.action == 'delete_group'
             ? false : data.link
         }); 
 
