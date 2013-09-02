@@ -379,12 +379,12 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.deriveKeys = function(password, salt, generatedKeysCb) {
+  this.deriveKeys = function(password, salt, bits, generatedKeysCb) {
 
     Syme.Crypto.executeJobWithoutLock({
 
       method: 'deriveKeys',
-      params: [password, salt]
+      params: [password, salt, bits]
 
     }, generatedKeysCb);
 

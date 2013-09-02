@@ -4,7 +4,7 @@ Syme.Auth = {
     
     var user = new User();
     
-    var srp = new SRPClient(email);
+    var srp = new SRPClient(email, password); //, 2048);
 
     user.save(
 
@@ -19,7 +19,7 @@ Syme.Auth = {
         var credentialSalt = srp.randomHexSalt();
         
         // Derive authentication and keyfile encryption keys from password.
-        Syme.Crypto.deriveKeys(password, credentialSalt, function (keys) {
+        Syme.Crypto.deriveKeys(password, credentialSalt, 512, function (keys) {
 
           srp.password = keys.key1;
           
@@ -100,9 +100,12 @@ Syme.Auth = {
           var salt = data.salt;
           var sessionId = data.session_id;
 
-          Syme.Crypto.deriveKeys(password, salt, function (keys) {
-
-            srp.password = keys.key1;
+          var bits = data.compatibility ? 256 : 512;
+          var group = data.compatibility ? 1024 : 1024; // 2048
+          
+          Syme.Crypto.deriveKeys(password, salt, bits, function (keys) {
+            
+            var srp = new SRPClient(email, keys.key1, group);
 
             var B = new BigInteger(data.B, 16);
             var u = srp.calculateU(A, B);
@@ -146,8 +149,9 @@ Syme.Auth = {
                 // Non-deterministic Heisenbug with login
                 if (hack) {
 
-                  Syme.CurrentSession = {};
-                  Syme.Router.navigate('login');
+                  Syme.Auth.logout(function () {
+                    Syme.Router.navigate('login');
+                  });
 
                 } else {
 

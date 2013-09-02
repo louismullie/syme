@@ -118,7 +118,8 @@ put '/users', auth: [] do
     # Build the verifier with the salt.
     user.verifier = Verifier.new(
       salt:     model.verifier.salt,
-      content:  model.verifier.content
+      content:  model.verifier.content,
+      version:  1
     )
 
     track user, 'User completed registration'

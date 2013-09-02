@@ -48,9 +48,20 @@ post '/users/:user_id/sessions' do |_|
     verifier = user.verifier.content
     salt = user.verifier.salt
     
+    if user.verifier.version == 1
+      srp_bits = 1024 # 2048
+      compatibility = false
+    else
+      srp_bits = 1024
+      compatibility = true
+    end
+    
+    session[:srp_bits] = srp_bits
+    
     username = user.email
 
-    authenticator = SRP::Verifier.new(1024)
+    authenticator = SRP::Verifier.new(srp_bits)
+    
     p = [username, verifier, salt, params[:A]]
     
     srp = authenticator.get_challenge_and_proof(*p)
@@ -61,7 +72,8 @@ post '/users/:user_id/sessions' do |_|
     
     srp[:challenge].merge({
       csrf: csrf_token,
-      session_id: session.id.to_s
+      session_id: session.id.to_s,
+      compatibility: compatibility
     }).to_json
 
   end
@@ -78,7 +90,7 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     error 403, 'invalid_session'
   end
   
-  authenticator = SRP::Verifier.new(1024)
+  authenticator = SRP::Verifier.new(session[:srp_bits])
   
   h_amk = authenticator.verify_session(
     session[:proof], params[:M])

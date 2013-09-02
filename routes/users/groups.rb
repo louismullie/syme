@@ -97,7 +97,7 @@ put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
 
 end
 
-# Set group avatar.
+# Set group avatar. # UH OH!!!!
 post '/:group_id/avatar', auth: [] do
 
   group_id = params[:group_id]
