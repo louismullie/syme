@@ -206,8 +206,7 @@ FileManager = {
       thumbnailer.thumbnail({
         image: this, mime: file.type,
         width: 680, height: 500,
-        compression: 0.6
-      }, callback);
+        compression: 0.6 }, callback);
 
     };
 

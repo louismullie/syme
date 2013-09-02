@@ -5,14 +5,13 @@
     %i.icon-remove-sign
 
 .modal-content
-  %p.header
-    Enter the email address of the person you want to invite below.
-
-  %p.explanation
-    You can invite more than one person by entering one email per line.
 
   %form{ action: 'post' }
+  
     %textarea.autogrow{ name: 'emails', placeholder: "email@example.com" }
+
+    %p.explanation
+      You can invite more than one person by entering one email per line.
 
     %a.modal-button{ href: '#' }
       %span.invite
