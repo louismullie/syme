@@ -301,8 +301,13 @@ Syme.Binders.add('groups', { main: function() {
 
             // Callback when membership deletion succeeded.
             success: function () {
+              
               var user = Syme.CurrentSession.getUser();
-              user.deleteKeylist(groupId, Syme.Router.reset);
+              
+              user.deleteKeylist(groupId, function () {
+                Syme.Router.reset();
+              });
+              
             },
 
             // Callback when membership deletion failed.
