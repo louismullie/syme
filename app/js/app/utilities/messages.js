@@ -206,6 +206,11 @@ Syme.Messages = {
         resource: "group"
       },
       
+      remove_from_group: {
+        message: '%(actors)s was removed from %(resource)s',
+        resource: "group"
+      },
+      
       // Destructive operations - DO NOT LI
       delete_group: {
         message: '%(actors)s deleted %(resource)s',

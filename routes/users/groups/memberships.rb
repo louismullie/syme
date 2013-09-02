@@ -81,10 +81,16 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
 
     membership.destroy
     
+    if user_id == @user.id.to_s
+      action = :leave_group
+    else
+      action = :remove_from_group
+    end
+    
     group.users.each do |user|
 
       user.notify({
-        action: :leave_group,
+        action: action,
         create: { actor_ids: [ user_id ] }
       }, group)
       
