@@ -399,11 +399,17 @@ Crypto = {
     
     
   },
+  
+  decrypt: function (key, message) {
+    
+    return sjcl.decrypt(key, message);
+    
+  },
 
   decodeBase64ThenDecrypt: function (key, message) {
     
     // Base64-decode, then decrypt the resulting message.
-    return sjcl.decrypt(key, this.decodeBase64(message));
+    return this.decrypt(key, this.decodeBase64(message));
     
   },
 

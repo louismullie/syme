@@ -74,10 +74,13 @@ FileManager = {
             
             Syme.Crypto.decryptMessage(data.groupId,  keys, function (key) {
               
-              var decrypted = sjcl.decrypt(key, data.content);
-              var blob = ThumbPick.prototype.dataURItoBlob(decrypted);
-              
-              display(id, blob, false);
+              var decrypted = Syme.Crypto.decrypt(key, data.content, function (decrypted) {
+                
+                var blob = ThumbPick.prototype.dataURItoBlob(decrypted);
+
+                display(id, blob, false);
+                
+              });
 
             });
             

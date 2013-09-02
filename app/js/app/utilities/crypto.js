@@ -187,6 +187,16 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
+  this.decrypt = function (key, content, decryptedMessageCb) {
+    
+    Syme.Crypto.executeJobWithoutLock({
+      method: 'decrypt'
+    }, function (message) {
+      decryptedMessageCb(message);
+    });
+    
+  };
+  
   this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
 
     Syme.Crypto.executeJobWithoutLock({
