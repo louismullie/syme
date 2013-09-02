@@ -17,10 +17,9 @@ Syme.Binders.add('feed', { posts: function(){
   // Delete post
   $('#main').on('click', '.post-header a.post-delete', function() {
 
-      var post_id    = $(this).closest('.post').attr('id'),
-          group      = Syme.CurrentSession.getGroupId(),
-          route      = SERVER_URL + '/' + group + '/post/delete';
-
+      var postId    = $(this).closest('.post').attr('id');
+      var deletePostUrl = Syme.Url.fromCurrentGroup('posts', postId);
+      
       Confirm.show(
         'Do you really want to delete this post?',
         {
@@ -29,8 +28,34 @@ Syme.Binders.add('feed', { posts: function(){
           submit: 'Delete',
           cancel: 'Cancel',
 
-          onsubmit: function(){
-            $.post(route, { post_id: post_id });
+          onsubmit: function() {
+            
+            $.encryptedAjax(deletePostUrl, {
+              
+              type: 'DELETE',
+              
+              success: function () {
+                
+                if (ONE_PAGE_VIEW) {
+                  
+                  var userId = Syme.CurrentSession.getUserId(),
+                      groupId = Syme.CurrentSession.getGroupId();
+                  
+                  var route = Syme.Url.join('users', userId, 'groups', groupId);
+                  
+                  Syme.Router.navigate(route);
+                }
+                
+               // Syme.Socket.delete.post({ target: postId });
+                
+              },
+              
+              error: function (response) {
+                Syme.Error.ajaxError(response, 'delete', 'post');
+              }
+              
+            });
+            
           }
         }
       );

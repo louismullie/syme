@@ -1,5 +1,9 @@
 .row
   #feed-column
+  
+    // Hidden mentioned users input
+    %input#mentioned_users{ type: 'hidden', name: 'mentioned_users', :'data-list' => '{{mention_list}}' }
+  
     // Feed form
     {{#unless single_post}} {{> feed-form.hbs}} {{/unless}}
 

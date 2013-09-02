@@ -1,44 +1,28 @@
-# Delete post or comment.
-post '/:group_id/:model/delete', auth: [] do |group_id, model|
+delete '/users/:user_id/groups/:group_id/posts/:post_id', auth: [] do |user_id, group_id, post_id|
 
-  @group = Group.find(group_id)
-  
-  @group.touch
-
-  post_id = params[:post_id]
+  group = begin
+    @user.groups.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'group_not_found'
+  end
   
   post = begin
-    @group.complete_posts.find(post_id)
+    group.complete_posts.find(post_id)
   rescue Mongoid::Errors::DocumentNotFound
     error 404, 'post_not_found'
   end
   
-  comment_id = params[:comment_id]
-  
-  resource = if model == 'comment'
-    track @user, 'User deleted comment'
-    begin
-      post.complete_comments.find(comment_id)
-    rescue Mongoid::Errors::DocumentNotFound
-      error 404, 'comment_not_found'
-    end
-  else
-    track @user, 'User deleted post'
-    post
+  unless post.deletable_by?(@user)
+    error 403, 'unauthorized'
   end
-
-  is_resource_owner = resource.owner.id == @user.id
-
-  halt 403 unless resource.deletable_by? @user
   
-  resource.parent_group.users.each do |user|
+  group.touch
+  
+  group.users.each do |user|
     
     user.notifications.each do |notification|
       
-      if model == 'post' && notification.
-          post_id == resource.id.to_s ||
-         model == 'comment' && notification.
-          comment_id == resource.id.to_s
+      if notification.post_id == post_id
         notification.destroy
       end
       
@@ -48,9 +32,55 @@ post '/:group_id/:model/delete', auth: [] do |group_id, model|
     
   end
   
-  resource.destroy
+  post.destroy
   
-  encrypt_response(empty_response)
+  empty_response
+
+end
+
+delete '/users/:user_id/groups/:group_id/posts/:post_id/comments/:comment_id', auth: [] do |user_id, group_id, post_id, comment_id|
+
+  group = begin
+    @user.groups.find(group_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'group_not_found'
+  end
+  
+  post = begin
+    group.complete_posts.find(post_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'post_not_found'
+  end
+  
+  comment = begin
+    post.complete_comments.find(comment_id)
+  rescue Mongoid::Errors::DocumentNotFound
+    error 404, 'comment_not_found'
+  end
+
+  unless comment.deletable_by?(@user)
+    error 403, 'unauthorized'
+  end
+  
+  group.touch
+  
+  group.users.each do |user|
+    
+    user.notifications.each do |notification|
+      
+      if notification.comment_id == comment_id
+        notification.destroy
+      end
+      
+    end
+    
+    user.save!
+    
+  end
+  
+  comment.destroy
+  
+  empty_response
 
 end
 

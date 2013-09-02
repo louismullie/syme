@@ -309,7 +309,7 @@ Syme.Socket = {
       } else {
 
         if($comments.length <= 3) {
-          $showmore.data('expanded', false);
+          //$showmoreContainer.data('expanded', false); --> created bugs.
         }
 
       }

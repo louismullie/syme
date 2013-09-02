@@ -121,10 +121,11 @@ Syme.Binders.add('feed', { comments: function(){
   // Delete comment
   $('#main').on('click', '.comment-box a.comment-delete', function() {
 
-      var post_id    = $(this).closest('.post').attr('id'),
-          comment_id = $(this).closest('.comment-box').attr('id'),
-          group      = Syme.CurrentSession.getGroupId(),
-          route      = SERVER_URL + '/' + group + '/comment/delete';
+      var postId    = $(this).closest('.post').attr('id'),
+          commentId = $(this).closest('.comment-box').attr('id');
+      
+      var deleteCommentUrl = Syme.Url.fromCurrentGroup(
+        'posts', postId, 'comments', commentId);
 
       Confirm.show(
         'Do you really want to delete this comment?',
@@ -135,7 +136,21 @@ Syme.Binders.add('feed', { comments: function(){
           cancel: 'Cancel',
 
           onsubmit: function(){
-            $.post(route, { post_id: post_id, comment_id: comment_id });
+            
+            $.encryptedAjax(deleteCommentUrl, {
+              
+              type: 'DELETE',
+              
+              success: function () {
+                Syme.Socket.delete.comment({ target: commentId });
+              },
+              
+              error: function (response) {
+                Syme.Error.ajaxError(response, 'delete', 'comment');
+              }
+              
+            });
+            
           }
         }
       );

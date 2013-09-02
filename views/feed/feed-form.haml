@@ -20,9 +20,6 @@
   #textarea-holder
     %textarea{ name: 'content', maxlength: '5000', placeholder: "What's happening?" }
 
-  // Hidden encryption-related inputs
-  %input#mentioned_users{ type: 'hidden', name: 'mentioned_users', :'data-list' => '{{mention_list}}' }
-
   // Hidden upload-related inputs
   %input#upload_id{ type: 'hidden', name: 'upload_id' }
   %input#upload_file.hidden{ type: 'file' }
