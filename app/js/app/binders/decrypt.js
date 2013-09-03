@@ -53,16 +53,15 @@ Syme.Binders.add('global', { decrypt: function() {
       // Format the text with Markdown, and make sure links open in new windows.
       $content.find('a:not([href="#"])').attr('target', '_blank');
 
-      // Put commenter name and comment tools in first paragraph of comment
-      $content.filter('p:first-child').prepend(
-        $this.closest('.comment-box').find('a.commenter-name')
-      );
-
       $this
         // Output decrypted content
         .html( $content )
         // Transform the .encrypted into .collapsable
-        .removeClass('encrypted hidden').addClass('collapsable');
+        .removeClass('encrypted').addClass('collapsable');
+
+      // Put commenter name and comment tools in first paragraph of comment
+      $this.closest('.comment-box').find('a.commenter-name')
+        .prependTo( $this.find('p:first-child') );
 
       // Collapse long posts.
       Syme.Helpers.collapseHTML(5, 'Read more');
@@ -72,6 +71,9 @@ Syme.Binders.add('global', { decrypt: function() {
 
       // Format dynamic timestamps.
       $post.find('time.timeago').timeago();
+
+      // Show encrypted text
+      $this.removeClass('hidden');
 
       // Format comment textarea.
       $post.find('textarea').trigger('format');
@@ -175,7 +177,7 @@ Syme.Binders.add('global', { decrypt: function() {
 
       done();
     };
-    
+
     // Decrypt and place media
     FileManager.getFile(mediaId, keys, callback, groupId);
 
