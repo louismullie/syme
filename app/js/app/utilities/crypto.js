@@ -9,14 +9,7 @@ Syme.Crypto = function (workerUrl) {
   this.batchDecrypt = function(callback, collection){
 
     // Default callback
-    var callback = callback || function(){};
-
-    // Cleanup / fix
-    if (ONE_PAGE_VIEW) {
-      $.each($('.comment-hidden'), function (ind, comment) {
-        $(comment).removeClass('comment-hidden');
-      });
-    }
+    var callback = callback || $.noop;
 
     // Default collection
     var collection = collection || $([
@@ -44,12 +37,6 @@ Syme.Crypto = function (workerUrl) {
       // Sync slave avatars
       $('.slave-avatar').trigger('sync');
 
-      // Remove hidden class on posts
-      $('.post').removeClass('hidden');
-
-      // Textarea autosizing
-      $('textarea.autogrow').autogrow();
-
       // Hide spinner
       NProgress.done();
 
@@ -58,7 +45,7 @@ Syme.Crypto = function (workerUrl) {
         ' items in ' + elapsedTime/1000 + 's', $(this)
       );*/
 
-      callback.call(this);
+      callback.call(this, elapsedTime);
 
     });
 
@@ -188,15 +175,15 @@ Syme.Crypto = function (workerUrl) {
   };
 
   this.decrypt = function (key, content, decryptedMessageCb) {
-    
+
     Syme.Crypto.executeJobWithoutLock({
       method: 'decrypt'
     }, function (message) {
       decryptedMessageCb(message);
     });
-    
+
   };
-  
+
   this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
 
     Syme.Crypto.executeJobWithoutLock({

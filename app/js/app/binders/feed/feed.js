@@ -31,7 +31,7 @@ Syme.Binders.add('feed', { feed: function(){
            .data('infinite-scroll-async', false)
            .data('infinite-scroll-manual', false);
 
-  $(window).on('scroll', function(){
+  $(window).on('scroll infinitescroll.trigger', function(){
 
     if( $(window).data('infinite-scroll-done'  )  ||
         $(window).data('infinite-scroll-async' )  ||
@@ -69,7 +69,7 @@ Syme.Binders.add('feed', { feed: function(){
 
       var groupId = Syme.CurrentSession.getGroupId();
       var url = SERVER_URL + '/' + groupId + '/page';
-      
+
       $.post(url, request, function(data){
 
         var lastPage = data.last_page,
@@ -93,31 +93,22 @@ Syme.Binders.add('feed', { feed: function(){
 
           }
 
-          if (lastPage) {
+          // Please Chris, look at this
+          $('#feed .post').last().css({ 'border-bottom': 'none' });
 
-            // If all pages are loaded, disable infinite scrolling
-            $(window).data('infinite-scroll-done', true);
+          // If all pages are loaded, disable infinite scrolling
+          $(window).data('infinite-scroll-done', lastPage ? 'hide' : 'show');
 
-            // Please Chris, look at this
-            $('#feed .post').last().css({ 'border-bottom': 'none' });
+          // Decrypt new content
+          Syme.Crypto.batchDecrypt(function() {
 
-            // Decrypt new content
-            Syme.Crypto.batchDecrypt(function () {
-              $('#load-more').hide();
-            });
+            // Show decrypted posts
+            this.closest('.post').removeClass('hidden');
 
-          } else {
+            // Show or hide load-more
+            $('#load-more').hide();
 
-            // Please Chris, look at this
-            $('#feed .post').last().css({ 'border-bottom': '1px solid #ddd' });
-
-
-            // Decrypt new content
-            Syme.Crypto.batchDecrypt(function () {
-              $('#load-more').show();
-            });
-
-          }
+          });
 
         } else {
 
@@ -130,7 +121,7 @@ Syme.Binders.add('feed', { feed: function(){
 
       }).complete(function(){
 
-        // Retrieve lock after AJAX request
+        // Release lock after AJAX request
         $(window).data('infinite-scroll-async', false);
 
       });
@@ -140,6 +131,7 @@ Syme.Binders.add('feed', { feed: function(){
 
   // Load more button
   $('#main').on('click', '#load-more a', function(e){
+
     e.preventDefault();
 
     // Hide load-more container
@@ -148,7 +140,7 @@ Syme.Binders.add('feed', { feed: function(){
     // Unlock infinite scrolling and load page
     $(window)
       .data('infinite-scroll-manual', false)
-      .trigger('scroll');
+      .trigger('infinitescroll.trigger');
 
   });
 
