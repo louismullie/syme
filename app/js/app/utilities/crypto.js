@@ -16,6 +16,7 @@ Syme.Crypto = function (workerUrl) {
 
       // Feed elements
       '.encrypted:not(.hidden)',
+      '[data-single-post="true"] .encrypted',
       '.encrypted-image:not([data-decrypted="true"])',
       '.encrypted-audio:not([data-decrypted="true"])',
       '.encrypted-video:not([data-decrypted="true"])',
