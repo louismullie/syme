@@ -1,4 +1,4 @@
-.comment-box{id: '{{id}}', class: '{{hidden}}'}
+.comment-box{ id: '{{id}}', class: '{{hidden}}', :'data-timestamp' => '{{created_at}}' }
   -# Avatar
   {{#with commenter}} {{> feed-avatar.hbs}} {{/with}}
 
@@ -20,14 +20,14 @@
 
     %a.time{ href: '#' }
       %time.timeago{ datetime: '{{created_at}}' }
-    
+
     %span &middot;
 
     // Like action
     %a{ href: '#', class: 'like-action {{#if likeable.liked_by_user}}active{{/if}}' }<
       %span.default-text> Like
       %span.active-text Unlike
-    
+
     // Like count
     %span{ partial: 'feed-like-count' }
       {{> feed-like-count.hbs}}

@@ -67,13 +67,13 @@ Syme.Binders.add('feed', { comments: function(){
 
             // Reset textarea
             $textarea.trigger('reset');
-            
+
             NProgress.showSpinner();
-            
+
             Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
               var updateCommentUrl = Syme.Url.join(createCommentUrl, comment.id);
-              
+
               $.encryptedAjax(updateCommentUrl, {
 
                 type: 'PUT',
@@ -81,15 +81,15 @@ Syme.Binders.add('feed', { comments: function(){
                 data: { content: encryptedMessage },
 
                 success: function () {
-                  
+
                   NProgress.hideSpinner();
-                  
+
                   $textarea.data('active', false);
-                  
+
                 },
 
                 error: function () {
-                  
+
                   // PUT failed
                   Alert.show(Syme.Messages.error.postingFailed);
                   NProgress.hideSpinner();
@@ -123,7 +123,7 @@ Syme.Binders.add('feed', { comments: function(){
 
       var postId    = $(this).closest('.post').attr('id'),
           commentId = $(this).closest('.comment-box').attr('id');
-      
+
       var deleteCommentUrl = Syme.Url.fromCurrentGroup(
         'posts', postId, 'comments', commentId);
 
@@ -136,48 +136,87 @@ Syme.Binders.add('feed', { comments: function(){
           cancel: 'Cancel',
 
           onsubmit: function(){
-            
+
             $.encryptedAjax(deleteCommentUrl, {
-              
+
               type: 'DELETE',
-              
+
               success: function () {
                 Syme.Socket.delete.comment({ target: commentId });
               },
-              
+
               error: function (response) {
                 Syme.Error.ajaxError(response, 'delete', 'comment');
               }
-              
+
             });
-            
+
           }
         }
       );
 
   });
 
+  // Organize, collapse and decrypt comments, updating counts
+  // TODO: DECRYPT BEFORE SHOWING
+  $('#main').on('organize', '.comments', function(e){
+
+    var $this             = $(this),
+        $comments         = $this.find('.comment-box');
+
+    // Sort by timestamp
+    $comments.detach().sort(function(a, b) {
+
+      // Get timestamps of compared elements
+      a = new Date( $(a).attr('data-timestamp') );
+      b = new Date( $(b).attr('data-timestamp'));
+
+      // Order chronogically
+      return a < b ? -1 : a > b ? 1 : 0;
+
+    }).appendTo( $this );
+
+    var collapseAfter     = !!$this.data('expanded') ? Infinity : 3,
+        commentsCount     = $comments.length;
+
+    // Show or hide each comment
+    $comments.each(function(i){
+
+      var action = i > commentsCount - collapseAfter - 1 ?
+        'removeClass' : 'addClass';
+
+      $(this)[action]('hidden');
+
+    });
+
+    // Decrypt encrypted comments
+    var $encryptedComments = $comments.not('.hidden').find('.encrypted');
+    Syme.Crypto.batchDecrypt($.noop, $encryptedComments);
+
+    // Show or hide show-more count, and update it
+    var hiddenCommentsCount = $comments.filter('.hidden').length;
+    $this.find('.show-more')[
+      hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
+    ]('hidden').find('span').html(hiddenCommentsCount);
+
+    // Update global comment count in post
+    $this.closest('.post').find('[partial="feed-comment-count"]')
+      .renderHbsTemplate({ comment_count: commentsCount });
+
+    // Show or hide textarea
+    $(this)[
+      commentsCount > 0 ? 'removeClass' : 'addClass'
+    ]('no-comments');
+
+  });
+
   // Show more comments
   $('#main').on('click', '.show-more a', function(e){
 
-    var $collection       = $(this).closest('.comments')
-        $hidden_comments  = $collection.find('.comment-box.hidden');
+    $(this).closest('.comments')
+      .data('expanded', true)
+      .trigger('organize');
 
-    Syme.Crypto.batchDecrypt(function(){
-
-      // Show comment box and textarea if they are hidden
-      $collection.removeClass('no-comments');
-
-      // Show decrypted comments
-      $hidden_comments.removeClass('hidden');
-
-      $collection.find('.show-more')
-        // Add expanded state
-        .data('expanded', true)
-        // Hide show more link
-        .addClass('hidden');
-
-    }, $hidden_comments.find('.encrypted'));
   });
 
 } }); // Syme.Binders.add();

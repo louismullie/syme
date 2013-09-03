@@ -90,7 +90,7 @@ Syme.Socket = {
 
       // Just return if the post has already been displayed.
       if ($('#' + post.view.id).length > 0) return;
-      
+
       // Remove empty group notice if there is one
       $('#empty-group-notice').remove();
 
@@ -118,46 +118,23 @@ Syme.Socket = {
 
     comment: function(data){
 
+      var $post             = $('#' + data.target),
+          $commentContainer = $post.find('.comments'),
+          $comment          = $('#' + data.view.id);
+
       // If related post doesn't exist, increment new content
-      if(!$('#' + data.target).length)
+      if(!$post.length)
         return Syme.Helpers.newContent('comment', data.view.group_id);
 
       // Just return if the comment has already been displayed.
-      if ($('#' + data.view.id).length > 0) return;
-
-      var $post              = $('#' + data.target),
-          $commentContainer  = $post.find('.comments'),
-          $showmoreContainer = $commentContainer.find('.show-more'),
-          $displayedComments = $commentContainer.find('.comment-box').not('.hidden');
-
-      // Show textarea if it was hidden
-      $commentContainer.removeClass('no-comments');
-
-      // If comments are still collapsed and they are full
-      if( !$showmoreContainer.data('expanded') && $displayedComments.length >= 3 ){
-
-        // Hide first displayed comment
-        $displayedComments.first().addClass('hidden');
-
-        // Show showmore
-        $showmoreContainer.removeClass('hidden');
-
-        // Update count
-        $showmoreContainer.find('span')
-          .html( $commentContainer.find('.comment-box.hidden').length );
-
-      }
+      if ($comment.length > 0)
+        return;
 
       // Append new comment
       var commentTemplate = Syme.Template.render('feed-comment', data.view);
       $commentContainer.append( commentTemplate );
 
-      // Decrypt
-      Syme.Crypto.batchDecrypt();
-
-      // Update comment count counter
-      $post.find('[partial="feed-comment-count"]')
-        .renderHbsTemplate({ comment_count: $post.find('.comment-box').length });
+      $commentContainer.trigger('organize');
 
     },
 
@@ -271,56 +248,8 @@ Syme.Socket = {
       // Remove comment
       $comment.remove();
 
-      // Create collections after removal of comment
-      var $comments           = $commentContainer.find('.comment-box'),
-          $commentsHidden     = $comments.filter('.hidden'),
-          $showmoreContainer  = $commentContainer.find('.show-more');
-
-      // If comments are still collapsed
-      if($showmoreContainer.is(':visible')){
-
-        // If the removed comment was visible
-        if($comments.not('.hidden').length < 3){
-
-          // Make the last hidden comment visible
-          var $lastComment = $commentsHidden.last();
-
-          // Decrypt it
-          Syme.Crypto.batchDecrypt(function(){
-            // Show it when decrypted
-            $lastComment.removeClass('hidden');
-          }, $lastComment.find('.encrypted'));
-
-          // Update hidden comments collection
-          $commentsHidden = $comments.filter('.hidden');
-
-        }
-
-        // If there are still hidden comments
-        if($commentsHidden.length){
-          // Update show-more
-          $showmoreContainer.find('span')
-            .html($commentsHidden.length);
-        }else{
-          // Otherwise, hide show-more
-          $showmoreContainer.addClass('hidden');
-        }
-
-      } else {
-
-        if($comments.length <= 3) {
-          //$showmoreContainer.data('expanded', false); --> created bugs.
-        }
-
-      }
-
-      if($comments.length <= 0) {
-        $commentContainer.addClass('no-comments');
-      }
-
-      // Reset comment count counter
-      $commentContainer.closest('.post').find('[partial="feed-comment-count"]')
-        .renderHbsTemplate({ comment_count: $comments.length });
+      // Organize comments
+      $commentContainer.trigger('organize');
 
     },
 
@@ -335,7 +264,7 @@ Syme.Socket = {
       Notifications.reset();
       Notifications.fetch();
 
-      if (Syme.Router.insideGroup() && 
+      if (Syme.Router.insideGroup() &&
           Syme.CurrentSession.getGroupId() == groupId);
         Syme.Router.navigate('');
 
