@@ -158,7 +158,6 @@ Syme.Binders.add('feed', { comments: function(){
   });
 
   // Organize, collapse and decrypt comments, updating counts
-  // TODO: DECRYPT BEFORE SHOWING
   $('#main').on('organize', '.comments', function(e){
 
     var $this             = $(this),
@@ -169,44 +168,61 @@ Syme.Binders.add('feed', { comments: function(){
 
       // Get timestamps of compared elements
       a = new Date( $(a).attr('data-timestamp') );
-      b = new Date( $(b).attr('data-timestamp'));
+      b = new Date( $(b).attr('data-timestamp') );
 
       // Order chronogically
       return a < b ? -1 : a > b ? 1 : 0;
 
     }).appendTo( $this );
 
-    var collapseAfter     = !!$this.data('expanded') ? Infinity : 3,
-        commentsCount     = $comments.length;
+    var collapseAfter = !!$this.data('expanded') ? Infinity : 3,
+        commentsCount = $comments.length,
+        $toDecrypt    = $();
 
-    // Show or hide each comment
+    // Show (and potentially decrypt) or hide each comment
     $comments.each(function(i){
 
-      var action = i > commentsCount - collapseAfter - 1 ?
-        'removeClass' : 'addClass';
+      var $comment = $(this);
 
-      $(this)[action]('hidden');
+      // Does comment needs to be hidden?
+      if ( i <= commentsCount - collapseAfter - 1 )
+        return $comment.addClass('hidden');
+
+      // Does the comment need to be decrypted?
+      if ( $comment.find('.encrypted').length ) {
+        // If it's encrypted, add to collection to $toDecrypt
+        $toDecrypt = $toDecrypt.add( $comment );
+      } else {
+        // Otherwise, just show
+        $comment.removeClass('hidden');
+      }
 
     });
 
-    // Decrypt encrypted comments
-    var $encryptedComments = $comments.not('.hidden').find('.encrypted');
-    Syme.Crypto.batchDecrypt($.noop, $encryptedComments);
+    // Decrypt encrypted comments to decrypt
+    Syme.Crypto.batchDecrypt(function(){
 
-    // Show or hide show-more count, and update it
-    var hiddenCommentsCount = $comments.filter('.hidden').length;
-    $this.find('.show-more')[
-      hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
-    ]('hidden').find('span').html(hiddenCommentsCount);
+      // Show decrypted comments
+      $(this).each(function(){
+        $(this).closest('.comment-box').removeClass('hidden')
+      });
 
-    // Update global comment count in post
-    $this.closest('.post').find('[partial="feed-comment-count"]')
-      .renderHbsTemplate({ comment_count: commentsCount });
+      // Show or hide show-more count, and update it
+      var hiddenCommentsCount = $comments.filter('.hidden').length;
+      $this.find('.show-more')[
+        hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
+      ]('hidden').find('span').html(hiddenCommentsCount);
 
-    // Show or hide textarea
-    $(this)[
-      commentsCount > 0 ? 'removeClass' : 'addClass'
-    ]('no-comments');
+      // Update global comment count in post
+      $this.closest('.post').find('[partial="feed-comment-count"]')
+        .renderHbsTemplate({ comment_count: commentsCount });
+
+      // Show or hide textarea
+      $(this)[
+        commentsCount > 0 ? 'removeClass' : 'addClass'
+      ]('no-comments');
+
+    }, $toDecrypt.find('.encrypted'));
 
   });
 
