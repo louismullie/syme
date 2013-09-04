@@ -119,9 +119,9 @@ Syme.Socket = {
           .closest('.post')
           .removeClass('hidden');
           
-      } else {
-        Syme.Crypto.batchDecrypt();
       }
+      
+      Syme.Crypto.batchDecrypt();
 
     },
 
