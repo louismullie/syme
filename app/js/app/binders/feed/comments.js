@@ -198,16 +198,24 @@ Syme.Binders.add('feed', { comments: function(){
       }
 
     });
-
-    // Decrypt encrypted comments to decrypt
-    Syme.Crypto.batchDecrypt(function(){
+    
+    var showComments = function(){
 
       // Show decrypted comments
       $(this).each(function(){
         $(this).closest('.comment-box').removeClass('hidden')
       });
 
-    }, $toDecrypt.find('.encrypted'));
+    };
+    
+    // Decrypt encrypted comments to decrypt
+    var encryptedComments = $toDecrypt.find('.encrypted');
+    
+    if( encryptedComments.length ) {
+      Syme.Crypto.batchDecrypt(showComments, encryptedComments);
+    } else {
+      showComments();
+    }
 
     var hiddenCommentsCount = $comments.filter('.hidden').length;
 
