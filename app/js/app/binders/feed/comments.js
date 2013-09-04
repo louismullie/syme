@@ -198,7 +198,7 @@ Syme.Binders.add('feed', { comments: function(){
       }
 
     });
-    
+
     var showComments = function(){
 
       // Show decrypted comments
@@ -206,23 +206,23 @@ Syme.Binders.add('feed', { comments: function(){
         $(this).closest('.comment-box').removeClass('hidden')
       });
 
+      var hiddenCommentsCount = $comments.find('.hidden').length;
+
+      // Show or hide show-more count, and update it
+      $this.find('.show-more')[
+        hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
+      ]('hidden').find('span').html(hiddenCommentsCount);
+
     };
-    
+
     // Decrypt encrypted comments to decrypt
     var encryptedComments = $toDecrypt.find('.encrypted');
-    
+
     if( encryptedComments.length ) {
       Syme.Crypto.batchDecrypt(showComments, encryptedComments);
     } else {
       showComments();
     }
-
-    var hiddenCommentsCount = $comments.filter('.hidden').length;
-
-    // Show or hide show-more count, and update it
-    $this.find('.show-more')[
-      hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
-    ]('hidden').find('span').html(hiddenCommentsCount);
 
     // Update global comment count in post
     $this.closest('.post').find('[partial="feed-comment-count"]')
