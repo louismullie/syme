@@ -63,7 +63,7 @@ Syme.Binders.add('feed', { comments: function(){
 
             Syme.Socket.create.comment({
               target: postId, view: comment
-            });
+            }, true);
 
             // Reset textarea
             $textarea.trigger('reset');

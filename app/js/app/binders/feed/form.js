@@ -76,7 +76,7 @@ Syme.Binders.add('feed', { form: function(){
           post.content = message;
           post.encrypted = false;
 
-          Syme.Socket.create.post({ view: post });
+          Syme.Socket.create.post({ view: post }, true);
 
           // Reset uploads & attachments
           $form.find('#upload_id').val('');

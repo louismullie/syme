@@ -83,8 +83,8 @@ Syme.Socket = {
 
   create: {
 
-    post: function(post){
-
+    post: function(post, decrypted){
+      
       // Don't display a post in the wrong group
       if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
 
@@ -112,11 +112,20 @@ Syme.Socket = {
       template.insertAfter($('#newcontent'));
 
       // Decrypt
-      Syme.Crypto.batchDecrypt();
+      if(decrypted){
+        
+        template.find('.encrypted')
+          .trigger('decrypt')
+          .closest('.post')
+          .removeClass('hidden');
+          
+      } else {
+        Syme.Crypto.batchDecrypt();
+      }
 
     },
 
-    comment: function(data){
+    comment: function(data, decrypted){
 
       var $post             = $('#' + data.target),
           $commentContainer = $post.find('.comments'),
@@ -131,8 +140,13 @@ Syme.Socket = {
         return;
 
       // Append new comment
-      var commentTemplate = Syme.Template.render('feed-comment', data.view);
-      $commentContainer.append( commentTemplate );
+      var $commentTemplate = $(Syme.Template.render('feed-comment', data.view));
+      
+      if (decrypted) {
+        $commentTemplate.find('.encrypted').trigger('decrypt');
+      }
+      
+      $commentContainer.append( $commentTemplate );
 
       $commentContainer.trigger('organize');
 
