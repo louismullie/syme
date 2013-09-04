@@ -207,22 +207,23 @@ Syme.Binders.add('feed', { comments: function(){
         $(this).closest('.comment-box').removeClass('hidden')
       });
 
-      // Show or hide show-more count, and update it
-      var hiddenCommentsCount = $comments.filter('.hidden').length;
-      $this.find('.show-more')[
-        hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
-      ]('hidden').find('span').html(hiddenCommentsCount);
-
-      // Update global comment count in post
-      $this.closest('.post').find('[partial="feed-comment-count"]')
-        .renderHbsTemplate({ comment_count: commentsCount });
-
-      // Show or hide textarea
-      $(this)[
-        commentsCount > 0 ? 'removeClass' : 'addClass'
-      ]('no-comments');
-
     }, $toDecrypt.find('.encrypted'));
+
+    var hiddenCommentsCount = $comments.filter('.hidden').length;
+
+    // Show or hide show-more count, and update it
+    $this.find('.show-more')[
+      hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
+    ]('hidden').find('span').html(hiddenCommentsCount);
+
+    // Update global comment count in post
+    $this.closest('.post').find('[partial="feed-comment-count"]')
+      .renderHbsTemplate({ comment_count: commentsCount });
+
+    // Show or hide textarea
+    $(this)[
+      commentsCount > 0 ? 'removeClass' : 'addClass'
+    ]('no-comments');
 
   });
 
