@@ -17,9 +17,9 @@ Notifications = (function(){
         this.collection.on('add', this.render, this);
       }, this);
     },
-    
+
     generateNotificationText: function (data) {
-  
+
       var action = data.action;
 
       if (!action) throw 'Undefined notification action.';
@@ -49,9 +49,9 @@ Notifications = (function(){
       });
 
       return { message: message, link: link };
-        
+
     },
-    
+
     render: function() {
 
       var _this = this;
@@ -68,7 +68,7 @@ Notifications = (function(){
       var notifications = _.map(notifications, function(notification){
 
         notification = notification.attributes;
-        
+
         var data = _this.generateNotificationText(notification);
 
         return _.extend(notification, {
@@ -78,7 +78,7 @@ Notifications = (function(){
                 notification.action == 'invite_cancel'  ||
                 notification.action == 'delete_group'
             ? false : data.link
-        }); 
+        });
 
       });
 
@@ -88,14 +88,14 @@ Notifications = (function(){
       // Render all notifications into element
       _this.$el.html( Syme.Template.render('notification',
         { notifications: notifications }) );
-      
+
       // Update notification count in title, navbar and extension badge.
       Notifications.showBadge(selector.length);
 
     },
 
     events: {
-      "click a.notification-link":  "markAsRead",
+      "click a.notification-link":    "markAsRead",
       "click a.accept-invitation":    "acceptInvitation",
       "click a.decline-invitation":   "declineInvitation",
       "click a.confirm-invitation":   "confirmInvitation",
@@ -108,7 +108,7 @@ Notifications = (function(){
       var notification = this.collection.findWhere({ id: id });
 
       notification.save({ read: true }, { patch: true });
-      
+
     },
 
     acceptInvitation: function (e) {
@@ -133,6 +133,28 @@ Notifications = (function(){
       var $this = $(e.currentTarget);
       $('.popover').hide();
       Invitation.cancelInvitationRequest($this);
+    },
+
+    // clearNotifications event is binded in jQuery because
+    // it is outside of the notifications container
+    clearNotifications: function () {
+
+      var deleteNotificationsUrl = Syme.Url.fromCurrentUser('notifications');
+
+      $.encryptedAjax(deleteNotificationsUrl, {
+
+        type: 'DELETE',
+
+        success: function () {
+          Notifications.reset();
+          Notifications.fetch();
+        },
+
+        error: function (response) {
+          Syme.Error.ajaxError(response, 'clear', 'notification');
+        }
+
+      });
     }
 
   });
@@ -148,7 +170,7 @@ Notifications = (function(){
 
     // Call this when the DOM is loaded and Syme.CurrentSession is available
     start: function(){
-      
+
       var userId = Syme.CurrentSession.getUserId();
       this.url = SERVER_URL + "/users/" + userId + "/notifications";
       this.view.setElement( $('#notifications-content') );
@@ -156,10 +178,10 @@ Notifications = (function(){
       // Fetch notifications
       this.fetch({ reset: true });
     },
-    
+
     // Show notification count in title, navbar and browser bar badges.
     showBadge: function (count) {
-       
+
       // Update notification count in the document title.
       var title = (count == '' ? 'Syme' : '(' + count + ') Syme');
       document.title = title;
@@ -169,7 +191,7 @@ Notifications = (function(){
 
       // Update notification count in extension bar.
       if (Syme.Compatibility.inChromeExtension()) {
-  
+
         var formattedCount = count == 0 ? '' : count.toString();
 
         chrome.browserAction.setBadgeBackgroundColor({color: '#ff0011'});
@@ -178,17 +200,17 @@ Notifications = (function(){
       }
 
     },
-    
+
     // Hide badge in extension bar.
     hideBadge: function () {
-      
+
       // Reset notification counter.
       if (Syme.Compatibility.inChromeExtension()) {
         chrome.browserAction.setBadgeText({ text: '' });
       }
-      
+
     }
-    
+
   });
 
   // Build self-referring MVC

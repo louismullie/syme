@@ -2,7 +2,7 @@ Syme.Binders.add('global', { main: function(){
 
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
-    
+
     e.stopPropagation();
 
     // Get container from attributes
@@ -62,26 +62,7 @@ Syme.Binders.add('global', { main: function(){
       $(this).closest('form').submit();
   });
 
-  $(document).on('click', '.clear-notifications', function (e) {
-
-    var deleteNotificationsUrl = Syme.Url.fromCurrentUser('notifications');
-    
-    $.encryptedAjax(deleteNotificationsUrl, {
-
-      type: 'DELETE',
-
-      success: function () {
-        Notifications.reset();
-        Notifications.fetch();
-      },
-
-      error: function () {
-        alert('Could not clear notifications.');
-      }
-
-    });
-
-  });
+  $(document).on('click', '.clear-notifications', Notifications.view.clearNotifications);
 
   // Background image decryption
   $(document).on('decrypt', '.encrypted-background-image', function(e, done){
