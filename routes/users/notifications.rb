@@ -57,11 +57,11 @@ delete '/users/:user_id/notifications', auth: [] do |user_id|
   end
   
   # Prevent invite request and confirm from clearing.
-  permanent = [:invite_request, :invite_accept]
+  permanent = ['invite_request', 'invite_accept']
   
   # Mark all the user's notifications as read.
   @user.notifications.each do |notification|
-    next if permanent.include?(notification.action)
+    next if permanent.include?(notification.action.to_s)
     notification.update_attributes(read: true)
   end
   
