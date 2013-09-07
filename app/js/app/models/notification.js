@@ -133,28 +133,6 @@ Notifications = (function(){
       var $this = $(e.currentTarget);
       $('.popover').hide();
       Invitation.cancelInvitationRequest($this);
-    },
-
-    // clearNotifications event is binded in jQuery because
-    // it is outside of the notifications container
-    clearNotifications: function () {
-
-      var deleteNotificationsUrl = Syme.Url.fromCurrentUser('notifications');
-
-      $.encryptedAjax(deleteNotificationsUrl, {
-
-        type: 'DELETE',
-
-        success: function () {
-          Notifications.reset();
-          Notifications.fetch();
-        },
-
-        error: function (response) {
-          Syme.Error.ajaxError(response, 'clear', 'notification');
-        }
-
-      });
     }
 
   });
@@ -208,6 +186,27 @@ Notifications = (function(){
       if (Syme.Compatibility.inChromeExtension()) {
         chrome.browserAction.setBadgeText({ text: '' });
       }
+
+    },
+
+    clearAll: function () {
+
+      var deleteNotificationsUrl = Syme.Url.fromCurrentUser('notifications');
+
+      $.encryptedAjax(deleteNotificationsUrl, {
+
+        type: 'DELETE',
+
+        success: function () {
+          Notifications.reset();
+          Notifications.fetch();
+        },
+
+        error: function (response) {
+          Syme.Error.ajaxError(response, 'clear', 'notification');
+        }
+
+      });
 
     }
 

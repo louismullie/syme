@@ -62,7 +62,7 @@ Syme.Binders.add('global', { main: function(){
       $(this).closest('form').submit();
   });
 
-  $(document).on('click', '.clear-notifications', Notifications.view.clearNotifications);
+  $(document).on('click', '.clear-notifications', Notifications.clearAll);
 
   // Background image decryption
   $(document).on('decrypt', '.encrypted-background-image', function(e, done){
