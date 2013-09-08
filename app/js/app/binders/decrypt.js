@@ -44,12 +44,6 @@ Syme.Binders.add('global', { decrypt: function() {
       // Format dynamic timestamps.
       $this.find('time.timeago').timeago();
 
-      // Show encrypted text
-      $this.removeClass('hidden');
-
-      // Format comment textarea.
-      $this.find('textarea').trigger('format');
-
     },
 
     // Decryption
@@ -62,22 +56,25 @@ Syme.Binders.add('global', { decrypt: function() {
           text          = $collapsable.text().replace(/^\s+|\s+$/g, ''),
           groupId       = $this.closest('.post').data('group_id');
 
+      // Fault tolerance to prevent JSON.parse from failing
+      if (!text.length) return;
+
+      /* LOUIS: TO ADD DIRECTLY IN Syme.Crypto.decryptMessage */
+
       // Check that keys exist for current user.
       var userId  = Syme.CurrentSession.getUserId(),
           message = JSON.parse($.base64.decode(text));
 
-
       // Throw exception if they don't.
-      // LOUIS: BETTER ERROR HANDLING HERE? IS IT FATAL?
       if (message.keys[userId] == undefined) {
         $collapsable.html('_This message could not be decrypted._');
         return done();
       }
 
+      /* ---------------- */
+
       // Decrypt message
       Syme.Crypto.decryptMessage(groupId, text, function(decryptedText){
-
-        debugger;
 
         // Retrieve the new key and reload if key is missing.
         if (decryptedText.error && decryptedText.error.missingKey) {

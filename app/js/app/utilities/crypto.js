@@ -25,29 +25,44 @@ Syme.Crypto = function (workerUrl) {
 
     ].join(','));
 
-    if (collection.length == 0)
-      return;
+    var decryptCounter = new Syme.Countable(
 
-    // Show spinner
-    NProgress.start();
+      collection, _this.decryptCallback,
 
-    // Initial decryption
-    collection.batchDecrypt(function(elapsedTime){
+      function (elapsedTime) {
+        _this.doneDecryptingCallback(callback);
+      }
+
+    );
+
+    // Trigger decrypt on every element
+    collection.trigger('decrypt', decryptCounter.increment);
+
+  };
+
+  this.decryptCallback = function (index, length) {
+
+      // Set progress bar
+      NProgress.set( index / length );
+
+  };
+
+  this.doneDecryptingCallback = function (finalCallback) {
 
       // Sync slave avatars
       $('.slave-avatar').trigger('sync');
 
+      // Show decrypted posts
+      $('.post').removeClass('hidden');
+
+      // Format textareas
+      $('textarea').trigger('format');
+
       // Hide spinner
       NProgress.done();
 
-      /*console.log(
-        'Done decrypting collection of ' + this.length +
-        ' items in ' + elapsedTime/1000 + 's', $(this)
-      );*/
-
-      callback.call(this, elapsedTime);
-
-    });
+      // Callback for batchDecrypt
+      finalCallback();
 
   };
 
