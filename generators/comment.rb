@@ -17,6 +17,7 @@ class CommentGenerator
     {
 
       id:         comment.id.to_s,
+      post_id:    comment.post.id.to_s,
       group_id:   comment.parent_group.id.to_s,
       content:    content,
       full_time:  generate_timestamp(comment),

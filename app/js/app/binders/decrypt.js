@@ -70,7 +70,10 @@ Syme.Binders.add('global', { decrypt: function() {
       $this.find('.post-content').oembed();
 
       // Format dynamic timestamps.
-      $post.find('time.timeago').timeago();
+      $this.find('time.timeago').timeago();
+      
+      $this.closest('.post-comments')
+        .find('time.timeago').timeago();
 
       // Show encrypted text
       $this.removeClass('hidden');

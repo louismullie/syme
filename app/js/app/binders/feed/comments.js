@@ -212,7 +212,9 @@ Syme.Binders.add('feed', { comments: function(){
       $this.find('.show-more')[
         hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
       ]('hidden').find('span').html(hiddenCommentsCount);
-
+      
+      $this.find('time.timeago').timeago();
+      
     };
 
     // Decrypt encrypted comments to decrypt
