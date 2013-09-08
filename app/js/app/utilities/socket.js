@@ -84,7 +84,7 @@ Syme.Socket = {
   create: {
 
     post: function(post, decrypted){
-      
+
       // Don't display a post in the wrong group
       if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
 
@@ -113,14 +113,14 @@ Syme.Socket = {
 
       // Decrypt
       if(decrypted){
-        
+
         template.find('.encrypted')
           .trigger('decrypt')
           .closest('.post')
           .removeClass('hidden');
-          
+
       }
-      
+
       Syme.Crypto.batchDecrypt();
 
     },
@@ -141,11 +141,11 @@ Syme.Socket = {
 
       // Append new comment
       var $commentTemplate = $(Syme.Template.render('feed-comment', data.view));
-      
+
       if (decrypted) {
         $commentTemplate.find('.encrypted').trigger('decrypt');
       }
-      
+
       $commentContainer.append( $commentTemplate );
 
       $commentContainer.trigger('organize');
@@ -189,6 +189,9 @@ Syme.Socket = {
 
       var target       = $('#' + data.target),
           action_link  = target.find('a.like-action').first();
+
+      // Return if concerned element doesn't exist
+      if(!target.length) return;
 
       // Toggle action link
       data.view.liked_by_user ?

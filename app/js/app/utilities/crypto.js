@@ -15,8 +15,7 @@ Syme.Crypto = function (workerUrl) {
     var collection = collection || $([
 
       // Feed elements
-      '.encrypted:not(.hidden)',
-      '[data-single-post="true"] .encrypted',
+      '.post, .comment-box',
       '.encrypted-image:not([data-decrypted="true"])',
       '.encrypted-audio:not([data-decrypted="true"])',
       '.encrypted-video:not([data-decrypted="true"])',

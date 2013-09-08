@@ -21,8 +21,7 @@
 
     // Post content
     .post-content
-      // Collapsable content
-      .encrypted{:'data-encrypted' => '{{#if encrypted}}true{{/if}}'}
+      .collapsable{:'data-encrypted' => '{{#if encrypted}}true{{/if}}'}
         {{content}}
 
       // Attachment
