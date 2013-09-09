@@ -2,35 +2,26 @@ Syme.Crypto = function (workerUrl) {
 
   var _this = this;
 
-  this.locked = false;
+  this.locked         = false;
+  this.onLockRelease  = [];
 
-  this.onLockRelease = [];
+  this.batchDecrypt = function(batchDecryptCallback, collection){
 
-  this.batchDecrypt = function(callback, collection){
+    // Defaults
+    var batchDecryptCallback  = batchDecryptCallback || $.noop;
+        collection            = collection || $('[data-encrypted="true"]');
 
-    // Default callback
-    var callback = callback || $.noop;
+    // Asynchronous counter for decryption
+    var decryptCounter = new Syme.Countable( collection,
 
-    // Default collection
-    var collection = collection || $([
+      // Increment
+      function(index, length) {
+        NProgress.set( index / length );
+      },
 
-      // Feed elements
-      '.post, .comment-box',
-      '.encrypted-image:not([data-decrypted="true"])',
-      '.encrypted-audio:not([data-decrypted="true"])',
-      '.encrypted-video:not([data-decrypted="true"])',
-
-      // User avatars
-      '.user-avatar:not([data-decrypted="true"])'
-
-    ].join(','));
-
-    var decryptCounter = new Syme.Countable(
-
-      collection, _this.decryptCallback,
-
+      // Done
       function (elapsedTime) {
-        _this.doneDecryptingCallback(callback);
+        _this.doneDecryptingCallback(collection, batchDecryptCallback);
       }
 
     );
@@ -40,29 +31,21 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.decryptCallback = function (index, length) {
+  this.doneDecryptingCallback = function (collection, batchDecryptCallback) {
 
-      // Set progress bar
-      NProgress.set( index / length );
+    var $postsAndComments = collection.filter('.post, .comment-box');
 
-  };
+    // Format posts and comments
+    $postsAndComments.removeClass('hidden');
 
-  this.doneDecryptingCallback = function (finalCallback) {
+    // Sync slave avatars
+    $postsAndComments.find('.slave-avatar').trigger('sync');
 
-      // Sync slave avatars
-      $('.slave-avatar').trigger('sync');
+    // Format textareas
+    $postsAndComments.find('textarea').trigger('format');
 
-      // Show decrypted posts
-      $('.post').removeClass('hidden');
-
-      // Format textareas
-      $('textarea').trigger('format');
-
-      // Hide spinner
-      NProgress.done();
-
-      // Callback for batchDecrypt
-      finalCallback();
+    // Callback for batchDecrypt
+    batchDecryptCallback();
 
   };
 
@@ -347,14 +330,52 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.decryptMessage = function (keylistId, message, decryptedMessageCb) {
+  this.decryptMessage = function (keylistId, text, decryptedMessageCb) {
+
+    // Check that keys exist for current user.
+    var userId  = Syme.CurrentSession.getUserId(),
+        message = JSON.parse($.base64.decode(text));
+
+    // Return error message to callback if they don't
+    if (message.keys[userId] == undefined)
+      decryptedMessageCb('There was a problem with the decryption');
 
     Syme.Crypto.executeJobWithoutLock({
 
       method: 'decryptMessage',
-      params: [keylistId, message]
+      params: [keylistId, text]
 
-    }, decryptedMessageCb);
+    }, function(decryptedText){
+
+      // Retrieve the new key and reload if key is missing.
+      if (decryptedText.error && decryptedText.error.missingKey)
+        return _this.getMissingKey( decryptedText.error.missingKey );
+
+      decryptedMessageCb(decryptedText);
+
+    });
+
+  };
+
+  this.getMissingKey = function (missingKey) {
+
+    var baseUrl       = Syme.Url.fromGroup(missingKey.groupId),
+        missingKeyUrl = Syme.Url.join(baseUrl, 'invitations', missingKey.userId);
+
+    $.encryptedAjax(missingKeyUrl, {
+
+      type: 'GET',
+
+      success: function (addUserRequest) {
+
+        var user = Syme.CurrentSession.getUser();
+        user.addUsersRequest([addUserRequest], function () {
+          return Syme.Router.reload();
+        });
+
+      }
+
+    });
 
   };
 

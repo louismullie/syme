@@ -1,13 +1,13 @@
 Syme.Binders.add('global', { decrypt: function() {
 
-  // Post and comments decryption and formatting.
+  // Post & comments decryption and formatting.
   $(document).on({
 
     // Formatting
     format: function (e) {
 
       var $this         = $(this),
-          $collapsable  = $this.find('.collapsable[data-encrypted="false"]').first();
+          $collapsable  = $this.find('.collapsable').first();
 
       // Create a jQuery wrapper around markdown'd text
       var $content = $( marked( $collapsable.text() ) );
@@ -52,60 +52,21 @@ Syme.Binders.add('global', { decrypt: function() {
       var $this = $(this),
           done  = done || $.noop;
 
-      var $collapsable  = $this.find('.collapsable[data-encrypted="true"]').first(),
+      var $collapsable  = $this.find('.collapsable').first(),
           text          = $collapsable.text().replace(/^\s+|\s+$/g, ''),
           groupId       = $this.closest('.post').data('group_id');
 
       // Fault tolerance to prevent JSON.parse from failing
       if (!text.length) return;
 
-      /* LOUIS: TO ADD DIRECTLY IN Syme.Crypto.decryptMessage */
-
-      // Check that keys exist for current user.
-      var userId  = Syme.CurrentSession.getUserId(),
-          message = JSON.parse($.base64.decode(text));
-
-      // Throw exception if they don't.
-      if (message.keys[userId] == undefined) {
-        $collapsable.html('_This message could not be decrypted._');
-        return done();
-      }
-
-      /* ---------------- */
-
       // Decrypt message
       Syme.Crypto.decryptMessage(groupId, text, function(decryptedText){
 
-        // Retrieve the new key and reload if key is missing.
-        if (decryptedText.error && decryptedText.error.missingKey) {
+        // Replace encrypted text by decrypted text in DOM
+        $collapsable.text(decryptedText);
 
-          var missingKey    = decryptedText.error.missingKey,
-              baseUrl       = Syme.Url.fromGroup(missingKey.groupId),
-              missingKeyUrl = Syme.Url.join(baseUrl, 'invitations', missingKey.userId);
-
-          $.encryptedAjax(missingKeyUrl, {
-
-            type: 'GET',
-
-            success: function (addUserRequest) {
-
-              var user = Syme.CurrentSession.getUser();
-              user.addUsersRequest([addUserRequest], function () {
-                return Syme.Router.reload();
-              });
-
-            }
-
-          });
-
-        }
-
-        // If everything is alright, replace encrypted text by decrypted
-        // text in DOM, and mark container as decrypted.
-        $collapsable.text(decryptedText).attr('data-encrypted', false);
-
-        // Format the decrypted post or comment
-        $this.trigger('format');
+        // Mark the container as decrypted, and format
+        $this.attr('data-encrypted', false).trigger('format');
 
         // Decryption callback if there is one
         done();
@@ -137,7 +98,7 @@ Syme.Binders.add('global', { decrypt: function() {
         .attr('src', url);
 
       // Set as decrypted
-      $this.attr('data-decrypted', true);
+      $this.attr('data-encrypted', false);
 
       done();
     };
@@ -166,10 +127,10 @@ Syme.Binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || $.noop;
 
-    var mediaId = $this.attr('data-attachment-id'),
-        keys     = $this.attr('data-attachment-keys'),
-        type     = $this.attr('data-attachment-type'),
-        groupId = $this.attr('data-attachment-group');
+    var mediaId   = $this.attr('data-attachment-id'),
+        keys      = $this.attr('data-attachment-keys'),
+        type      = $this.attr('data-attachment-type'),
+        groupId   = $this.attr('data-attachment-group');
 
     if ( !keys ) return done();
 
@@ -182,7 +143,7 @@ Syme.Binders.add('global', { decrypt: function() {
         .removeClass('.encrypted-' + type);
 
       // Set as decrypted
-      $this.attr('data-decrypted', true);
+      $this.attr('data-encrypted', false);
 
       done();
     };
