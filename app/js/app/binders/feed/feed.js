@@ -109,9 +109,6 @@ Syme.Binders.add('feed', { feed: function(){
         // Decrypt new content
         Syme.Crypto.batchDecrypt(function(){
 
-          // Show decrypted posts
-          $('.post').removeClass('hidden');
-
           // Show or hide load-more
           $('#load-more').hide();
 

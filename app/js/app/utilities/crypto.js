@@ -21,7 +21,7 @@ Syme.Crypto = function (workerUrl) {
 
       // Done
       function (elapsedTime) {
-        _this.doneDecryptingCallback(collection, batchDecryptCallback);
+        _this.formatCollection(collection, batchDecryptCallback);
       }
 
     );
@@ -31,18 +31,23 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.doneDecryptingCallback = function (collection, batchDecryptCallback) {
+  // Move to binders
+  this.formatCollection = function (collection, batchDecryptCallback) {
 
-    var $postsAndComments = collection.filter('.post, .comment-box');
+    // Default callback
+    batchDecryptCallback = batchDecryptCallback || $.noop;
 
-    // Format posts and comments
-    $postsAndComments.removeClass('hidden');
+    var $postsAndComments = collection.filter('.post, .comment-box'),
+        $commentBoxes     = collection.filter('.comment-box').closest('.comments');
 
     // Sync slave avatars
     $postsAndComments.find('.slave-avatar').trigger('sync');
 
     // Format textareas
     $postsAndComments.find('textarea').trigger('format');
+
+    // Show posts and comments
+    $postsAndComments.removeClass('hidden');
 
     // Callback for batchDecrypt
     batchDecryptCallback();

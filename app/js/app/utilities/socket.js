@@ -85,70 +85,61 @@ Syme.Socket = {
 
     post: function(post, decrypted){
 
-      // Don't display a post in the wrong group
-      if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
-
-      // Just return if the post has already been displayed.
-      if ($('#' + post.view.id).length > 0) return;
+      // If post already exists, return.
+      if ($('#' + post.view.id).length) return;
 
       // Remove empty group notice if there is one
       $('#empty-group-notice').remove();
 
       // Render post with the data
-      var template = $(Syme.Template.render('feed-post', post.view));
-
-      var owner = post.view.owner.id;
+      var $post = $(Syme.Template.render('feed-post', post.view));
 
       // If the post owner isn't the user.
-      if (owner != Syme.CurrentSession.getUserId()) {
+      if (post.view.owner.id != Syme.CurrentSession.getUserId()) {
 
         // Increment unread_posts variable
         Syme.Helpers.newContent('post', post.view.group_id);
 
-        template.addClass('new-post');
+        $post.addClass('new-post');
+
       }
 
       // Append hidden new post
-      template.insertAfter($('#newcontent'));
+      $post.insertAfter( $('#newcontent') );
 
       // Decrypt
       if(decrypted){
-
-        template.find('.encrypted')
-          .trigger('decrypt')
-          .closest('.post')
-          .removeClass('hidden');
-
+        $post.trigger('format');
+        Syme.Crypto.formatCollection($post);
+      } else {
+        Syme.Crypto.batchDecrypt($.noop, $post);
       }
-
-      Syme.Crypto.batchDecrypt();
 
     },
 
     comment: function(data, decrypted){
 
       var $post             = $('#' + data.target),
-          $commentContainer = $post.find('.comments'),
-          $comment          = $('#' + data.view.id);
+          $commentContainer = $post.find('.comments');
 
       // If related post doesn't exist, increment new content
       if(!$post.length)
         return Syme.Helpers.newContent('comment', data.view.group_id);
 
       // Just return if the comment has already been displayed.
-      if ($comment.length > 0)
-        return;
+      if ( $('#' + data.view.id).length ) return;
 
       // Append new comment
-      var $commentTemplate = $(Syme.Template.render('feed-comment', data.view));
+      var $comment = $(Syme.Template.render('feed-comment', data.view));
+      $commentContainer.append( $comment );
 
+      // Format or decrypt
       if (decrypted) {
-        $commentTemplate.find('.encrypted').trigger('decrypt');
+        $comment.trigger('format');
+        Syme.Crypto.formatCollection($comment);
+      } else {
+        Syme.Crypto.batchDecrypt($.noop, $comment);
       }
-
-      $commentContainer.append( $commentTemplate );
-
-      $commentContainer.trigger('organize');
 
     },
 
@@ -348,12 +339,21 @@ Syme.Socket = {
 
   receiveUpdate: function(data){
 
+    console.log('SOCKET RECEIVED', data);
+
     // Check that the relevant handler exists.
     if(!this[data.action][data.model]){
       throw 'Syme.Socket.' + data.action +
             '.' + data.model + '() doesn\'t exist';
       return false;
     }
+
+    // Return if the socket update is group-specific
+    // and does not belong to the current group
+    if( _.has(data, 'view') &&
+        _.has(data.view, 'group_id') &&
+        data.view.group_id != Syme.CurrentSession.getGroupId() )
+      return;
 
     // Call it and pass the relevant data to it.
     this[data.action][data.model](data.data);

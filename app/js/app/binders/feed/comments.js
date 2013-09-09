@@ -189,7 +189,8 @@ Syme.Binders.add('feed', { comments: function(){
         return $comment.addClass('hidden');
 
       // Does the comment need to be decrypted?
-      if ( $comment.find('.encrypted').length ) {
+      if ( $comment.attr('data-encrypted') == "true" ) {
+        console.log($comment.attr('data-encrypted'));
         // If it's encrypted, add to collection to $toDecrypt
         $toDecrypt = $toDecrypt.add( $comment );
       } else {
@@ -199,29 +200,24 @@ Syme.Binders.add('feed', { comments: function(){
 
     });
 
-    var showComments = function(){
+    var showCommentsCallback = function(){
 
-      // Show decrypted comments
-      $(this).each(function(){
-        $(this).closest('.comment-box').removeClass('hidden')
-      });
+      var hiddenCommentsCount = $comments.filter('.hidden').length;
 
-      var hiddenCommentsCount = $comments.find('.hidden').length;
-
-      // Show or hide show-more count, and update it
-      $this.find('.show-more')[
-        hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
-      ]('hidden').find('span').html(hiddenCommentsCount);
+      $this
+        // Show or hide show-more count
+        .find('.show-more')[
+          hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
+        ]('hidden')
+        // Update it
+        .find('span').html(hiddenCommentsCount);
 
     };
 
-    // Decrypt encrypted comments to decrypt
-    var encryptedComments = $toDecrypt.find('.encrypted');
-
-    if( encryptedComments.length ) {
-      Syme.Crypto.batchDecrypt(showComments, encryptedComments);
+    if( $toDecrypt.length ) {
+      Syme.Crypto.batchDecrypt(showCommentsCallback, $toDecrypt);
     } else {
-      showComments();
+      showCommentsCallback();
     }
 
     // Update global comment count in post
