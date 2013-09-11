@@ -6,9 +6,6 @@ Syme.Binders.add('feed', { main: function(){
   // Initial decryption
   Syme.Crypto.batchDecrypt(function(){
 
-    // Remove hidden class on posts
-    $('.post').removeClass('hidden');
-
     // Fix (hide) awful chrome bug part 2
     $('#feed-panel-column').show(0);
 

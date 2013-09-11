@@ -1,46 +1,20 @@
 Syme.Binders.add('global', { decrypt: function() {
 
-  // Post and comment decryption
-  $(document).on('decrypt', '.encrypted', function(e, done){
+  // Post & comments decryption and formatting.
+  $(document).on({
 
-    var $this = $(this),
-        done  = done || $.noop;
+    // Formatting
+    format: function (e) {
 
-    var $post     = $this.closest('.post'),
-        text      = $this.text().replace(/^\s+|\s+$/g, ''),
-        groupId   = $post.data('group_id');
-
-    var formatDecryptedText = function(decryptedText) {
-
-      // Retrieve the new key.
-      if (decryptedText.error && decryptedText.error.missingKey) {
-
-        var missingKey = decryptedText.error.missingKey;
-
-        var url = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() + '/groups/' +
-            missingKey.groupId + '/invitations/' + missingKey.userId;
-
-        $.getJSON(url,
-
-          function (addUserRequest) {
-
-            var user = Syme.CurrentSession.getUser();
-            user.addUsersRequest([addUserRequest],
-              function () { Syme.Router.reload(); });
-
-          }
-
-        );
-
-        return done();
-
-      }
+      var $this         = $(this),
+          $collapsable  = $this.find('.collapsable').first();
 
       // Create a jQuery wrapper around markdown'd text
-      var $content = $( marked(decryptedText) );
+      var $content = $( marked( $collapsable.text() ) );
 
       // Replace mentions
       $content.find('a[href^="id:"]').each(function(){
+
         // Get the part after the 'id:'
         var id = $(this).attr('href').split(':')[1];
 
@@ -48,66 +22,60 @@ Syme.Binders.add('global', { decrypt: function() {
         $(this).addClass('mentioned-user')
                .attr('href', '#')
                .attr('data-mentioned-user-id', id);
+
       });
 
-      // Format the text with Markdown, and make sure links open in new windows.
+      // Make sure external links open in new windows.
       $content.find('a:not([href="#"])').attr('target', '_blank');
 
-      $this
-        // Output decrypted content
-        .html( $content )
-        // Transform the .encrypted into .collapsable
-        .removeClass('encrypted').addClass('collapsable');
-
       // Put commenter name and comment tools in first paragraph of comment
-      $this.closest('.comment-box').find('a.commenter-name')
-        .prependTo( $this.find('p:first-child') );
+      $collapsable.closest('.comment-box').find('a.commenter-name')
+        .prependTo( $content.find('p:first-child') );
 
-      // Collapse long posts.
-      Syme.Helpers.collapseHTML(5, 'Read more');
+      // Replace old content by formatted content
+      $collapsable.html( $content );
 
-      // Embed rich media content.
-      $this.find('.post-content').oembed();
+      // Oembed.
+      $collapsable.oembed();
 
       // Format dynamic timestamps.
-      $this.find('time.timeago').timeago();
-      
       $this.closest('.post-comments')
         .find('time.timeago').timeago();
 
-      // Show encrypted text
-      $this.removeClass('hidden');
+    },
 
-      // Format comment textarea.
-      $post.find('textarea').trigger('format');
+    // Decryption
+    decrypt: function (e, done) {
 
-      done();
+      var $this = $(this),
+          done  = done || $.noop;
 
-    };
+      var $collapsable  = $this.find('.collapsable').first(),
+          text          = $collapsable.text().replace(/^\s+|\s+$/g, ''),
+          groupId       = $this.closest('.post').data('group_id');
 
-    // Decrypt, then format element
-    if ($this.data('encrypted') == true) {
+      // Fault tolerance to prevent JSON.parse from failing
+      if (!text.length) return;
 
-      // Check that keys exist for current user.
-      var userId = Syme.CurrentSession.getUserId();
-      var message = JSON.parse($.base64.decode(text));
+      // Fault tolerance to prevent multiple decryption
+      if ( $this.attr('data-encrypted') == "false" ) return;
 
-      // Throw exception if they don't.
-      if (message.keys[userId] == undefined) {
-        console.log('ERROR: Missing keys for current user.');
-        formatDecryptedText('_This message could not be decrypted._');
-      }
+      // Decrypt message
+      Syme.Crypto.decryptMessage(groupId, text, function(decryptedText){
 
-      Syme.Crypto.decryptMessage(groupId, text, formatDecryptedText);
+        // Replace encrypted text by decrypted text in DOM
+        $collapsable.text(decryptedText);
 
-    } else {
+        // Mark the container as decrypted, and format
+        $this.attr('data-encrypted', false).trigger('format');
 
-      // If element not encrypted, just format it.
-      formatDecryptedText(text);
+        // Decryption callback if there is one
+        done();
+
+      });
 
     }
-
-  });
+  }, '.post, .comment-box');
 
   // Avatar decryption
   $(document).on('decrypt', '.user-avatar', function(e, done) {
@@ -131,7 +99,7 @@ Syme.Binders.add('global', { decrypt: function() {
         .attr('src', url);
 
       // Set as decrypted
-      $this.attr('data-decrypted', true);
+      $this.attr('data-encrypted', false);
 
       done();
     };
@@ -160,10 +128,10 @@ Syme.Binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || $.noop;
 
-    var mediaId = $this.attr('data-attachment-id'),
-        keys     = $this.attr('data-attachment-keys'),
-        type     = $this.attr('data-attachment-type'),
-        groupId = $this.attr('data-attachment-group');
+    var mediaId   = $this.attr('data-attachment-id'),
+        keys      = $this.attr('data-attachment-keys'),
+        type      = $this.attr('data-attachment-type'),
+        groupId   = $this.attr('data-attachment-group');
 
     if ( !keys ) return done();
 
@@ -176,7 +144,7 @@ Syme.Binders.add('global', { decrypt: function() {
         .removeClass('.encrypted-' + type);
 
       // Set as decrypted
-      $this.attr('data-decrypted', true);
+      $this.attr('data-encrypted', false);
 
       done();
     };

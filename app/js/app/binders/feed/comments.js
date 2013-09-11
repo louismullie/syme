@@ -182,48 +182,36 @@ Syme.Binders.add('feed', { comments: function(){
     // Show (and potentially decrypt) or hide each comment
     $comments.each(function(i){
 
-      var $comment = $(this);
+      var $comment    = $(this),
+          shouldHide  = i < commentsCount - collapseAfter;
 
-      // Does comment needs to be hidden?
-      if ( i <= commentsCount - collapseAfter - 1 )
-        return $comment.addClass('hidden');
+      // Collapse or hide the comment
+      $comment[shouldHide ? 'addClass' : 'removeClass']('collapsed');
 
-      // Does the comment need to be decrypted?
-      if ( $comment.find('.encrypted').length ) {
-        // If it's encrypted, add to collection to $toDecrypt
+      // If it's encrypted, add to collection to $toDecrypt
+      if ( !shouldHide && $comment.attr('data-encrypted') == "true" )
         $toDecrypt = $toDecrypt.add( $comment );
-      } else {
-        // Otherwise, just show
-        $comment.removeClass('hidden');
-      }
 
     });
 
-    var showComments = function(){
+    var showCommentsCallback = function () {
 
-      // Show decrypted comments
-      $(this).each(function(){
-        $(this).closest('.comment-box').removeClass('hidden')
-      });
+      var collapsedCommentsCount  = $comments.filter('.collapsed').length;
+          showMoreAction          = collapsedCommentsCount > 0 ? 'removeClass' : 'addClass';
 
-      var hiddenCommentsCount = $comments.find('.hidden').length;
+      // Show or hide show-more count and update it
+      $this.find('.show-more')[showMoreAction]('hidden')
+           .find('span').html(collapsedCommentsCount);
 
-      // Show or hide show-more count, and update it
-      $this.find('.show-more')[
-        hiddenCommentsCount > 0 ? 'removeClass' : 'addClass'
-      ]('hidden').find('span').html(hiddenCommentsCount);
-      
+      // Timeago
       $this.find('time.timeago').timeago();
-      
+
     };
 
-    // Decrypt encrypted comments to decrypt
-    var encryptedComments = $toDecrypt.find('.encrypted');
-
-    if( encryptedComments.length ) {
-      Syme.Crypto.batchDecrypt(showComments, encryptedComments);
+    if ( $toDecrypt.length ) {
+      Syme.Crypto.batchDecrypt(showCommentsCallback, $toDecrypt);
     } else {
-      showComments();
+      showCommentsCallback();
     }
 
     // Update global comment count in post
@@ -231,9 +219,8 @@ Syme.Binders.add('feed', { comments: function(){
       .renderHbsTemplate({ comment_count: commentsCount });
 
     // Show or hide textarea
-    $(this)[
-      commentsCount > 0 ? 'removeClass' : 'addClass'
-    ]('no-comments');
+    var textareaAction = commentsCount > 0 ? 'removeClass' : 'addClass';
+    $(this)[textareaAction]('no-comments');
 
   });
 

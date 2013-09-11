@@ -1,4 +1,4 @@
-.comment-box{ id: '{{id}}', class: '{{hidden}}', :'data-timestamp' => '{{created_at}}' }
+%div{ id: '{{id}}', class: 'comment-box hidden {{#if collapsed}}collapsed{{/if}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}', :'data-timestamp' => '{{created_at}}' }
   -# Avatar
   {{#with commenter}} {{> feed-avatar.hbs}} {{/with}}
 
@@ -10,10 +10,7 @@
 
   -# Commenter name (will dynamically be put in .collapsable's first <p>)
   %a.commenter-name{href: '#'} {{commenter.name}}
-
-  -# Will transform into collapsable
-  %div{ class: 'encrypted {{hidden}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}' }
-    {{content}}
+  <div class="collapsable">{{content}}</div>
 
   -# Footer
   .comment-footer

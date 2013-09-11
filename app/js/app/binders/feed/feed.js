@@ -56,8 +56,6 @@ Syme.Binders.add('feed', { feed: function(){
       var request = {
         // Post a list of already showed posts to prevent duplication
         'ignore': showed_posts_id,
-        // Post the last data timestamp to prevent pill duplication
-        //'last_timestamp': $('.gutter-infos[data-timestamp]').last().data('timestamp'),
         'page': toload
       };
 
@@ -72,52 +70,48 @@ Syme.Binders.add('feed', { feed: function(){
 
       $.post(url, request, function(data){
 
-        var lastPage = data.last_page,
-            posts    = data.posts;
+        // Deactivate and return if there are no
+        // more posts to load
+        if ( _.isEmpty(data) ) {
 
-        // Check if there are pages to load
-        if(Object.keys(data).length > 0) {
-
-          // Buffer html.
-          var postsHtml = [];
-
-          for (var i = 0; i < posts.length; i++) {
-
-            var post = posts[i];
-
-            // Render HTML.
-            var html = Syme.Template.render('feed-post', post);
-
-            // Append page
-            $('#feed').data('pagesloaded', toload).append(html);
-
-          }
-
-          // Please Chris, look at this
-          $('#feed .post').last().css({ 'border-bottom': 'none' });
-
-          // If all pages are loaded, disable infinite scrolling
-          $(window).data('infinite-scroll-done', lastPage ? 'hide' : 'show');
-
-          // Decrypt new content
-          Syme.Crypto.batchDecrypt(function() {
-
-            // Show decrypted posts
-            this.closest('.post').removeClass('hidden');
-
-            // Show or hide load-more
-            $('#load-more').hide();
-
-          });
-
-        } else {
-
-          // No more pages to load
           $(window).data('infinite-scroll-done', true);
-
           $('#load-more').hide();
 
+          return;
+
         }
+
+        // Deactivate if this is the last page
+        $(window).data( 'infinite-scroll-done', data.last_page ? true : false );
+
+        // Generate templates for each post
+        var html = $();
+
+        _.each(data.posts, function(post){
+
+          // Add generated post to the $html jQuery collection
+          html = html.add(
+            $( Syme.Template.render('feed-post', post) )
+          );
+
+        });
+
+        // Update counter
+        $('#feed').data('pagesloaded', toload);
+
+        // Append generated templates
+        $('#feed').append( html );
+
+        // Please Chris, look at this
+        $('#feed .post').last().css({ 'border-bottom': 'none' });
+
+        // Decrypt new content
+        Syme.Crypto.batchDecrypt(function(){
+
+          // Show or hide load-more
+          $('#load-more').hide();
+
+        });
 
       }).complete(function(){
 

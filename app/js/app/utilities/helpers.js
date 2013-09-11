@@ -51,8 +51,8 @@ Syme.Helpers = {
   collapseHTML: function(shownLines, expanderLink){
 
     // Configuration
-    var shownLines   = shownLines || 4,
-        expanderLink = expanderLink || 'See more';
+    var shownLines   = shownLines || 5,
+        expanderLink = expanderLink || 'Read more';
 
     $('.collapsable').each(function(){
 
@@ -66,6 +66,7 @@ Syme.Helpers = {
       // If the current div needs collapsing
       if( $(this).height() > maxHeight) {
 
+        // Don't collide with embedded iframes
         if ($(this).find('iframe').length > 0) return;
 
         $(this)
