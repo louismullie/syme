@@ -9,7 +9,9 @@ Syme.Crypto = function (workerUrl) {
 
     // Defaults
     var batchDecryptCallback  = batchDecryptCallback || $.noop;
-        collection            = collection || $('[data-encrypted="true"]');
+        // Note: .comment-box are excluded because their decryption
+        // is handled by the 'format' event on '.comments'
+        collection            = collection || $('[data-encrypted="true"]:not(.comment-box)');
 
     // Asynchronous counter for decryption
     var decryptCounter = new Syme.Countable( collection,
@@ -37,8 +39,7 @@ Syme.Crypto = function (workerUrl) {
     // Default callback
     batchDecryptCallback = batchDecryptCallback || $.noop;
 
-    var $postsAndComments = collection.filter('.post, .comment-box'),
-        $commentBoxes     = collection.filter('.comment-box').closest('.comments');
+    var $postsAndComments = collection.filter('.post, .comment-box');
 
     // Sync slave avatars
     $postsAndComments.find('.slave-avatar').trigger('sync');
