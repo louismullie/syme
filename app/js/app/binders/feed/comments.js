@@ -203,6 +203,9 @@ Syme.Binders.add('feed', { comments: function(){
       $this.find('.show-more')[showMoreAction]('hidden')
            .find('span').html(collapsedCommentsCount);
 
+      // Timeago
+      $this.find('time.timeago').timeago();
+
     };
 
     if ( $toDecrypt.length ) {

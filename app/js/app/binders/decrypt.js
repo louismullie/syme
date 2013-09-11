@@ -39,7 +39,8 @@ Syme.Binders.add('global', { decrypt: function() {
       $collapsable.oembed();
 
       // Format dynamic timestamps.
-      $this.find('time.timeago').timeago();
+      $this.closest('.post-comments')
+        .find('time.timeago').timeago();
 
     },
 
