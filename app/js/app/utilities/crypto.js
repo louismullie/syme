@@ -9,9 +9,8 @@ Syme.Crypto = function (workerUrl) {
 
     // Defaults
     var batchDecryptCallback  = batchDecryptCallback || $.noop;
-        // Note: .comment-box are excluded because their decryption
-        // is handled by the 'format' event on '.comments'
-        collection            = collection || $('[data-encrypted="true"]:not(.comment-box)');
+        collection            = collection ||
+          $('[data-encrypted="true"]:not(.comment-box.collapsed)');
 
     // Asynchronous counter for decryption
     var decryptCounter = new Syme.Countable( collection,
@@ -49,6 +48,10 @@ Syme.Crypto = function (workerUrl) {
 
     // Show posts and comments
     $postsAndComments.removeClass('hidden');
+
+    // Show element (must stay here, because
+    // Syme.Helpers.collapseHTML needs the element to be shown.)
+    Syme.Helpers.collapseHTML(5, 'Read more');
 
     // Callback for batchDecrypt
     batchDecryptCallback();

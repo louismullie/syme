@@ -183,13 +183,13 @@ Syme.Binders.add('feed', { comments: function(){
     $comments.each(function(i){
 
       var $comment    = $(this),
-          shouldShow  = i <= commentsCount - collapseAfter - 1;
+          shouldHide  = i < commentsCount - collapseAfter;
 
       // Collapse or hide the comment
-      $comment[shouldShow ? 'removeClass' : 'addClass']('collapsed');
+      $comment[shouldHide ? 'addClass' : 'removeClass']('collapsed');
 
       // If it's encrypted, add to collection to $toDecrypt
-      if ( shouldShow && $comment.attr('data-encrypted') == "true" )
+      if ( !shouldHide && $comment.attr('data-encrypted') == "true" )
         $toDecrypt = $toDecrypt.add( $comment );
 
     });

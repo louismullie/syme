@@ -6,7 +6,7 @@
       View <span>{{comments_collapsed_count}}</span> more comment(s)
 
   // Comments
-  {{#foreach comments}} {{> feed-comment.hbs}} {{/foreach}}
+  {{#each comments}} {{> feed-comment.hbs}} {{/each}}
 
 // Comment box
 .comment-form

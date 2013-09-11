@@ -1,4 +1,4 @@
-.comment-box.hidden{ id: '{{id}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}', :'data-timestamp' => '{{created_at}}' }
+%div{ id: '{{id}}', class: 'comment-box hidden {{#if collapsed}}collapsed{{/if}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}', :'data-timestamp' => '{{created_at}}' }
   -# Avatar
   {{#with commenter}} {{> feed-avatar.hbs}} {{/with}}
 

@@ -64,8 +64,8 @@ class PostGenerator
 
       result = CommentGenerator.generate(comment, current_user)
       result.merge({
-        hidden: (i < post.complete_comments.count - CommentsPerThread) ?
-          'hidden' : ''
+        collapsed: (i < post.complete_comments.count - CommentsPerThread) ?
+          'collapsed' : ''
       })
 
     end

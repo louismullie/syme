@@ -35,9 +35,6 @@ Syme.Binders.add('global', { decrypt: function() {
       // Replace old content by formatted content
       $collapsable.html( $content );
 
-      // Collapse long content.
-      Syme.Helpers.collapseHTML(5, 'Read more');
-
       // Oembed.
       $collapsable.oembed();
 
@@ -58,6 +55,9 @@ Syme.Binders.add('global', { decrypt: function() {
 
       // Fault tolerance to prevent JSON.parse from failing
       if (!text.length) return;
+
+      // Fault tolerance to prevent multiple decryption
+      if ( $this.attr('data-encrypted') == "false" ) return;
 
       // Decrypt message
       Syme.Crypto.decryptMessage(groupId, text, function(decryptedText){
