@@ -49,9 +49,9 @@ Syme.Crypto = function (workerUrl) {
     // Show posts and comments
     $postsAndComments.removeClass('hidden');
 
-    // Show element (must stay here, because
-    // Syme.Helpers.collapseHTML needs the element to be shown.)
-    Syme.Helpers.collapseHTML(5, 'Read more');
+    // Seem to sometimes fail accurate height
+    // calculations in a seemingly non-deterministic way
+    // Syme.Helpers.collapseHTML();
 
     // Callback for batchDecrypt
     batchDecryptCallback();

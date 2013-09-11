@@ -82,8 +82,7 @@ Syme.Binders.add('feed', { feed: function(){
         }
 
         // Deactivate if this is the last page
-        $(window).data( 'infinite-scroll-done',
-          data.last_page ? 'hide' : 'show' );
+        $(window).data( 'infinite-scroll-done', data.last_page ? true : false );
 
         // Generate templates for each post
         var html = $();
@@ -112,7 +111,7 @@ Syme.Binders.add('feed', { feed: function(){
           // Show or hide load-more
           $('#load-more').hide();
 
-        }, html);
+        });
 
       }).complete(function(){
 

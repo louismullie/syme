@@ -342,8 +342,6 @@ Syme.Socket = {
 
   receiveUpdate: function(data){
 
-    console.log('SOCKET RECEIVED', data);
-
     // Check that the relevant handler exists.
     if(!this[data.action][data.model]){
       throw 'Syme.Socket.' + data.action +
@@ -353,8 +351,7 @@ Syme.Socket = {
 
     // Return if the socket update is group-specific
     // and does not belong to the current group
-    if( _.has(data, 'view') &&
-        _.has(data.view, 'group_id') &&
+    if( data['view'] && data.view['group_id'] &&
         data.view.group_id != Syme.CurrentSession.getGroupId() )
       return;
 
