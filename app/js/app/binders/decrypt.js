@@ -54,11 +54,11 @@ Syme.Binders.add('global', { decrypt: function() {
           text          = $collapsable.text().replace(/^\s+|\s+$/g, ''),
           groupId       = $this.closest('.post').data('group_id');
 
-      // Fault tolerance to prevent JSON.parse from failing
-      if (!text.length) return;
-
-      // Fault tolerance to prevent multiple decryption
-      if ( $this.attr('data-encrypted') == "false" ) return;
+      // Fault tolerance to prevent JSON.parse from failing     // @CHRIS:
+      if (!text.length) return;                                 // Keep these but raise
+                                                                // an exception instead
+      // Fault tolerance to prevent multiple decryption         // of returning and make
+      if ( $this.attr('data-encrypted') == "false" ) return;    // sure it never happens.
 
       // Decrypt message
       Syme.Crypto.decryptMessage(groupId, text, function(decryptedText){
