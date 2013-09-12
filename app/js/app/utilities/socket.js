@@ -85,6 +85,9 @@ Syme.Socket = {
 
     post: function(post, decrypted){
 
+      // Don't display a post in the wrong group
+      if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
+      
       // If post already exists, return.
       if ($('#' + post.view.id).length) return;
 
@@ -348,12 +351,6 @@ Syme.Socket = {
             '.' + data.model + '() doesn\'t exist';
       return false;
     }
-
-    // Return if the socket update is group-specific
-    // and does not belong to the current group
-    if( data['view'] && data.view['group_id'] &&
-        data.view.group_id != Syme.CurrentSession.getGroupId() )
-      return;
 
     // Call it and pass the relevant data to it.
     this[data.action][data.model](data.data);
