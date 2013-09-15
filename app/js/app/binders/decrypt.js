@@ -66,8 +66,6 @@ Syme.Binders.add('global', { decrypt: function() {
     // Make sure external links open in new windows.
     $content.find('a:not([href="#"])').attr('target', '_blank');
 
-    debugger;
-
     // Put commenter name and comment tools in first paragraph of comment
     $collapsable.closest('.comment-box').find('a.commenter-name')
       .prependTo( $content.filter('p').first() );
