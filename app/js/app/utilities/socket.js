@@ -118,7 +118,7 @@ Syme.Socket = {
 
         // @LOUIS: ADD IMAGES TO INSTANT POSTING AND
         // DELETE THE FOLLOWING LINE
-        Syme.Crypto.batchDecrypt($.noop, $post.find('[data-encrypted="true"]'));
+        $post.find('[data-encrypted="true"]').trigger('decrypt');
 
       } else {
 

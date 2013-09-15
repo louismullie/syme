@@ -3,6 +3,9 @@ Syme.Binders.add('global', { decrypt: function() {
   // Post & comments decryption
   $(document).on('decrypt', '.post, .comment-box', function (e, doneDecryptingCb) {
 
+    // Prevent event propagation to children
+    if ( e.target !== this ) return;
+
     var $this             = $(this),
         doneDecryptingCb  = doneDecryptingCb || $.noop;
 
@@ -44,6 +47,9 @@ Syme.Binders.add('global', { decrypt: function() {
   // Post & comments formatting
   $(document).on('format', '.post, .comment-box', function (e) {
 
+    // Prevent event propagation to children
+    if ( e.target !== this ) return;
+
     var $this         = $(this),
         $collapsable  = $this.find('.collapsable').first();
 
@@ -83,6 +89,9 @@ Syme.Binders.add('global', { decrypt: function() {
 
   // Avatar decryption
   $(document).on('decrypt', '.user-avatar', function(e, doneDecryptingCb) {
+
+    // Prevent event propagation to children
+    if ( e.target !== this ) return;
 
     var $this             = $(this),
         doneDecryptingCb  = doneDecryptingCb || $.noop;
