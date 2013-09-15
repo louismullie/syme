@@ -30,6 +30,10 @@
   textarea                { display: block  !important; }
 }
 
+iframe#rdbIndicator {
+  display: none;
+}
+
 // Notice when no posts on feed
 #empty-group-notice {
   margin-top: 3em;

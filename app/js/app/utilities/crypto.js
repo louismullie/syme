@@ -12,12 +12,16 @@ Syme.Crypto = function (workerUrl) {
         collection            = collection ||
           $('[data-encrypted="true"]:not(.comment-box.collapsed)');
 
+
     // Asynchronous counter for decryption
     var decryptCounter = new Syme.Countable( collection,
 
       // Increment
       function(index, length) {
-        NProgress.set( index / length );
+        // Prevent jumps in progress bar if multiple
+        // batchDecrypt run at the same time
+        if (NProgress.status < index / length)
+          NProgress.set( index / length );
       },
 
       // Done
