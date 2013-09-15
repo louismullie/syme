@@ -140,11 +140,11 @@ put '/invitations', auth: [] do
         comment = post.complete_comments.find(comment_info['id'])
         comment.keys[invitee_id] = comment_info['key']
 
-        comment.save!
         
+        comment.timeless.save!
       end
 
-      post.save!
+      post.timeless.save!
 
     end
     
