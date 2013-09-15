@@ -87,7 +87,7 @@ Syme.Socket = {
 
       // Don't display a post in the wrong group
       if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
-      
+
       // If post already exists, return.
       if ($('#' + post.view.id).length) return;
 
@@ -112,10 +112,20 @@ Syme.Socket = {
 
       // Decrypt
       if(decrypted){
+
         $post.trigger('format');
         Syme.Crypto.formatCollection($post);
+
+        // @LOUIS: ADD IMAGES TO INSTANT POSTING AND
+        // DELETE THE FOLLOWING LINE
+        Syme.Crypto.batchDecrypt($.noop, $post.find('[data-encrypted="true"]'));
+
       } else {
-        Syme.Crypto.batchDecrypt($.noop, $post);
+
+        // Add potential images to batchDecrypt
+        var $toDecrypt = $post.add( $post.find('[data-encrypted="true"]') );
+        Syme.Crypto.batchDecrypt($.noop, $toDecrypt);
+
       }
 
     },
