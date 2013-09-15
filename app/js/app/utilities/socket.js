@@ -146,13 +146,18 @@ Syme.Socket = {
       var $comment = $(Syme.Template.render('feed-comment', data.view));
       $commentContainer.append( $comment );
 
-      // Organize comment container
-      $commentContainer.trigger('organize');
-
       // Format or decrypt
       if (decrypted) {
+
+        // Organize comment container
+        $commentContainer.trigger('organize');
+
+        // Format comment
         $comment.trigger('format');
+
+        // Format collection
         Syme.Crypto.formatCollection($comment);
+
       } else {
         Syme.Crypto.batchDecrypt($.noop, $comment);
       }
