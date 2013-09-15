@@ -14,10 +14,9 @@
 
   -# Footer
   .comment-footer
-    {{debug}}
     %a.time{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{post_id}}', hbs: '' }
       %time.timeago{ datetime: '{{created_at}}' }
-        
+
     %span &middot;
 
     // Like action
