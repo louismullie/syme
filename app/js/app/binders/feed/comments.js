@@ -160,8 +160,14 @@ Syme.Binders.add('feed', { comments: function(){
   // Organize, collapse and decrypt comments, updating counts
   $('#main').on('organize', '.comments', function(e){
 
-    var $this             = $(this),
-        $comments         = $this.find('.comment-box');
+    var $this         = $(this),
+        $comments     = $this.find('.comment-box'),
+        commentsCount = $comments.length,
+        $container    = $this.closest('.post-comments');
+
+    // Show or hide container (thus textarea)
+    var containerAction = commentsCount > 0 ? 'removeClass' : 'addClass';
+    $container[containerAction]('no-comments');
 
     // Sort by timestamp
     $comments.detach().sort(function(a, b) {
@@ -176,7 +182,6 @@ Syme.Binders.add('feed', { comments: function(){
     }).appendTo( $this );
 
     var collapseAfter = !!$this.data('expanded') ? Infinity : 3,
-        commentsCount = $comments.length,
         $toDecrypt    = $();
 
     // Show (and potentially decrypt) or hide each comment
@@ -217,10 +222,6 @@ Syme.Binders.add('feed', { comments: function(){
     // Update global comment count in post
     $this.closest('.post').find('[partial="feed-comment-count"]')
       .renderHbsTemplate({ comment_count: commentsCount });
-
-    // Show or hide textarea
-    var textareaAction = commentsCount > 0 ? 'removeClass' : 'addClass';
-    $(this)[textareaAction]('no-comments');
 
   });
 
