@@ -63,12 +63,16 @@ Syme.Binders.add('feed', { feed: function(){
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
 
+      // Spinner and loadmore
+      NProgress.showSpinner();
       $('#load-more').show();
 
       var groupId = Syme.CurrentSession.getGroupId();
       var url = SERVER_URL + '/' + groupId + '/page';
 
       $.post(url, request, function(data){
+
+        NProgress.hideSpinner();
 
         // Deactivate and return if there are no
         // more posts to load

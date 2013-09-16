@@ -10,7 +10,7 @@ Syme.Crypto = function (workerUrl) {
     // Defaults
     var batchDecryptCallback  = batchDecryptCallback || $.noop;
         collection            = collection ||
-          $('[data-encrypted="true"]:not(#feed[data-single-post="false"] .comment-box.collapsed)');
+          $('[data-encrypted="true"]:not(#feed[data-single-post=""] .comment-box.collapsed)');
 
 
     // Asynchronous counter for decryption
