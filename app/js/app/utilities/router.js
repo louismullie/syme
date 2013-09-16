@@ -32,7 +32,13 @@ Syme.Router = Backbone.Router.extend({
       );
 
     } else {
-      this.doNavigate(fragment, options);
+
+      try {
+        this.doNavigate(fragment, options);
+      } catch (e) {
+        console.error(e, 'Could not navigate to ' + fragment);
+      }
+
     }
 
   },
@@ -46,9 +52,6 @@ Syme.Router = Backbone.Router.extend({
 
     // Override pushstate and load url directly
     Backbone.history.loadUrl(fragment);
-
-    // Scroll to top
-    window.scrollTo(0,0);
 
   },
 
@@ -152,14 +155,10 @@ Syme.Router = Backbone.Router.extend({
 
   userGroup: function(user_id, group_id) {
 
-    ONE_PAGE_VIEW = false; // FIX
-
     this.loadDynamicPage('feed', group_id);
   },
 
   userGroupPost: function(user_id, group_id, post_id) {
-
-    ONE_PAGE_VIEW = true; // FIX
 
     this.loadDynamicPage('feed', group_id,
       // Specific binders
@@ -216,7 +215,6 @@ Syme.Router = Backbone.Router.extend({
     // Render template
     var view = Handlebars.templates[template + '.hbs']();
 
-
     // Fill body
     $('body').html(view);
 
@@ -231,8 +229,8 @@ Syme.Router = Backbone.Router.extend({
     // Optional group id for routes that require group authentication
     var groupId = groupId || false;
 
-    // Clear breadcrumbs
-    $('#navbar-breadcrumbs').html('');
+    // Show spinner while waiting for AJAX
+    NProgress.showSpinner();
 
     var _this = this;
 
@@ -286,8 +284,13 @@ Syme.Router = Backbone.Router.extend({
 
       success: function (data) {
 
-        // First pageload: initiate logged in template
-        if( !$('#main').length ) Syme.Router.renderLoggedInTemplate();
+        // Initiate logged in template on first pageload
+        if( !$('#main').length )
+          Syme.Router.renderLoggedInTemplate();
+
+        // Hide container and scroll to top
+        $('#main').addClass('hidden');
+        window.scrollTo(0,0);
 
         // Render template
         var view = Handlebars.compileTemplate(template, data);
@@ -351,7 +354,7 @@ Syme.Router = Backbone.Router.extend({
   reload: function () {
     Backbone.history.loadUrl(Backbone.history.fragment);
   },
-  
+
   reset: function () {
     Notifications.reset();
     Notifications.fetch();

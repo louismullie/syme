@@ -7,7 +7,7 @@ Syme.Binders = {
     // Create namespace for binders.
     if(typeof($.fn.binders) === 'undefined')
       $.fn.binders = {};
-    
+
     // Create route object if it doesn't exist
     if(typeof($.fn.binders[route]) === 'undefined')
       $.fn.binders[route] = {};
@@ -52,6 +52,10 @@ Syme.Binders = {
     // Start idleTimeout if logged in
     if(Syme.CurrentSession.initialized) this.idleTimeout();
 
+    // Show container and hide spinner
+    $('#main').removeClass('hidden');
+    NProgress.hideSpinner();
+
   },
 
   unbind: function() {
@@ -71,27 +75,27 @@ Syme.Binders = {
     idleTime = 0;
 
     var timerIncrement = function() {
-      
+
       idleTime++;
 
       if (Syme.Compatibility.inChromeExtension()) {
 
         chrome.storage.local.get('remember', function (setting) {
-          
+
           // If the delay has not passed, or the user clicks
           // "remember me", no idle timeout is set on the session.
           if (idleTime < 20 || setting.remember) return;
-          
+
           // Clear the timer interval.
           clearInterval(idleInterval);
-          
+
           // Disconnect the user.
           Syme.Auth.disconnect();
-          
+
         });
 
       }
-        
+
     };
 
     var timerReset = function(){ idleTime = 0; };

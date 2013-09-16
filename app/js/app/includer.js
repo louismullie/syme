@@ -27,7 +27,9 @@ $(function(){
     // Hide popovers
     $('.popover').hide();
 
+    // Follow link
     Syme.Router.navigate( $(this).attr('href') );
+
   });
 
   // Initialize router

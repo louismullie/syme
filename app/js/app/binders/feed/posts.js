@@ -19,7 +19,7 @@ Syme.Binders.add('feed', { posts: function(){
 
       var postId    = $(this).closest('.post').attr('id');
       var deletePostUrl = Syme.Url.fromCurrentGroup('posts', postId);
-      
+
       Confirm.show(
         'Do you really want to delete this post?',
         {
@@ -29,33 +29,36 @@ Syme.Binders.add('feed', { posts: function(){
           cancel: 'Cancel',
 
           onsubmit: function() {
-            
+
             $.encryptedAjax(deletePostUrl, {
-              
+
               type: 'DELETE',
-              
+
               success: function () {
-                
-                if (ONE_PAGE_VIEW) {
-                  
+
+                if ( $('#feed').attr('data-single-post') == "true" ) {
+
                   var userId = Syme.CurrentSession.getUserId(),
                       groupId = Syme.CurrentSession.getGroupId();
-                  
+
                   var route = Syme.Url.join('users', userId, 'groups', groupId);
-                  
+
                   Syme.Router.navigate(route);
+
+                } else {
+
+                  Syme.Socket.delete.post({ target: postId });
+
                 }
-                
-               // Syme.Socket.delete.post({ target: postId });
-                
+
               },
-              
+
               error: function (response) {
                 Syme.Error.ajaxError(response, 'delete', 'post');
               }
-              
+
             });
-            
+
           }
         }
       );
@@ -83,7 +86,7 @@ Syme.Binders.add('feed', { posts: function(){
     FileManager.getFile(id, keys, function (url) {
 
       if (!url) return progress.remove();
-      
+
       link.attr('href', url)
           .attr('download', filename)
           // Change link status
@@ -95,23 +98,23 @@ Syme.Binders.add('feed', { posts: function(){
       link.closest('.attachment').find('a.image-download')
           .attr('href', url)
           .attr('download', filename);
-      
-      
+
+
       link.on('click', function () {
-        
+
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.responseType = 'blob';
-        
+
         xhr.onload = function(e) {
           if (this.status == 200) {
             var blob = this.response;
             saveAs(blob, filename);
           }
         };
-        
+
         xhr.send();
-        
+
       });
 
       progress.remove();
@@ -125,22 +128,22 @@ Syme.Binders.add('feed', { posts: function(){
   $('#main').on('click', 'a.image-download', function() {
 
     NProgress.showSpinner();
-    
+
     var id        = $(this).data('attachment-id'),
         filename  = $(this).data('attachment-filename'),
         keys      = $(this).data('attachment-keys'),
         group     = $(this).data('attachment-group');
-    
+
     var callback = function (url) {
-      
+
       NProgress.hideSpinner();
 
       if (!url) return;
 
       Lightbox.show(url);
-      
+
     };
-    
+
     FileManager.getFile(id, keys, callback, group);
 
   });
