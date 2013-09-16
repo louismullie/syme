@@ -500,6 +500,8 @@ Keyfile = function(userId, password, encKeyfile) {
     var inviteeKeypair = that.generateEncryptionKeypair();
     var inviteeKeypairJson = that.serializeKeypair(inviteeKeypair);
     
+    var token = Crypto.generateRandomHex(256);
+    
     var symKey = Crypto.diffieHellman(
       inviteeKeypair.privateKey, inviterPublicKey);
     
@@ -508,6 +510,7 @@ Keyfile = function(userId, password, encKeyfile) {
       inviteeId: that.userId,
       inviterPublicKey: inviterPublicKeyJson,
       inviteeKeypair: inviteeKeypairJson,
+      token: token,
       inviteeExponent: gRb.toString(16),
       inviterXab: Xab.toString(16),
       invitationToken: invitationToken
@@ -532,28 +535,15 @@ Keyfile = function(userId, password, encKeyfile) {
     var encryptedInviteeKeypairsBase64 = Crypto
       .encryptThenEncodeBase64(symKey, inviteeKeypairsTxt);
     
-    var encKeypairsHmacSalt = Crypto.generateRandomHex(128);
-    
-    var encKeypairsHmacKey = sjcl.misc.pbkdf2(
-      invitationToken, encKeypairsHmacSalt, 10000);
-    
-    var hmacBuilder = new sjcl.misc.hmac(
-      encKeypairsHmacKey, sjcl.hash.sha256);
-    
-    var encKeypairsHmac = hmacBuilder.mac(
-      encryptedInviteeKeypairsBase64);
-    
     return Crypto.encodeBase64(JSON.stringify({
       keylistId: inviteRequest.keylistId,
       inviterId: inviteRequest.inviterId,
       inviteeAlias: inviteRequest.inviteeAlias,
-      inviteeId: that.userId,
-      inviteePublicKey: that.serializePublicKey(inviteeKeypair.publicKey),
+      inviteeId: that.userId, inviteePublicKey:
+      that.serializePublicKey(inviteeKeypair.publicKey),
       inviteeS1: S1.toString(16),
       inviteeY: Y.toString(16),
-      encKeypairs: encryptedInviteeKeypairsBase64,
-      encKeypairsHmac: encKeypairsHmac,
-      encKeypairsHmacSalt: encKeypairsHmacSalt
+      encKeypairs: encryptedInviteeKeypairsBase64
     }));
     
   };
@@ -580,25 +570,6 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var transaction = that.getTransaction(keylistId,
       'createInviteRequest', inviteRequest.inviteeAlias);
-    
-    var invitationToken = transaction.invitationToken,
-        encKeypairsHmacSalt = inviteRequest.encKeypairsHmacSalt;
-        
-    if (!invitationToken || !encKeypairsHmacSalt)
-      throw 'Missing required parameters.';
-    
-    var encKeypairsHmacKey = sjcl.misc.pbkdf2(
-      invitationToken, encKeypairsHmacSalt, 10000);
-      
-    var encKeypairs = inviteRequest.encKeypairs;
-      
-    var hmacBuilder = new sjcl.misc.hmac(
-      encKeypairsHmacKey, sjcl.hash.sha256);
-    
-    var encKeypairsHmac = hmacBuilder.mac(encKeypairs);
-    
-    if (!_.isEqual(encKeypairsHmac, inviteRequest.encKeypairsHmac))
-      throw 'Message authentication code didnt check out.';
     
     var inviterPrivateKey = that.buildPrivateKey(
       transaction.inviterKeypair.privateKey, 'encryption');
