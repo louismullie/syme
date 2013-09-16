@@ -229,8 +229,8 @@ Syme.Router = Backbone.Router.extend({
     // Optional group id for routes that require group authentication
     var groupId = groupId || false;
 
-    // Show spinner while waiting for AJAX
-    NProgress.showSpinner();
+    // Show spinner while waiting for AJAX if there is a container
+    if ( $('#main').length ) NProgress.showSpinner();
 
     var _this = this;
 
