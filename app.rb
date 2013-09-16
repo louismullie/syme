@@ -3,9 +3,9 @@ module Syme
   require './base'
 
   class Application < Base
-    
-    VERSION = '0.1.4'
-    
+
+    VERSION = '0.1.5'
+
     Bundler.require :default, settings.environment
 
     configure { require_all 'config' }
@@ -14,15 +14,15 @@ module Syme
     require_directory 'models'
     require_directory 'observers'
     require_directory 'generators'
-    
+
     require_all 'routes'
-    
-    Mongoid.observers = GroupObserver, InvitationObserver, 
+
+    Mongoid.observers = GroupObserver, InvitationObserver,
     UserObserver, NotificationObserver, PostObserver,
-    CommentObserver, LikeObserver    
+    CommentObserver, LikeObserver
 
     Mongoid.instantiate_observers
-    
+
   end
 
 end
