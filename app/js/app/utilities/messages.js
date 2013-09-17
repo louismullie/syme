@@ -96,7 +96,7 @@ Syme.Messages = {
     
     alert: {
       
-      disconnected: {
+      disconnect: {
 
         message: 'You have been disconnected',
         title: 'Disconnected',

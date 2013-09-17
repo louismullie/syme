@@ -128,7 +128,7 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
   
 end
 
-delete '/users/:user_id/sessions/:session_id' do |_,session_id|
+delete '/users/:user_id/sessions/:session_id', auth: [] do |_,session_id|
   
   # Track the event.
   track @user, 'User was logged out'
