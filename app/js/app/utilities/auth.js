@@ -214,7 +214,7 @@ Syme.Auth = {
         
         // Clear client session object.
         delete Syme.CurrentSession;
-        Syme.CurrentSession = {};
+        Syme.CurrentSession = new Syme.Session();
         
         // Pass execution to success callback.
         callback();
@@ -225,8 +225,14 @@ Syme.Auth = {
       error: function (response) {
         
         // We're already logged out.
-        if (response.status == 403) {
+        if (response.status == 403 || response.status == 401) {
+          
+          // Clear client session object.
+          delete Syme.CurrentSession;
+          Syme.CurrentSession = new Syme.Session();
+          
           callback();
+          
         // Otherwise show an error.
         } else {
           Syme.Error.ajaxError(response, 'delete', 'session');
