@@ -1,8 +1,5 @@
 def send_email_to(email, subject, body)
 
-  puts body
-  return
-
   Pony.mail({
     to: email,
     from: "Syme <team@getsyme.com>",
@@ -22,9 +19,9 @@ def send_email_to(email, subject, body)
 
 end
 
-def send_beta_invite(email, token)
+def send_beta_invite(email)
 
-  subject = "You've been signed up for an invite"
+  subject = "Welcome to Syme beta"
 
   message = haml :'mails/send_beta_invite',
     layout: :'mails/layout'
@@ -33,7 +30,7 @@ def send_beta_invite(email, token)
 
 end
 
-def send_beta_welcome(email, token)
+def send_beta_welcome(email)
 
   subject = "Welcome to Syme beta"
 
@@ -44,12 +41,9 @@ def send_beta_welcome(email, token)
 
 end
 
-def send_email_confirm(email, token)
+def send_email_confirm(email)
 
   subject = "Confirm your Syme account"
-
-  # @LOUIS: @user DOESN'T SEEM TO BE DEFINED HERE
-  return
 
   message = haml :'mails/send_email_confirm',
     layout: :'mails/layout',
@@ -59,7 +53,7 @@ def send_email_confirm(email, token)
 
 end
 
-def send_invite(email, token)
+def send_invite(email)
 
   subject = "You've been invited to a group on Syme"
 
@@ -67,7 +61,7 @@ def send_invite(email, token)
 
   message = haml invitee.nil? ?
     :'mails/send_invite_new_user' : :'mails/send_invite_old_user',
-    layout: 'mails/layout'
+    layout: :'mails/layout'
 
   send_email_to(email, subject, message)
 

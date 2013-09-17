@@ -77,7 +77,7 @@ post '/invitations', auth: [] do
 
   track @user, 'User invited new group member'
   
-  send_invite(invitation.email, token)
+  send_invite(invitation.email)
 
   { status: 'ok', token: token }.to_json
 
@@ -140,11 +140,11 @@ put '/invitations', auth: [] do
         comment = post.complete_comments.find(comment_info['id'])
         comment.keys[invitee_id] = comment_info['key']
 
+        comment.save!
         
-        comment.timeless.save!
       end
 
-      post.timeless.save!
+      post.save!
 
     end
     
