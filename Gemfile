@@ -5,7 +5,7 @@ gem 'rack', '>= 1.5.2'
 gem 'sinatra'
 gem 'thin'
 gem 'foreman'
-  
+
 # * Security * #
 gem 'rack-ssl',
   require: 'rack/ssl'
@@ -29,13 +29,14 @@ gem 'stripe'
 gem 'analytics-ruby',
   require: 'analytics-ruby'
 
-# * Deployment * #  
+# * Deployment * #
 gem 'capistrano'
 gem 'rvm-capistrano'
-  
+
 # * Assets * #
 gem 'sprockets'
 gem 'sass'
+gem 'haml'
 gem 'i18n'
 
 gem 'guard'
@@ -48,7 +49,7 @@ gem 'closure-compiler'
 
 gem 'therubyracer',
   require: 'v8'
-  
+
 # * Development * #
 group :development do
   gem 'rake'

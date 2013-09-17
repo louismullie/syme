@@ -172,6 +172,7 @@ DEPENDENCIES
   guard
   guard-haml
   guard-steering
+  haml
   htmlentities
   i18n
   json
