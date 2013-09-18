@@ -21,10 +21,7 @@
       {{> groups-create.hbs}}
 
       // Group Loop
-      {{#each groups}}
-      %li.group-card{ :'data-index' => '{{@index}}' }
-        {{> groups-group.hbs}}
-      {{/each}}
+      {{#each groups}} {{> groups-group.hbs}} {{/each}}
 
     {{else}}
 

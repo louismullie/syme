@@ -44,7 +44,7 @@ Syme.Binders.add('groups', { main: function() {
 
     // Get <li>s
     var $ul = $('#groups ul'),
-        $li = $ul.children("li").not(':first-child');
+        $li = $ul.children("li").not('.group-create');
 
     // Store, remove and sort <li>s
     var sortedLi = $li.detach().sort(function(a, b) {
@@ -63,6 +63,12 @@ Syme.Binders.add('groups', { main: function() {
 
   };
 
+  // Append data-index
+  $('#groups ul li').not('.group-create').each(function(i){
+    $(this).attr('data-index', i);
+  });
+
+  // Enquire rules (javascript media queries)
   enquire
     // Small
     .register("screen and (max-width:767px)", {
@@ -120,12 +126,12 @@ Syme.Binders.add('groups', { main: function() {
 
     // Build the URL for the group creation API call.
     var createGroupUrl = Syme.Url.fromGroup();
-    
+
     // Create a new empty group on the server.
     $.encryptedAjax(createGroupUrl, {
-      
+
       type: 'POST',
-      
+
       data: {  name: name },
 
       // Callback when group creation has succeeded.
@@ -134,7 +140,7 @@ Syme.Binders.add('groups', { main: function() {
         // Get the group ID from the AJAX response.
         var groupId = group.id;
 
-        // Create the keylist 
+        // Create the keylist
         Syme.Crypto.createKeylist(group.id, function (encryptedKeyfile) {
 
           // Get the user modal from the current session.
@@ -145,13 +151,13 @@ Syme.Binders.add('groups', { main: function() {
 
             // Get the current user's ID from the current session.
             var userId = Syme.CurrentSession.getUserId();
-            
+
             // Build the target route for redirection after group creation.
             var targetGroupRoute = Syme.Url.join('users', userId, 'groups', groupId);
-            
+
             // Build the URL for the group creation acknowledgement API call.
             var updateGroupUrl = Syme.Url.fromBase(targetGroupRoute);
-            
+
             // Acknowledge that group was successfully created in keyfile.
             $.encryptedAjax(updateGroupUrl, {
 
@@ -169,7 +175,7 @@ Syme.Binders.add('groups', { main: function() {
 
               // Callback when group creation acknowledgement fails.
               error: function (response) {
-                
+
                 Syme.Error.ajaxError(response, 'acknowledge', 'group');
                 $this.data('active', false);
 
@@ -180,23 +186,23 @@ Syme.Binders.add('groups', { main: function() {
           });
 
         });
-        
+
       },
 
       // Callback when group creation failed.
       error: function (response) {
         Syme.Error.ajaxError(response, 'create', 'group');
       }
-      
+
     });
 
   });
 
   // Delete group
   $('#main').on('click', '.delete-group', function (e) {
-    
+
     var $this = $(this);
-    
+
     // Get the group id from the form.
     // This is a global variable on purpose. Gods have not
     // wanted this local variable to persist into the callback
@@ -211,28 +217,28 @@ Syme.Binders.add('groups', { main: function() {
     // Sincerely,
     // Chris and Louis
     Syme.globals.toDeleteGroupId = $this.data('group-id');
-    
+
     e.preventDefault();
-    
+
     var modal = Syme.Messages.modals.confirm.deleteGroup;
-    
+
     var callback = function(value) {
-      
+
       var groupId = Syme.globals.toDeleteGroupId;
-      
+
       // If user did not enter the right confirmation
       // token (i.e. "delete"), do nothing and return.
       if (value != 'delete') return;
-      
+
       // Get current user id from session.
       var userId = Syme.CurrentSession.getUserId();
-      
+
       // Build API url to call to delete group.
       var deleteGroupUrl = Syme.Url.fromGroup(groupId);
 
       // Delete group on server, then do further cleanup.
       $.encryptedAjax(deleteGroupUrl, {
-        
+
         // DELETE /users/userId/groups/groupId
         type: 'DELETE',
 
@@ -254,20 +260,20 @@ Syme.Binders.add('groups', { main: function() {
           });
 
         },
-        
+
         // Callback when group deletion failed.
         error: function (response) {
           Syme.Error.ajaxError(response, 'delete', 'group');
         }
 
       });
-      
+
       delete Syme.globals.toDeleteGroupId;
 
     };
-    
+
     var prompt = new Prompt(modal.message, callback, modal);
-    
+
     prompt.show();
 
   });
@@ -278,11 +284,11 @@ Syme.Binders.add('groups', { main: function() {
     var groupId = $(this).data('group-id');
     var userId = Syme.CurrentSession.getUserId();
     var modal = Syme.Messages.modals.confirm.leaveGroup;
-    
+
     Confirm.show(modal.message,
-      
+
       {
-        
+
         closable: true,
         title: modal.title,
         submit: modal.submit,
@@ -291,23 +297,23 @@ Syme.Binders.add('groups', { main: function() {
         onsubmit: function(){
 
           var baseUrl = Syme.Url.fromGroup(groupId);
-          
+
           var deleteMembershipUrl = Syme.Url.join(
             baseUrl, 'memberships', userId);
-          
+
           $.encryptedAjax(deleteMembershipUrl, {
-            
+
             type: 'DELETE',
 
             // Callback when membership deletion succeeded.
             success: function () {
-              
+
               var user = Syme.CurrentSession.getUser();
-              
+
               user.deleteKeylist(groupId, function () {
                 Syme.Router.reset();
               });
-              
+
             },
 
             // Callback when membership deletion failed.
@@ -318,7 +324,7 @@ Syme.Binders.add('groups', { main: function() {
           });
 
         }
-        
+
       }
     );
   });
