@@ -7,7 +7,7 @@ Syme.Binders.add('register', { main: function(){
     showErrors: function (input, errors) {
 
       // If the form hasn't been submitted yet, don't show errors
-      // unless the concern input is [data-validate-persistent="true"]
+      // unless the concerned input is [data-validate-persistent="true"]
       if (!input.closest('form').data('submit-failed') &&
           !input.data('validate-persistent')) return;
 
@@ -98,14 +98,14 @@ Syme.Binders.add('register', { main: function(){
 
   // Registering mode
   $('#auth').on('submit', '#register-form', function(e) {
-    
+
     var $this = $(this);
-    
+
     if (Syme.Compatibility.inChromeExtension())
       chrome.storage.local.set({ 'hasRegistered':  true });
-    
+
     e.preventDefault();
-    
+
     // Lock event
     if( $this.data('active') ) {
       return false;
@@ -124,12 +124,12 @@ Syme.Binders.add('register', { main: function(){
     Syme.Auth.register(email, password, fullName, remember, function (error) {
       $('#auth').trigger('registrationError', error);
     });
-    
+
   });
 
   // Registration error
   $('#auth').on('registrationError', function (e, error) {
-    
+
     var $this = $(this);
 
     var errorMessage = Syme.Messages.error.registration[error];
@@ -144,10 +144,10 @@ Syme.Binders.add('register', { main: function(){
     // Set container as closest .validation-container
     var $container = $this.find('input[name="' + errorField + '"]')
                           .closest('div.validation-container');
-    
+
     // Get message box
     var $box, $message = $container.find('div.validation-message');
-    
+
     // If box does not exist
     if ($message.length == 0) {
       // Create the box
@@ -157,32 +157,41 @@ Syme.Binders.add('register', { main: function(){
       var $box = $container.find('div.validation-message')
         .attr('data-related-input', errorField);
     }
-    
+
     // Fill message in box
     $box.html( errorMessage );
 
     // Unlock event
     $this.data('submit-failed', true);
     $this.find('#register-form').data('active', false);
-    
+
     // Release spinner
     $this.trigger('showSpinner', false);
-    
+
     return null;
 
   });
-  
+
+  // Spinner
   $('#auth').on('showSpinner', function (e, show) {
-    
+
     var $this = $(this);
-    
-    var submitButton = $this.find('a[role="submit"]');
-    
-    if (show == true) submitButton.addClass('loading');
-    if (show == false) submitButton.removeClass('loading');
-    
+
+    var submitButton  = $this.find('a[role="submit"]'),
+        spinnerAction = show ? 'addClass' : 'removeClass';
+
+    submitButton[spinnerAction]('loading');
+
     return null;
-    
+
   });
-  
+
+  // Terms of use and Privacy Policy modals
+  $('#auth').on('click', 'a#terms-of-use', function(e){
+    Modal.show('Terms of Use', {});
+  });
+  $('#auth').on('click', 'a#privacy-policy', function(e){
+    Modal.show('Privacy Policy', {});
+  });
+
 }});

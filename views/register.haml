@@ -31,6 +31,12 @@
             %i.icon-lock
             %input{ type: 'password', name: 'password_confirm', placeholder: 'Confirm password', :'data-validate-equals-to' => 'password' }
 
+        %label{ for: 'i_agree' }
+          %input#i_agree{type: 'checkbox', name: 'i_agree', tabindex: '3'}
+          %span
+            I agree to the <a id="terms-of-use" href="#">terms of use</a>
+            and the <a id="privacy-policy" href="#">privacy policy</a>.
+
         %input{ type: 'submit' }
         %a.btn.btn-success{ href: '#', role: 'submit' }
           Register <i class="icon-spinner icon-spin"></i>
