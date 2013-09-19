@@ -9,9 +9,20 @@
 
       = yield
 
+      %p{ style: 'margin: 0 0 1em 0;' }
+        Sincerely,
+
+      %p{ style: 'margin: 0;' }
+        The Syme Team
+
     // Footer
     %div{ style: 'padding: 15px 30px; color: #888; font-size: .9em; text-align: center; background-color: #f5f5f5; border: 1px solid #CCC; border-top: 1px solid #E7E7E7; border-radius: 0 0 5px 5px; line-height: 1.4em;' }
       You are receiving e-mail notifications from Syme. <br />
       You can disable this feature in the settings panel of the application.
+
       -# NOTE: I DON'T THINK THIS IS LEGAL
       -# AN UNSUBSCRIBE URL MAY BE REQUIRED BY LAW
+
+      %p
+        %a{ href: 'http://www.getsyme.com', target: '_blank' }
+          getsyme.com
