@@ -192,10 +192,23 @@ Syme.Binders.add('register', { main: function(){
 
   // Terms of use and Privacy Policy modals
   $('#auth').on('click', 'a#terms-of-use', function(e){
-    Alert.show('Terms of Use', { classes: 'modal-terms', title: 'Terms of Use' });
+    var content = Syme.Template.render('modals-terms-of-use');
+    Alert.show(content, {
+      classes: 'modal-terms',
+      title: 'Terms of Use',
+
+      onshow: function(){
+        $('.modal-content a.link-to-privacy-policy').click(function(e){
+          e.preventDefault();
+          $('a#privacy-policy').trigger('click');
+        })
+      }
+    });
   });
-  $('#auth').on('click', 'a#privacy-policy', function(e){
-    Alert.show('Privacy Policy', { classes: 'modal-terms', title: 'Privacy Policy' });
+
+  $('#auth').on('click', 'a#privacy-policy, a.link-to-privacy-policy', function(e){
+    var content = Syme.Template.render('modals-privacy-policy');
+    Alert.show(content, { classes: 'modal-terms', title: 'Privacy Policy' });
   });
 
 }});

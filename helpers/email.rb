@@ -41,6 +41,14 @@ def send_beta_welcome(email)
 
 end
 
+# FOR USE IN TUX ONLY
+# CALL: app.batch_beta('example@domain.com, example2@domain.com')
+def batch_beta(emails)
+  emails.delete(' ').split(',').each do |email|
+    send_beta_welcome(email)
+  end
+end
+
 def send_email_confirm(email)
 
   subject = "Confirm your Syme account"
