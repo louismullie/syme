@@ -1,5 +1,5 @@
 Alert = {
-  
+
   show: function(content, options) {
 
     var options  = typeof(options) === "undefined" ? {} : options;
@@ -18,5 +18,5 @@ Alert = {
 
     Modal.show(content, options);
   }
-  
+
 };

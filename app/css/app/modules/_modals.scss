@@ -148,6 +148,16 @@
       }
     }
 
+    // Terms
+    &.modal-terms {
+      @media #{$breakpointLarge}  { width: 50%; }
+      @media #{$breakpointMedium} { width: 60%; }
+
+      .modal-content {
+        text-align: left;
+      }
+    }
+
     .modal-title {
       padding: .5em 1em;
 

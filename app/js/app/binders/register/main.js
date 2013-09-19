@@ -192,10 +192,10 @@ Syme.Binders.add('register', { main: function(){
 
   // Terms of use and Privacy Policy modals
   $('#auth').on('click', 'a#terms-of-use', function(e){
-    Modal.show('Terms of Use', {});
+    Alert.show('Terms of Use', { classes: 'modal-terms', title: 'Terms of Use' });
   });
   $('#auth').on('click', 'a#privacy-policy', function(e){
-    Modal.show('Privacy Policy', {});
+    Alert.show('Privacy Policy', { classes: 'modal-terms', title: 'Privacy Policy' });
   });
 
 }});
