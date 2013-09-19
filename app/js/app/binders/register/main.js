@@ -15,24 +15,28 @@ Syme.Binders.add('register', { main: function(){
       var messages = {
 
         full_name: {
-          required: "Please enter your name",
-          minlength: "Your name is too short"
+          required:   "Please enter your name",
+          minlength:  "Your name is too short"
         },
 
         email: {
           required: "Please enter your email",
-          email: "Your email looks weird"
+          email:    "Your email looks weird"
         },
 
         password: {
-          required: "Please enter a password",
-          minlength: "Your password is too short",
-          differs_from: "You should only use your password in one field",
-          password_strength: "Your password isn't strong enough"
+          required:           "Please enter a password",
+          minlength:          "Your password is too short",
+          differs_from:       "You should only use your password in one field",
+          password_strength:  "Your password isn't strong enough"
         },
 
         password_confirm: {
           equals_to: "Passwords don't match"
+        },
+
+        i_agree: {
+          must_check: "You must agree to create an account"
         }
 
       };

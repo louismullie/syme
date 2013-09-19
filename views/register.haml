@@ -12,33 +12,34 @@
         .validation-container
           .input-text-icon
             %i.icon-user
-            %input{ type: 'text', name: 'full_name', placeholder: 'Full name', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', minlength: 5, required: '' }
+            %input{ type: 'text', name: 'full_name', tabindex: '1', placeholder: 'Full name', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', minlength: 5, required: '' }
 
         .validation-container
           .input-text-icon
             %i.icon-envelope
-            %input{ type: 'text', name: 'email', placeholder: 'Email address', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', :'data-validate-email' => 'true', required: '' }
+            %input{ type: 'text', name: 'email', tabindex: '2', placeholder: 'Email address', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', :'data-validate-email' => 'true', required: '' }
 
         .validation-container
           .input-text-icon
             %i.icon-lock
-            %input{ type: 'password', name: 'password', placeholder: 'Password', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true', :'data-validate-differs-from' => 'full_name, email' }
+            %input{ type: 'password', name: 'password', tabindex: '3', placeholder: 'Password', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true', :'data-validate-differs-from' => 'full_name, email' }
 
             #password-score.validation-append.hidden
 
         .validation-container
           .input-text-icon
             %i.icon-lock
-            %input{ type: 'password', name: 'password_confirm', placeholder: 'Confirm password', :'data-validate-equals-to' => 'password' }
+            %input{ type: 'password', name: 'password_confirm', tabindex: '4', placeholder: 'Confirm password', :'data-validate-equals-to' => 'password' }
 
-        %label{ for: 'i_agree' }
-          %input#i_agree{type: 'checkbox', name: 'i_agree', tabindex: '3'}
-          %span
-            I agree to the <a id="terms-of-use" href="#">terms of use</a>
-            and the <a id="privacy-policy" href="#">privacy policy</a>.
+        .validation-container
+          %label{ for: 'i_agree' }
+            %input#i_agree{type: 'checkbox', name: 'i_agree', :'data-validate-must-check' => 'true'}
+            %span
+              I agree to the <a id="terms-of-use" href="#">terms of use</a>
+              and the <a id="privacy-policy" href="#">privacy policy</a>.
 
         %input{ type: 'submit' }
-        %a.btn.btn-success{ href: '#', role: 'submit' }
+        %a.btn.btn-success{ href: '#', role: 'submit', tabindex: '5' }
           Register <i class="icon-spinner icon-spin"></i>
 
         %p.switchmode
