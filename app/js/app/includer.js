@@ -36,18 +36,23 @@ $(function(){
   Syme.Router = new Syme.Router();
 
   Syme.CurrentSession = new Syme.Session();
+  Syme.FileManager = new Syme.FileManager();
 
   Syme.CurrentSession.initialize(function () {
 
-    Backbone.history.start({ pushState: true });
+    Syme.FileManager.initialize(function () {
+      
+      Backbone.history.start({ pushState: true });
 
-    // Bind global binders
-    Syme.Binders.bind('global', false);
+      // Bind global binders
+      Syme.Binders.bind('global', false);
 
-    // Trigger root.
-    if (Syme.Compatibility.inChromeExtension()) {
-      Syme.Router.navigate('/');
-    }
+      // Trigger root.
+      if (Syme.Compatibility.inChromeExtension()) {
+        Syme.Router.navigate('/');
+      }
+      
+    });
 
   }, function () { alert('Session failed!'); });
 

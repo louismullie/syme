@@ -1,111 +1,101 @@
 Syme.Binders.add('global', { decrypt: function() {
 
-  // Post & comments decryption
-  $(document).on('decrypt', '.post, .comment-box', function (e, doneDecryptingCb) {
+  // Post & comments decryption and formatting.
+  $(document).on({
 
-    // Prevent event propagation to children
-    if ( e.target !== this ) return;
+    // Formatting
+    format: function (e) {
 
-    var $this             = $(this),
-        doneDecryptingCb  = doneDecryptingCb || $.noop;
+      var $this         = $(this),
+          $collapsable  = $this.find('.collapsable').first();
 
-    var $collapsable  = $this.find('.collapsable').first(),
-        text          = $collapsable.text().replace(/^\s+|\s+$/g, ''),
-        groupId       = $this.closest('.post').data('group_id');
+      // Create a jQuery wrapper around markdown'd text
+      var $content = $( marked( $collapsable.text() ) );
 
-    var replaceTextWithDecryptedText = function (decryptedText) {
+      // Replace mentions
+      $content.find('a[href^="id:"]').each(function(){
 
-      // Replace encrypted text by decrypted text in DOM
-      $collapsable.text(decryptedText);
+        // Get the part after the 'id:'
+        var id = $(this).attr('href').split(':')[1];
 
-      // Mark the container as decrypted, and format
-      $this.attr('data-encrypted', false).trigger('format');
+        // Add class, remove link and add data
+        $(this).addClass('mentioned-user')
+               .attr('href', '#')
+               .attr('data-mentioned-user-id', id);
 
-      // Decryption callback if there is one
-      doneDecryptingCb();
+      });
 
-    };
+      // Make sure external links open in new windows.
+      $content.find('a:not([href="#"])').attr('target', '_blank');
 
-    try {
+      // Put commenter name and comment tools in first paragraph of comment
+      $collapsable.closest('.comment-box').find('a.commenter-name')
+        .prependTo( $content.find('p:first-child') );
+
+      // Replace old content by formatted content
+      $collapsable.html( $content );
+
+      // Oembed.
+      $collapsable.oembed();
+
+      // Format dynamic timestamps.
+      $this.closest('.post-comments')
+        .find('time.timeago').timeago();
+
+    },
+
+    // Decryption
+    decrypt: function (e, done) {
+
+      var $this = $(this),
+          done  = done || $.noop;
+
+      var $collapsable  = $this.find('.collapsable').first(),
+          text          = $collapsable.text().replace(/^\s+|\s+$/g, ''),
+          groupId       = $this.closest('.post').data('group_id');
+
+      // Fault tolerance to prevent JSON.parse from failing     // @CHRIS:
+      if (!text.length) return;                                 // Keep these but raise
+                                                                // an exception instead
+      // Fault tolerance to prevent multiple decryption         // of returning and make
+      if ( $this.attr('data-encrypted') == "false" ) return;    // sure it never happens.
 
       // Decrypt message
-      Syme.Crypto.decryptMessage(groupId, text, replaceTextWithDecryptedText);
+      Syme.Crypto.decryptMessage(groupId, text, function(decryptedText){
 
-    } catch (e) {
+        // Replace encrypted text by decrypted text in DOM
+        $collapsable.text(decryptedText);
 
-      // In case of decryption failure, raise a console
-      // error with full backtrace. It is not supposed to
-      // happen, but keeping it as a debugging fail-safe
-      // seems like common sense because it is arguably the
-      // most crucial encryption-related event to happen to the DOM.
-      console.error('Error in decryption', $this, e);
+        // Mark the container as decrypted, and format
+        $this.attr('data-encrypted', false).trigger('format');
+
+        // Decryption callback if there is one
+        done();
+
+      });
 
     }
-
-  });
-
-  // Post & comments formatting
-  $(document).on('format', '.post, .comment-box', function (e) {
-
-    // Prevent event propagation to children
-    if ( e.target !== this ) return;
-
-    var $this         = $(this),
-        $collapsable  = $this.find('.collapsable').first();
-
-    // Create a jQuery wrapper around markdown'd text
-    var $content = $( marked( $collapsable.text() ) );
-
-    // Replace mentions
-    $content.find('a[href^="id:"]').each(function(){
-
-      // Get the part after the 'id:'
-      var id = $(this).attr('href').split(':')[1];
-
-      // Add class, remove link and add data
-      $(this).addClass('mentioned-user')
-             .attr('href', '#')
-             .attr('data-mentioned-user-id', id);
-
-    });
-
-    // Make sure external links open in new windows.
-    $content.find('a:not([href="#"])').attr('target', '_blank');
-
-    // Put commenter name and comment tools in first paragraph of comment
-    $collapsable.closest('.comment-box').find('a.commenter-name')
-      .prependTo( $content.filter('p').first() );
-
-    // Replace old content by formatted content
-    $collapsable.html( $content );
-
-    // Oembed.
-    $collapsable.oembed();
-
-    // Format dynamic timestamps.
-    $this.find('time.timeago').timeago();
-
-  });
+  }, '.post, .comment-box');
 
   // Avatar decryption
-  $(document).on('decrypt', '.user-avatar', function(e, doneDecryptingCb) {
+  $(document).on('decrypt', '.user-avatar', function(e, done) {
 
-    // Prevent event propagation to children
-    if ( e.target !== this ) return;
+    var $this = $(this),
+        done  = done || $.noop;
 
-    var $this             = $(this),
-        doneDecryptingCb  = doneDecryptingCb || $.noop;
-
-    var group_id  = Syme.CurrentSession.getGroupId(),
+    var groupId  = Syme.CurrentSession.getGroupId(),
         user_id   = $this.attr('data-user-id'),
-        avatar_id = $this.attr('data-avatar-id'),
+        avatarId = $this.attr('data-avatar-id'),
         keys      = $this.attr('data-keys');
 
-    if ( !keys ) return doneDecryptingCb();
+    if ( !keys ) return done();
 
-    var callback = function(url) {
+    // Decrypt and place avatar
+    var file = Syme.FileManager.buildFileInfo(avatarId, groupId, keys);
+    
+    Syme.FileManager.getFile(file, function(url) {
 
-      if (!url) return doneDecryptingCb();
+      if (!url) return done();
 
       // Set new src to master and slaves
       $this.add('.slave-avatar[data-user-id="' + user_id + '"]')
@@ -114,19 +104,17 @@ Syme.Binders.add('global', { decrypt: function() {
       // Set as decrypted
       $this.attr('data-encrypted', false);
 
-      doneDecryptingCb();
-
-    };
-
-    // Decrypt and place avatar
-    FileManager.getFile(avatar_id, keys, callback, group_id);
+      done();
+  
+    });
 
   });
 
   // Synchronize slaves to master avatars
   $(document).on('sync', '.slave-avatar', function(){
 
-    var $this = $(this);
+    var $this = $(this),
+        done  = done || $.noop;
 
     var user_id     = $this.attr('data-user-id'),
         master      = $('.user-avatar[data-user-id="' + user_id + '"]');
@@ -136,21 +124,21 @@ Syme.Binders.add('global', { decrypt: function() {
   });
 
   // Media decryption
-  $(document).on('decrypt', '.encrypted-image, .encrypted-video, .encrypted-audio', function(e, doneDecryptingCb){
+  $(document).on('decrypt', '.encrypted-image, .encrypted-video, .encrypted-audio', function(e, done){
 
-    var $this             = $(this),
-        doneDecryptingCb  = doneDecryptingCb || $.noop;
+    var $this = $(this),
+        done  = done || $.noop;
 
     var mediaId   = $this.attr('data-attachment-id'),
         keys      = $this.attr('data-attachment-keys'),
         type      = $this.attr('data-attachment-type'),
         groupId   = $this.attr('data-attachment-group');
 
-    if ( !keys ) return doneDecryptingCb();
+    if ( !keys ) return done();
 
     var callback = function(url){
 
-      if (!url) return doneDecryptingCb();
+      if (!url) return done();
 
       // Set src to element
       $this.attr('src', url)
@@ -159,11 +147,12 @@ Syme.Binders.add('global', { decrypt: function() {
       // Set as decrypted
       $this.attr('data-encrypted', false);
 
-      doneDecryptingCb();
+      done();
     };
 
     // Decrypt and place media
-    FileManager.getFile(mediaId, keys, callback, groupId);
+    var file = Syme.FileManager.buildFileInfo(mediaId, groupId, keys);
+    Syme.FileManager.getFile(file, callback);
 
   });
 

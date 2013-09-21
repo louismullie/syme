@@ -12,7 +12,7 @@ Syme.Binders.add('feed', { panel: function(){
     var trigger = $('#group-photo-edit');
 
     // Get filename
-    var filename = FileManager.getFilename($(this).val());
+    var filename = Syme.FileManager.getFilename($(this).val());
 
     // Return if filename is blank
     if (filename == '') return;
@@ -32,7 +32,7 @@ Syme.Binders.add('feed', { panel: function(){
     };
 
     // Thumbnail and upload avatar
-    var started = FileManager.selectGroupAvatar(
+    var started = Syme.FileManager.selectGroupAvatar(
       // Filename
       $(this)[0].files[0],
 

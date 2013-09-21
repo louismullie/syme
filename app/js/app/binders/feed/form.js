@@ -75,9 +75,9 @@ Syme.Binders.add('feed', { form: function(){
           // unencrypted post by self-socket update
           post.content = message;
           post.encrypted = false;
-
+          
           Syme.Socket.create.post({ view: post }, true);
-
+          
           // Reset uploads & attachments
           $form.find('#upload_id').val('');
           $form.find('#upload-box').removeClass('active').hide();
@@ -152,7 +152,7 @@ Syme.Binders.add('feed', { form: function(){
       event.preventDefault();
       $(draghelper).hide();
       var file = event.originalEvent.dataTransfer.files[0];
-      FileManager.selectFile(file);
+      Syme.FileManager.selectFile(file);
     });
 
   // Trigger avatar changing
@@ -168,7 +168,7 @@ Syme.Binders.add('feed', { form: function(){
   $('#upload_avatar').on('change', function() {
 
     // Get filename
-    var filename = FileManager.getFilename($(this).val());
+    var filename = Syme.FileManager.getFilename($(this).val());
 
     // Return if filename is blank
     if (filename == "") return;
@@ -193,7 +193,7 @@ Syme.Binders.add('feed', { form: function(){
     };
 
     // Thumbnail and upload avatar
-    var started = FileManager.selectAvatar(
+    var started = Syme.FileManager.selectAvatar(
       // Filename
       $(this)[0].files[0],
 
@@ -223,6 +223,6 @@ Syme.Binders.add('feed', { form: function(){
   });
 
   // Prepare file upload when the file is changed.
-  $('#upload_file').on('change', FileManager.selectFile);
+  $('#upload_file').on('change', Syme.FileManager.selectFile);
 
 } }); // Syme.Binders.add();

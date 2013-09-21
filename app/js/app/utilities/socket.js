@@ -87,7 +87,7 @@ Syme.Socket = {
 
       // Don't display a post in the wrong group
       if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
-
+      
       // If post already exists, return.
       if ($('#' + post.view.id).length) return;
 
@@ -112,20 +112,10 @@ Syme.Socket = {
 
       // Decrypt
       if(decrypted){
-
         $post.trigger('format');
         Syme.Crypto.formatCollection($post);
-
-        // @LOUIS: ADD IMAGES TO INSTANT POSTING AND
-        // DELETE THE FOLLOWING LINE
-        $post.find('[data-encrypted="true"]').trigger('decrypt');
-
       } else {
-
-        // Add potential images to batchDecrypt
-        var $toDecrypt = $post.add( $post.find('[data-encrypted="true"]') );
-        Syme.Crypto.batchDecrypt($.noop, $toDecrypt);
-
+        Syme.Crypto.batchDecrypt($.noop, $post);
       }
 
     },
@@ -146,18 +136,13 @@ Syme.Socket = {
       var $comment = $(Syme.Template.render('feed-comment', data.view));
       $commentContainer.append( $comment );
 
+      // Organize comment container
+      $commentContainer.trigger('organize');
+
       // Format or decrypt
       if (decrypted) {
-
-        // Organize comment container
-        $commentContainer.trigger('organize');
-
-        // Format comment
         $comment.trigger('format');
-
-        // Format collection
         Syme.Crypto.formatCollection($comment);
-
       } else {
         Syme.Crypto.batchDecrypt($.noop, $comment);
       }
@@ -312,7 +297,7 @@ Syme.Socket = {
       if (data.action == 'request') {
 
         var sentence = ' would like to send you the following file: ';
-        var filename = FileManager.getFilename(data.filename);
+        var filename = Syme.FileManager.getFilename(data.filename);
 
         Alert.show(data.sender_name + sentence + filename);
 
@@ -324,7 +309,7 @@ Syme.Socket = {
 
         var recipient = $('#' + data.recipient_id)
         var file = recipient.find('input[type="file"]')[0].files[0];
-        FileManager.uploadTransfer(file, data.transfer_id);
+        Syme.FileManager.uploadTransfer(file, data.transfer_id);
 
       } else if (data.action == 'start') {
 

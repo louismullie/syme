@@ -70,9 +70,9 @@ Syme.Binders.add('global', { main: function(){
     var $this = $(this),
         done  = done || $.noop;
 
-    var image_id  = $this.attr('data-attachment-id'),
+    var imageId  = $this.attr('data-attachment-id'),
         keys      = $this.attr('data-attachment-keys'),
-        group_id  = $this.attr('data-attachment-group');
+        groupId  = $this.attr('data-attachment-group');
 
     if ( !keys ) return done();
 
@@ -88,9 +88,11 @@ Syme.Binders.add('global', { main: function(){
       done();
 
     }
+    
+    var file = Syme.FileManager.buildFileInfo(imageId, groupId, keys);
 
     // Decrypt and place background-image
-    FileManager.getFile(image_id, keys, callback, group_id);
+    Syme.FileManager.getFile(file, callback);
 
   });
 
