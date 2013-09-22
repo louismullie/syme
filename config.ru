@@ -2,8 +2,6 @@ require 'bundler/setup'
 require 'sinatra/base'
 require 'securerandom'
 
-ENV['RACK_ENV'] = 'PRODUCTION'
-
 $root = File.dirname(__FILE__)
 
 # Setup server-side sessions.
@@ -45,7 +43,8 @@ if ENV['RACK_ENV'] == 'PRODUCTION'
     # 'report-uri' => '/route/for/report'
     # Leave media-src, img-src and frame-src.
   }
-  
+
+=begin
   # Enable token protection against CSRF.
   require 'rack/csrf'
 
@@ -53,10 +52,10 @@ if ENV['RACK_ENV'] == 'PRODUCTION'
     # Allow registration without CSRF.
     'POST:/users',
     # Allow login without CSRF.
-    'POST:/users/current/sessions',
+    'POST:/users/current/sessions'
   ]
-  
-  
+=end
+
   require 'active_support'
   require 'rack/attack'
 
