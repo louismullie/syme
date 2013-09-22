@@ -9,6 +9,9 @@ set :haml, layout: false
 set store: $store
 set secure: $secure
 
+set :show_exceptions, false
+set :raise_errors, false
+
 # Default to production environment
 unless ENV['SYME_ENV'] == 'development'
   set :environment, :production
