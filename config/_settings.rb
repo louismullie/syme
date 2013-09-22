@@ -9,6 +9,10 @@ set :haml, layout: false
 set store: $store
 set secure: $secure
 
+unless ENV['RACK_ENV'] == 'DEVELOPMENT'
+  set :environment, :production
+end
+
 # Environment-specific config.
 if settings.environment == :development
   set :reload_templates, true
