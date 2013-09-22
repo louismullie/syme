@@ -107,6 +107,9 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
 
   if params[:last]
 
+    upload.complete = true
+    upload.save!
+    
     if upload.is_a?(GroupAvatar)
 
       group = upload.group

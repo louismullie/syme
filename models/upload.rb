@@ -42,10 +42,10 @@ class Upload < Resource
   field :image_size, type: String
   
   # Whether the upload has finished or not.
-  field :finished, type: Boolean
+  field :complete, type: Boolean
   
   attr_accessible :key, :keys, :store, :filename,
-  :size, :image_size, :finished, :thumbnail_id, :type, :encrypted
+  :size, :image_size, :complete, :thumbnail_id, :type, :encrypted
 
   def thumbnail
     group.thumbnails.find(thumbnail_id) if thumbnail_id

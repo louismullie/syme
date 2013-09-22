@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
 # * Application * #
-gem 'rack', '>= 1.5.2'
+gem 'rack'
 gem 'sinatra'
 gem 'thin'
 gem 'foreman'
+gem 'rufus-scheduler'
 
 # * Security * #
 gem 'rack-ssl',

@@ -7,6 +7,7 @@ class User
   include User::Deletable
 
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   has_and_belongs_to_many :groups
   has_and_belongs_to_many :hangouts
@@ -26,5 +27,7 @@ class User
   field :activated, type: Boolean
   field :session_id, type: String
   field :keyfile, type: String
+  
+  field :complete
 
 end
