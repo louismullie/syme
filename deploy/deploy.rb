@@ -38,10 +38,10 @@ namespace :deploy do
   
   task :restart, roles: :app do
 
-    run "cd #{release_path}"
-    run "export RACK_ENV=PRODUCTION"
-    run "bundle install"
-    run "thin restart --servers 3 -p 3000 -e production"
+    run "cd #{release_path} &&" +
+        "export RACK_ENV=PRODUCTION &&"
+        "bundle install &&"
+        "thin restart --servers 3 -p 3000 -e production"
 
   end
 
