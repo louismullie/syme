@@ -42,7 +42,7 @@ namespace :deploy do
     thin_opts = "-p 3000 -P #{pid_path} -l #{log_path}"
     thin_call = "-servers 3 -e production #{thin_opts}"
     
-    run "cd #{current_release} && "
+    run "cd #{current_release} && " +
         "export RACK_ENV=PRODUCTION && " +
         "bundle install && " +
         "thin restart #{thin_call}"
