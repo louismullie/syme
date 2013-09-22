@@ -15,9 +15,17 @@ if settings.environment == :development
     if File.readable?(layout_path)
       File.read(layout_path)  
     else
-      settings.environment.inspect
+      'Layouts have not been generated.'
     end
   
+  end
+  
+else
+  
+  get '/' do
+    
+    error 404
+    
   end
   
 end

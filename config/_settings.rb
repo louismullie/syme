@@ -9,7 +9,8 @@ set :haml, layout: false
 set store: $store
 set secure: $secure
 
-unless ENV['RACK_ENV'] == 'DEVELOPMENT'
+# Default to production environment
+unless ENV['SYME_ENV'] == 'development'
   set :environment, :production
 end
 
