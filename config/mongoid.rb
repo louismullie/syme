@@ -1,2 +1,2 @@
 require 'mongoid'
-Mongoid.load!('./config/mongoid.yml', $env)
+Mongoid.load!('./config/mongoid.yml', settings.environment)

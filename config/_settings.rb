@@ -7,11 +7,10 @@ set app_title: 'Syme'
 set :haml, layout: false
 
 set store: $store
-set environment: $env
 set secure: $secure
 
 # Environment-specific config.
-if $env == :development
+if settings.environment == :development
   set :reload_templates, true
 end
 

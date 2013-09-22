@@ -1,5 +1,3 @@
-$env = :production
-
 require 'rufus-scheduler'
 require './config/mongoid'
 require './models/user'

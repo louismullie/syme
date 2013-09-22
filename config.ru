@@ -13,12 +13,9 @@ use Rack::Session::Memcache,
   path: '/',
   secret: '8dg236rgd31238fb13vd65'
 
-if ENV['RACK_ENV'] == 'PRODUCTION'
-
-  $env = :production
+if ENV['RACK_ENV'].upcase == 'PRODUCTION'
 
 =begin
-  $env, $secure = :production, true
 
   # Enforce SSL for all connections.
   require 'rack/ssl'
@@ -70,14 +67,24 @@ if ENV['RACK_ENV'] == 'PRODUCTION'
 
 else
 
-  $env, $secure = :development, false
-
   # Disable caching alltogether.
   require 'rack/nocache'
   use Rack::Nocache
 
   # Show exceptions from Sinatra.
   use Rack::ShowExceptions
+
+  # Dynamically generate assets
+  map '/assets' do
+
+    environment = Sprockets::Environment.new
+
+    environment.append_path 'app/js'
+    environment.append_path 'app/css'
+
+    run environment
+
+  end
 
 end
 
@@ -88,25 +95,9 @@ Rack::Mime::MIME_TYPES.merge!({
   ".otf" => "font/otf",
   ".svg" => "image/svg+xml",
   ".woff" => "application/x-font-woff"
-})
+})$
 
 require './app'
-
-map '/assets' do
-
-  environment = Sprockets::Environment.new
-
-  environment.append_path 'app/js'
-  environment.append_path 'app/css'
-
-  if $env == :production
-    environment.js_compressor = Closure::Compiler.new
-    environment.css_compressor = :sass
-  end
-
-  run environment
-
-end
 
 map '/' do
   run Syme::Application
