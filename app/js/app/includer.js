@@ -37,7 +37,7 @@ $(function(){
 
   Syme.CurrentSession = new Syme.Session();
   Syme.FileManager = new Syme.FileManager();
-
+  
   Syme.CurrentSession.initialize(function () {
 
     Syme.FileManager.initialize(function () {
