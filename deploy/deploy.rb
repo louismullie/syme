@@ -29,8 +29,6 @@ role :web, location
 role :app, location
 role :db, location, primary: true
 
-after 'deploy:update', 'deploy:restart'
-
 # Post-deploy tasks.
 namespace :deploy do
 
