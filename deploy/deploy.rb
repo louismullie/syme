@@ -38,6 +38,7 @@ namespace :deploy do
   
   task :restart, roles: :app do
 
+    run "cd #{release_path} && thin stop --servers 3 -p 3000"
     run "#{try_sudo} rm -rf #{release_path}/tmp #{release_path}/log"
 
     run "cd #{release_path} && " +
