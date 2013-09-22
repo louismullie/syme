@@ -36,12 +36,15 @@ namespace :deploy do
   
   task :restart, roles: :app do
 
-    run "cd #{previous_release} && thin stop --servers 3 -p 3000 -P thin.pid -l thin.log"
+    thin_opts = "-p 3000 -P thin.pid -l thin.log"
+    
+    run "cd #{previous_release} && " +
+        "thin stop --servers 3 #{thin_opts}"
      
-    run "cd #{current_release} && " +
-        "export RACK_ENV=PRODUCTION &&" +
-        "bundle install &&" +
-        "thin start --servers 3 -p 3000 -e production -P thin.pid -l thin.log"
+    run "cd #{current_release} && "
+        "export RACK_ENV=PRODUCTION && " +
+        "bundle install && " +
+        "thin start --servers 3 -e production #{thin_opts}"
 
   end
 
