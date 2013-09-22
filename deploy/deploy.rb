@@ -36,9 +36,9 @@ namespace :deploy do
   
   task :restart, roles: :app do
 
-    run "cd #{current_path} && thin stop --servers 3 -p 3000"
+    run "cd #{previous_release} && thin stop --servers 3 -p 3000"
     
-    run "cd #{release_path} && " +
+    run "cd #{current_release} && " +
         "export RACK_ENV=PRODUCTION &&" +
         "bundle install &&" +
         "thin start --servers 3 -p 3000 -e production"
