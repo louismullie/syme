@@ -15,7 +15,7 @@ if settings.environment == :development
     if File.readable?(layout_path)
       File.read(layout_path)  
     else
-      'Layouts have not been generated.'
+      settings.environment.inspect
     end
   
   end
