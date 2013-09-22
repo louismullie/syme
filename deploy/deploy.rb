@@ -44,7 +44,7 @@ namespace :deploy do
     run "cd #{release_path} && " +
         "export RACK_ENV=PRODUCTION &&" +
         "bundle install &&" +
-        "thin restart --servers 3 -p 3000 -e production"
+        "thin start --servers 3 -p 3000 -e production"
 
   end
 
