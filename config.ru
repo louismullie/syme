@@ -95,7 +95,7 @@ Rack::Mime::MIME_TYPES.merge!({
   ".otf" => "font/otf",
   ".svg" => "image/svg+xml",
   ".woff" => "application/x-font-woff"
-})$
+})
 
 require './app'
 
