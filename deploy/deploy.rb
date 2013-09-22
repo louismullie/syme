@@ -43,7 +43,7 @@ namespace :deploy do
     thin_call = "-s 3 -e production #{thin_opts}"
     
     run "cd #{current_release} && " +
-        "export RACK_ENV=PRODUCTION && " +
+        "export RACK_ENV=\"PRODUCTION\" && " +
         "bundle install && " +
         "thin restart #{thin_call}"
 
