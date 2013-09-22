@@ -36,12 +36,12 @@ namespace :deploy do
   
   task :restart, roles: :app do
 
-    run "cd #{previous_release} && thin stop --servers 3 -p 3000"
+    run "cd #{previous_release} && thin stop --servers 3 -p 3000 -P thin.pid"
      
     run "cd #{current_release} && " +
         "export RACK_ENV=PRODUCTION &&" +
         "bundle install &&" +
-        "thin start --servers 3 -p 3000 -e production"
+        "thin start --servers 3 -p 3000 -e production -P thin.pid"
 
   end
 
