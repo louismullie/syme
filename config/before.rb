@@ -2,7 +2,11 @@ before do
 
   # Get the current user's infos.
   if user_id = session[:user_id]
-    @user = User.find(user_id)
+    begin
+      @user = User.find(user_id)
+    rescue Mongoid::Errors::DocumentNotFound
+      # User deleted meanwhile
+    end
   end
 
   # Set default content type.
