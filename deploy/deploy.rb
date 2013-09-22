@@ -39,8 +39,8 @@ namespace :deploy do
     pid_path = "#{shared_path}/thin.pid"
     log_path = "#{shared_path}/thin.log"
     
-    thin_opts = "-p 3000 -P #{pid_path} -l #{log_path}"
-    thin_call = "--servers 3 -e production #{thin_opts}"
+    thin_opts = "-p 3000 -P #{pid_path} -l #{log_path} -O"
+    thin_call = "-s 3 -e production #{thin_opts}"
     
     run "cd #{current_release} && " +
         "export RACK_ENV=PRODUCTION && " +
