@@ -15,16 +15,6 @@ use Rack::Session::Memcache,
 
 if ENV['RACK_ENV'].upcase == 'PRODUCTION'
 
-=begin
-
-  # Enforce SSL for all connections.
-  require 'rack/ssl'
-  use Rack::SSL
-
-  # use Rack::Protection::EscapedParams
-
-=end
-
   # Setup a strict CSP to discourage XSS.
   require 'content-security-policy'
 
