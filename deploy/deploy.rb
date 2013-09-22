@@ -39,8 +39,8 @@ namespace :deploy do
     pid_path = "#{shared_path}/thin.pid"
     log_path = "#{shared_path}/thin.log"
     
-    thin_opts = "-p 3000 -P #{pid_path} -l #{log_path} -O"
-    thin_call = "-s 3 -e production #{thin_opts}"
+    thin_opts = "-P #{pid_path} -l #{log_path} -O"
+    thin_call = "-e production -s 3 -p 3000 #{thin_opts}"
     
     run "cd #{current_release} && " +
         "bundle install && " +
