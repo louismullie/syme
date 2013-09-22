@@ -38,7 +38,7 @@ namespace :deploy do
   
   task :restart, roles: :app do
 
-    run "#{try_sudo} rm -rf tmp log"
+    run "#{try_sudo} cd #{release_path} && rm -rf tmp log"
 
     run "cd #{release_path} && " +
         "export RACK_ENV=PRODUCTION &&" +
