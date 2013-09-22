@@ -8,11 +8,14 @@ before do
   # Set default content type.
   content_type 'application/json'
   
+  # Obfuscate the server type
+  response.headers['Server'] = 'syme'
+  
   # If this is a preflight OPTIONS request, then short-circuit the
   # request, return only the necessary headers with status code 200.
   if request.request_method == 'OPTIONS'
 
-    headers['Access-Control-Allow-Origin'] = 
+    response.headers['Access-Control-Allow-Origin'] = 
     'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani'
 
     response.headers["Access-Control-Allow-Methods"] =
@@ -21,18 +24,18 @@ before do
     response.headers["Access-Control-Allow-Headers"] =
     "X-Requested-With, X-Prototype-Version, X_CSRF_TOKEN"
 
-    headers['Access-Control-Max-Age'] = '1728000'
+    response.headers['Access-Control-Max-Age'] = '1728000'
 
     halt 200
 
   # For all responses, return the CORS access control headers.
   else
 
-    headers['Access-Control-Allow-Origin'] = 
+    response.headers['Access-Control-Allow-Origin'] = 
     'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani'
-  
-    headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
-    headers['Access-Control-Max-Age'] = "1728000"
+    
+    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+    response.headers['Access-Control-Max-Age'] = "1728000"
 
   end
 
