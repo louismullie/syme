@@ -47,7 +47,10 @@ namespace :extensions do
                     'SERVER_URL="https://getsyme.com:81";')
       File.open('.extension/assets/app.js', "w+") { |f| f.write(contents) }
     end
-
+    
+    # Zip file and remove folder
+    `zip -r chrome.zip .extension`
+    
   end
   
 end

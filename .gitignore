@@ -4,6 +4,7 @@
 
 *.log
 *.pid
+*.zip
 
 *.hbs.js
 
