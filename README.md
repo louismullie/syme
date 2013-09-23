@@ -17,7 +17,7 @@ rvm install 1.9.3
 **Install Binaries**
 
 ```
-sudo brew install nginx haproxy memcached redis mongodb
+sudo brew install nginx memcached amqp mongodb
 ```
 
 **Install Syme**
@@ -35,6 +35,9 @@ rvm use 1.9.3
 foreman start
 ```
 
-###Ubuntu
+**Deploy Syme**
 
-Coming soon.
+```
+cap deploy:setup
+cap deploy
+```

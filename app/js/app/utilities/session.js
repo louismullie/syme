@@ -95,6 +95,14 @@ Syme.Session = function (csrfToken) {
 
   };
   
+  this.tearDown = function () {
+    
+    // Delete WebWorker pools (download, upload, crypto)
+    // Delete session/user
+    // Clear cache (?)
+    
+  };
+  
   this.initializeWithPasswordAndKey = function (password, key, remember, callback) {
     
     this.password = password;

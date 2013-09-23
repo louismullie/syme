@@ -182,6 +182,8 @@ delete '/users/:user_id', auth: [] do |user_id|
   if user_id != @user.id.to_s
     error 403, 'unauthorized'
   end
+  
+  track @user, 'User deleted account'
 
   # Destroy all of the user's groups.
   @user.groups.each do |group|

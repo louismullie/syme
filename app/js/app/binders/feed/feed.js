@@ -148,6 +148,8 @@ Syme.Binders.add('feed', { feed: function(){
   // Prevent leaving if there's unsaved content
   $(window).bind("beforeunload", function(e) {
 
+    Syme.Cache.clear();
+    
     var unsavedContent = _.any($('textarea'),
       function (textarea) { return textarea.value != ''; });
 

@@ -32,7 +32,7 @@ Syme.Cache = {
     
     var url = this.cache[id];
     
-    Object.revokeObjectURL(url);
+    URL.revokeObjectURL(url);
     
     delete url; delete id;
     
@@ -40,30 +40,13 @@ Syme.Cache = {
     
   },
   
-  getAsBlob: function (id, callback) {
+  clear: function () {
     
-    var blobUrl = this.getAsBlob[id];
+    var _this = this;
     
-    var xhr = new XMLHttpRequest;
-    xhr.responseType = 'blob';
-
-    xhr.onload = function() {
-      
-      var recoveredBlob = xhr.response;
-
-      var reader = new FileReader;
-
-      reader.onload = function() {
-       var blobAsDataUrl = reader.result;
-       window.location = blobAsDataUrl;
-      };
-
-      reader.readAsDataURL(recoveredBlob, callback);
-
-    };
-
-    xhr.open('GET', blobUrl);
-    xhr.send();
+    _.each(_this.cache[id], function (url, id) {
+      _this.delete(id);
+    });
     
     return null;
     

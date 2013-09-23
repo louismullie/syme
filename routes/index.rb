@@ -22,10 +22,6 @@ if settings.environment == :development
   
 else
   
-  get '/' do
-    
-    error 404
-    
-  end
+  get('/') { error 403 }
   
 end
