@@ -55,7 +55,7 @@ end
 
 def send_beta_welcome(email)
 
-  subject = "Welcome to Syme beta"
+  subject = "You're in! Welcome to Syme beta"
 
   message = email_template :send_beta_welcome
 
