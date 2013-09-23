@@ -7,15 +7,15 @@ haml_config = {
 }
 
 guard 'haml', haml_config do
-  watch(/^.+(\.haml)/)
+  watch(/^views\/.+(\.haml)/)
 end
 
-hbs_config = { 
+hbs_config = {
   input: './.hbs/views',
   output_folder: './app/js/app/templates',
   register_partials: true,
-  run_at_start: true 
-} 
+  run_at_start: true
+}
 
 guard 'steering', hbs_config do
   watch(/^\.hbs\/views\/.+\.hbs$/)

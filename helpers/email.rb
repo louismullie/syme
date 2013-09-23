@@ -1,3 +1,4 @@
+# Email sending helper. All email helpers call it.
 def send_email_to(email, subject, body)
 
   Pony.mail({
@@ -19,12 +20,34 @@ def send_email_to(email, subject, body)
 
 end
 
+# Manual HAML rendering in order to put mail templates
+# outside of /views directory.
+def email_template(template, locals = {})
+
+  template  = File.join(settings.root, 'mails', "#{template.to_s}.haml")
+  layout    = File.join(settings.root, 'mails', "layout.haml")
+
+  haml File.open(template).read, layout: File.open(layout).read, locals: locals
+
+end
+
+# Batch beta invitations
+# 'emails' should be a string of email addresses separated by comma
+# ex: app.batch_beta('example@domain.com, example2@domain.com')
+def batch_beta(emails)
+  emails.delete(' ').split(',').each do |email|
+    send_beta_welcome(email)
+  end
+end
+
+# =====================================================
+# Mail helpers
+
 def send_beta_invite(email)
 
   subject = "Welcome to Syme beta"
 
-  message = haml :'mails/send_beta_invite',
-    layout: :'mails/layout'
+  message = email_template :send_beta_invite
 
   send_email_to(email, subject, message)
 
@@ -34,28 +57,17 @@ def send_beta_welcome(email)
 
   subject = "Welcome to Syme beta"
 
-  message = haml :'mails/send_beta_welcome',
-    layout: :'mails/layout'
+  message = email_template :send_beta_welcome
 
   send_email_to(email, subject, message)
 
-end
-
-# FOR USE IN TUX ONLY
-# CALL: app.batch_beta('example@domain.com, example2@domain.com')
-def batch_beta(emails)
-  emails.delete(' ').split(',').each do |email|
-    send_beta_welcome(email)
-  end
 end
 
 def send_email_confirm(email)
 
   subject = "Confirm your Syme account"
 
-  message = haml :'mails/send_email_confirm',
-    layout: :'mails/layout',
-    locals: { user: @user }
+  message = mail_template :send_email_confirm, { user: @user }
 
   send_email_to(email, subject, message)
 
@@ -67,9 +79,8 @@ def send_invite(email)
 
   invitee = User.where(email: email).first
 
-  message = haml invitee.nil? ?
-    :'mails/send_invite_new_user' : :'mails/send_invite_old_user',
-    layout: :'mails/layout'
+  message = mail_template invitee.nil? ?
+    :send_invite_new_user : :send_invite_old_user
 
   send_email_to(email, subject, message)
 
@@ -81,8 +92,7 @@ def request_confirm(invite)
 
   subject = "Confirm your new group member on Syme"
 
-  message = haml :'mails/request_confirm',
-    layout: :'mails/layout'
+  message = mail_template :request_confirm
 
   # inviter.email
   send_email_to(inviter.email, subject, message)
@@ -96,8 +106,7 @@ def notify_confirmed(invite)
 
   subject = "You've joined a new group on Syme"
 
-  message = haml :'mails/notify_confirmed',
-    layout: :'mails/layout'
+  message = mail_template :notify_confirmed
 
   # invitee.email
   send_email_to(invitee.email, subject, message)
