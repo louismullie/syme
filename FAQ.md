@@ -22,9 +22,9 @@ But:
 
 **What JS crypto library are you using?**
 
-All of our cryptographic primitives, including the ECDH, ECDSA, AES, PBKDF2 and SHA-2 algorithms as well as the PRNG are taken from the Stanford Javascript Crypto Library (SJCL) [1].
+All of our cryptographic primitives, including the ECDH, ECDSA, AES, PBKDF2 and SHA-2 algorithms as well as the PRNG are taken from the Stanford Javascript Crypto Library (SJCL) [^1].
 
-[1] Stark, E. Hamburg, M. Boneh, D. Symmetric Cryptography in Javascript. December 2009.  http://crypto.stanford.edu/sjcl/#paper
+[^1]: Stark, E. Hamburg, M. Boneh, D. Symmetric Cryptography in Javascript. December 2009.  http://crypto.stanford.edu/sjcl/#paper
 
 **What measures do you take to deter application security threats?**
 
