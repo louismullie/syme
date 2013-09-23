@@ -13,7 +13,7 @@ use Rack::Session::Memcache,
   path: '/',
   secret: '8dg236rgd31238fb13vd65'
 
-if ENV['RACK_ENV'].upcase == 'PRODUCTION'
+if ENV['RACK_ENV'] == 'production' or ENV['RACK_ENV'] == 'production'.upcase
 
   # Setup a strict CSP to discourage XSS.
   require 'content-security-policy'
