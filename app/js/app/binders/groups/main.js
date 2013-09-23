@@ -89,13 +89,11 @@ Syme.Binders.add('groups', { main: function() {
   $("div.group-banner").on({
     mouseenter: function(){
       $(this).find('a.delete-group, a.leave-group')
-        .css({ display: 'block' })
-        .transition({ opacity: 1}, 100);
+        .css({ display: 'block', opacity: 1 });
     },
     mouseleave: function(){
       $(this).find('a.delete-group, a.leave-group')
-        .transition({ opacity: 0}, 100)
-        .css({ display: 'none' });
+        .css({ display: 'none', opacity: 0 });
     }
   });
 
