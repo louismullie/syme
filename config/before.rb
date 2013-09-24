@@ -23,7 +23,7 @@ before do
     'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani'
 
     response.headers["Access-Control-Allow-Methods"] =
-    "GET, POST, OPTIONS"
+    "GET, POST, OPTIONS, PUT"
 
     response.headers["Access-Control-Allow-Headers"] =
     "X-Requested-With, X-Prototype-Version, X_CSRF_TOKEN"
@@ -38,7 +38,7 @@ before do
     response.headers['Access-Control-Allow-Origin'] = 
     'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani'
     
-    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT'
     response.headers['Access-Control-Max-Age'] = "1728000"
 
   end
