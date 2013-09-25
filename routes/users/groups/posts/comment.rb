@@ -18,7 +18,7 @@ post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |us
 
   mentions = params[:mentioned_users] || []
 
-  comment = post.comments.create(
+  comment = post.comments.create!(
     content: '', keys: {},
     encrypted: true,
     owner_id: @user.id,
@@ -66,6 +66,8 @@ put '/users/:user_id/groups/:group_id/posts/:post_id/comments/:comment_id', auth
   end
   
   warn "4"
+  
+  puts post.comments.to_a.inspect
   
   comment = begin
     post.comments.find(comment_id)
