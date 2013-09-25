@@ -305,7 +305,7 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
     }}, group) if invitee
     
     track(@user, 'User canceled invitation', 
-    { invitation_id: invitation_id }
+    { invitation_id: invitation_id })
     
   elsif invitee.id.to_s == @user.id.to_s
     
@@ -317,7 +317,7 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
     }}, group) if invitee
 
     track(@user, 'User declined invitation', 
-    { invitation_id: invitation_id }
+    { invitation_id: invitation_id })
     
   end
   
