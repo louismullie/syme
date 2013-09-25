@@ -4,7 +4,7 @@ class FeedGenerator
 
     posts = generate_posts(posts, current_user, current_group)
     user = generate_user(current_user, current_group)
-    users = generate_user_list(current_group, current_user)
+    users = generate_user_list(current_user, current_group)
     mention_list = users.map{ |user| { id: user[:id], name: user[:full_name] } }.to_json
     invite = InvitationGenerator.generate_pending_invites(current_group, current_user)
     group = GroupGenerator.generate(current_group, current_user)
@@ -35,9 +35,12 @@ class FeedGenerator
 
   end
 
-  def self.generate_user_list(current_group, current_user)
+  def self.generate_user_list(current_user, current_group)
 
-    user_list = current_group.users.map do |user|
+    users = current_group.users
+    warn "USER SIZE #{users}"
+    
+    user_list = user.map do |user|
 
       # Skip current user
       next if user.id.to_s == current_user.id.to_s
