@@ -39,7 +39,7 @@ class FeedGenerator
 
     users = current_group.users
     warn "USER SIZE #{users.to_a.size}"
-    
+
     user_list = users.map do |user|
 
       # Skip current user
@@ -55,10 +55,11 @@ class FeedGenerator
     current_user = self.generate_user2(current_user, current_membership, current_user)
 
     user_list.unshift(current_user)
-    
+
     warn "NOT UNIQUE: " + user_list.size.to_s
     warn user_list.uniq.size
-    user_list.uniq
+    # user_list.uniq
+    user_list
 
   end
 
