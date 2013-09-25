@@ -42,6 +42,8 @@ end
 
 # =====================================================
 # Mail helpers
+# 
+# TODO: refactor titles into hash, define one function
 
 def send_beta_invite(email)
 
