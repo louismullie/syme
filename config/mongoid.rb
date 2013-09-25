@@ -1,2 +1,2 @@
 require 'mongoid'
-Mongoid.load!('./config/mongoid.yml', :development)
+Mongoid.load!('./config/mongoid.yml', settings.environment)
