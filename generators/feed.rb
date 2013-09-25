@@ -52,8 +52,10 @@ class FeedGenerator
     current_user = self.generate_user2(current_user, current_membership, current_user)
 
     user_list.unshift(current_user)
-
-    user_list
+    
+    warn "NOT UNIQUE: " + user_list.size.to_s
+    warn user_list.uniq.size
+    user_list.uniq
 
   end
 
