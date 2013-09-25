@@ -6,7 +6,7 @@ if settings.environment == :production
   require 'content-security-policy'
 
   default = 'localhost:5000 getsyme.com:81'
-
+=begin
   use ContentSecurityPolicy, directives: {
     # 'default-src' => settings.secure ? 'https: ' : '*',
     'script-src' => default,
@@ -17,7 +17,7 @@ if settings.environment == :production
     # 'report-uri' => '/route/for/report'
     # Leave media-src, img-src and frame-src.
   }
-
+=end
 =begin
   # Enable token protection against CSRF.
   require 'rack/csrf'
@@ -29,7 +29,7 @@ if settings.environment == :production
     'POST:/users/current/sessions'
   ]
 =end
-
+=begin
   require 'active_support'
   require 'rack/attack'
 
@@ -41,7 +41,7 @@ if settings.environment == :production
   Rack::Attack.throttle('login/email', limit: 6, period: 60) do |req|
     req.params['email'] if req.path =~ /login\/1/ && req.post?
   end
-
+=end
 else
 
   # Disable caching alltogether.
