@@ -22,6 +22,6 @@ if settings.environment == :development
   
 else
   
-  get('/') { status 503 }
+  get('/') { status 403 }
   
 end
