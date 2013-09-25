@@ -37,10 +37,7 @@ class FeedGenerator
 
   def self.generate_user_list(current_user, current_group)
 
-    users = current_group.users
-    warn "USER SIZE #{users.to_a.size}"
-
-    user_list = users.map do |user|
+    user_list = current_group.users.map do |user|
 
       # Skip current user
       next if user.id.to_s == current_user.id.to_s
@@ -56,9 +53,6 @@ class FeedGenerator
 
     user_list.unshift(current_user)
 
-    warn "NOT UNIQUE: " + user_list.size.to_s
-    warn user_list.uniq.size
-    # user_list.uniq
     user_list
 
   end
