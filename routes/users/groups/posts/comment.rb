@@ -32,6 +32,8 @@ post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |us
 
   response = CommentGenerator.generate(comment, @user).to_json
   
+  puts response.inspect
+  
   encrypt_response(response)
 
 end
@@ -68,6 +70,7 @@ put '/users/:user_id/groups/:group_id/posts/:post_id/comments/:comment_id', auth
   warn "4"
   
   puts post.comments.to_a.inspect
+  puts post.comments.where(id: comment_id).to_a.inspect
   
   comment = begin
     post.comments.find(comment_id)
