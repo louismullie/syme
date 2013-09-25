@@ -108,7 +108,7 @@ put '/invitations', auth: [] do
     invitation.save! # Save the invitation.
     
     # Track the invitation accepted event.
-    track(@user, 'User accepted invitation'
+    track(@user, 'User accepted invitation',
       { invitation_id: invitation.id.to_s })
     
     # Get a list of other invitations to this group.
