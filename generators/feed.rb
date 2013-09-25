@@ -40,7 +40,7 @@ class FeedGenerator
     users = current_group.users
     warn "USER SIZE #{users.to_a.size}"
     
-    user_list = user.map do |user|
+    user_list = users.map do |user|
 
       # Skip current user
       next if user.id.to_s == current_user.id.to_s
