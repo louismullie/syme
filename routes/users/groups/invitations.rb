@@ -75,7 +75,9 @@ post '/invitations', auth: [] do
 
   invitation.save!
 
-  track @user, 'User invited new group member'
+  track(@user, 'User invited new group member',
+    { invitation_id: invitation.id.to_s,
+      group_id: group.id.to_s })
   
   send_invite(invitation.email)
 
@@ -106,7 +108,8 @@ put '/invitations', auth: [] do
     invitation.save! # Save the invitation.
     
     # Track the invitation accepted event.
-    track @user, 'User accepted invitation'
+    track(@user, 'User accepted invitation'
+      { invitation_id: invitation.id.to_s })
     
     # Get a list of other invitations to this group.
     other_invitations =
@@ -197,7 +200,8 @@ put '/invitations', auth: [] do
     # User enters group.
     invitation.integrate = params.integrate
 
-    unless params.distribute == 'e30=' # fix {}
+    # Base64 equivalent of string '{}'
+    unless params.distribute == 'e30='
       invitation.distribute = params.distribute
     end
 
@@ -220,7 +224,8 @@ put '/invitations', auth: [] do
 
     invitee.save!
 
-    track @user, 'User confirmed invitation'
+    track(@user, 'User confirmed invitation',
+      { invitation_id: invitation.id.to_s })
 
   elsif params.completed
     
@@ -299,7 +304,8 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
         invitation: InvitationGenerator.generate(invitation)
     }}, group) if invitee
     
-    track @user, 'User canceled invitation'
+    track(@user, 'User canceled invitation', 
+    { invitation_id: invitation_id }
     
   elsif invitee.id.to_s == @user.id.to_s
     
@@ -310,7 +316,8 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
         invitation: InvitationGenerator.generate(invitation)
     }}, group) if invitee
 
-    track @user, 'User declined invitation'
+    track(@user, 'User declined invitation', 
+    { invitation_id: invitation_id }
     
   end
   
