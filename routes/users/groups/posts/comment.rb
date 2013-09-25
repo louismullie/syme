@@ -24,7 +24,10 @@ post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |us
     owner_id: @user.id,
     mentions: mentions
   )
-
+  
+  comment.save!
+  post.save!
+  
   track @user, 'User commented on post'
 
   response = CommentGenerator.generate(comment, @user).to_json
