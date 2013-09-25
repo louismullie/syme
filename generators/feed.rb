@@ -38,7 +38,7 @@ class FeedGenerator
   def self.generate_user_list(current_user, current_group)
 
     users = current_group.users
-    warn "USER SIZE #{users}"
+    warn "USER SIZE #{users.to_a.size}"
     
     user_list = user.map do |user|
 
