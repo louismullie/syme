@@ -70,15 +70,14 @@ Crypto = {
     var transaction = keyfile.getTransaction(
       keylistId, 'createInviteRequest', userAlias);
     
-    
     return transaction.invitationToken;
     
   },
   
-  acceptInviteRequest: function (inviteRequest, token) {
+  acceptInviteRequest: function (inviteRequest) {
     
     var keyfile = this.getKeyfile();
-    return keyfile.acceptInviteRequest(inviteRequest, token);
+    return keyfile.acceptInviteRequest(inviteRequest);
     
   },
   

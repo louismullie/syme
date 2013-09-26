@@ -444,11 +444,11 @@ Keyfile = function(userId, password, encKeyfile) {
       inviterPublicKey: inviterPublicKey
     };
     
-    return [Crypto.encodeBase64(JSON.stringify(inviteRequest)), 'fake token'];
+    return Crypto.encodeBase64(JSON.stringify(inviteRequest));
     
   };
   
-  that.acceptInviteRequest = function(inviteRequestBase64, invitationToken) {
+  that.acceptInviteRequest = function(inviteRequestBase64) {
     
     var inviteRequestTxt = Crypto.decodeBase64(inviteRequestBase64);
     var inviteRequest = JSON.parse(inviteRequestTxt);

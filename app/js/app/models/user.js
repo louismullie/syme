@@ -83,10 +83,7 @@ var User = Backbone.Model.extend({
           _.each(inviteInfos, function (inviteInfo, index) {
 
               var email = inviteInfo.alias,
-                  request = inviteInfo.request;
-
-              var inviteRequest = request[0];
-              var inviteToken = request[1];
+                  inviteRequest = inviteInfo.request;
 
               invitation.save(
                 {
@@ -116,13 +113,13 @@ var User = Backbone.Model.extend({
 
   },
   
-  acceptInviteRequest: function (invitationId, request, token, inviteAcceptedCb, errorCb) {
+  acceptInviteRequest: function (invitationId, request, inviteAcceptedCb, errorCb) {
     
     var _this = this;
     var invitation = new Invitation();
     invitation.set('id', invitationId);
 
-    Syme.Crypto.acceptInviteRequest(request, token, function (inviteRequest) {
+    Syme.Crypto.acceptInviteRequest(request, function (inviteRequest) {
       
       Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
         

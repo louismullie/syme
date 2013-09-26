@@ -262,12 +262,12 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.acceptInviteRequest = function (inviteRequest, token, inviteAcceptedCb) {
+  this.acceptInviteRequest = function (inviteRequest, inviteAcceptedCb) {
 
     Syme.Crypto.executeJobWithLock({
 
       method: 'acceptInviteRequest',
-      params: [inviteRequest, token]
+      params: [inviteRequest]
 
     }, inviteAcceptedCb);
 

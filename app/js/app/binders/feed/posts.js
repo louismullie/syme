@@ -36,7 +36,7 @@ Syme.Binders.add('feed', { posts: function(){
               
               success: function () {
                 
-                if (ONE_PAGE_VIEW) {
+                if ($('#feed').data('single-post')) {
                   
                   var userId = Syme.CurrentSession.getUserId(),
                       groupId = Syme.CurrentSession.getGroupId();
@@ -45,9 +45,11 @@ Syme.Binders.add('feed', { posts: function(){
                   
                   Syme.Router.navigate(route);
                   
+                } else {
+                  
+                  Syme.Socket.delete.post({ target: postId });
+                  
                 }
-                
-               // Syme.Socket.delete.post({ target: postId });
                 
               },
               

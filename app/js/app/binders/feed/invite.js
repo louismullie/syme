@@ -10,21 +10,6 @@ Syme.Binders.add('feed', { invite: function() {
     Invitation.cancelInvitationRequest($(this));
   });
 
-  $('#main').on('click', '.invite-pending', function(e) {
-
-    var $this = $(this);
-
-    var invitationId  = $this.data('invite-id'),
-        email         = $this.data('invite-email'),
-        user          = Syme.CurrentSession.getUser(),
-        keylistId     = Syme.CurrentSession.getGroupId();
-
-    Syme.Crypto.getInvitationToken(keylistId, email, function (token) {
-       prompt('Invitation token for ' + email, token);
-    });
-
-  });
-
   // Add new user
   $('#main').on('click', 'a#add-user, a#add-user-first', function(){
 

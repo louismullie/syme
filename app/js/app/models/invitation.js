@@ -45,8 +45,7 @@ var Invitation = Backbone.Model.extend({
           failedInvitations[email] = inviteRequestInfo.error;
         } else {
           succeededInvitations.push({
-            email: inviteRequestInfo.alias,
-            token: inviteRequestInfo.request[1]
+            email: inviteRequestInfo.alias
           });
         }
         
@@ -68,17 +67,11 @@ var Invitation = Backbone.Model.extend({
     var inviterName = inviteLink.data('invite-inviter_name');
     var message = 'Enter the key ' + inviterName + ' has sent you:';
 
-    var prompt = new Prompt(message, function (token) {
-
-      user.acceptInviteRequest(invitationId, request, token, function () {
-        Notifications.fetch();
-        Syme.Router.reload();
-        $('.popover').hide();
-      });
-
-    }, { title: 'Accept invitation', closable: false });
-    
-    prompt.show();
+    user.acceptInviteRequest(invitationId, request, function () {
+      Notifications.fetch();
+      Syme.Router.reload();
+      $('.popover').hide();
+    });
 
   },
 
@@ -161,13 +154,9 @@ var Invitation = Backbone.Model.extend({
               Invitation.cancelInvitationRequest(inviteLink);
 
               user.createInviteRequests(keylistId, [email], function (inviteInfos) {
-
-                var token = inviteInfos[0].request[1];
               
                 Alert.show(
-                  "You've sent a new invitation to <b>" + email + "</b>. <br />" +
-                  "A new invitation key was created." +
-                  "<br />The new key is: <b>" + token + "</b>", {
+                  "You've sent a new invitation to <b>" + email + "</b>.", {
                     title: 'Invitation sent',
                     onsubmit: function () {
                       Syme.Router.reload();
