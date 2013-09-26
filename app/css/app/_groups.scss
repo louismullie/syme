@@ -52,7 +52,6 @@
 
     @media #{$small}  { @include column-count(2); }
     @media #{$large}  { @include column-count(3); }
-    //@media #{$large}  { @include column-count(3); }
 
 
     list-style-type: none;
