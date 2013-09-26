@@ -6,9 +6,13 @@
 //= require_tree ./binders
 
 // Register all Handlebars templates.
-$.each(Handlebars.templates, function (name, template) {
-  Handlebars.registerPartial(name.slice(1), template);
-});
+try {
+  $.each(Handlebars.templates, function (name, template) {
+    Handlebars.registerPartial(name.slice(1), template);
+  });
+} catch (e) {
+  console.error('Handlebars registration failed', e); debugger;
+}
 
 $(function(){
 
@@ -37,11 +41,11 @@ $(function(){
 
   Syme.CurrentSession = new Syme.Session();
   Syme.FileManager = new Syme.FileManager();
-  
+
   Syme.CurrentSession.initialize(function () {
 
     Syme.FileManager.initialize(function () {
-      
+
       Backbone.history.start({ pushState: true });
 
       // Bind global binders
@@ -51,7 +55,7 @@ $(function(){
       if (Syme.Compatibility.inChromeExtension()) {
         Syme.Router.navigate('/');
       }
-      
+
     });
 
   }, function () { alert('Session failed!'); });
