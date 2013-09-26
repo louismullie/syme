@@ -370,7 +370,7 @@ Keyfile = function(userId, password, encKeyfile) {
     var keylist = that.getKeylist(keylistId);
     
     var transactions = keylist._transactions;
-     
+    
      if (!transactions)
        throw 'Transactions book not initialized.'
      
@@ -481,11 +481,15 @@ Keyfile = function(userId, password, encKeyfile) {
     var inviteePrivateKeyJson = that
       .serializePrivateKey(inviteeKeypair.privateKey);
     
+    var inviteePublicKeyJson = that
+      .serializePublicKey(inviteeKeypair.publicKey);
+    
     var transaction = {
       inviterId: inviterId,
       inviteeId: that.userId,
+      inviteePublicKey: inviteePublicKeyJson,
       inviteePrivateKey: inviteePrivateKeyJson,
-      inviterPublicKey: inviterPublicKeyJson,
+      inviterPublicKey: inviterPublicKeyJson, // redundancy here
       inviteeKeypair: inviteeKeypairJson
     };
       

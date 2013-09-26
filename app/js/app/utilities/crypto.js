@@ -426,14 +426,14 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.getInvitationToken = function (keylistId, userAlias, invitationTokenCb) {
+  this.getKeyFingerprint = function (keylistId, userAlias, userRole, keyFingerprintCb) {
 
     Syme.Crypto.executeJobWithoutLock({
 
-      method: 'getInvitationToken',
-      params: [keylistId, userAlias]
+      method: 'getKeyFingerprint',
+      params: [keylistId, userAlias, userRole]
 
-    }, invitationTokenCb);
+    }, keyFingerprintCb);
 
   };
 

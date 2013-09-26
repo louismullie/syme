@@ -5,5 +5,17 @@ Syme.Binders.add('groups', { invite: function() {
     e.preventDefault();
     Invitation.acceptInvitationRequest($(this));
   });
+  
+  // Accept an invitation to join a group.
+  $('#main').on('click', '.invite-link[data-invite-state="2"]', function (e) {
+
+    var groupId = $(this).data('invite-group_id'),
+        inviterId = $(this).data('invite-inviter_id');
+      
+    Syme.Crypto.getKeyFingerprint(groupId, inviterId, 'invitee', function (fingerprint) {
+      prompt('Your key fingerprint is:', fingerprint)
+    });
+    
+  });
 
 } }); // Syme.Binders.add();

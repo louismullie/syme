@@ -2,7 +2,20 @@ Syme.Binders.add('feed', { invite: function() {
 
   // Confirm user
   $('#main').on('click', '.invite-confirm', function(e) {
-    Invitation.confirmInvitationRequest($(this));
+    
+    var groupId = $(this).data('invite-group_id'),
+        inviteeId = $(this).data('invite-email');
+    
+    ///Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', function (fingerprint) {
+
+      var msg = 'Are you sure you want to confirm? ' +
+                'Key fingerprint is: <INSERT FINGERPRINT>'; // + fingerprint;
+       
+      if (prompt(msg))
+        Invitation.confirmInvitationRequest($(this));
+    
+    ///});
+
   });
 
   // Accept an invitation to join a group.
