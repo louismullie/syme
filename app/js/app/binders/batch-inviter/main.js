@@ -3,6 +3,11 @@ Syme.Binders.add('batchinviter', { main: function() {
   // Batch email text input. Get array of results like this:
   // $('span.tag[data-mail]').map(function(tag){ return $(this).attr('data-mail') });
 
+  $('#main').on('changeState', '#batchinvite a#batchinvite-link', function(){
+    var action = $('#batchinvite #tags .tag').length > 0 ? 'removeClass' : 'addClass';
+    $(this)[action]('disabled');
+  });
+
   $('#main').on('focusout', '#batchinvite #tags input', function() {
 
     var mail = this.value.toLowerCase();
@@ -13,6 +18,10 @@ Syme.Binders.add('batchinviter', { main: function() {
 
       $(this).before('<span class="tag" data-mail="' + mail + '">'+ mail +'<span class="delete">×</span></span>');
       $(this).val('').removeClass('invalid');
+
+      $(this).focus();
+
+      $('#batchinvite a#batchinvite-link').trigger('changeState');
 
     } else {
 
@@ -29,6 +38,11 @@ Syme.Binders.add('batchinviter', { main: function() {
 
     $(this).parent().remove();
 
+    $('#batchinvite a#batchinvite-link').trigger('changeState');
+
   });
+
+  // Focus on pageload
+  $('#batchinvite input')[0].focus();
 
 }});

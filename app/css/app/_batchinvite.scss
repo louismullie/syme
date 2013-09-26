@@ -1,15 +1,25 @@
 #batchinvite {
 
-  h4 {
+  h2 {
     font: 200 2em/1.4em $opensans;
+    border-bottom: 2px solid #eee;
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
 
     span { color: $concrete; }
   }
 
+  h3 {
+    font: 200 1.2em/1.3em $opensans;
+  }
+
   #tags {
 
-    $padding: 5px;
-    $margin:  4px;
+    margin-top: 2em;
+
+    $padding: 10px;
+    $margin:  8px;
     $height:  40px;
 
     overflow: auto;
@@ -26,7 +36,7 @@
       background: white;
       border: 0;
       margin: $margin;
-      padding: $padding;
+      padding: 5px;
       border: 2px solid $success;
       width: auto;
 
@@ -58,5 +68,17 @@
         padding-left: $padding;
       }
     }
+  }
+
+  a#batchinvite-link {
+    display: block;
+    width: 350px;
+    text-align: center;
+    font: 200 1.5em/3em $opensans;
+    margin: 0 auto;
+    margin-top: 1.5em;
+
+    @extend .btn;
+    @extend .btn-success;
   }
 }
