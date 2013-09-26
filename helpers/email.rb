@@ -69,7 +69,7 @@ def send_email_confirm(email)
 
   subject = "Confirm your Syme account"
 
-  message = mail_template :send_email_confirm, { user: @user }
+  message = email_template :send_email_confirm, { user: @user }
 
   send_email_to(email, subject, message)
 
@@ -81,7 +81,7 @@ def send_invite(email)
 
   invitee = User.where(email: email).first
 
-  message = mail_template invitee.nil? ?
+  message = email_template invitee.nil? ?
     :send_invite_new_user : :send_invite_old_user
 
   send_email_to(email, subject, message)
@@ -94,7 +94,7 @@ def request_confirm(invite)
 
   subject = "Confirm your new group member on Syme"
 
-  message = mail_template :request_confirm
+  message = email_template :request_confirm
 
   # inviter.email
   send_email_to(inviter.email, subject, message)
@@ -108,7 +108,7 @@ def notify_confirmed(invite)
 
   subject = "You've joined a new group on Syme"
 
-  message = mail_template :notify_confirmed
+  message = email_template :notify_confirmed
 
   # invitee.email
   send_email_to(invitee.email, subject, message)
