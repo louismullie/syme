@@ -44,15 +44,11 @@ if settings.environment == :production
 
 else
 
-  # Disable caching alltogether.
-  require 'rack/nocache'
-  use Rack::Nocache
-
   # Show exceptions from Sinatra.
   use Rack::ShowExceptions
-  
+
   set :reload_templates, true
-  
+
   # Setup sprockets for compilation.
   set :sprockets, (Sprockets::Environment.new(root) do |env|
     env.logger = Logger.new(STDOUT)

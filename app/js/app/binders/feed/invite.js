@@ -42,6 +42,11 @@ Syme.Binders.add('feed', { invite: function() {
 
       onshow: function() {
 
+        // When everything below goes in the batchinvite binders,
+        // bind them like this:
+
+        // Syme.Binders.bind( 'batchinviter', false );
+
         // Initial textarea autosizing
         $('textarea.autogrow')
           .autogrow().removeClass('autogrow');
@@ -72,18 +77,18 @@ Syme.Binders.add('feed', { invite: function() {
 
             // If failed is empty, remove it from log.
             if ( _.size(log.failed) == 0 ) {
-              
+
               log = _.omit(log, 'failed');
-              
+
             // Otherwise, translate error to message.
             } else {
-              
+
               _.each(log.failed, function (value, key) {
                 log.failed[key] = Syme.Messages.error.invitation[value];
               });
 
             }
-            
+
             // Compile success template with log
             var template = Syme.Template.render('feed-modals-invite-success', log);
 
