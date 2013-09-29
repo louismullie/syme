@@ -61,44 +61,33 @@ var User = Backbone.Model.extend({
 
   },
 
-  createInviteRequests: function (keylistId, emails, requestsSentCb) {
+  createInviteRequests: function (keylistId, emails, requestsCreatedCb) {
 
     var _this       = this;
     var invitation  = new Invitation();
 
     Syme.Crypto.createInviteRequests(keylistId, emails, function (inviteInfos) {
 
+      console.log(inviteInfos);
+      
       Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
 
         _this.updateKeyfile(encryptedKeyfile, function () {
-
-          /*
-          _.each(inviteInfos, function (inviteInfo, index) {
-
-            var email         = inviteInfo.alias,
-                inviteRequest = inviteInfo.request;
-
-            invitation.save(
-              {
-                group_id: keylistId,
-                email: email,
-                request: inviteRequest
-              },
-              {
-                success: requestSentCb,
-
-                error: function (model, response) {
-                  var responseJson = JSON.parse(response.responseText);
-                  inviteInfos[index].error = responseJson.error;
-                  requestSentCb();
-                }
-              }
-            );
-
+          
+          var keylistUrl = Syme.Url.fromGroup(keylistId);
+          var createInviteUrl = Syme.Url.join(keylistUrl, 'invitations');
+          
+          $.ajax(createInviteUrl, {
+            
+            type: 'POST',
+            data: { invitations: inviteInfos },
+            success: requestsCreatedCb,
+            
+            error: function (response) {
+              Syme.Error.ajaxError(response, 'create', 'invitations');
+            }
+            
           });
-          */
-
-          requestsSentCb(); // debugging purposes
 
         });
 

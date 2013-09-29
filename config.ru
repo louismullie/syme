@@ -33,7 +33,7 @@ map '/' do
   run Syme::Application
 end
 
-# For development, map assets.
+# For development, serve assets.
 map '/assets' do
 
   environment = Sprockets::Environment.new

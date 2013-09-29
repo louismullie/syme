@@ -63,7 +63,12 @@ Syme.Binders.add('batchinviter', { main: function() {
         groupId = Syme.CurrentSession.getGroupId();
 
     user.createInviteRequests(groupId, emails, function(){
-      alert('Invites sent');
+      
+      var groupRoute = Syme.Url.join('users',
+        user.get('id'), 'groups', groupId);
+      
+      Syme.Router.navigate(groupRoute);
+      
     });
 
   });

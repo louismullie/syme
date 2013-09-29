@@ -28,61 +28,69 @@ get '/users/:user_id/groups/:group_id/invitations/:invitee_id', auth: [] do |use
 
 end
 
-post '/invitations', auth: [] do
+post '/users/:user_id/groups/:group_id/invitations', auth: [] do |user_id, group_id|
 
-  invitation = get_model(request)
+  invitations = params[:invitations]
   
-  if !invitation.group_id || 
-     !invitation.email ||
-     !invitation.request
-    error 400, 'missing_params'
+  invitations.each do |invitation|
+    
+    invitation = invitation[1]
+    warn invitation.inspect
+  
+    if !invitation['group_id'] || 
+       !invitation['email'] ||
+       !invitation['request']
+      error 400, 'missing_params'
+    end
+  
+    group = @user.groups.find(invitation['group_id'])
+  
+    # Cleanup the e-mail.
+    email = invitation['email']
+    coder = HTMLEntities.new
+    email = coder.encode(email).downcase
+  
+    if @user.email == email
+      error 400, 'own_email'
+    end
+  
+    # Disallow inviting someone who is in the group.
+    if group.users.where(email: email).any?
+      error 400, 'already_joined'
+    end
+  
+    # Allow multiple people inviting the same user
+    # to a group, but not if the invitee has already
+    # accepted one of the invitations.
+    if group.invitations.where(email: email)
+       .any? { |invitation| invitation['state'] > 1 }
+      error 400, 'already_invited'
+    end
+    
+
+    # Create the invitation in the database.
+    invitation = group.invitations.create!(
+      inviter_id: @user.id.to_s,
+      privileges: :none,
+      token: SecureRandom.uuid,
+      request: invitation['request'],
+      email: email
+    )
+
+    # Save the invitation to the database.
+    invitation.save!
+
+    # Track user invitations.
+    track(@user, 'User invited new group member',
+      { invitation_id: invitation.id.to_s,
+        group_id: group.id.to_s })
+  
+    send_invite(invitation.email)
+
   end
-  
-  group = @user.groups.find(invitation.group_id)
-  
-  # Cleanup the e-mail.
-  email = invitation.email
-  
-  coder = HTMLEntities.new
-  email = coder.encode(email)
-  email = email.downcase
-  
-  if @user.email == email
-    error 400, 'own_email'
-  end
-  
-  # Disallow inviting someone who is in the group.
-  if group.users.where(email: email).any?
-    error 400, 'already_joined'
-  end
-  
-  # Allow multiple people inviting the same user
-  # to a group, but not if the invitee has already
-  # accepted one of the invitations.
-  if group.invitations.where(email: email)
-     .any? { |invitation| invitation.state > 1 }
-    error 400, 'already_invited'
-  end
-  
-  token = SecureRandom.uuid
 
-  invitation = group.invitations.create!(
-    inviter_id: @user.id.to_s,
-    privileges: :none, token: token,
-    request: invitation.request,
-    email: email
-  )
-
-  invitation.save!
-
-  track(@user, 'User invited new group member',
-    { invitation_id: invitation.id.to_s,
-      group_id: group.id.to_s })
+  empty_response
   
-  send_invite(invitation.email)
-
-  { status: 'ok', token: token }.to_json
-
 end
 
 put '/invitations', auth: [] do

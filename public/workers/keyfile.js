@@ -410,8 +410,15 @@ Keyfile = function(userId, password, encKeyfile) {
     var inviteRequests = [];
     
     _.each(inviteeAliases, function (inviteeAlias) {
+      
       var request = that.createInviteRequest(keylistId, inviteeAlias);
-      inviteRequests.push({ alias: inviteeAlias, request: request });
+      
+      inviteRequests.push({
+        group_id: keylistId,
+        email: inviteeAlias,
+        request: request
+      });
+      
     });
     
     return inviteRequests;
