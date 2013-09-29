@@ -279,8 +279,9 @@ Syme.Router = Backbone.Router.extend({
 
       success: function (data) {
 
-        // If we're on feed and there are no users, load batch inviter
-        if( template == 'feed' && data.users.length == 1 ) {
+        // If we're on feed and there are no users and no pending invites,
+        // load batch inviter
+        if( template == 'feed' && data.users.length == 1 && !data.invite ) {
           template = 'batchinviter';
         }
 
