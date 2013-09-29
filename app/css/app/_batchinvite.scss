@@ -60,6 +60,8 @@
 
       background: $success;
 
+      @include transition(background 0.45s ease-in-out);
+
       span.delete {
         line-height: $height - $padding * 2 - 2;
         cursor: pointer;
@@ -70,6 +72,8 @@
   }
 
   a#batchinvite-link {
+    position: relative;
+
     display: block;
     width: 350px;
     text-align: center;
@@ -79,5 +83,37 @@
 
     @extend .btn;
     @extend .btn-success;
+
+    .nprogress-spinner {
+      display: none;
+      position: absolute;
+      top: 50%; left: 50%;
+      @include transform(translate(-50%, -50%));
+
+      .nprogress-spinner-icon {
+        border-top-color: white;
+        border-left-color: white;
+      }
+    }
+  }
+
+  &[data-active="true"]{
+    span.tag {
+      background: $concrete !important;
+
+      span.delete { cursor: default !important; }
+    }
+    a#batchinvite-link {
+      span {
+        visibility: hidden;
+      }
+      &:hover {
+        background-color: $success !important;
+        cursor: default;
+      }
+      .nprogress-spinner {
+        display: block;
+      }
+    }
   }
 }
