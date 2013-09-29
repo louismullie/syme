@@ -97,26 +97,11 @@ put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
 
 end
 
-# Set group avatar. # UH OH!!!!
-post '/:group_id/avatar', auth: [] do
-
-  group_id = params[:group_id]
-  avatar_id = params[:avatar_id]
-  
-  group = Group.find(group_id)
-  group.avatar_id = avatar_id
-
-  track @user, 'User changed the group avatar'
-
-  { status: 'ok' }.to_json
-
-end
-
 delete '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
 
   # Find the group to delete.
   group = begin
-    Group.find(group_id)
+    @user.groups.find(group_id)
   rescue Mongoid::Errors::DocumentNotFound
     error 404, 'group_not_found'
   end
