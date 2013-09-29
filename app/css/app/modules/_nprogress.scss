@@ -31,7 +31,7 @@
 }
 
 /* Remove these to get rid of the spinner */
-#nprogress .spinner {
+#nprogress .spinner, .nprogress-spinner {
   display: block;
   position: fixed;
   z-index: 100;
@@ -41,7 +41,7 @@
   @include transform( translateX(-50%) );
 }
 
-#nprogress .spinner-icon {
+#nprogress .spinner-icon, .nprogress-spinner-icon {
   width: 18px;
   height: 18px;
   box-sizing: border-box;

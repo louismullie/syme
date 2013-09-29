@@ -1,8 +1,8 @@
 Syme.Binders.add('batchinviter', { main: function() {
 
-  // Batch email text input
-
   var currentUserEmail = Syme.CurrentSession.getUser().get('email');
+
+  // Batch email text input
 
   $('#main').on('changeState', '#batchinvite a#batchinvite-link', function(){
     var action = $('#batchinvite #tags .tag').length > 0 ? 'removeClass' : 'addClass';
@@ -10,6 +10,9 @@ Syme.Binders.add('batchinviter', { main: function() {
   });
 
   $('#main').on('focusout', '#batchinvite #tags input', function() {
+
+    // Return if batchinviter is active
+    if( !!$('#batchinvite').attr('data-active') ) return;
 
     var mail = this.value.toLowerCase();
 
@@ -43,6 +46,9 @@ Syme.Binders.add('batchinviter', { main: function() {
 
   }).on('click','#batchinvite #tags .tag .delete', function(){
 
+    // Return if batchinviter is active
+    if( !!$('#batchinvite').attr('data-active') ) return;
+
     $(this).parent().remove();
 
     $('#batchinvite a#batchinvite-link').trigger('changeState');
@@ -51,11 +57,19 @@ Syme.Binders.add('batchinviter', { main: function() {
 
   $('#main').on('click', 'a#batchinvite-link', function(e){
 
-    // Return if button is disabled
-    if( $(this).hasClass('disabled') ) return;
+    var $this         = $(this),
+        $batchinvite  = $('#batchinvite'),
+        $input        = $('input', $batchinvite);
+
+    // Return if button is disabled or the batchinviter is active
+    if( $this.hasClass('disabled') || !!$batchinvite.attr('data-active') ) return;
+
+    // Mark the batchinviter as active
+    $batchinvite.attr('data-active', true);
+    $input.prop('disabled', true);
 
     // Get emails in this format: [*str email]
-    var emails = $('#batchinvite span.tag[data-mail]').map(function(tag){
+    var emails = $('#batchinvite span.tag[data-mail]').map(function(){
       return $(this).attr('data-mail');
     }).get();
 
