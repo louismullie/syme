@@ -84,7 +84,7 @@ Crypto = {
     }
     
     var key = transaction.inviteePublicKey;
-    throw JSON.stringify(transaction);
+
     // Strip all characters, just keep numbers
     var sequence = JSON.stringify(key.point)
         .split(',').join('').split('-').join('')
