@@ -185,6 +185,14 @@ img.placeholder {
   @include transition(width 0.1s ease);
 }
 
+.large-centered-column {
+  @media #{$breakpointLarge}  { @include grid-column(20, false, true); }
+  @media #{$breakpointMedium} { @include grid-column(20, false, true); }
+  @media #{$breakpointSmall}  { @include grid-column(24); }
+
+  @include transition(width 0.1s ease);
+}
+
 .small-centered-column {
   @media #{$breakpointLarge}  { @include grid-column(8, false, true); }
   @media #{$breakpointMedium} { @include grid-column(10, false, true); }
