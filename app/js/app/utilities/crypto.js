@@ -426,12 +426,12 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.getKeyFingerprint = function (keylistId, userAlias, userRole, keyFingerprintCb) {
+  this.getKeyFingerprint = function (keylistId, userAlias, userRole, inviteePublicKey, keyFingerprintCb) {
 
     Syme.Crypto.executeJobWithoutLock({
 
       method: 'getKeyFingerprint',
-      params: [keylistId, userAlias, userRole]
+      params: [keylistId, userAlias, userRole, inviteePublicKey]
 
     }, keyFingerprintCb);
 

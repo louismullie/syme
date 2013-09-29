@@ -6,15 +6,26 @@ Syme.Binders.add('feed', { invite: function() {
     var groupId = $(this).data('invite-group_id'),
         inviteeId = $(this).data('invite-email');
     
-    ///Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', function (fingerprint) {
+    // Temporary fix...
+    var acceptInviteRequest = JSON.parse(
+      $.base64.decode($(this).data('invite-accept')));
+    
+    var inviteePublicKey = acceptInviteRequest.inviteePublicKey;
+    // End temporary fix
+    
+    Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', inviteePublicKey,
+    
+      function (fingerprint) {
 
-      var msg = 'Are you sure you want to confirm? ' +
-                'Key fingerprint is: <INSERT FINGERPRINT>'; // + fingerprint;
+      prompt('Your fingerprint is:', fingerprint.inviterFingerprint);
+      prompt('Invitee fingerprint is:', fingerprint.inviteeFingerprint);
        
-      if (prompt(msg))
+      if (prompt('Are you sure you want to accept?'))
         Invitation.confirmInvitationRequest($(this));
     
-    ///});
+      }
+    
+    );
 
   });
 

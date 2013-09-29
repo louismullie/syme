@@ -63,7 +63,7 @@ Crypto = {
     
   },
   
-  getKeyFingerprint: function (keylistId, userAlias, userRole) {
+  getKeyFingerprint: function (keylistId, userAlias, userRole, inviteeKey) {
     
     var transaction, keyfile = this.getKeyfile();
     
@@ -72,44 +72,46 @@ Crypto = {
       var transaction = keyfile.getTransaction(
         keylistId, 'acceptInviteRequest', userAlias);
       
+
+      var inviteeKey = transaction.inviteePublicKey,
+          inviterKey = transaction.inviterPublicKey;
+            
     } else if (userRole == 'inviter') {
   
       var transaction = keyfile.getTransaction(
         keylistId, 'createInviteRequest', userAlias);
-        
+      
+      var inviterKey = transaction.inviterPublicKey;
+      
     } else {
       
       throw 'Invalid user role.';
       
     }
     
-    
-    var inviteeKey = transaction.inviteePublicKey,
-        inviterKey = transaction.inviterPublicKey;
-      
-    function makeKeyFingerprint(key) {
-      
-      // Strip all characters, just keep numbers
-      var sequence = JSON.stringify(key.point)
-          .split(',').join('').split('-').join('')
-          .replace('[', '').replace(']', '');
-
-      var fingerprint = sjcl.codec.hex.fromBits(
-          sjcl.hash.sha256.hash(sequence));
-
-      var fingerprint = fingerprint
-        .slice(0,32).replace(/(.{2})/g,"$1:")
-        .slice(0,47); // remove last char.
-      
-      return fingerprint;
-
-    }
-
     return { 
-      inviterFingerprint: makeKeyFingerprint(inviterKey),
-      inviteeFingerprint: makeKeyFingerprint(inviteeKey)
+      inviterFingerprint: this.makeKeyFingerprint(inviterKey),
+      inviteeFingerprint: this.makeKeyFingerprint(inviteeKey)
     };
     
+  },
+  
+  makeKeyFingerprint: function(key) {
+    
+    // Strip all characters, just keep numbers
+    var sequence = JSON.stringify(key.point)
+        .split(',').join('').split('-').join('')
+        .replace('[', '').replace(']', '');
+  
+    var fingerprint = sjcl.codec.hex.fromBits(
+        sjcl.hash.sha256.hash(sequence));
+  
+    var fingerprint = fingerprint
+      .slice(0,32).replace(/(.{2})/g,"$1:")
+      .slice(0,47); // remove last char.
+    
+    return fingerprint;
+  
   },
   
   acceptInviteRequest: function (inviteRequest) {

@@ -12,12 +12,16 @@ Syme.Binders.add('groups', { invite: function() {
     var groupId = $(this).data('invite-group_id'),
         inviterId = $(this).data('invite-inviter_id');
       
-    Syme.Crypto.getKeyFingerprint(groupId, inviterId, 'invitee', function (fingerprint) {
+    Syme.Crypto.getKeyFingerprint(groupId, inviterId, 'invitee', null,
+    
+      function (fingerprint) {
 
-      prompt('Your key fingerprint is: ', fingerprint.inviteeFingerprint);
-      prompt('Inviter fingerprint is: ', fingerprint.inviterFingerprint);
+        prompt('Your key fingerprint is: ', fingerprint.inviteeFingerprint);
+        prompt('Inviter fingerprint is: ', fingerprint.inviterFingerprint);
 
-    });
+      }
+    
+    );
     
   });
 
