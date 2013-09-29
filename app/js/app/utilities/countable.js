@@ -6,7 +6,7 @@ Syme.Countable = function (collection, incrementCallback, doneCallback) {
 
   if (!collectionLength) doneCallback( false );
 
-  this.increment = function(e) {
+  this.increment = function() {
 
     // Increment counter
     decryptCounter++;

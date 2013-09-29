@@ -2,58 +2,16 @@ var Invitation = Backbone.Model.extend({
 
   idAttribute: "id",
   url: SERVER_URL + '/invitations'
-  
+
 }, {
-  
+
   // Parse emails and invite them all
   createInvitationRequest: function(emails, callback) {
 
-    // Validate emails
-    var validatedEmails = [],
-        succeededInvitations = [],
-        failedInvitations = {};
+    var user    = Syme.CurrentSession.getUser(),
+        groupId = Syme.CurrentSession.getGroupId();
 
-    _.each(emails.split("\n"), function(email){
-      // If email is blank, skip it.
-      if(email == "") return;
-
-      if ( $.ndbValidator.regexps.email.test(email) ){
-        validatedEmails.push(email);
-      } else {
-        failedInvitations[email] = 'validation';
-      }
-    });
-
-    // Eliminate duplicates
-    validatedEmails = _.uniq(validatedEmails);
-
-    // Submit invite
-    var user = Syme.CurrentSession.getUser();
-    var groupId = Syme.CurrentSession.getGroupId();
-  
-    var succeededInvitations = [];
-    
-    if (validatedEmails.length == 0)
-      return callback({ failed: failedInvitations });
-  
-    user.createInviteRequests(groupId, validatedEmails, function (inviteRequests) {
-    
-      _.each(inviteRequests, function (inviteRequestInfo) {
-        
-        if (inviteRequestInfo.error) {
-          var email = inviteRequestInfo.alias;
-          failedInvitations[email] = inviteRequestInfo.error;
-        } else {
-          succeededInvitations.push({
-            email: inviteRequestInfo.alias
-          });
-        }
-        
-      });
-    
-      callback({ succeeded: succeededInvitations, failed: failedInvitations });
-
-    });
+    user.createInviteRequests(groupId, emails, callback);
 
   },
 
@@ -82,12 +40,12 @@ var Invitation = Backbone.Model.extend({
     var invitationId = inviteLink.data('invite-id');
 
     var baseUrl = Syme.Url.fromGroup(groupId);
-    
+
     var cancelInvitationUrl = Syme.Url.join(
       baseUrl, 'invitations', invitationId);
-    
+
     $.encryptedAjax(cancelInvitationUrl, {
-      
+
       type: 'DELETE',
 
       success: function () {
@@ -142,7 +100,7 @@ var Invitation = Backbone.Model.extend({
         }, function () {
 
           Confirm.show(
-          
+
             name + ' entered the wrong key.', {
             title: 'Wrong key',
             submit: 'Send a new invite',
@@ -154,7 +112,7 @@ var Invitation = Backbone.Model.extend({
               Invitation.cancelInvitationRequest(inviteLink);
 
               user.createInviteRequests(keylistId, [email], function (inviteInfos) {
-              
+
                 Alert.show(
                   "You've sent a new invitation to <b>" + email + "</b>.", {
                     title: 'Invitation sent',
@@ -168,9 +126,9 @@ var Invitation = Backbone.Model.extend({
             },
 
             onhide: function () {
-            
+
               Invitation.cancelInvitationRequest(inviteLink);
-            
+
             }
 
           });
@@ -180,7 +138,7 @@ var Invitation = Backbone.Model.extend({
 
       }
     });
-  
+
   }
-  
+
 });

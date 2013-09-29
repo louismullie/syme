@@ -4,7 +4,8 @@
 
     %h3 Name your first encrypted group:
 
-    #create-group-box
-      %input{ type: 'text', placeholder: 'e.g. Family and friends', maxlength: 50 }
+    %form#create-first-group-form{ method: 'post' }
+      #create-first-group-box
+        %input{ type: 'text', name: 'name', placeholder: 'e.g. Family and friends', maxlength: 50 }
 
-    %a#create-first-group-link.disabled{ href: '#' } Create group
+      %a#create-first-group-link.disabled{ href: '#', role: 'submit' } Create group

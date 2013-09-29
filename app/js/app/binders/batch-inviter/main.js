@@ -1,7 +1,8 @@
 Syme.Binders.add('batchinviter', { main: function() {
 
-  // Batch email text input. Get array of results like this:
-  // $('span.tag[data-mail]').map(function(tag){ return $(this).attr('data-mail') });
+  // Batch email text input
+
+  var currentUserEmail = Syme.CurrentSession.getUser().get('email');
 
   $('#main').on('changeState', '#batchinvite a#batchinvite-link', function(){
     var action = $('#batchinvite #tags .tag').length > 0 ? 'removeClass' : 'addClass';
@@ -14,7 +15,13 @@ Syme.Binders.add('batchinviter', { main: function() {
 
     if ( mail == '' ) return $(this).removeClass('invalid');
 
-    if( $.ndbValidator.regexps.email.test(mail) ) {
+    // Conditions: must be a valid email, must be different from
+    // current user's email, and must not be already entered.
+    var is_valid        = $.ndbValidator.regexps.email.test(mail),
+        is_not_current  = mail != currentUserEmail,
+        is_new          = $('span.tag[data-mail="' + mail + '"]').length == 0;
+
+    if( is_valid && is_not_current && is_new ){
 
       $(this).before('<span class="tag" data-mail="' + mail + '">'+ mail +'<span class="delete">×</span></span>');
       $(this).val('').removeClass('invalid');
@@ -39,6 +46,39 @@ Syme.Binders.add('batchinviter', { main: function() {
     $(this).parent().remove();
 
     $('#batchinvite a#batchinvite-link').trigger('changeState');
+
+  });
+
+  $('#main').on('click', 'a#batchinvite-link', function(e){
+
+    // Return if button is disabled
+    if( $(this).hasClass('disabled') ) return;
+
+    // Get emails in this format: [*str email]
+    var emails = $('#batchinvite span.tag[data-mail]').map(function(tag){
+      return $(this).attr('data-mail');
+    }).get();
+
+    var user    = Syme.CurrentSession.getUser(),
+        groupId = Syme.CurrentSession.getGroupId();
+
+    var inviteCounter = new Syme.Countable( emails,
+      // Increment
+      function(index, length) {
+
+        // Update progress bar
+        if (NProgress.status < index / length)
+          NProgress.set( index / length );
+
+      },
+
+      // Done
+      function (elapsedTime) {
+        alert('Invitation sent!');
+      }
+    );
+
+    user.createInviteRequests(groupId, emails, inviteCounter.increment);
 
   });
 

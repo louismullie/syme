@@ -86,8 +86,8 @@ Syme.Binders.add('groups', { main: function() {
   // Timeago
   $('time.timeago').timeago();
 
-  // Focus on first #create_first_group input[type="text"]
-  $('#create_first_group').find('input[type="text"]').first().focus();
+  // Focus on input in first group creation
+  $('#create-first-group-form').find('input[type="text"]').first().focus();
 
   // Group delete button toggling
   $("div.group-banner").on({
@@ -101,13 +101,17 @@ Syme.Binders.add('groups', { main: function() {
     }
   });
 
-  $('#create_group input[name="name"], #create_first_group input[name="name"]').keyup(function(){
-    $(this).parent().find('a.btn')[
-      $(this).val().length > 0 ? 'removeClass' : 'addClass'
-    ]('disabled');
+  // Button enable/disable for create first group form
+  $('#create-group input[type="text"], #create-first-group input[type="text"]').keyup(function(){
+
+    var $button = $(this).closest('form').find('a[role="submit"]'),
+        action  = this.value.length > 0 ? 'removeClass' : 'addClass';
+
+    $button[action]('disabled');
+
   });
 
-  $('#main').on('submit', '#create_group, #create_first_group', function(e) {
+  $('#main').on('submit', '#create-group, #create-first-group-form', function(e) {
 
     e.preventDefault();
 
