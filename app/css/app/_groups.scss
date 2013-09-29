@@ -6,7 +6,7 @@
     @include column-gap($bodyPadding);
     @include column-count(1);
     @media #{$small}  { @include column-count(2); }
-    @media #{$large}  { @include column-count(3); }
+    //@media #{$large}  { @include column-count(3); }
 
     list-style-type: none;
     text-align: center;
@@ -137,11 +137,12 @@
               display: block;
 
               position: absolute;
-              top: 0; left: 0; right: 0; bottom: 0;
+              top: 0; left: 0; right: 0;
 
               background: rgba(255, 255, 255, 0.7);
 
               line-height: 160px;
+              height: 160px;
               font-weight: 200;
               font-size: 2em;
                 @media #{$breakpointMedium} { font-size: 1.4em; }
@@ -189,6 +190,35 @@
 
         .group-updated-at {
           font-size: .9em;
+        }
+
+        a.fingerprint-link {
+          float: right;
+        }
+
+        .fingerprint-box {
+          margin-top: .5em;
+          padding-top: .5em;
+          border-top: $baseBorderStyle;
+
+          text-align: center;
+
+          span {
+            position: relative;
+            top: 2px;
+
+            padding: 4px 7px;
+            padding-bottom: 1px;
+            border-radius: 3px;
+
+            color: white;
+            background: $concrete;
+            font-family: $codeFontFamily;
+
+            &.you {
+              margin-right: 1em;
+            }
+          }
         }
       }
     }

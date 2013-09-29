@@ -75,12 +75,8 @@ Syme.Binders.add('groups', { main: function() {
       match : function() { orderGroupCards(1); }
     })
     // Medium
-    .register("screen and (min-width:768px) and (max-width:1439px)", {
+    .register("screen and (min-width:768px)", {
       match : function() { orderGroupCards(2); }
-    })
-    // Large
-    .register("screen and (min-width: 1440px)", {
-      match : function() { orderGroupCards(3); }
     });
 
   // Timeago
