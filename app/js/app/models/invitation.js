@@ -5,16 +5,6 @@ var Invitation = Backbone.Model.extend({
 
 }, {
 
-  // Parse emails and invite them all
-  createInvitationRequest: function(emails, callback) {
-
-    var user    = Syme.CurrentSession.getUser(),
-        groupId = Syme.CurrentSession.getGroupId();
-
-    user.createInviteRequests(groupId, emails, callback);
-
-  },
-
   acceptInvitationRequest: function (inviteLink) {
 
     var user = Syme.CurrentSession.getUser();

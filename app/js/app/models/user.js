@@ -61,7 +61,7 @@ var User = Backbone.Model.extend({
 
   },
 
-  createInviteRequests: function (keylistId, emails, requestSentCb) {
+  createInviteRequests: function (keylistId, emails, requestsSentCb) {
 
     var _this       = this;
     var invitation  = new Invitation();
@@ -72,6 +72,7 @@ var User = Backbone.Model.extend({
 
         _this.updateKeyfile(encryptedKeyfile, function () {
 
+          /*
           _.each(inviteInfos, function (inviteInfo, index) {
 
             var email         = inviteInfo.alias,
@@ -95,6 +96,9 @@ var User = Backbone.Model.extend({
             );
 
           });
+          */
+
+          requestsSentCb(); // debugging purposes
 
         });
 

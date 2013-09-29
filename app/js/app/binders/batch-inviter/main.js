@@ -62,23 +62,9 @@ Syme.Binders.add('batchinviter', { main: function() {
     var user    = Syme.CurrentSession.getUser(),
         groupId = Syme.CurrentSession.getGroupId();
 
-    var inviteCounter = new Syme.Countable( emails,
-      // Increment
-      function(index, length) {
-
-        // Update progress bar
-        if (NProgress.status < index / length)
-          NProgress.set( index / length );
-
-      },
-
-      // Done
-      function (elapsedTime) {
-        alert('Invitation sent!');
-      }
-    );
-
-    user.createInviteRequests(groupId, emails, inviteCounter.increment);
+    user.createInviteRequests(groupId, emails, function(){
+      alert('Invites sent');
+    });
 
   });
 
