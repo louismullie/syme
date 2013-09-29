@@ -77,9 +77,14 @@ Syme.Session = function (csrfToken) {
             var msg = Syme.Messages.app.connection;
 
             Alert.show(msg, {
+              
               closable: false,
               title: 'No Internet connection',
-              onsubmit: function () { Syme.Router.reload(); }
+              
+              onsubmit: function () { 
+                window.history.go(0);
+              }
+              
             });
 
           }
