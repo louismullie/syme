@@ -281,7 +281,7 @@ Syme.Router = Backbone.Router.extend({
 
         // If we're on feed and there are no users, load batch inviter
         if( template == 'feed' && data.users.length == 1 ) {
-         // template = 'batchinviter';
+          template = 'batchinviter';
         }
 
         // Initiate logged in template on first pageload

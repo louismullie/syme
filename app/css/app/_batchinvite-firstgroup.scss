@@ -1,4 +1,51 @@
-#batchinvite {
+#batchinvite, #create-first-group {
+
+  /*
+  .create-first-group {
+    h2 {
+      font: 200 2em/2em $opensans;
+      text-align: center;
+
+      margin-bottom: 1em;
+    }
+
+    form#create_first_group {
+      input[type="text"] {
+        height: 70px;
+        padding: 0 0.5em;
+
+        line-height: 1.8em;
+        font-size: 1.8em;
+        font-weight: 200;
+
+        text-align: center;
+      }
+
+      a[role="submit"] {
+        @include btn-slide(70px, $bodyBackgroundColor2);
+
+        font-size: 2em;
+
+        span {
+          font-weight: 200;
+
+          &.default {
+            color: lighten($black, 30%);
+          }
+          &.hover {
+            color: $success;
+          }
+        }
+
+        border: 2px solid $gray;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  */
 
   h2 {
     font: 200 2em/1.4em $opensans;
@@ -46,7 +93,6 @@
     }
 
     span.tag {
-
       line-height: $height - $padding * 2 - 2;
 
       border-radius: $baseBorderRadius;
@@ -70,7 +116,32 @@
     }
   }
 
-  a#batchinvite-link {
+  #create-group-box {
+
+    margin-top: 2em;
+
+    border: $baseBorderStyle;
+    border-radius: $baseBorderRadius;
+    padding: 10px;
+    box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
+
+    input {
+      @include box-sizing;
+
+      width: 100%;
+      height: 60px;
+
+      font-size: 1.2em;
+
+      background: white;
+      border: 0;
+      margin: 0;
+      padding: 20px 10px;
+      border: 2px solid $success;
+    }
+  }
+
+  a#batchinvite-link, a#create-first-group-link {
     display: block;
     width: 350px;
     text-align: center;

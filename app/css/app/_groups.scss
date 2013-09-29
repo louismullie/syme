@@ -1,58 +1,12 @@
-// Masonry content disposition
 #groups {
-  .create-first-group {
-    h2 {
-      font: 200 2em/2em $opensans;
-      text-align: center;
-
-      margin-bottom: 1em;
-    }
-
-    form#create_first_group {
-      input[type="text"] {
-        height: 70px;
-        padding: 0 0.5em;
-
-        line-height: 1.8em;
-        font-size: 1.8em;
-        font-weight: 200;
-
-        text-align: center;
-      }
-
-      a[role="submit"] {
-        @include btn-slide(70px, $bodyBackgroundColor2);
-
-        font-size: 2em;
-
-        span {
-          font-weight: 200;
-
-          &.default {
-            color: lighten($black, 30%);
-          }
-          &.hover {
-            color: $success;
-          }
-        }
-
-        border: 2px solid $gray;
-
-        &:hover {
-          text-decoration: none;
-        }
-      }
-    }
-  }
-
   ul {
+
+    // Masonry content disposition
+
     @include column-gap($bodyPadding);
-
     @include column-count(1);
-
     @media #{$small}  { @include column-count(2); }
     @media #{$large}  { @include column-count(3); }
-
 
     list-style-type: none;
     text-align: center;
