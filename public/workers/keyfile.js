@@ -436,7 +436,8 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var transaction = {
       inviteeAlias: inviteeAlias,
-      inviterKeypair: keypairJson
+      inviterPublicKey: keypairJson.publicKey,
+      inviterPrivateKey: keypairJson.privateKey
     };
     
     var inviterPublicKey = that.serializePublicKey(keypair.publicKey);
@@ -552,7 +553,7 @@ Keyfile = function(userId, password, encKeyfile) {
       'createInviteRequest', inviteRequest.inviteeAlias);
     
     var inviterPrivateKey = that.buildPrivateKey(
-      transaction.inviterKeypair.privateKey, 'encryption');
+      transaction.inviterPrivateKey, 'encryption');
     
     var inviteePublicKey = that.buildPublicKey(
       inviteRequest.inviteePublicKey, 'encryption');
@@ -579,7 +580,7 @@ Keyfile = function(userId, password, encKeyfile) {
         inviterId: inviteRequest.inviterId,
         inviteeId: inviteRequest.inviteeId,
         keylistId: inviteRequest.keylistId,
-        inviterPublicKey: transaction.inviterKeypair.publicKey,
+        inviterPublicKey: transaction.inviterPublicKey,
         encKeylist: encKeylistJsonTxtBase64
     }));
     

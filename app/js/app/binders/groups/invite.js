@@ -13,7 +13,10 @@ Syme.Binders.add('groups', { invite: function() {
         inviterId = $(this).data('invite-inviter_id');
       
     Syme.Crypto.getKeyFingerprint(groupId, inviterId, 'invitee', function (fingerprint) {
-      prompt('Your key fingerprint is:', fingerprint)
+
+      prompt('Your key fingerprint is: ', fingerprint.inviteeFingerprint);
+      prompt('Inviter fingerprint is: ', fingerprint.inviterFingerprint);
+
     });
     
   });

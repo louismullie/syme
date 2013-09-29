@@ -68,8 +68,6 @@ var User = Backbone.Model.extend({
 
     Syme.Crypto.createInviteRequests(keylistId, emails, function (inviteInfos) {
 
-      console.log(inviteInfos);
-      
       Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
 
         _this.updateKeyfile(encryptedKeyfile, function () {

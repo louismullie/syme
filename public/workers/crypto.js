@@ -71,7 +71,7 @@ Crypto = {
       
       var transaction = keyfile.getTransaction(
         keylistId, 'acceptInviteRequest', userAlias);
-
+      
     } else if (userRole == 'inviter') {
   
       var transaction = keyfile.getTransaction(
@@ -83,21 +83,32 @@ Crypto = {
       
     }
     
-    var key = transaction.inviteePublicKey;
-
-    // Strip all characters, just keep numbers
-    var sequence = JSON.stringify(key.point)
-        .split(',').join('').split('-').join('')
-        .replace('[', '').replace(']', '');
     
-    var fingerprint = sjcl.codec.hex.fromBits(
-        sjcl.hash.sha256.hash(sequence));
+    var inviteeKey = transaction.inviteePublicKey,
+        inviterKey = transaction.inviterPublicKey;
+      
+    function makeKeyFingerprint(key) {
+      
+      // Strip all characters, just keep numbers
+      var sequence = JSON.stringify(key.point)
+          .split(',').join('').split('-').join('')
+          .replace('[', '').replace(']', '');
 
-    var fingerprint = fingerprint
-      .slice(0,32).replace(/(.{2})/g,"$1:")
-      .slice(0,47); // remove last char.
+      var fingerprint = sjcl.codec.hex.fromBits(
+          sjcl.hash.sha256.hash(sequence));
 
-    return fingerprint;
+      var fingerprint = fingerprint
+        .slice(0,32).replace(/(.{2})/g,"$1:")
+        .slice(0,47); // remove last char.
+      
+      return fingerprint;
+
+    }
+
+    return { 
+      inviterFingerprint: makeKeyFingerprint(inviterKey),
+      inviteeFingerprint: makeKeyFingerprint(inviteeKey)
+    };
     
   },
   
