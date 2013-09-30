@@ -27,7 +27,8 @@ def email_template(template, recipient, locals = {})
   template  = File.join(settings.root, 'mails', "#{template.to_s}.haml")
   layout    = File.join(settings.root, 'mails', "layout.haml")
 
-  token = Digest::SHA2.hexdigest( recipient + settings.email_salt )
+  recipient = Base64.strict_encode64(recipient)
+  token     = Digest::SHA2.hexdigest( recipient + settings.email_salt )
 
   locals.merge! { recipient: recipient, unsubscribe_token: token }
 
