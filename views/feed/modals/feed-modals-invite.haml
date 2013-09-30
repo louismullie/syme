@@ -5,16 +5,13 @@
     %i.icon-remove-sign
 
 .modal-content
+  %p.explanation
+    Enter the email addresses below:
 
   %form{ action: 'post' }
-  
     #batchinvite
-
       #tags
         %input{ type: 'text', placeholder: 'Add an email', maxlength: 50 }
-
-    %p.explanation
-      Invite more than one person by entering one email per line.
 
     %a.modal-button{ href: '#' }
       %span.invite

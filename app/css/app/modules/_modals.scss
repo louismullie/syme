@@ -82,8 +82,8 @@
 
     // Invite
     &.modal-invite {
-      @media #{$breakpointLarge}  { width: 30%; }
-      @media #{$breakpointMedium} { width: 45%; }
+      @media #{$breakpointLarge}  { width: 40%; }
+      @media #{$breakpointMedium} { width: 50%; }
 
       .modal-content {
         text-align: left;

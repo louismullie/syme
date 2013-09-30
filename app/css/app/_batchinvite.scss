@@ -1,3 +1,7 @@
+$batchInvitePadding: 10px;
+$batchInviteMargin:  8px;
+$batchInviteHeight:  40px;
+
 #batchinvite {
 
   h2 {
@@ -18,24 +22,20 @@
 
     margin-top: 2em;
 
-    $padding: 10px;
-    $margin:  8px;
-    $height:  40px;
-
     overflow: auto;
     border: $baseBorderStyle;
     border-radius: $baseBorderRadius;
-    padding: $padding;
+    padding: $batchInvitePadding;
     box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
 
     input {
-      height: $height;
+      height: $batchInviteHeight;
       min-width: 250px;
 
       float: left;
       background: white;
       border: 0;
-      margin: $margin;
+      margin: $batchInviteMargin;
       padding: 5px;
       border: 2px solid $success;
       width: auto;
@@ -46,7 +46,7 @@
     }
 
     span.tag {
-      line-height: $height - $padding * 2 - 2;
+      line-height: $batchInviteHeight - $batchInvitePadding * 2 - 2;
 
       border-radius: $baseBorderRadius;
       border: $baseBorderStyle;
@@ -55,18 +55,18 @@
       color: #fff;
       display: block;
       float: left;
-      padding: $padding #{$padding * 2};
-      margin: $margin;
+      padding: $batchInvitePadding #{$batchInvitePadding * 2};
+      margin: $batchInviteMargin;
 
       background: $success;
 
       @include transition(background 0.45s ease-in-out);
 
       span.delete {
-        line-height: $height - $padding * 2 - 2;
+        line-height: $batchInviteHeight - $batchInvitePadding * 2 - 2;
         cursor: pointer;
         font-size: 1em;
-        padding-left: $padding;
+        padding-left: $batchInvitePadding;
       }
     }
   }
@@ -114,6 +114,25 @@
       .nprogress-spinner {
         display: block;
       }
+    }
+  }
+}
+
+.modal-content #batchinvite {
+  #tags {
+    margin: -#{ $batchInviteMargin / 2 };
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+
+    span.tag, input {
+      margin: $batchInviteMargin / 2;
+    }
+
+    input {
+      width: 98%; // hack. please do something better
+      box-sizing: border-box;
+      margin: $batchInviteMargin / 2;
     }
   }
 }
