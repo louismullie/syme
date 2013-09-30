@@ -9,7 +9,7 @@ Syme.Binders.add('batchinviter', { main: function() {
     $(this)[action]('disabled');
   });
 
-  $('#main, #responsive-modal').on('focusout', '#batchinvite #tags input', function() {
+  $('#batchinvite').on('focusout', '#tags input', function() {
 
     // Return if batchinviter is active
     if( !!$('#batchinvite').attr('data-active') ) return;
@@ -39,12 +39,12 @@ Syme.Binders.add('batchinviter', { main: function() {
 
     }
 
-  }).on('keyup', '#batchinvite #tags input', function(e) {
+  }).on('keyup', '#tags input', function(e) {
 
     // Enter, comma, tab
     if(/(13|188)/.test(e.which)) $(this).focusout();
 
-  }).on('click','#batchinvite #tags .tag .delete', function(){
+  }).on('click', '.tag .delete', function(){
 
     // Return if batchinviter is active
     if( !!$('#batchinvite').attr('data-active') ) return;
@@ -77,12 +77,12 @@ Syme.Binders.add('batchinviter', { main: function() {
         groupId = Syme.CurrentSession.getGroupId();
 
     user.createInviteRequests(groupId, emails, function(){
-      
+
       var groupRoute = Syme.Url.join('users',
         user.get('id'), 'groups', groupId);
-      
+
       Syme.Router.navigate(groupRoute);
-      
+
     });
 
   });

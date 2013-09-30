@@ -2,21 +2,21 @@ Syme.Binders.add('feed', { invite: function() {
 
   // Confirm user
   $('#main').on('click', '.invite-confirm', function(e) {
-    
+
     var $this = $(this);
-    
+
     var groupId = $(this).data('invite-group_id'),
         inviteeId = $(this).data('invite-email');
-    
+
     // Temporary fix...
     var acceptInviteRequest = JSON.parse(
       $.base64.decode($(this).data('invite-accept')));
-    
+
     var inviteePublicKey = acceptInviteRequest.inviteePublicKey;
     // End temporary fix
-    
+
     Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', inviteePublicKey,
-    
+
       function (fingerprints) {
 
       Confirm.show(
@@ -34,14 +34,14 @@ Syme.Binders.add('feed', { invite: function() {
             Invitation.confirmInvitationRequest($this);
 
           },
-          
+
           onhide: $.noop
-          
+
         }
       );
-      
+
     });
-    
+
   });
 
   // Accept an invitation to join a group.
@@ -66,39 +66,39 @@ Syme.Binders.add('feed', { invite: function() {
 
       onshow: function() {
 
-        Syme.Binders.bind('batchinviter');
+        $.fn.binders.batchinviter.main();
 
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal a.modal-button').bind('click', function(e){
 
           e.preventDefault();
-          
+
           // Get e-mails from batch inviter
           var emails = $('#batchinvite span.tag[data-mail]').map(function(){
             return $(this).attr('data-mail');
           }).get();
-          
+
           // Prevent submitting if no email
-          if(!emails) return false;
-          
+          if(!emails.length) return false;
+
           // Get responsive modal form
           var $form = $('#responsive-modal form');
-          
+
           // Lock form
           $form.data('active', true);
-          
+
           // Add spinner
           $form.find('a.modal-button').addClass('spinner');
-          
+
           var user    = Syme.CurrentSession.getUser(),
               groupId = Syme.CurrentSession.getGroupId();
 
           user.createInviteRequests(groupId, emails,
-            function(){ 
-              $('#responsive-modal').hide()
+            function(){
+              Modal.hide();
               Syme.Router.reload();
           });
-          
+
         });
 
       }
