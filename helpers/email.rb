@@ -102,7 +102,7 @@ def request_confirm(invite)
 
   subject = "Confirm your new group member on Syme"
 
-  message = email_template :request_confirm, email
+  message = email_template :request_confirm, inviter.email
 
   # inviter.email
   send_email_to(inviter.email, subject, message)
@@ -116,7 +116,7 @@ def notify_confirmed(invite)
 
   subject = "You've joined a new group on Syme"
 
-  message = email_template :notify_confirmed, email
+  message = email_template :notify_confirmed, invitee.email
 
   # invitee.email
   send_email_to(invitee.email, subject, message)
