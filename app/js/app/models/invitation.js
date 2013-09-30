@@ -67,9 +67,9 @@ var Invitation = Backbone.Model.extend({
 
     // Render confirmation modal
     var confirm_modal = Syme.Template.render(
-      'feed-modals-confirm', { name: name }
+      'feed-modals-invite-confirming', { name: name }
     );
-
+    
     // Show confirmation modal
     Modal.show(confirm_modal, {
 
@@ -86,43 +86,6 @@ var Invitation = Backbone.Model.extend({
 
           Modal.hide();
           Syme.Router.reload();
-
-        }, function () {
-
-          Confirm.show(
-
-            name + ' entered the wrong key.', {
-            title: 'Wrong key',
-            submit: 'Send a new invite',
-            cancel: 'Cancel invite',
-            closable: false,
-
-            onsubmit: function(){
-
-              Invitation.cancelInvitationRequest(inviteLink);
-
-              user.createInviteRequests(keylistId, [email], function (inviteInfos) {
-
-                Alert.show(
-                  "You've sent a new invitation to <b>" + email + "</b>.", {
-                    title: 'Invitation sent',
-                    onsubmit: function () {
-                      Syme.Router.reload();
-                    }
-                });
-
-              });
-
-            },
-
-            onhide: function () {
-
-              Invitation.cancelInvitationRequest(inviteLink);
-
-            }
-
-          });
-
 
         });
 
