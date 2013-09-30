@@ -27,7 +27,9 @@ def email_template(template, locals = {})
   template  = File.join(settings.root, 'mails', "#{template.to_s}.haml")
   layout    = File.join(settings.root, 'mails', "layout.haml")
 
-  haml File.open(template).read, layout: File.open(layout).read, locals: locals
+  Haml::Engine.new(File.read(layout)).render do
+    Haml::Engine.new(File.read(template)).render(Object.new, locals)
+  end
 
 end
 
