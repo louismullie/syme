@@ -19,20 +19,23 @@
     %p
       -# Acceptation
       {{#compare state 1}}
-
-      %a.fingerprint-link{ href: '#' } Fingerprint
       <b>{{inviter_name}}</b> has invited you to join <b>{{group_name}}</b>.
-
-      .fingerprint-box
-        You: <span class="you">01F3BC</span>
-        {{inviter_name}}: <span class"inviter">08CE25</span>
-
       {{/compare}}
 
       -# Confirmation
       {{#compare state 2}}
+      %a.fingerprint-link{ href: '#' }
+        <span class="expand">View</span>
+        <span class="collapse">Hide</span>
+        fingerprints
+
       <b>{{inviter_name}}</b> needs to confirm before you can join
       <b>{{group_name}}</b>. As soon as that's done, you're in.
+
+      .fingerprint-box.hidden
+        You: <span class="you"></span>
+        {{inviter_name}}: <span class="inviter"></span>
+
       {{/compare}}
 
 {{/each}}

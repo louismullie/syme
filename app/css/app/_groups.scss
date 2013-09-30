@@ -194,6 +194,14 @@
 
         a.fingerprint-link {
           float: right;
+          font-size: .9em;
+
+          span.collapse { display: none; }
+
+          &.expanded {
+            span.expand   { display: none; }
+            span.collapse { display: inline; }
+          }
         }
 
         .fingerprint-box {
@@ -214,6 +222,8 @@
             color: white;
             background: $concrete;
             font-family: $codeFontFamily;
+
+            cursor: help;
 
             &.you {
               margin-right: 1em;
