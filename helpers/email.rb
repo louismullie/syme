@@ -30,7 +30,7 @@ def email_template(template, recipient, locals = {})
   recipient = Base64.strict_encode64(recipient)
   token     = Digest::SHA2.hexdigest( recipient + settings.email_salt )
 
-  locals.merge! { recipient: recipient, unsubscribe_token: token }
+  locals.merge!({ recipient: recipient, unsubscribe_token: token })
 
   Haml::Engine.new(File.read(layout)).render do
     Haml::Engine.new(File.read(template)).render(Object.new, locals)
