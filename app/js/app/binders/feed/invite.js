@@ -51,67 +51,39 @@ Syme.Binders.add('feed', { invite: function() {
 
       onshow: function() {
 
-        // When everything below goes in the batchinvite binders,
-        // bind them like this:
-
-        // Syme.Binders.bind( 'batchinviter', false );
-
-        // Initial textarea autosizing
-        $('textarea.autogrow')
-          .autogrow().removeClass('autogrow');
+        Syme.Binders.bind('batchinviter');
 
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal a.modal-button').bind('click', function(e){
 
           e.preventDefault();
-
-          var $form = $('#responsive-modal form');
-
-          // Return if event is locked
-          if($form.data('active')) return false;
-
-          var emails = $form.find('textarea[name="emails"]').val();
-
-          // Return if textarea is blank
+          
+          // Get e-mails from batch inviter
+          var emails = $('#batchinvite span.tag[data-mail]').map(function(){
+            return $(this).attr('data-mail');
+          }).get();
+          
+          // Prevent submitting if no email
           if(!emails) return false;
-
+          
+          // Get responsive modal form
+          var $form = $('#responsive-modal form');
+          
           // Lock form
           $form.data('active', true);
-
-          // Show spinner
+          
+          // Add spinner
           $form.find('a.modal-button').addClass('spinner');
+          
+          var user    = Syme.CurrentSession.getUser(),
+              groupId = Syme.CurrentSession.getGroupId();
 
-          // Show confirmations and/or errors
-          Invitation.createInvitationRequest(emails, function(log){
-
-            // If failed is empty, remove it from log.
-            if ( _.size(log.failed) == 0 ) {
-
-              log = _.omit(log, 'failed');
-
-            // Otherwise, translate error to message.
-            } else {
-
-              _.each(log.failed, function (value, key) {
-                log.failed[key] = Syme.Messages.error.invitation[value];
-              });
-
-            }
-
-            // Compile success template with log
-            var template = Syme.Template.render('feed-modals-invite-success', log);
-
-            // Show modal
-            Alert.show(template, {
-              classes: 'modal-invite',
-              title: 'Invite people',
-              onhide: function () {
-                Syme.Router.reload();
-              }
-            });
-
+          user.createInviteRequests(groupId, emails,
+            function(){ 
+              $('#responsive-modal').hide()
+              Syme.Router.reload();
           });
-
+          
         });
 
       }

@@ -8,7 +8,10 @@
 
   %form{ action: 'post' }
   
-    %textarea.autogrow{ name: 'emails', placeholder: 'john@example.com' }
+    #batchinvite
+
+      #tags
+        %input{ type: 'text', placeholder: 'Add an email', maxlength: 50 }
 
     %p.explanation
       Invite more than one person by entering one email per line.

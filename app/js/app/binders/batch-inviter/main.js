@@ -4,12 +4,12 @@ Syme.Binders.add('batchinviter', { main: function() {
 
   // Batch email text input
 
-  $('#main').on('changeState', '#batchinvite a#batchinvite-link', function(){
+  $('#main, #responsive-modal').on('changeState', '#batchinvite a#batchinvite-link', function(){
     var action = $('#batchinvite #tags .tag').length > 0 ? 'removeClass' : 'addClass';
     $(this)[action]('disabled');
   });
 
-  $('#main').on('focusout', '#batchinvite #tags input', function() {
+  $('#main, #responsive-modal').on('focusout', '#batchinvite #tags input', function() {
 
     // Return if batchinviter is active
     if( !!$('#batchinvite').attr('data-active') ) return;
@@ -55,7 +55,7 @@ Syme.Binders.add('batchinviter', { main: function() {
 
   });
 
-  $('#main').on('click', 'a#batchinvite-link', function(e){
+  $('#main, #responsive-modal').on('click', 'a#batchinvite-link', function(e){
 
     var $this         = $(this),
         $batchinvite  = $('#batchinvite'),
