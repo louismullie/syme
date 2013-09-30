@@ -6,6 +6,7 @@
     %a.group-banner-link.invite-link{ href: '#', 'data-invite-id' => '{{id}}',
                                                  'data-invite-group_id' => '{{group_id}}',
                                                  'data-invite-inviter_name' => '{{inviter_name}}',
+                                                 'data-invite-inviter_id' => '{{inviter_id}}',
                                                  'data-invite-request' => '{{request}}',
                                                  'data-invite-state' => '{{state}}' }
       %span.cover
@@ -16,13 +17,25 @@
 
   .group-card-content
     %p
+      -# Acceptation
       {{#compare state 1}}
       <b>{{inviter_name}}</b> has invited you to join <b>{{group_name}}</b>.
       {{/compare}}
 
+      -# Confirmation
       {{#compare state 2}}
+      %a.fingerprint-link{ href: '#' }
+        <span class="expand">View</span>
+        <span class="collapse">Hide</span>
+        fingerprints
+
       <b>{{inviter_name}}</b> needs to confirm before you can join
       <b>{{group_name}}</b>. As soon as that's done, you're in.
+
+      .fingerprint-box.hidden
+        You: <span class="you"></span>
+        {{inviter_name}}: <span class="inviter"></span>
+
       {{/compare}}
 
 {{/each}}

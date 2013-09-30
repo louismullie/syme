@@ -2,27 +2,51 @@ Syme.Binders.add('feed', { invite: function() {
 
   // Confirm user
   $('#main').on('click', '.invite-confirm', function(e) {
-    Invitation.confirmInvitationRequest($(this));
+
+    var $this = $(this);
+
+    var groupId = $(this).data('invite-group_id'),
+        inviteeId = $(this).data('invite-email');
+
+    // Temporary fix...
+    var acceptInviteRequest = JSON.parse(
+      $.base64.decode($(this).data('invite-accept')));
+
+    var inviteePublicKey = acceptInviteRequest.inviteePublicKey;
+    // End temporary fix
+
+    Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', inviteePublicKey,
+
+      function (fingerprints) {
+
+      Confirm.show(
+
+        Syme.Template.render('feed-modals-invite-confirm', fingerprints),
+
+        {
+          closable: true,
+          title: 'Confirm invitation',
+          submit: 'Confirm',
+          cancel: 'Cancel',
+
+          onsubmit: function() {
+
+            Invitation.confirmInvitationRequest($this);
+
+          },
+
+          onhide: $.noop
+
+        }
+      );
+
+    });
+
   });
 
   // Accept an invitation to join a group.
   $('#main').on('click', '.invite-delete', function (e) {
     Invitation.cancelInvitationRequest($(this));
-  });
-
-  $('#main').on('click', '.invite-pending', function(e) {
-
-    var $this = $(this);
-
-    var invitationId  = $this.data('invite-id'),
-        email         = $this.data('invite-email'),
-        user          = Syme.CurrentSession.getUser(),
-        keylistId     = Syme.CurrentSession.getGroupId();
-
-    Syme.Crypto.getInvitationToken(keylistId, email, function (token) {
-       prompt('Invitation token for ' + email, token);
-    });
-
   });
 
   // Add new user
@@ -42,60 +66,37 @@ Syme.Binders.add('feed', { invite: function() {
 
       onshow: function() {
 
-        // Initial textarea autosizing
-        $('textarea.autogrow')
-          .autogrow().removeClass('autogrow');
+        $.fn.binders.batchinviter.main();
 
         // Bind form action directly, to avoid event persistance
         $('#responsive-modal a.modal-button').bind('click', function(e){
 
           e.preventDefault();
 
+          // Get e-mails from batch inviter
+          var emails = $('#batchinvite span.tag[data-mail]').map(function(){
+            return $(this).attr('data-mail');
+          }).get();
+
+          // Prevent submitting if no email
+          if(!emails.length) return false;
+
+          // Get responsive modal form
           var $form = $('#responsive-modal form');
-
-          // Return if event is locked
-          if($form.data('active')) return false;
-
-          var emails = $form.find('textarea[name="emails"]').val();
-
-          // Return if textarea is blank
-          if(!emails) return false;
 
           // Lock form
           $form.data('active', true);
 
-          // Show spinner
+          // Add spinner
           $form.find('a.modal-button').addClass('spinner');
 
-          // Show confirmations and/or errors
-          Invitation.createInvitationRequest(emails, function(log){
+          var user    = Syme.CurrentSession.getUser(),
+              groupId = Syme.CurrentSession.getGroupId();
 
-            // If failed is empty, remove it from log.
-            if ( _.size(log.failed) == 0 ) {
-              
-              log = _.omit(log, 'failed');
-              
-            // Otherwise, translate error to message.
-            } else {
-              
-              _.each(log.failed, function (value, key) {
-                log.failed[key] = Syme.Messages.error.invitation[value];
-              });
-
-            }
-            
-            // Compile success template with log
-            var template = Syme.Template.render('feed-modals-invite-success', log);
-
-            // Show modal
-            Alert.show(template, {
-              classes: 'modal-invite',
-              title: 'Invite people',
-              onhide: function () {
-                Syme.Router.reload();
-              }
-            });
-
+          user.createInviteRequests(groupId, emails,
+            function(){
+              Modal.hide();
+              Syme.Router.reload();
           });
 
         });

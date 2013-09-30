@@ -30,7 +30,7 @@ Syme.Binders.add('global', { decrypt: function() {
 
       // Put commenter name and comment tools in first paragraph of comment
       $collapsable.closest('.comment-box').find('a.commenter-name')
-        .prependTo( $content.find('p:first-child') );
+        .prependTo( $content.filter('p').first() );
 
       // Replace old content by formatted content
       $collapsable.html( $content );
@@ -39,8 +39,7 @@ Syme.Binders.add('global', { decrypt: function() {
       $collapsable.oembed();
 
       // Format dynamic timestamps.
-      $this.closest('.post-comments')
-        .find('time.timeago').timeago();
+      $this.find('time.timeago').timeago();
 
     },
 
@@ -92,7 +91,7 @@ Syme.Binders.add('global', { decrypt: function() {
 
     // Decrypt and place avatar
     var file = Syme.FileManager.buildFileInfo(avatarId, groupId, keys);
-    
+
     Syme.FileManager.getFile(file, function(url) {
 
       if (!url) return done();
@@ -105,7 +104,7 @@ Syme.Binders.add('global', { decrypt: function() {
       $this.attr('data-encrypted', false);
 
       done();
-  
+
     });
 
   });

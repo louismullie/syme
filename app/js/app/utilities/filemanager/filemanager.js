@@ -2,52 +2,52 @@ Syme.FileManager = function (databaseName, initializedCb) {
 
   this.databaseName = databaseName;
   this.adapterType = 'indexed-db';
-  
+
   this.store = null;
-  
+
 };
 
 Syme.FileManager.prototype = {
-  
+
   /*
    * Initialize the file manager by creating
-   * a Lawnchair instance and connecting to 
+   * a Lawnchair instance and connecting to
    * the local database.
    */
   initialize: function (initializedCb) {
-    
+
     var _this = this;
-    
+
     // Options for the store
     var options = {
       adapter: this.adapterType,
       name: this.databaseName
     };
-    
+
     // Initialize the store
     var callback = function(store) {
       _this.store = store;
       initializedCb();
     }
-    
+
     // Create a new Lawnchair instance
     new Lawnchair(options, callback);
 
   },
-  
+
   /*
    * Build a JSON object containing the ID of the file,
    * the ID of the group, and the decryption keys for the user.
    */
   buildFileInfo: function (fileId, groupId, decryptionKeys) {
-    
+
     return {
       fileId: fileId, groupId: groupId,
       decryptionKeys: decryptionKeys
     };
-    
+
   },
-  
+
   /*
    * Retrieve the file with the given file info.
    *
@@ -56,38 +56,38 @@ Syme.FileManager.prototype = {
    * the locally decrypted file.
    */
   getFile: function (fileInfo, gotFileCb) {
-  
+
     var _this = this;
-    
+
     // Create local variables from file info
     var fileId = fileInfo.fileId,
         groupId = fileInfo.groupId,
         decryptionKeys = fileInfo.decryptionKeys;
-    
+
     // Verify if the file already exists in the cache
     if (Syme.Cache.contains(fileId)) {
 
       // Pass file URL to callback
       gotFileCb(Syme.Cache.get(fileId));
-      
+
     // If the file is not cached, get it elsewhere
     } else {
-      
+
       // Get the file from database or remote server
       this.retrieveFile(fileInfo, function (fileUrl) {
-      
+
         // Pass file URL to callback
         gotFileCb(fileUrl);
-        
+
         // Store the file URL in the cache
         Syme.Cache.store(fileId, fileUrl);
-        
+
       });
-      
+
     }
-    
+
   },
-  
+
   /*
    * Retrieve the file with the given info.
    *
@@ -96,14 +96,14 @@ Syme.FileManager.prototype = {
    * to the locally decrypted file.
    */
   retrieveFile: function (fileInfo, gotFileCb) {
-    
+
     var _this = this;
-    
+
     // Create local variables from file info
     var fileId = fileInfo.fileId,
         groupId = fileInfo.groupId,
         decryptionKeys = fileInfo.decryptionKeys;
-    
+
     // Attempt to retrieve the file from the database store.
     this.store.get(fileId, function(record) {
 
@@ -111,22 +111,22 @@ Syme.FileManager.prototype = {
       if (typeof(record) == 'undefined') {
 
         _this.downloadFile(fileInfo, gotFileCb);
-        
+
       // If the record already exists, just decrypt the file
       } else {
 
         // Inject the file content into the file info
         fileInfo.content = record.value.content;
-        
+
         // Decrypt the file with the supplied info
         _this.decryptFile(fileInfo, gotFileCb);
-        
+
       }
-      
+
     });
 
   },
-  
+
   /*
    * Retrieves the file matching the supplied info
    * on the server, locally decrypts it and passes
@@ -134,89 +134,89 @@ Syme.FileManager.prototype = {
    * the callback.
    */
   downloadFile: function (fileInfo, downloadedFileCb) {
-    
+
     var _this = this;
-    
+
     // Create local variables from file info
     var fileId = fileInfo.fileId,
         groupId = fileInfo.groupId,
         decryptionKeys = fileInfo.decryptionKeys;
-          
+
     var groupId = groupId || Syme.CurrentSession.getGroupId();
 
     var baseUrl = SERVER_URL + '/' + groupId + '/file/';
     var csrfToken = Syme.CurrentSession.getCsrfToken();
-    
+
     var downloader = new Downloader(fileId, decryptionKeys, {
       baseUrl: baseUrl, group: groupId, csrfToken: csrfToken });
 
     downloader.start($.noop,
-      
+
       // Success
       function(blob) {
-        
+
         var url = URL.createObjectURL(blob);
-        
+
         downloadedFileCb(url);
-        
+
         //_this.saveFile(fileId, groupId, key, blob, store);
-        
+
       },
-      
+
       // Error
       function () {
         downloadedFileCb(false);
       }
-    
+
     );
 
   },
 
   saveFile: function (fileInfo, savedFileCb) {
-    
+
     var reader = new FileReader();
-    
+
     // Get file as base64
     reader.onload = function(event){
-      
+
       // Encrypt base64 representation of file.
       var content = sjcl.encrypt(key, event.target.result),
           value = { groupId: group, content: content };
-      
+
       // Store base64
       store.save({ key: id, value: value });
-      
+
       // Pass to callback
       savedFileCb(url);
-        
+
     };
-    
+
     // Read in the blob as base64
     reader.readAsDataURL(blob);
-    
+
   },
 
   decryptFile: function (fileId, groupId, decryptionKeys, encryptedFile, decryptedFileCb) {
-    
+
     // Decrypt message keys
     Syme.Crypto.decryptMessage(groupId, decryptionKeys, function (key) {
-      
+
       // Decrypt message
       Syme.Crypto.decrypt(key, encryptedFile, function (decryptedFile) {
-        
+
         // Create blob from base 64
         var blob = ThumbPick.prototype.dataURItoBlob(decryptedFile);
         var url = URL.createObjectUrl(blob);
-        
+
         // Return ID and blod.
         decryptedFileCb(id, blob, url);
-        
+
       });
 
     });
-    
+
   },
-  
+
   upload: function(file, data, progress, success) {
 
     var progress = progress || function () {};
@@ -228,7 +228,7 @@ Syme.FileManager.prototype = {
 
       Alert.show(
         Syme.Messages.file.maxSize);
-      
+
       Syme.Helpers.resetFeedForm();
 
       return false;
@@ -237,7 +237,7 @@ Syme.FileManager.prototype = {
 
       var baseUrl = SERVER_URL + '/' + group + '/file/';
       var csrfToken = Syme.CurrentSession.getCsrfToken();
-      
+
       var uploadOptions = {
         data: data, baseUrl: baseUrl,
         csrfToken: csrfToken
@@ -293,7 +293,7 @@ Syme.FileManager.prototype = {
         );
 
       };
-      
+
       var options = { image: this, mime: file.type };
 
       var compressor = new ThumbPick('#canvas');
@@ -349,7 +349,7 @@ Syme.FileManager.prototype = {
   },
 
   selectFile: function (file, type) {
-    
+
     if (!(file instanceof File)) {
       file = $('#upload_file')[0].files[0];
     }
@@ -373,9 +373,9 @@ Syme.FileManager.prototype = {
 
       // Remove active state from container
       container.removeClass('active');
-      
+
       $('#upload_file').val('');
-      
+
     };
 
     // Show upload box and mark it as active
@@ -537,9 +537,9 @@ Syme.FileManager.prototype = {
     $('.textarea-supplement-info').show();
     $('.textarea-supplement-file').addClass('hidden');
   },
-  
+
   formatSize: function (bytes, precision) {
-    
+
     precision = precision || 2;
     var kilobyte = 1024;
     var megabyte = kilobyte * 1024;
@@ -565,7 +565,7 @@ Syme.FileManager.prototype = {
       return bytes + ' B';
     }
   },
-  
+
   getFilename: function(fakepath) {
     var filename = fakepath;
     var lastIndex = filename.lastIndexOf("\\");
@@ -573,6 +573,12 @@ Syme.FileManager.prototype = {
       filename = filename.substring(lastIndex + 1);
     }
     return filename;
+  },
+
+  saveToDisk: function(url, filename) {
+    var a = $("<a>").attr("href", url).attr("download", filename).appendTo("body");
+    a[0].click();
+    a.remove();
   }
 
 };

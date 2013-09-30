@@ -8,6 +8,13 @@ module Syme
 
     Bundler.require :default, settings.environment
 
+    configure do
+      set store:        $store
+      set secure:       $secure
+      set environment:  $env
+      set :root,        $root
+    end
+    
     configure { require_all 'config' }
     helpers   { require_all 'helpers' }
 

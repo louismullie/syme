@@ -1,7 +1,5 @@
 class GroupGenerator
 
-  require 'base64'
-
   def self.generate(group, user)
 
     membership = group.memberships.find_by(user_id: user.id)

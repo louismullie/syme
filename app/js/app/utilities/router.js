@@ -1,6 +1,6 @@
 Syme.Router = Backbone.Router.extend({
 
-  /* RULES */
+  /* NAVIGATION AND CUSTOM FUNCTIONS */
 
   currentRoute: '',
 
@@ -16,9 +16,9 @@ Syme.Router = Backbone.Router.extend({
     if (unsavedContent) {
 
       Confirm.show(
-
         Syme.Messages.error.unsavedContent,
         {
+
           closable: true,
           title: 'Confirm Navigation',
           submit: 'Leave this page',
@@ -61,6 +61,8 @@ Syme.Router = Backbone.Router.extend({
     return bits[bits.length-1] != 'groups';
 
   },
+
+  /* ROUTES */
 
   routes: {
 
@@ -154,7 +156,6 @@ Syme.Router = Backbone.Router.extend({
   },
 
   userGroup: function(user_id, group_id) {
-
     this.loadDynamicPage('feed', group_id);
   },
 
@@ -232,32 +233,24 @@ Syme.Router = Backbone.Router.extend({
     // Show spinner while waiting for AJAX if there is a container
     if ( $('#main').length ) NProgress.showSpinner();
 
-    var _this = this;
-
     this.authenticate(function(){
 
       var user = Syme.CurrentSession.getUser();
 
       // If the route isn't group specific, render page now that
       // all authentications and authorizations have been done.
-      if(!groupId) {
+      if(groupId) {
 
-        user.getAllGroupUpdates(function () {
-          Syme.Router.renderDynamicTemplate(template, specificBinders);
-        });
-
-      } else {
-
-        Syme.globals.updatedPosts[groupId] = 0;
+        Syme.globals.updatedPosts[groupId]    = 0;
         Syme.globals.updatedComments[groupId] = 0;
 
         Syme.CurrentSession.setGroupId(groupId);
 
-        user.getAllGroupUpdates(function () {
-          Syme.Router.renderDynamicTemplate(template, specificBinders);
-        });
-
       }
+
+      user.getAllGroupUpdates(function () {
+        Syme.Router.renderDynamicTemplate(template, specificBinders);
+      });
 
     }, function() {
 
@@ -271,6 +264,8 @@ Syme.Router = Backbone.Router.extend({
 
   renderDynamicTemplate: function(template, specific_binders) {
 
+    var _this = this;
+
     // Get current URL
     var url = SERVER_URL + '/' + Backbone.history.fragment;
 
@@ -283,6 +278,14 @@ Syme.Router = Backbone.Router.extend({
       type: 'GET',
 
       success: function (data) {
+
+        // If we're on feed and there are no users and no pending invites,
+        // load batch inviter
+        if( template == 'feed' &&
+            data.users.length == 1 &&
+            data.invite.length == 0 ) {
+          template = 'batchinviter';
+        }
 
         // Initiate logged in template on first pageload
         if( !$('#main').length )
@@ -305,27 +308,29 @@ Syme.Router = Backbone.Router.extend({
 
       error: function(response){
 
-      if(response.status == 401) {
+        if(response.status == 401) {
 
-        // User has been logged off.
-        Syme.Auth.disconnect();
+          // User has been logged off.
+          Syme.Auth.disconnect();
 
-      } else if (response.status == 404) {
+        } else if (response.status == 404) {
 
-        // Post or group doesn't exist
-        NProgress.done();
+          // Post or group doesn't exist
+          NProgress.done();
 
-        Alert.show(
-          "This content has been removed by its owner."
-        );
+          Alert.show(
+            "This content has been removed by its owner."
+          );
 
-      } else {
+        } else {
 
-        // Fatal error
-        Syme.Router.error();
+          // Fatal error
+          Syme.Router.error();
+
+        }
 
       }
-    }});
+    });
 
   },
 

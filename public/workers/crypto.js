@@ -63,22 +63,61 @@ Crypto = {
     
   },
   
-  getInvitationToken: function (keylistId, userAlias) {
+  getKeyFingerprint: function (keylistId, userAlias, userRole, inviteeKey) {
     
-    var keyfile = this.getKeyfile();
+    var transaction, keyfile = this.getKeyfile();
     
-    var transaction = keyfile.getTransaction(
-      keylistId, 'createInviteRequest', userAlias);
+    if (userRole == 'invitee') {
+      
+      var transaction = keyfile.getTransaction(
+        keylistId, 'acceptInviteRequest', userAlias);
+      
+
+      var inviteeKey = transaction.inviteePublicKey,
+          inviterKey = transaction.inviterPublicKey;
+            
+    } else if (userRole == 'inviter') {
+  
+      var transaction = keyfile.getTransaction(
+        keylistId, 'createInviteRequest', userAlias);
+      
+      var inviterKey = transaction.inviterPublicKey;
+      
+    } else {
+      
+      throw 'Invalid user role.';
+      
+    }
     
-    
-    return transaction.invitationToken;
+    return { 
+      inviterFingerprint: this.makeKeyFingerprint(inviterKey),
+      inviteeFingerprint: this.makeKeyFingerprint(inviteeKey)
+    };
     
   },
   
-  acceptInviteRequest: function (inviteRequest, token) {
+  makeKeyFingerprint: function(key) {
+    
+    // Strip all characters, just keep numbers
+    var sequence = JSON.stringify(key.point)
+        .split(',').join('').split('-').join('')
+        .replace('[', '').replace(']', '');
+  
+    var fingerprint = sjcl.codec.hex.fromBits(
+        sjcl.hash.sha256.hash(sequence));
+  
+    var fingerprint = fingerprint
+      .slice(0,32).replace(/(.{2})/g,"$1:")
+      .slice(0,47); // remove last char.
+    
+    return fingerprint;
+  
+  },
+  
+  acceptInviteRequest: function (inviteRequest) {
     
     var keyfile = this.getKeyfile();
-    return keyfile.acceptInviteRequest(inviteRequest, token);
+    return keyfile.acceptInviteRequest(inviteRequest);
     
   },
   

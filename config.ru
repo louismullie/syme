@@ -21,6 +21,10 @@ use Rack::Session::Memcache,
   path: '/',
   secret: '8dg236rgd31238fb13vd65'
 
+# Disable caching altogether.
+require 'rack/nocache'
+use Rack::Nocache
+
 # Require the main application class.
 require './app'
 
@@ -29,7 +33,7 @@ map '/' do
   run Syme::Application
 end
 
-# For development, map assets.
+# For development, serve assets.
 map '/assets' do
 
   environment = Sprockets::Environment.new

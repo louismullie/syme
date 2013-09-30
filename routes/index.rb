@@ -6,14 +6,10 @@ if settings.environment == :development
     
     # Set the content type for page.
     content_type 'text/html'
-      
-    # Generate the layout path.
-    layout_path = File.join(
-      settings.hbs_path, 'layout.hbs')
     
     # Verify that the layout exists.
-    if File.readable?(layout_path)
-      File.read(layout_path)  
+    if File.readable?(settings.layout_path)
+      File.read(settings.layout_path)  
     else
       'Layouts have not been generated.'
     end

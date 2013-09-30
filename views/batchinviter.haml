@@ -1,0 +1,13 @@
+#batchinvite.row
+  .base-centered-column
+    %h2 Invite people to <span>{{group.name}}</span>
+    %h3
+      Enter the email addresses of people you want to invite
+      to your group
+
+    #tags
+      %input{ type: 'text', placeholder: 'Add an email', maxlength: 50 }
+
+    %a#batchinvite-link.disabled{ href: '#' }
+      %span Go to your group
+      <div class="nprogress-spinner"><div class="nprogress-spinner-icon"></div></div>

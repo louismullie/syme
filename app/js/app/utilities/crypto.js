@@ -262,12 +262,12 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.acceptInviteRequest = function (inviteRequest, token, inviteAcceptedCb) {
+  this.acceptInviteRequest = function (inviteRequest, inviteAcceptedCb) {
 
     Syme.Crypto.executeJobWithLock({
 
       method: 'acceptInviteRequest',
-      params: [inviteRequest, token]
+      params: [inviteRequest]
 
     }, inviteAcceptedCb);
 
@@ -426,14 +426,14 @@ Syme.Crypto = function (workerUrl) {
 
   };
 
-  this.getInvitationToken = function (keylistId, userAlias, invitationTokenCb) {
+  this.getKeyFingerprint = function (keylistId, userAlias, userRole, inviteePublicKey, keyFingerprintCb) {
 
     Syme.Crypto.executeJobWithoutLock({
 
-      method: 'getInvitationToken',
-      params: [keylistId, userAlias]
+      method: 'getKeyFingerprint',
+      params: [keylistId, userAlias, userRole, inviteePublicKey]
 
-    }, invitationTokenCb);
+    }, keyFingerprintCb);
 
   };
 

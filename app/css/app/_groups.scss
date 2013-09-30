@@ -1,55 +1,12 @@
-// Masonry content disposition
 #groups {
-  .create-first-group {
-    h2 {
-      font: 200 2em/2em $opensans;
-      text-align: center;
-
-      margin-bottom: 1em;
-    }
-
-    form#create_first_group {
-      input[type="text"] {
-        height: 70px;
-        padding: 0 0.5em;
-
-        line-height: 1.8em;
-        font-size: 1.8em;
-        font-weight: 200;
-
-        text-align: center;
-      }
-
-      a[role="submit"] {
-        @include btn-slide(70px, $bodyBackgroundColor2);
-
-        font-size: 2em;
-
-        span {
-          font-weight: 200;
-
-          &.default {
-            color: lighten($black, 30%);
-          }
-          &.hover {
-            color: $success;
-          }
-        }
-
-        border: 2px solid $gray;
-
-        &:hover {
-          text-decoration: none;
-        }
-      }
-    }
-  }
-
   ul {
-    @include column-gap($bodyPadding);
 
+    // Masonry content disposition
+
+    @include column-gap($bodyPadding);
     @include column-count(1);
     @media #{$small}  { @include column-count(2); }
+    //@media #{$large}  { @include column-count(3); }
 
     list-style-type: none;
     text-align: center;
@@ -58,6 +15,7 @@
       width: 100%;
 
       display: inline-block;
+      position: relative;
 
       margin-bottom: $bodyPadding;
 
@@ -82,7 +40,7 @@
         .group-card-content {
           display: none;
 
-          form#create_group {
+          form#create-group {
             position: relative;
 
             input[type="text"] {
@@ -153,7 +111,8 @@
           opacity: 0;
 
           position: absolute;
-          top: 10px; right: 25px;
+          top: 10px; right: 10px;
+          z-index: 100;
 
           padding: 0 0.5em;
           font-size: 0.8em;
@@ -161,10 +120,12 @@
 
           &::before {
             border-left-color: white;
+            z-index: 101;
           }
 
           &::after {
             border: 1px solid white;
+            z-index: 101;
           }
         }
 
@@ -176,11 +137,12 @@
               display: block;
 
               position: absolute;
-              top: 0; left: 0; right: 0; bottom: 0;
+              top: 0; left: 0; right: 0;
 
               background: rgba(255, 255, 255, 0.7);
 
               line-height: 160px;
+              height: 160px;
               font-weight: 200;
               font-size: 2em;
                 @media #{$breakpointMedium} { font-size: 1.4em; }
@@ -228,6 +190,45 @@
 
         .group-updated-at {
           font-size: .9em;
+        }
+
+        a.fingerprint-link {
+          float: right;
+          font-size: .9em;
+
+          span.collapse { display: none; }
+
+          &.expanded {
+            span.expand   { display: none; }
+            span.collapse { display: inline; }
+          }
+        }
+
+        .fingerprint-box {
+          margin-top: .5em;
+          padding-top: .5em;
+          border-top: $baseBorderStyle;
+
+          text-align: center;
+
+          span {
+            position: relative;
+            top: 2px;
+
+            padding: 4px 7px;
+            padding-bottom: 1px;
+            border-radius: 3px;
+
+            color: white;
+            background: $concrete;
+            font-family: $codeFontFamily;
+
+            cursor: help;
+
+            &.you {
+              margin-right: 1em;
+            }
+          }
         }
       }
     }

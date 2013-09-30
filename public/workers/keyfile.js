@@ -1,5 +1,3 @@
-importScripts('pakdh-client.js');
-
 Keyfile = function(userId, password, encKeyfile) {
   
   var that = this;
@@ -372,7 +370,7 @@ Keyfile = function(userId, password, encKeyfile) {
     var keylist = that.getKeylist(keylistId);
     
     var transactions = keylist._transactions;
-     
+    
      if (!transactions)
        throw 'Transactions book not initialized.'
      
@@ -412,8 +410,15 @@ Keyfile = function(userId, password, encKeyfile) {
     var inviteRequests = [];
     
     _.each(inviteeAliases, function (inviteeAlias) {
+      
       var request = that.createInviteRequest(keylistId, inviteeAlias);
-      inviteRequests.push({ alias: inviteeAlias, request: request });
+      
+      inviteRequests.push({
+        group_id: keylistId,
+        email: inviteeAlias,
+        request: request
+      });
+      
     });
     
     return inviteRequests;
@@ -423,23 +428,16 @@ Keyfile = function(userId, password, encKeyfile) {
   that.createInviteRequest = function (keylistId, inviteeAlias) {
     
     var keylist = that.getKeylist(keylistId);
-    var invitationToken = Crypto.generateRandomHex(8);
     
     var inviterId = that.userId;
     
-    // PAK-DH step 1.
-    var pakdh = new PAKDHClient(invitationToken);
-    var gRa = pakdh.generategRa();
-    
-    var X = pakdh.calculateX(inviterId, inviteeAlias, gRa);
     var keypair = that.generateEncryptionKeypair();
     var keypairJson = that.serializeKeypair(keypair);
     
     var transaction = {
       inviteeAlias: inviteeAlias,
-      inviterKeypair: keypairJson,
-      inviterExponent: gRa.toString(16),
-      invitationToken: invitationToken
+      inviterPublicKey: keypairJson.publicKey,
+      inviterPrivateKey: keypairJson.privateKey
     };
     
     var inviterPublicKey = that.serializePublicKey(keypair.publicKey);
@@ -451,15 +449,14 @@ Keyfile = function(userId, password, encKeyfile) {
       keylistId: keylistId,
       inviterId: inviterId,
       inviteeAlias: inviteeAlias,
-      inviterPublicKey: inviterPublicKey,
-      inviterX: X.toString(16)
+      inviterPublicKey: inviterPublicKey
     };
     
-    return [Crypto.encodeBase64(JSON.stringify(inviteRequest)), invitationToken];
+    return Crypto.encodeBase64(JSON.stringify(inviteRequest));
     
   };
   
-  that.acceptInviteRequest = function(inviteRequestBase64, invitationToken) {
+  that.acceptInviteRequest = function(inviteRequestBase64) {
     
     var inviteRequestTxt = Crypto.decodeBase64(inviteRequestBase64);
     var inviteRequest = JSON.parse(inviteRequestTxt);
@@ -483,37 +480,25 @@ Keyfile = function(userId, password, encKeyfile) {
     var inviterPublicKey = that.buildPublicKey(
       inviteRequest.inviterPublicKey, 'encryption');
     
-    var pakdh = new PAKDHClient(invitationToken);
-    
-    var gRb = pakdh.generategRb();
-    
-    var Xab = pakdh.calculateXab(inviterId,
-      inviteRequest.inviteeAlias,
-      new BigInteger(inviteRequest.inviterX, 16));
-    
-    var Y = pakdh.calculateY(inviterId,
-      inviteRequest.inviteeAlias, gRb);
-    
-    var S1 = pakdh.calculateS1(inviterId,
-      inviteRequest.inviteeAlias, Xab, gRb);
-    
     var inviteeKeypair = that.generateEncryptionKeypair();
     var inviteeKeypairJson = that.serializeKeypair(inviteeKeypair);
-    
-    var token = Crypto.generateRandomHex(256);
     
     var symKey = Crypto.diffieHellman(
       inviteeKeypair.privateKey, inviterPublicKey);
     
+    var inviteePrivateKeyJson = that
+      .serializePrivateKey(inviteeKeypair.privateKey);
+    
+    var inviteePublicKeyJson = that
+      .serializePublicKey(inviteeKeypair.publicKey);
+    
     var transaction = {
       inviterId: inviterId,
       inviteeId: that.userId,
-      inviterPublicKey: inviterPublicKeyJson,
-      inviteeKeypair: inviteeKeypairJson,
-      token: token,
-      inviteeExponent: gRb.toString(16),
-      inviterXab: Xab.toString(16),
-      invitationToken: invitationToken
+      inviteePublicKey: inviteePublicKeyJson,
+      inviteePrivateKey: inviteePrivateKeyJson,
+      inviterPublicKey: inviterPublicKeyJson, // redundancy here
+      inviteeKeypair: inviteeKeypairJson
     };
       
     that.createTransaction(keylistId,
@@ -541,8 +526,6 @@ Keyfile = function(userId, password, encKeyfile) {
       inviteeAlias: inviteRequest.inviteeAlias,
       inviteeId: that.userId, inviteePublicKey:
       that.serializePublicKey(inviteeKeypair.publicKey),
-      inviteeS1: S1.toString(16),
-      inviteeY: Y.toString(16),
       encKeypairs: encryptedInviteeKeypairsBase64
     }));
     
@@ -558,8 +541,6 @@ Keyfile = function(userId, password, encKeyfile) {
     var inviterId = inviteRequest.inviterId;
     var inviteeAlias = inviteRequest.inviteeAlias;
     
-    var inviteeY = inviteRequest.inviteeY;
-    
     if (!inviterId || !inviteeId || !inviteeAlias ||
         !keylistId || !inviteRequest.inviteePublicKey ||
         !inviteRequest.encKeypairs)
@@ -572,7 +553,7 @@ Keyfile = function(userId, password, encKeyfile) {
       'createInviteRequest', inviteRequest.inviteeAlias);
     
     var inviterPrivateKey = that.buildPrivateKey(
-      transaction.inviterKeypair.privateKey, 'encryption');
+      transaction.inviterPrivateKey, 'encryption');
     
     var inviteePublicKey = that.buildPublicKey(
       inviteRequest.inviteePublicKey, 'encryption');
@@ -591,22 +572,6 @@ Keyfile = function(userId, password, encKeyfile) {
     
     that.addKeypairs(keylistId, inviteeId, inviteeKeypairsJson);
     
-    var pakdh = new PAKDHClient(transaction.invitationToken);
-    
-    var gRa = new BigInteger(transaction.inviterExponent, 16);
-    
-    var Yba = pakdh.calculateYba(inviterId, inviteeAlias,
-      new BigInteger(inviteeY, 16));
-      
-    var S1p = pakdh.calculateS1(inviterId, inviteeAlias, gRa, Yba);
-
-    if (S1p.toString(16) != inviteRequest.inviteeS1)
-      return { error: 'invalid_s1' };
-    
-    // Upgrade invitee alias to invitee ID.
-    var S2 = pakdh.calculateS2(inviterId, inviteeId, gRa, Yba);
-    var symKey = pakdh.calculateK(inviterId, inviteeId, gRa, Yba);
-    
     var encKeylistJsonTxtBase64 = Crypto
       .encryptThenEncodeBase64(symKey.toString(16), keylistJsonTxt);
     
@@ -615,8 +580,8 @@ Keyfile = function(userId, password, encKeyfile) {
         inviterId: inviteRequest.inviterId,
         inviteeId: inviteRequest.inviteeId,
         keylistId: inviteRequest.keylistId,
-        encKeylist: encKeylistJsonTxtBase64,
-        inviterS2: S2.toString(16)
+        inviterPublicKey: transaction.inviterPublicKey,
+        encKeylist: encKeylistJsonTxtBase64
     }));
     
     var encInviteeKeypairBase64 = Crypto.encryptMessage(
@@ -651,19 +616,14 @@ Keyfile = function(userId, password, encKeyfile) {
     
     var transaction = that.getTransaction(keylistId, 
       'acceptInviteRequest', inviteRequest.inviterId);
+  
+    var inviteePrivateKey = that.buildPrivateKey(
+      transaction.inviteePrivateKey, 'encryption');
     
-    var pakdh = new PAKDHClient(transaction.invitationToken);
+    var inviterPublicKey = that.buildPublicKey(
+      inviteRequest.inviterPublicKey, 'encryption');
     
-    var exponent = new BigInteger(transaction.inviteeExponent, 16);
-    var Xab = new BigInteger(transaction.inviterXab, 16);
-    var gRb = new BigInteger(transaction.inviteeExponent, 16);
-
-    var S2p = pakdh.calculateS2(inviterId, inviteeId, Xab, gRb);
-    
-    if (S2p.toString(16) !== inviteRequest.inviterS2)
-      throw 'Unsafe - invalid S2.';
-    
-    var symKey = pakdh.calculateK(inviterId, inviteeId, Xab, gRb);
+    var symKey = Crypto.diffieHellman(inviteePrivateKey, inviterPublicKey);
     
     if (!transaction)
       throw 'Missing acceptInviteRequest transaction.'

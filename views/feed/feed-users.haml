@@ -23,13 +23,8 @@
         // If inviter is awaiting invitee's acceptance, show link to token
         {{#compare state 1}}
         // Replace by GET request with only invite ID, which returns the rest.
-        %a.invite-pending.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'View key',
-                                                    'data-invite-id'         => '{{id}}',
-                                                    'data-invite-invitee_id' => '{{invitee_id}}',
-                                                    'data-invite-invitee_full_name' => '{{invitee_full_name}}',
-                                                    'data-invite-email'      => '{{email}}',
-                                                    'data-invite-group_id'   => '{{group_id}}' }>
-          %i.icon-key
+        %a.invite-pending.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Pending' }>
+          %i.icon-time
         {{/compare}}
 
         // If invitee is awaiting inviter's confirmation, show link to confirmation

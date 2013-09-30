@@ -22,12 +22,19 @@ end
 
 # Manual HAML rendering in order to put mail templates
 # outside of /views directory.
-def email_template(template, locals = {})
+def email_template(template, recipient, locals = {})
 
   template  = File.join(settings.root, 'mails', "#{template.to_s}.haml")
   layout    = File.join(settings.root, 'mails', "layout.haml")
 
-  haml File.open(template).read, layout: File.open(layout).read, locals: locals
+  recipient = Base64.strict_encode64(recipient)
+  token     = Digest::SHA2.hexdigest( recipient + settings.email_salt )
+
+  locals.merge! { recipient: recipient, unsubscribe_token: token }
+
+  Haml::Engine.new(File.read(layout)).render do
+    Haml::Engine.new(File.read(template)).render(Object.new, locals)
+  end
 
 end
 
@@ -42,14 +49,14 @@ end
 
 # =====================================================
 # Mail helpers
-# 
+#
 # TODO: refactor titles into hash, define one function
 
 def send_beta_invite(email)
 
   subject = "Welcome to Syme beta"
 
-  message = email_template :send_beta_invite
+  message = email_template :send_beta_invite, email
 
   send_email_to(email, subject, message)
 
@@ -59,7 +66,7 @@ def send_beta_welcome(email)
 
   subject = "You're in! Welcome to Syme beta"
 
-  message = email_template :send_beta_welcome
+  message = email_template :send_beta_welcome, email
 
   send_email_to(email, subject, message)
 
@@ -69,7 +76,7 @@ def send_email_confirm(email)
 
   subject = "Confirm your Syme account"
 
-  message = mail_template :send_email_confirm, { user: @user }
+  message = email_template :send_email_confirm, email, { user: @user }
 
   send_email_to(email, subject, message)
 
@@ -81,8 +88,9 @@ def send_invite(email)
 
   invitee = User.where(email: email).first
 
-  message = mail_template invitee.nil? ?
-    :send_invite_new_user : :send_invite_old_user
+  template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
+
+  message = email_template template, email
 
   send_email_to(email, subject, message)
 
@@ -94,7 +102,7 @@ def request_confirm(invite)
 
   subject = "Confirm your new group member on Syme"
 
-  message = mail_template :request_confirm
+  message = email_template :request_confirm, email
 
   # inviter.email
   send_email_to(inviter.email, subject, message)
@@ -108,7 +116,7 @@ def notify_confirmed(invite)
 
   subject = "You've joined a new group on Syme"
 
-  message = mail_template :notify_confirmed
+  message = email_template :notify_confirmed, email
 
   # invitee.email
   send_email_to(invitee.email, subject, message)

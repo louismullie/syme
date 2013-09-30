@@ -52,14 +52,6 @@ input[type="url"], input[type="search"], input[type="tel"], input[type="color"],
   }
 }
 
-// Disabled state
-input[disabled], input[readonly], textarea[disabled], textarea[readonly] {
-  background-color: mix($gray, white, 10%);
-  border-color: mix($gray, white, 40%);
-  color: mix($gray, white, 40%);
-  cursor: default;
-}
-
 // Textarea
 textarea {
   height: auto;
@@ -103,4 +95,12 @@ input[type="checkbox"] + span:before {
 
 input[type="checkbox"]:checked + span:before {
   content: "\f046"; /* check */
+}
+
+// Disabled state
+input[disabled], input[readonly], textarea[disabled], textarea[readonly] {
+  background-color: mix($gray, white, 10%) !important;
+  border-color: mix($gray, white, 40%) !important;
+  color: mix($gray, white, 40%) !important;
+  cursor: default !important;
 }
