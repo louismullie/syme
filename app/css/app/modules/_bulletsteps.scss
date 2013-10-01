@@ -1,83 +1,93 @@
-// This variable affects the maximum supported bullets.
-// Changing this to a too high value will result in oversized
-// generated CSS.
+// HAML DOM structure example:
+//
+// #bullet-steps{ :'data-step' => 3, :'data-amount' => 4 }
+//   #bullet-steps-slider
+//
+//   #bullet-steps-container
+//     .bullet-step
+//     .bullet-step
+//     .bullet-step
+//     .bullet-step
 
-$maxBulletAmount: 5;
+#bullet-steps {
 
-@for $bulletAmount from 1 through $maxBulletAmount {
+  // This variable affects the maximum supported bullets.
+  // Changing this to a too high value will result in an
+  // oversized generated CSS.
+  $maxBulletAmount:     5;
 
-  #bullet-steps[data-amount="#{$bulletAmount}"] {
+  $backgroundColor:     white;
 
-    $stepheight: 20px;
-    $bulletborder: 5px;
+  $pastBulletColor:     $green;
+  $currentBulletColor:  $success;
+  $futureBulletColor:   gray;
 
-    $backgroundColor: white;
+  $stepSize:            20px;
+  $bulletBorderStyle:   5px solid $backgroundColor;
 
-    $pastBulletColor: $green;
-    $currentBulletColor: $success;
-    $futureBulletColor: gray;
+  @for $bulletAmount from 1 through $maxBulletAmount {
 
-    margin: 50px; // development only
+    &[data-amount="#{$bulletAmount}"] {
 
-    height: $stepheight;
+      height: $stepSize;
 
-    position: relative;
+      position: relative;
 
-    background: $backgroundColor;
+      background: $backgroundColor;
 
-    @for $step from 1 through $bulletAmount {
-      &[data-step="#{$step}"] {
-        #bullet-steps-slider {
-          $position: 100 / ( $bulletAmount - 1 ) * ( $step - 1 );
-          background-size: unquote($position + '%');
-        }
-        @for $child from 1 through $step {
-          .bullet-step:nth-child(#{$child}) {
-            background: if($child == $step, $currentBulletColor, $pastBulletColor);
+      @for $step from 1 through $bulletAmount {
+        &[data-step="#{$step}"] {
+          #bullet-steps-slider {
+            $position: 100 / ( $bulletAmount - 1 ) * ( $step - 1 );
+            background-size: unquote($position + '%');
+          }
+          @for $child from 1 through $step {
+            .bullet-step:nth-child(#{$child}) {
+              background: if($child == $step, $currentBulletColor, $pastBulletColor);
+            }
           }
         }
       }
-    }
 
-    #bullet-steps-slider {
-      height: 2px;
+      #bullet-steps-slider {
+        height: 2px;
 
-      position: absolute;
-      top: 50%; left: 0; right: 0;
-      margin-top: -1px;
+        position: absolute;
+        top: 50%; left: 0; right: 0;
+        margin-top: -1px;
 
-      background: -webkit-linear-gradient(left, $pastBulletColor, $pastBulletColor 50%);
-      background-repeat: repeat-y;
-      background-size: 0%;
-      background-color: $futureBulletColor;
-    }
+        background: -webkit-linear-gradient(left, $pastBulletColor, $pastBulletColor 50%);
+        background-repeat: repeat-y;
+        background-size: 0%;
+        background-color: $futureBulletColor;
+      }
 
-    .bullet-step {
-      position: absolute;
-      width: $stepheight; height: $stepheight;
-      box-sizing: border-box;
+      .bullet-step {
+        position: absolute;
+        width: $stepSize; height: $stepSize;
+        box-sizing: border-box;
 
-      border: $bulletborder solid $backgroundColor;
+        border: $bulletBorderStyle;
 
-      border-radius: 50%;
+        border-radius: 50%;
 
-      text-align: center;
-      line-height: $stepheight;
+        text-align: center;
+        line-height: $stepSize;
 
-      font-size: 2em;
-      color: white;
-      background: $futureBulletColor;
+        font-size: 2em;
+        color: white;
+        background: $futureBulletColor;
 
-      @for $i from 1 through $bulletAmount {
-        &:nth-child(#{$i}){
-          $position: 100 / ( $bulletAmount - 1 ) * ( $i - 1 );
-          left: unquote($position + '%');
-          @if $i != 1 {
-            margin-left: -1 * $stepheight / 2;
+        @for $i from 1 through $bulletAmount {
+          &:nth-child(#{$i}){
+            $position: 100 / ( $bulletAmount - 1 ) * ( $i - 1 );
+            left: unquote($position + '%');
+            @if $i != 1 {
+              margin-left: -1 * $stepSize / 2;
+            }
           }
         }
       }
     }
   }
-
 }
