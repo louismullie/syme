@@ -10,8 +10,6 @@ class InvitationObserver < Mongoid::Observer
     inviter = invite.inviter
     group = invite.group
     
-    warn "NOTIFYING BITCH"
-    
     user.notify({
       action: :invite_request,
       create: {

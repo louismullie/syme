@@ -35,7 +35,6 @@ post '/users/:user_id/groups/:group_id/invitations', auth: [] do |user_id, group
   invitations.each do |invitation|
     
     invitation = invitation[1]
-    warn invitation.inspect
   
     if !invitation['group_id'] || 
        !invitation['email'] ||
