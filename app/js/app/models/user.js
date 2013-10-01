@@ -100,7 +100,10 @@ var User = Backbone.Model.extend({
     var _this = this;
     var invitation = new Invitation();
     invitation.set('id', invitationId);
-
+    
+    if (!invitationId || !request)
+      throw 'Empty invitation ID or request.';
+  
     Syme.Crypto.acceptInviteRequest(request, function (inviteRequest) {
 
       Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
