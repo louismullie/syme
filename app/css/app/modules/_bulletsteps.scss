@@ -1,0 +1,83 @@
+// This variable affects the maximum supported bullets.
+// Changing this to a too high value will result in oversized
+// generated CSS.
+
+$maxBulletAmount: 5;
+
+@for $bulletAmount from 1 through $maxBulletAmount {
+
+  #bullet-steps[data-amount="#{$bulletAmount}"] {
+
+    $stepheight: 20px;
+    $bulletborder: 5px;
+
+    $backgroundColor: white;
+
+    $pastBulletColor: $green;
+    $currentBulletColor: $success;
+    $futureBulletColor: gray;
+
+    margin: 50px; // development only
+
+    height: $stepheight;
+
+    position: relative;
+
+    background: $backgroundColor;
+
+    @for $step from 1 through $bulletAmount {
+      &[data-step="#{$step}"] {
+        #bullet-steps-slider {
+          $position: 100 / ( $bulletAmount - 1 ) * ( $step - 1 );
+          background-size: unquote($position + '%');
+        }
+        @for $child from 1 through $step {
+          .bullet-step:nth-child(#{$child}) {
+            background: if($child == $step, $currentBulletColor, $pastBulletColor);
+          }
+        }
+      }
+    }
+
+    #bullet-steps-slider {
+      height: 2px;
+
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      margin-top: -1px;
+
+      background: -webkit-linear-gradient(left, $pastBulletColor, $pastBulletColor 50%);
+      background-repeat: repeat-y;
+      background-size: 0%;
+      background-color: $futureBulletColor;
+    }
+
+    .bullet-step {
+      position: absolute;
+      width: $stepheight; height: $stepheight;
+      box-sizing: border-box;
+
+      border: $bulletborder solid $backgroundColor;
+
+      border-radius: 50%;
+
+      text-align: center;
+      line-height: $stepheight;
+
+      font-size: 2em;
+      color: white;
+      background: $futureBulletColor;
+
+      @for $i from 1 through $bulletAmount {
+        &:nth-child(#{$i}){
+          $position: 100 / ( $bulletAmount - 1 ) * ( $i - 1 );
+          left: unquote($position + '%');
+          @if $i != 1 {
+            margin-left: -1 * $stepheight / 2;
+          }
+        }
+      }
+    }
+  }
+
+}
