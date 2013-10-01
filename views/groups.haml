@@ -1,5 +1,3 @@
-{{#if groups}}
-
 #groups.row
   .large-centered-column
 
@@ -25,10 +23,3 @@
       {{#each groups}} {{> groups-group.hbs}} {{/each}}
 
     {{/if}}
-
-{{else}}
-
--# If there are no groups, first group creation
-{{> groups-first.hbs}}
-
-{{/if}}

@@ -287,6 +287,14 @@ Syme.Router = Backbone.Router.extend({
           template = 'batchinviter';
         }
 
+        // If we're on groups, and there are no groups and no pending invites,
+        // load create first group
+        if( template == 'groups' &&
+            data.groups.length == 0 &&
+            data.invites.length == 0 ) {
+          template = 'groups-first';
+        }
+
         // Initiate logged in template on first pageload
         if( !$('#main').length )
           Syme.Router.renderLoggedInTemplate();
