@@ -1,5 +1,33 @@
 {{#if groups}}
 
+#groups.row
+  .large-centered-column
+
+    {{#if invites}}
+
+    %ul
+      // Invitations
+      {{> groups-invites.hbs}}
+
+      // Create group
+      {{> groups-create.hbs}}
+
+      // Group Loop
+      {{#each groups}} {{> groups-group.hbs}} {{/each}}
+
+    {{else}}
+
+    %ul
+      // Create group
+      {{> groups-create.hbs}}
+
+      // Group Loop
+      {{#each groups}} {{> groups-group.hbs}} {{/each}}
+
+    {{/if}}
+
+{{else}}
+
 {{#if invites}}
 
 #groups.row
@@ -27,15 +55,10 @@
       {{#each groups}} {{> groups-group.hbs}} {{/each}}
 
     {{/if}}
-      
+
 {{else}}
-  
+
 {{> groups-first.hbs}}
-  
+
 {{/if}}
-
-{{else}}
-
-{{> groups-first.hbs}}
-
 {{/if}}
