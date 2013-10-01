@@ -111,6 +111,8 @@ Syme.Binders.add('groups', { main: function() {
 
     e.preventDefault();
 
+    NProgress.showSpinner();
+    
     // Pass reference to self to subcontext.
     var $this = $(this);
 
@@ -172,6 +174,7 @@ Syme.Binders.add('groups', { main: function() {
 
                 Syme.Router.navigate(targetGroupRoute);
                 $this.data('active', false);
+                NProgress.hideSpinner();
 
               },
 
@@ -180,7 +183,8 @@ Syme.Binders.add('groups', { main: function() {
 
                 Syme.Error.ajaxError(response, 'acknowledge', 'group');
                 $this.data('active', false);
-
+                NProgress.hideSpinner();
+                
               }
 
             });

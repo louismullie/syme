@@ -127,22 +127,11 @@ Syme.Auth = {
 
                if (data.status == 'ok') {
                 
-                var msg = Syme.Messages.beta.warning;
-
                 var derivedKey = keys.key2;
                 var csrfToken = data.csrf;
                 var sessionKey = Sc.toString(16);
                 
-                Alert.show(msg, {
-                  
-                  title: 'Beta warning',
-                  
-                  onhide: function () {
-                    success(derivedKey, csrfToken, sessionKey);
-                    return true;
-                  }
-
-                });
+                success(derivedKey, csrfToken, sessionKey);
 
               } else if (data.status == 'error') {
 

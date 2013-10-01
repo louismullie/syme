@@ -18,16 +18,6 @@ Syme.Messages = {
                  "and try again."
   },
   
-  beta: {
-    
-    warning: 'Syme is currently in an early beta phase. ' +
-             'This means that we might make small changes to our ' +
-             'software that could imply loss of your data. You ' +
-             'should always keep backups of any important information ' +
-             'that you share in your groups.'
-    
-  },
-  
   file: {
     
     maxSize: 'You can only upload files of up to 25 Mb for now.'

@@ -13,12 +13,14 @@ var Invitation = Backbone.Model.extend({
     var groupId = inviteLink.data('invite-group_id');
     var request = inviteLink.data('invite-request');
     var inviterName = inviteLink.data('invite-inviter_name');
-    var message = 'Enter the key ' + inviterName + ' has sent you:';
+    
+    NProgress.showSpinner();
 
     user.acceptInviteRequest(invitationId, request, function () {
       Notifications.fetch();
       Syme.Router.reload();
       $('.popover').hide();
+      NProgress.hideSpinner();
     });
 
   },
