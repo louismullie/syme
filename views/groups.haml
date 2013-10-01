@@ -1,3 +1,7 @@
+{{#if groups}}
+
+{{#if invites}}
+
 #groups.row
   .large-centered-column
 
@@ -23,3 +27,15 @@
       {{#each groups}} {{> groups-group.hbs}} {{/each}}
 
     {{/if}}
+      
+{{else}}
+  
+{{> groups-first.hbs}}
+  
+{{/if}}
+
+{{else}}
+
+{{> groups-first.hbs}}
+
+{{/if}}
