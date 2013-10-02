@@ -70,6 +70,8 @@ Syme.Socket = {
   invitation: {
 
     distribute: function (data) {
+      
+      Notifications.fetch();
 
       var user = Syme.CurrentSession.getUser();
       var groupId = data.group_id;
