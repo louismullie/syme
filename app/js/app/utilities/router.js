@@ -347,13 +347,13 @@ Syme.Router = Backbone.Router.extend({
             data.invites == false) {
 
           var crumbs = [
-            { title: 'My Groups', href: '/' },
+            { title: 'My groups', href: '/' },
             { title: 'Create your first group', href: '#' }
           ];
 
         } else {
 
-          var crumbs = [ { title: 'My Groups', href: '/' } ];
+          var crumbs = [ { title: 'My groups', href: '/' } ];
 
         }
 
@@ -362,14 +362,14 @@ Syme.Router = Backbone.Router.extend({
       case 'groups-first':
 
         var crumbs = [
-          { title: 'My Groups', href: '/' },
+          { title: 'My groups', href: '/' },
           { title: 'Create your first group', href: '#' }
         ];
         break;
 
       case 'settings':
 
-        var crumbs = [ { title: 'My Groups', href: '/' } ];
+        var crumbs = [ { title: 'My groups', href: '/' } ];
         break;
 
       case 'feed':
@@ -377,7 +377,7 @@ Syme.Router = Backbone.Router.extend({
         var groupName = data.group.name;
       
         var crumbs = [
-          { title: 'My Groups', href: '/' },
+          { title: 'My groups', href: '/' },
           { title: groupName, href: Syme.Router.currentRoute }
         ];
         
@@ -388,7 +388,7 @@ Syme.Router = Backbone.Router.extend({
         var groupName = data.group.name;
         
         var crumbs = [
-          { title: 'My Groups', href: '/' },
+          { title: 'My groups', href: '/' },
           { title: 'Invite people to ' + groupName,
           href: Syme.Router.currentRoute }
         ];
@@ -403,10 +403,8 @@ Syme.Router = Backbone.Router.extend({
     
     
     Syme.Navbar.setBreadCrumb({
-      
-      brand_only: template == 'groups',
+      brand_only: false,
       elements: crumbs
-      
     });
 
   },

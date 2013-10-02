@@ -284,9 +284,9 @@ Syme.FileManager.prototype = {
 
           function(upload_id) {
 
-            _this.uploadThumbnail(file, upload_id);
-
-            success(upload_id);
+            _this.uploadThumbnail(file, upload_id, function () {
+              success(upload_id);
+            });
 
           }
 
@@ -310,7 +310,7 @@ Syme.FileManager.prototype = {
 
   },
 
-  uploadThumbnail: function (file, uploadId) {
+  uploadThumbnail: function (file, uploadId, success) {
 
     var url = URL.createObjectURL(file);
     var img = document.createElement('img');
@@ -325,7 +325,7 @@ Syme.FileManager.prototype = {
           upload_id: uploadId
         };
 
-        _this.upload(image, data);
+        _this.upload(image, data, $.noop, success);
 
       };
 

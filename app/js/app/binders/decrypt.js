@@ -67,10 +67,6 @@ Syme.Binders.add('global', { decrypt: function() {
 
         // Replace encrypted text by decrypted text in DOM
         $collapsable.text(decryptedText);
-
-        console.log("TRIGGER 1");
-        console.trace();
-        //debugger;
         
         // Mark the container as decrypted, and format
         $this.attr('data-encrypted', false).trigger('format');
@@ -140,7 +136,10 @@ Syme.Binders.add('global', { decrypt: function() {
         type      = $this.attr('data-attachment-type'),
         groupId   = $this.attr('data-attachment-group');
 
-    if ( !keys ) return done();
+    if ( !keys ) {
+      console.log('NO KEYS FOR MESSAGE');
+      return done();
+    }
 
     var callback = function(url){
 

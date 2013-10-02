@@ -49,15 +49,13 @@ Syme.Crypto = function (workerUrl) {
 
     // Format textareas
 
-    console.log("TRIGGER 3");
-    
-    console.trace();
-    
     $postsAndComments.find('textarea').trigger('format');
 
     // Show posts and comments
     $postsAndComments.removeClass('hidden');
 
+    $postsAndComments.find('.encrypted-image').trigger('decrypt');
+    
     // Seem to sometimes fail accurate height
     // calculations in a seemingly non-deterministic way
     // Syme.Helpers.collapseHTML();
