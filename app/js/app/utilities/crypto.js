@@ -48,11 +48,14 @@ Syme.Crypto = function (workerUrl) {
     $postsAndComments.find('.slave-avatar').trigger('sync');
 
     // Format textareas
+
     $postsAndComments.find('textarea').trigger('format');
 
     // Show posts and comments
     $postsAndComments.removeClass('hidden');
 
+    $postsAndComments.find('.encrypted-image').trigger('decrypt');
+    
     // Seem to sometimes fail accurate height
     // calculations in a seemingly non-deterministic way
     // Syme.Helpers.collapseHTML();

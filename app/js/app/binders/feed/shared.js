@@ -39,7 +39,7 @@ Syme.Binders.add('feed', { shared: function(){
     });
 
   });
-
+  
   // Form feed textarea formatting (should stay here because
   // of dependency order)
   $('#feed-form textarea').trigger('format');

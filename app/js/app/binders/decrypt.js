@@ -5,6 +5,9 @@ Syme.Binders.add('global', { decrypt: function() {
 
     // Formatting
     format: function (e) {
+      
+      // Return to prevent backward propagation @CHRIS
+      if(e.currentTarget != this) return;
 
       var $this         = $(this),
           $collapsable  = $this.find('.collapsable').first();
@@ -64,7 +67,7 @@ Syme.Binders.add('global', { decrypt: function() {
 
         // Replace encrypted text by decrypted text in DOM
         $collapsable.text(decryptedText);
-
+        
         // Mark the container as decrypted, and format
         $this.attr('data-encrypted', false).trigger('format');
 
@@ -133,7 +136,10 @@ Syme.Binders.add('global', { decrypt: function() {
         type      = $this.attr('data-attachment-type'),
         groupId   = $this.attr('data-attachment-group');
 
-    if ( !keys ) return done();
+    if ( !keys ) {
+      console.log('NO KEYS FOR MESSAGE');
+      return done();
+    }
 
     var callback = function(url){
 

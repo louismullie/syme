@@ -22,16 +22,6 @@ class NotificationGenerator
       group_name = notification.group_name
       group_id = notification.group_id
       group = Group.where(id: group_id).first
-    else
-      # OLD API - to MIGRATE
-      # Want to completely denormalize the group.
-      group = begin
-        Group.find(notification.group_id)
-      rescue Mongoid::Errors::DocumentNotFound
-      end
-      group_name = group.name
-      group_id = group.id.to_s
-      # END OLD API - to MIGRATE
     end
     
     # If all the users have been deleted, or the group

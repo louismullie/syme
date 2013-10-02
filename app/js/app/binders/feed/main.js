@@ -11,18 +11,6 @@ Syme.Binders.add('feed', { main: function(){
 
   var currentGroupName = $('#feed').data('group-name');
 
-  // Set navigation bar breadcrumb.
-  Syme.Navbar.setBreadCrumb({
-
-    brand_only: false,
-
-    elements: [
-      { title: 'Groups', href: groupsUrl },
-      { title: currentGroupName, href: currentGroupUrl }
-    ]
-
-  });
-
   // Initial decryption
   Syme.Crypto.batchDecrypt(function(){
 
@@ -30,5 +18,12 @@ Syme.Binders.add('feed', { main: function(){
     $('#feed-panel-column').show(0);
 
   });
+  
+  /*$('#feed').on('showTutorial', function(){
+    var $feedHider = $('<div id="feed-hider" />').prependTo('body');
+    $('body').addClass('noscroll');
+  });
 
+  $('#feed').trigger('showTutorial');*/
+  
 } }); // Syme.Binders.add();

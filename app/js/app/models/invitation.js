@@ -87,6 +87,7 @@ var Invitation = Backbone.Model.extend({
         user.confirmInviteRequest(keylistId, invitationId, inviteeId, accept, function () {
 
           Modal.hide();
+          Notifications.fetch();
           Syme.Router.reload();
 
         });
