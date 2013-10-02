@@ -24,14 +24,17 @@
 
       -# Confirmation
       {{#compare state 2}}
+
+      <b>{{inviter_name}}</b> needs to confirm before you can join
+      <b>{{group_name}}</b>. As soon as that's done, you're in.
+      
+      &nbsp; &mdash; &nbsp;
+      
       %a.fingerprint-link{ href: '#' }
         <span class="expand">View</span>
         <span class="collapse">Hide</span>
         fingerprints
-
-      <b>{{inviter_name}}</b> needs to confirm before you can join
-      <b>{{group_name}}</b>. As soon as that's done, you're in.
-
+        
       .fingerprint-box.hidden
         You: <span class="you"></span>
         {{inviter_name}}: <span class="inviter"></span>

@@ -40,6 +40,10 @@ Syme.Binders.add('feed', { shared: function(){
 
   });
 
+  console.log("TRIGGER 2");
+  
+  console.trace();
+  
   // Form feed textarea formatting (should stay here because
   // of dependency order)
   $('#feed-form textarea').trigger('format');

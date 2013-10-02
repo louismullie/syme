@@ -48,6 +48,11 @@ Syme.Crypto = function (workerUrl) {
     $postsAndComments.find('.slave-avatar').trigger('sync');
 
     // Format textareas
+
+    console.log("TRIGGER 3");
+    
+    console.trace();
+    
     $postsAndComments.find('textarea').trigger('format');
 
     // Show posts and comments
