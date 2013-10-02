@@ -4,9 +4,12 @@ Syme.Binders.add('batchinviter', { main: function() {
 
   // Batch email text input
 
-  $('#main, #responsive-modal').on('changeState', '#batchinvite a#batchinvite-link', function(){
-    var action = $('#batchinvite #tags .tag').length > 0 ? 'removeClass' : 'addClass';
-    $(this)[action]('disabled');
+  $('#main, #responsive-modal').on('changeState', '#batchinvite a#batchinvite-link', function(e){
+
+    var enable = $('#batchinvite #tags .tag').length > 0;
+    $(this)[enable ? 'removeClass' : 'addClass']('disabled');
+    $('#batchinvite input')[enable ? 'addClass' : 'removeClass']('no-placeholder');
+
   });
 
   $('#batchinvite').on('focusout', '#tags input', function() {
@@ -14,7 +17,7 @@ Syme.Binders.add('batchinviter', { main: function() {
     // Return if batchinviter is active
     if( !!$('#batchinvite').attr('data-active') ) return;
 
-    var mail = this.value.toLowerCase();
+    var mail = this.value.toLowerCase().replace(/(\s+|,|;)/g, '');
 
     if ( mail == '' ) return $(this).removeClass('invalid');
 
@@ -27,24 +30,29 @@ Syme.Binders.add('batchinviter', { main: function() {
     if( is_valid && is_not_current && is_new ){
 
       $(this).before('<span class="tag" data-mail="' + mail + '">'+ mail +'<span class="delete">×</span></span>');
-      $(this).val('').removeClass('invalid');
+      $(this).val('').parent().removeClass('invalid');
 
       $(this).focus();
+
+      $('#batchinvite a#batchinvite-link').bind('click', function(){ return false; });
+      window.setTimeout(function(){ $('#batchinvite a#batchinvite-link').unbind('click') }, 500);
 
       $('#batchinvite a#batchinvite-link').trigger('changeState');
 
     } else {
 
-      $(this).addClass('invalid');
+      $(this).parent().addClass('invalid');
 
     }
 
   }).on('keyup', '#tags input', function(e) {
 
-    // Enter, comma, tab
-    if(/(13|188)/.test(e.which)) $(this).focusout();
+    // Enter, space, comma, semicolumn
+    if(/(13|32|188|186)/.test(e.which)) $(this).focusout();
 
-  }).on('click', '.tag .delete', function(){
+  }).on('click', '.tag .delete', function(e){
+
+    e.stopPropagation();
 
     // Return if batchinviter is active
     if( !!$('#batchinvite').attr('data-active') ) return;
@@ -52,6 +60,10 @@ Syme.Binders.add('batchinviter', { main: function() {
     $(this).parent().remove();
 
     $('#batchinvite a#batchinvite-link').trigger('changeState');
+
+  }).on('click', '#tags', function(e) {
+
+    $(this).find('input').focus();
 
   });
 
@@ -88,6 +100,6 @@ Syme.Binders.add('batchinviter', { main: function() {
   });
 
   // Focus on pageload
-  $('#batchinvite input')[0].focus();
+  window.setTimeout(function(){ $('#batchinvite input').focus() }, 100);
 
 }});

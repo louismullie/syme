@@ -1,18 +1,8 @@
 $batchInvitePadding: 10px;
-$batchInviteMargin:  8px;
+$batchInviteMargin:  4px;
 $batchInviteHeight:  40px;
 
 #batchinvite {
-
-  h2 {
-    font: 200 2em/1.4em $opensans;
-    border-bottom: 2px solid #eee;
-    display: inline-block;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-
-    span { color: $concrete; }
-  }
 
   h3 {
     font: 200 1.2em/1.3em $opensans;
@@ -26,7 +16,14 @@ $batchInviteHeight:  40px;
     border: $baseBorderStyle;
     border-radius: $baseBorderRadius;
     padding: $batchInvitePadding;
-    box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
+
+    border: 2px solid $success;
+
+    cursor: text;
+
+    &.invalid {
+      border-color: $danger !important;
+    }
 
     input {
       height: $batchInviteHeight;
@@ -36,12 +33,16 @@ $batchInviteHeight:  40px;
       background: white;
       border: 0;
       margin: $batchInviteMargin;
-      padding: 5px;
-      border: 2px solid $success;
+      padding: 5px 0;
+      border: 0;
       width: auto;
 
-      &.invalid {
-        border-color: $danger;
+      cursor: text;
+
+      &.no-placeholder {
+        @include placeholder {
+          opacity: 0;
+        }
       }
     }
 
@@ -60,6 +61,8 @@ $batchInviteHeight:  40px;
 
       background: $success;
 
+      cursor: default;
+
       @include transition(background 0.45s ease-in-out);
 
       span.delete {
@@ -75,14 +78,16 @@ $batchInviteHeight:  40px;
     position: relative;
 
     display: block;
-    width: 350px;
+    width: 250px;
     text-align: center;
-    font: 200 1.5em/3em $opensans;
+    font: 200 1.2em/2.5em $opensans;
     margin: 0 auto;
-    margin-top: 1.5em;
+    margin-top: 2em;
 
     @extend .btn;
     @extend .btn-success;
+
+    i { margin-left: .5em; }
 
     .nprogress-spinner {
       display: none;

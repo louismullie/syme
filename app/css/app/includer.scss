@@ -11,7 +11,8 @@
 // Configuration
 @import "../config", "mixins";
 
-@import "modules/buttons",
+@import "modules/bulletsteps",
+        "modules/buttons",
         "modules/inputs",
         "modules/mentionsInput",
         "modules/nprogress",

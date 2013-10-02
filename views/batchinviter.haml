@@ -1,13 +1,31 @@
 #batchinvite.row
   .base-centered-column
-    %h2 Invite people to <span>{{group.name}}</span>
+    #bullet-steps{ :'data-step' => 2, :'data-amount' => 3 }
+      #bullet-steps-slider
+        #bullet-steps-slider-progress
+
+      #bullet-steps-container
+        .bullet-step
+          .bullet-title
+            Create a group
+
+        .bullet-step
+          .bullet-title
+            Invite people
+
+        .bullet-step
+          .bullet-title
+            Start sharing
+
     %h3
-      Enter the email addresses of people you want to invite
-      to your group
+      Invite people to your group by email
 
     #tags
-      %input{ type: 'text', placeholder: 'Add an email', maxlength: 50 }
+      %input{ type: 'text', placeholder: 'Enter a list of emails', maxlength: 50 }
 
     %a#batchinvite-link.disabled{ href: '#' }
-      %span Continue
+      %span
+        Start sharing
+        %i.icon-angle-right
+
       <div class="nprogress-spinner"><div class="nprogress-spinner-icon"></div></div>

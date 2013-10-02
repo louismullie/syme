@@ -2,6 +2,7 @@
 //
 // #bullet-steps{ :'data-step' => 3, :'data-amount' => 4 }
 //   #bullet-steps-slider
+//     #bullet-steps-slider-progress
 //
 //   #bullet-steps-container
 //     .bullet-step
@@ -14,16 +15,31 @@
   // This variable affects the maximum supported bullets.
   // Changing this to a too high value will result in an
   // oversized generated CSS.
-  $maxBulletAmount:     5;
+  $maxBulletAmount:     3;
 
   $backgroundColor:     white;
 
-  $pastBulletColor:     $green;
+  $pastBulletColor:     #BDBDBD;
   $currentBulletColor:  $success;
-  $futureBulletColor:   gray;
+  $futureBulletColor:   #D6D6D6;
 
   $stepSize:            20px;
   $bulletBorderStyle:   5px solid $backgroundColor;
+  $sliderHeight:        2px;
+
+  $pastTitleColor:      #BDBDBD;
+  $currentTitleColor:   $black;
+  $futureTitleColor:    #D6D6D6;
+
+  $bulletTitleWidth:    160px;
+  $bulletTitleOffset:   20px;
+  $bulletTitleLH:       16px;
+
+  $marginBottom:        20px;
+
+  width: 75%;
+  margin-left: auto; margin-right: auto;
+  margin-bottom: $bulletTitleOffset + $bulletTitleLH + $marginBottom;
 
   @for $bulletAmount from 1 through $maxBulletAmount {
 
@@ -37,29 +53,41 @@
 
       @for $step from 1 through $bulletAmount {
         &[data-step="#{$step}"] {
-          #bullet-steps-slider {
+          #bullet-steps-slider #bullet-steps-slider-progress {
             $position: 100 / ( $bulletAmount - 1 ) * ( $step - 1 );
-            background-size: unquote($position + '%');
+            width: unquote($position + '%');
           }
           @for $child from 1 through $step {
             .bullet-step:nth-child(#{$child}) {
               background: if($child == $step, $currentBulletColor, $pastBulletColor);
+
+              .bullet-title {
+                color: if($child == $step, $currentTitleColor, $pastTitleColor);
+              }
             }
           }
         }
       }
 
       #bullet-steps-slider {
-        height: 2px;
+        height: $sliderHeight;
 
         position: absolute;
         top: 50%; left: 0; right: 0;
-        margin-top: -1px;
+        margin-top: -1 * $sliderHeight / 2;
 
-        background: -webkit-linear-gradient(left, $pastBulletColor, $pastBulletColor 50%);
-        background-repeat: repeat-y;
-        background-size: 0%;
         background-color: $futureBulletColor;
+
+        #bullet-steps-slider-progress {
+          width: 0%;
+          height: $sliderHeight;
+
+          position: absolute;
+          top: 50%; left: 0;
+          margin-top: -1 * $sliderHeight / 2;
+
+          background-color: $pastBulletColor;
+        }
       }
 
       .bullet-step {
@@ -74,7 +102,6 @@
         text-align: center;
         line-height: $stepSize;
 
-        font-size: 2em;
         color: white;
         background: $futureBulletColor;
 
@@ -83,9 +110,22 @@
             $position: 100 / ( $bulletAmount - 1 ) * ( $i - 1 );
             left: unquote($position + '%');
             @if $i != 1 {
-              margin-left: -1 * $stepSize / 2;
+              margin-left: if($i != $bulletAmount, -1 * $stepSize / 2, -1 * $stepSize);
             }
           }
+        }
+
+        .bullet-title {
+          width: $bulletTitleWidth;
+
+          position: absolute;
+          top: $bulletTitleOffset; left: 50%;
+          @include transform( translate(-50%, 0) );
+
+          font-size: 1em;
+          line-height: emCalc($bulletTitleLH);
+
+          color: $futureTitleColor;
         }
       }
     }
