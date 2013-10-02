@@ -12,6 +12,10 @@ body {
   &.noscroll {
     // Locks scroll on document only
     overflow: hidden !important;
+    
+    #main {
+      overflow: hidden !important;
+    }
   }
 }
 
@@ -98,6 +102,13 @@ img#splashlogo {
 @include keyframes(fadeIn) {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+#feed-hider {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 #main {
