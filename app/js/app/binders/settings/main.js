@@ -3,16 +3,6 @@ Syme.Binders.add('settings', { main: function(){
   // Hide spinner
   NProgress.done();
 
-  // Breadcrumbs
-  Syme.Navbar.setBreadCrumb({
-    brand_only: true,
-
-    elements: [
-      { title: 'Groups',
-        href: '/' }
-    ]
-  });
-
   // 'Change name' form
   $('#change-name').submit(function(e){
 

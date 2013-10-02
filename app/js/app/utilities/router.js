@@ -278,13 +278,13 @@ Syme.Router = Backbone.Router.extend({
       type: 'GET',
 
       success: function (data) {
-
-        // If we're on feed and there are no users and no pending invites,
-        // load batch inviter
+        
+       
         if( template == 'feed' &&
             data.users.length == 1 &&
             data.invite.length == 0 ) {
           template = 'batchinviter';
+          
         }
 
         // Initiate logged in template on first pageload
@@ -303,6 +303,8 @@ Syme.Router = Backbone.Router.extend({
 
         // Binders
         Syme.Binders.bind(template, true, specific_binders);
+        
+        _this.showBreadCrumbs(template, data);
 
       },
 
@@ -334,6 +336,81 @@ Syme.Router = Backbone.Router.extend({
 
   },
 
+  showBreadCrumbs: function (template, data) {
+
+    switch(template) {
+
+      case 'groups':
+      
+        if (template == 'groups' && 
+            data.groups.length == 0 &&
+            data.invites == false) {
+
+          var crumbs = [
+            { title: 'My Groups', href: '/' },
+            { title: 'Create your first group', href: '#' }
+          ];
+
+        } else {
+
+          var crumbs = [ { title: 'My Groups', href: '/' } ];
+
+        }
+
+        break;
+
+      case 'groups-first':
+
+        var crumbs = [
+          { title: 'My Groups', href: '/' },
+          { title: 'Create your first group', href: '#' }
+        ];
+        break;
+
+      case 'settings':
+
+        var crumbs = [ { title: 'My Groups', href: '/' } ];
+        break;
+
+      case 'feed':
+        
+        var groupName = data.group.name;
+      
+        var crumbs = [
+          { title: 'My Groups', href: '/' },
+          { title: groupName, href: Syme.Router.currentRoute }
+        ];
+        
+        break;
+    
+      case 'batchinviter':
+        
+        var groupName = data.group.name;
+        
+        var crumbs = [
+          { title: 'My Groups', href: '/' },
+          { title: 'Invite people to ' + groupName,
+          href: Syme.Router.currentRoute }
+        ];
+        
+        break;
+      
+      default:
+      
+        throw 'Unkown action';
+        
+    }
+    
+    
+    Syme.Navbar.setBreadCrumb({
+      
+      brand_only: template == 'groups',
+      elements: crumbs
+      
+    });
+
+  },
+  
   renderLoggedInTemplate: function() {
     // Render it
     $('body').html( Handlebars.templates['container.hbs']() );

@@ -3,16 +3,6 @@ Syme.Binders.add('groups', { main: function() {
   // Hide spinner
   NProgress.done();
 
-  // Breadcrumbs
-  Syme.Navbar.setBreadCrumb({
-    brand_only: true,
-
-    elements: [
-      { title: 'Groups',
-        href: 'users/' + Syme.CurrentSession.getUserId() + '/groups' }
-    ]
-  });
-
   var sortToColumns = function(arr, cols) {
 
     // Initialize results array with a level for each column
