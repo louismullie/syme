@@ -155,7 +155,8 @@ Syme.Socket = {
       if (!Syme.Router.insideGroup() && (
           data.action == 'invite_confirm' ||
           data.action == 'invite_request' ||
-          data.action == 'invite_cancel'))
+          data.action == 'invite_cancel'  ||
+          data.action == 'leave_group'))
         Syme.Router.reload();
 
       // Refresh if inside group and invite state changes.
