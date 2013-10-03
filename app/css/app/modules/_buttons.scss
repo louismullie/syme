@@ -58,6 +58,7 @@
   &.btn-danger  { @include button-states($danger);   }
   &.btn-success { @include button-states($success);  }
   &.btn-warning { @include button-states($warning);  }
+  &.btn-orange  { @include button-states($orange);   }
 
   &.btn-white {
     margin: -1px;

@@ -85,7 +85,7 @@ $batchInviteHeight:  40px;
     margin-top: 2em;
 
     @extend .btn;
-    @extend .btn-success;
+    @extend .btn-orange;
 
     i { margin-left: .5em; }
 
@@ -113,7 +113,7 @@ $batchInviteHeight:  40px;
         visibility: hidden;
       }
       &:hover {
-        background-color: $success !important;
+        background-color: $orange !important;
         cursor: default;
       }
       .nprogress-spinner {
