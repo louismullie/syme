@@ -29,12 +29,12 @@ def email_template(template, recipient, locals = {})
   template  = File.join(settings.root, 'mails', "#{template.to_s}.haml")
   layout    = File.join(settings.root, 'mails', "layout.haml")
 
-  recipient = Base64.strict_encode64(recipient)
+  recipient = CGI.escape(Base64.strict_encode64(recipient))
   token     = Digest::SHA2.hexdigest( recipient + settings.email_salt )
 
   locals.merge!({ recipient: recipient, unsubscribe_token: token })
 
-  Haml::Engine.new(File.read(layout)).render do
+  Haml::Engine.new(File.read(layout)).render(Object.new, locals) do
     Haml::Engine.new(File.read(template)).render(Object.new, locals)
   end
 
@@ -59,7 +59,7 @@ def send_beta_invite(email)
   subject = "Welcome to Syme beta"
 
   message = email_template :send_beta_invite, email
-
+  
   send_email_to(email, subject, message)
 
 end
@@ -79,7 +79,7 @@ def send_email_confirm(email)
   subject = "Confirm your Syme account"
 
   message = email_template :send_email_confirm, email, { user: @user }
-
+  
   send_email_to(email, subject, message)
 
 end
@@ -93,7 +93,9 @@ def send_invite(email)
   template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
 
   message = email_template template, email
-
+  
+  warn message
+  
   send_email_to(email, subject, message)
 
 end
