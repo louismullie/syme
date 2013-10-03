@@ -175,7 +175,7 @@ Syme.Router = Backbone.Router.extend({
   error: function(error){
 
     Alert.show(
-      Syme.Messages.errors.fatal,
+      Syme.Messages.error.fatal,
       {
         title: 'Oops! Something went wrong.',
         onhide: Syme.Auth.disconnect

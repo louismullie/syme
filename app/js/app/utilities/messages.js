@@ -201,14 +201,14 @@ Syme.Messages = {
         resource: "group"
       },
       
-      // Destructive operations - DO NOT LI
+      // Destructive operations - DO NOT LINK
       delete_group: {
         message: '%(actors)s deleted %(resource)s',
         resource: 'group'
       },
 
       boot_from_group: {
-        message: '%(actor)s removed you from %(resources)',
+        message: '%(actors)s removed you from %(resource)s',
         resource: 'group'
       }
 
