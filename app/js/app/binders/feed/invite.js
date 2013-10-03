@@ -33,9 +33,7 @@ Syme.Binders.add('feed', { invite: function() {
 
             Invitation.confirmInvitationRequest($this);
 
-          },
-
-          onhide: $.noop
+          }
 
         }
       );

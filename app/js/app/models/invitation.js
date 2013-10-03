@@ -72,17 +72,18 @@ var Invitation = Backbone.Model.extend({
       'feed-modals-invite-confirming', { name: name }
     );
     
+    
     // Show confirmation modal
     Modal.show(confirm_modal, {
 
       closable: false,
       classes: 'modal-alert',
 
-      // Disable modal closing by enter key if button is disabled
-      onsubmit: function(){ return true; },
-
-      onshow: function(){
-
+      // Disable modal closing by enter key
+      onsubmit: function(){ return false; },
+      
+      onshow: function () {
+        
         //Proceed to confirmation
         user.confirmInviteRequest(keylistId, invitationId, inviteeId, accept, function () {
 
@@ -91,8 +92,9 @@ var Invitation = Backbone.Model.extend({
           Syme.Router.reload();
 
         });
-
+        
       }
+      
     });
 
   }
