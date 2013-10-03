@@ -17,12 +17,12 @@
           .bullet-title
             Start sharing
 
-    %h2 Welcome to <b>Syme</b>
-
     %h3 Name your first encrypted group:
 
     %form#create-first-group-form{ method: 'post' }
       #create-first-group-box
         %input{ type: 'text', name: 'name', placeholder: 'e.g. Family and friends', maxlength: 50 }
 
-      %a#create-first-group-link.disabled{ href: '#', role: 'submit' } Create group
+      %a#create-first-group-link.disabled{ href: '#', role: 'submit' }
+        Create group
+        %i.icon-angle-right

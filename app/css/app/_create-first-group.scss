@@ -41,13 +41,15 @@
 
   a#create-first-group-link {
     display: block;
-    width: 350px;
+    width: 250px;
     text-align: center;
-    font: 200 1.5em/3em $opensans;
+    font: 200 1.2em/2.5em $opensans;
     margin: 0 auto;
-    margin-top: 1.5em;
+    margin-top: 2em;
 
     @extend .btn;
     @extend .btn-success;
+
+    i { margin-left: .5em; }
   }
 }

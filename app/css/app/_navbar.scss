@@ -292,6 +292,10 @@ $stripeBarHeight: 8px;
               }
             }
 
+            &:first-child {
+              padding: 0;
+            }
+
             // Text-overflow for last-child
             &:last-child {
               overflow-x: hidden;
@@ -299,7 +303,7 @@ $stripeBarHeight: 8px;
               max-width: 76%; // I know
 
               // Compensation for out-of-box serifs
-              padding: 0 5px;
+              //padding: 0 5px;
 
               a { color: $black; }
 

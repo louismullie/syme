@@ -85,7 +85,7 @@ $batchInviteHeight:  40px;
     margin-top: 2em;
 
     @extend .btn;
-    @extend .btn-orange;
+    @extend .btn-success;
 
     i { margin-left: .5em; }
 
@@ -108,12 +108,15 @@ $batchInviteHeight:  40px;
 
       span.delete { cursor: default !important; }
     }
+    input {
+      background: white;
+    }
     a#batchinvite-link {
       span {
         visibility: hidden;
       }
       &:hover {
-        background-color: $orange !important;
+        background-color: $success !important;
         cursor: default;
       }
       .nprogress-spinner {
