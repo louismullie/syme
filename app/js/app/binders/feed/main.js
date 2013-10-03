@@ -17,13 +17,16 @@ Syme.Binders.add('feed', { main: function(){
     // Fix (hide) awful chrome bug part 2
     $('#feed-panel-column').show(0);
 
+    // Initiate infinite scroller
+    $(window).data('infinite-scroll-started', true);
+
   });
-  
+
   /*$('#feed').on('showTutorial', function(){
     var $feedHider = $('<div id="feed-hider" />').prependTo('body');
     $('body').addClass('noscroll');
   });
 
   $('#feed').trigger('showTutorial');*/
-  
+
 } }); // Syme.Binders.add();

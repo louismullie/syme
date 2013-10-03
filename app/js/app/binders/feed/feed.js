@@ -33,9 +33,10 @@ Syme.Binders.add('feed', { feed: function(){
 
   $(window).on('scroll infinitescroll.trigger', function(){
 
-    if( $(window).data('infinite-scroll-done'  )  ||
-        $(window).data('infinite-scroll-async' )  ||
-        $(window).data('infinite-scroll-manual')) return;
+    if( !$(window).data('infinite-scroll-started') ||
+        $(window).data('infinite-scroll-done') ||
+        $(window).data('infinite-scroll-async') ||
+        $(window).data('infinite-scroll-manual') ) return;
 
     if($(window).scrollTop() >= $(document).height() - $(window).height() - 50){
 
@@ -48,10 +49,10 @@ Syme.Binders.add('feed', { feed: function(){
       $.each($('.post'), function(index, value){
         showed_posts_id.push($(this).attr('id'));
       });
-      
+
       // Prevent triggering scroller when no posts shown
       if (showed_posts_id.length == 0) return;
-      
+
       // Increment feed's state
       var toload = $('#feed').data('pagesloaded') + 1;
 
@@ -65,7 +66,7 @@ Syme.Binders.add('feed', { feed: function(){
       // Add optional year and month to request
       if($('#feed').data('year')) request['year'] = $('#feed').data('year');
       if($('#feed').data('month')) request['month'] = $('#feed').data('month');
-      
+
       // Spinner and loadmore
       NProgress.showSpinner();
       $('#load-more').show();
@@ -149,7 +150,7 @@ Syme.Binders.add('feed', { feed: function(){
   $(window).bind("beforeunload", function(e) {
 
     Syme.Cache.clear();
-    
+
     var unsavedContent = _.any($('textarea'),
       function (textarea) { return textarea.value != ''; });
 
