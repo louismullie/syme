@@ -70,7 +70,7 @@ Syme.Socket = {
   invitation: {
 
     distribute: function (data) {
-      
+
       Notifications.fetch();
 
       var user = Syme.CurrentSession.getUser();
@@ -89,7 +89,7 @@ Syme.Socket = {
 
       // Don't display a post in the wrong group
       if (post.view.group_id != Syme.CurrentSession.getGroupId()) return;
-      
+
       // If post already exists, return.
       if ($('#' + post.view.id).length) return;
 
@@ -138,15 +138,20 @@ Syme.Socket = {
       var $comment = $(Syme.Template.render('feed-comment', data.view));
       $commentContainer.append( $comment );
 
-      // Organize comment container
-      $commentContainer.trigger('organize');
-
       // Format or decrypt
       if (decrypted) {
-        $comment.trigger('format');
-        Syme.Crypto.formatCollection($comment);
+
+        // If comment is already decrypted
+        $commentContainer.trigger('organize');  // Organize container
+        $comment.trigger('format');             // Format comment
+        Syme.Crypto.formatCollection($comment); // Format children elements
+
       } else {
-        Syme.Crypto.batchDecrypt($.noop, $comment);
+        // If comment is not already decrypted
+        Syme.Crypto.batchDecrypt(function(){      // Decrypt comment
+          $commentContainer.trigger('organize');  // Organize container
+        }, $comment);
+
       }
 
     },
