@@ -4,7 +4,7 @@ module Syme
 
   class Application < Base
 
-    VERSION = '0.1.8'
+    VERSION = '0.1.9'
 
     Bundler.require :default, settings.environment
 
@@ -14,7 +14,7 @@ module Syme
       set environment:  $env
       set :root,        $root
     end
-    
+
     configure { require_all 'config' }
     helpers   { require_all 'helpers' }
 
