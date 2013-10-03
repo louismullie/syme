@@ -91,7 +91,8 @@
         minlength     = $input.attr('minlength'),
         email         = $input.data('validate-email'),
         equals_to     = $input.data('validate-equals-to'),
-        differs_from  = $input.data('validate-differs-from');
+        differs_from  = $input.data('validate-differs-from'),
+        must_check    = $input.data('validate-must-check')
 
     // Error definitions (in order of importance)
     var errors = {
@@ -101,6 +102,7 @@
       email:        !!email         && !$.ndbValidator.regexps.email.test(val),
       equals_to:    !!equals_to     && val != $('input[name="' + equals_to + '"]').val(),
       differs_from: !!differs_from  && val == differsFromSelector(differs_from).val(),
+      must_check:   !!must_check    && !$input[0].checked
     };
 
     // Optional password strength check with zxcvbn
