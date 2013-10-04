@@ -1,7 +1,7 @@
 # Email sending helper. All email helpers call it.
 def send_email_to(email, subject, body)
 
-  return if settings.environment != :production
+  return if settings.environment != :production && !ENV['_'].indexof('tux')
   
   Pony.mail({
     to: email,
