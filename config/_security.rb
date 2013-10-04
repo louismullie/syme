@@ -4,7 +4,7 @@ set :protection,
      except: [:http_origin, :remote_token, :frame_options],
      origin_whitelist: OriginWhitelist
 
-set :email_salt, '"a$$#!%@&Fe39n#?*4n4C$ni'
+EMAIL_SALT = '"a$$#!%@&Fe39n#?*4n4C$ni'
 
 if settings.environment == :production
   

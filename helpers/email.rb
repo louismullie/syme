@@ -30,7 +30,7 @@ def email_template(template, recipient, locals = {})
   layout    = File.join(settings.root, 'mails', "layout.haml")
 
   recipient = CGI.escape(Base64.strict_encode64(recipient))
-  token     = Digest::SHA2.hexdigest( recipient + settings.email_salt )
+  token     = Digest::SHA2.hexdigest( recipient + EMAIL_SALT )
 
   locals.merge!({ recipient: recipient, unsubscribe_token: token })
 
