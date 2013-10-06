@@ -12,7 +12,7 @@ Syme.Binders.add('feed', { main: function(){
   var currentGroupName = $('#feed').data('group-name');
 
   // Initial decryption
-  Syme.Crypto.batchDecrypt(function(){
+  Syme.Decryptor.batchDecrypt(function(){
 
     // Fix (hide) awful chrome bug part 2
     $('#feed-panel-column').show(0);

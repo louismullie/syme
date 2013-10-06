@@ -149,6 +149,8 @@ function Uploader(file, options) {
       
       _this.key = key;
 
+      if (!key) throw 'Illegal - no key given.';
+      
       var keylistId = Syme.CurrentSession.getGroupId(); // unsafe!
       
       Syme.Crypto.encryptMessage(keylistId, key, function (encryptedMessage) {

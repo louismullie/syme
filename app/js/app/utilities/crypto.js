@@ -4,328 +4,168 @@ Syme.Crypto = function (workerUrl) {
 
   this.locked         = false;
   this.onLockRelease  = [];
-
-  this.batchDecrypt = function(batchDecryptCallback, collection){
-
-    // Defaults
-    var batchDecryptCallback  = batchDecryptCallback || $.noop;
-        collection            = collection ||
-          $('[data-encrypted="true"]:not(#feed[data-single-post=""] .comment-box.collapsed)');
-
-
-    // Asynchronous counter for decryption
-    var decryptCounter = new Syme.Countable( collection,
-
-      // Increment
-      function(index, length) {
-        // Prevent jumps in progress bar if multiple
-        // batchDecrypt run at the same time
-        if (NProgress.status < index / length)
-          NProgress.set( index / length );
-      },
-
-      // Done
-      function (elapsedTime) {
-        _this.formatCollection(collection, batchDecryptCallback);
-      }
-
-    );
-
-    // Trigger decrypt on every element
-    collection.trigger('decrypt', decryptCounter.increment);
-
-  };
-
-  // Move to binders
-  this.formatCollection = function (collection, batchDecryptCallback) {
-
-    // Default callback
-    batchDecryptCallback = batchDecryptCallback || $.noop;
-
-    var $postsAndComments = collection.filter('.post, .comment-box');
-
-    // Sync slave avatars
-    $postsAndComments.find('.slave-avatar').trigger('sync');
-
-    // Format textareas
-
-    $postsAndComments.find('textarea').trigger('format');
-
-    // Show posts and comments
-    $postsAndComments.removeClass('hidden');
-
-    $postsAndComments.find('.encrypted-image').trigger('decrypt');
+  
+  this.lockRequirements = {
     
-    // Seem to sometimes fail accurate height
-    // calculations in a seemingly non-deterministic way
-    // Syme.Helpers.collapseHTML();
+    // Keyfile-related methods
+    getEncryptedKeyfile: false,
+    getSerializedKeyfile: false,
 
-    // Callback for batchDecrypt
-    batchDecryptCallback();
-
+    // Keylist-related methods
+    createKeylist: true,
+    deleteKeylist: true,
+    
+    // Key transfer-related methods
+    createInviteRequests: true,
+    acceptInviteRequest: true,
+    confirmInviteRequest: true,
+    completeInviteRequest: true,
+    transferKeysRequest: true,
+    addUsersRequest: true,
+    getKeyFingerprint: false,
+    
+    // Random generation-related methods
+    generateRandomKeys: false,
+    generateRandomHex: false,
+    
+    // Key derivation-related methods
+    deriveKeys: false,
+    
+    // Encryption-related methods
+    encryptMessage: false,
+    decryptMessage: false,
+    decrypt: false
+    
   };
 
-  this.executeJobWithLock = function (job, successCb) {
-
-    var successCb = successCb || function () {};
-    this.executeJob(true, job, successCb);
-
+  this.executeJob = function (jobType, args) {
+    
+    var args = [].slice.call(args);
+    
+    var needsLock = this.lockRequirements[jobType];
+    
+    if (args.length == 1) {
+      var arguments = [];
+    } else {
+      var arguments = args.slice(0, args.length - 1);
+    }
+    
+    if (needsLock === undefined)
+      throw 'Lock requirement not defined.';
+    
+    var job = { method: jobType, params: arguments };
+    
+    var callback = args[args.length - 1];
+    
+    this._executeJob(needsLock, job, callback);
+    
   };
-
-  this.executeJobWithoutLock = function (job, successCb) {
-
-    var successCb = successCb || function () {};
-    this.executeJob(false, job, successCb);
-
-  };
-
-  this.executeJob = function (needsLock, job, successCb) {
-
+  
+  this._executeJob = function (needsLock, job, successCb) {
+    
+   console.log('[Crypto] ' + job.method + '() ' + (needsLock ? '[LOCK]' : ''));
+      
     var jobsQueued = (_this.onLockRelease.length != 0);
-
-    if (jobsQueued) {
-
-      if (_this.locked) {
-
-        if (needsLock) {
-
-          _this.onLockRelease.push({
-            lock: true, job: job,
-            success: successCb
-          });
-
-        } else {
-
-          _this.onLockRelease.push({
-            lock: false, job: job,
-            success: successCb
-          });
-
-        } // needsLock
-
-     } else { // _this.locked
-
-        var nextJob = _this.onLockRelease.shift();
-
-        if (needsLock) {
-
-          _this.onLockRelease.push({
-            lock: true, job: job,
-            success: successCb
-          });
-
-        } else {
-
-          _this.onLockRelease.push({
-            lock: false, job: job,
-            success: successCb
-          });
-
-        } // needsLock
-
-        _this.executeJob(nextJob.lock, nextJob.job, nextJob.success);
-
-      } // _this.locked
-
-    } else { // jobsQueued
-
-      if (_this.locked) {
-
-        if (needsLock) {
-
-          _this.onLockRelease.push({
-            lock: true, job: job,
-            success: successCb
-          });
-
-        } else {
-
-          _this.onLockRelease.push({
-            lock: false, job: job,
-            success: successCb
-          });
-
-        }
-
+    
+    // If there are no jobs queued, and we are 
+    // not currently in a lock
+    if (!jobsQueued && !_this.locked) {
+    
+      // No queue, no lock, no need for a lock:
+      // just execute the job directly.
+      if (!needsLock) {
+        
+        _this.workerPool.queueJob(job, successCb);
+        
+      // No queue, no lock, but need to start a lock:
+      // wrap the callback with the lock function 
+      // and execute the job immediately.
       } else {
-
-        if (needsLock) {
-
-          var worker = _this.workerPool.queueJob(job,
-
-            function (data) {
-
-              //alert('Locking for ' + JSON.stringify(job));
-              _this.lock = false;
-
-              _this.workerPool.sendJob(worker,
-
-                {
-                  id: Math.random()*Math.exp(40).toString(),
-                  method: 'getEncryptedKeyfile'
-                }, function (encryptedKeyfile) {
-                  //alert('Reinitializing');
-                  _this.workerPool.broadcastJob(
-                    {
-                      id: Math.random()*Math.exp(40).toString(),
-                      method: 'reinitializeKeyfile',
-                      params: [encryptedKeyfile]
-                    }, function () {
-                      successCb(data);
-                    });
-              });
-
-          });
-
-        } else {
-
-          _this.workerPool.queueJob(job, successCb);
-        }
-
+        
+        _this.queueWithLock(job, successCb);
+        
       }
+    
+    // Either there is a job queued, or we are locked,
+    // so push the job to the queue.
+    }  else {
+
+      _this.onLockRelease.push({
+        lock: needsLock, job: job,
+        success: successCb
+      });
+
+    }
+    
+    // If there are jobs queued, and we are not 
+    // locked, execute the first job in the queue.
+    if (jobsQueued && !this.locked) {
+
+      var nextJob = _this.onLockRelease.shift();
+      _this._executeJob(nextJob.lock, nextJob.job, nextJob.success);
 
     }
 
   };
-
-  this.decrypt = function (key, content, decryptedMessageCb) {
-
-    Syme.Crypto.executeJobWithoutLock({
-      method: 'decrypt'
-    }, function (message) {
-      decryptedMessageCb(message);
-    });
-
-  };
-
-  this.getEncryptedKeyfile = function (encryptedKeyfileCb) {
-
-    Syme.Crypto.executeJobWithoutLock({
-      method: 'getEncryptedKeyfile'
-    }, function (message) {
-      encryptedKeyfileCb(message);
-    });
-
-  };
-
-  // Development only!
-  this.getSerializedKeyfile = function (keyfileCb) {
-
-    Syme.Crypto.executeJobWithoutLock({
-
-      method: 'getSerializedKeyfile'
-
-    // Return encrypted keyfile.
-    }, keyfileCb);
-
-  };
-
-  this.createKeylist = function (keylistId, encryptedKeyfileCb) {
-
+  
+  // Execute a job, retrieve the encrypted keyfile,
+  // broadcast it for other workers to get the updates
+  this.queueWithLock = function (job, successCb) {
+    
     var _this = this;
+    
+    var worker = _this.workerPool.queueJob(job, function (data) {
 
-    // Generate keylist for group.
-    Syme.Crypto.executeJobWithLock({
+      _this.lock = false;
 
-      method: 'createKeylist',
-      params: [keylistId]
+      _this.workerPool.sendJob(worker,
 
-    // Get encrypted keyfile.
-    }, function () {
-      _this.getEncryptedKeyfile(encryptedKeyfileCb);
+        {
+          id: Math.random()*Math.exp(40).toString(),
+          method: 'getEncryptedKeyfile'
+        }, function (encryptedKeyfile) {
+          
+          _this.workerPool.broadcastJob(
+            {
+              id: Math.random()*Math.exp(40).toString(),
+              method: 'reinitializeKeyfile',
+              params: [encryptedKeyfile]
+            }, function () {
+              successCb(data);
+            });
+            
+      });
+
     });
-
+    
   };
-
-  this.deleteKeylist = function (keylistId, encryptedKeyfileCb) {
-
-    var _this = this;
-
-    // Delete a keylist.
-    Syme.Crypto.executeJobWithLock({
-
-      method: 'deleteKeylist',
-      params: [keylistId]
-
-    // Get encrypted keyfile.
-    }, function () {
-      _this.getEncryptedKeyfile(encryptedKeyfileCb);
-    });
-
-  };
-
-  this.createInviteRequests = function (keylistId, userAliases, inviteCreatedCb) {
-
-    Syme.Crypto.executeJobWithLock({
-
-      method: 'createInviteRequests',
-      params: [keylistId, userAliases]
-
-    }, inviteCreatedCb);
-
-  };
-
-  this.acceptInviteRequest = function (inviteRequest, inviteAcceptedCb) {
-
-    Syme.Crypto.executeJobWithLock({
-
-      method: 'acceptInviteRequest',
-      params: [inviteRequest]
-
-    }, inviteAcceptedCb);
-
-  };
-
-  this.confirmInviteRequest = function (keylistId, inviteeId, inviteRequest, keysJson, inviteAcceptedCb) {
-
-    Syme.Crypto.executeJobWithLock({
-
-      method: 'confirmInviteRequest',
-      params: [keylistId, inviteeId, inviteRequest, keysJson]
-
-    }, inviteAcceptedCb);
-
-  };
-
-  this.completeInviteRequest = function (completeRequest, inviteCompletedCb) {
-
-    Syme.Crypto.executeJobWithLock({
-
-      method: 'completeInviteRequest',
-      params: [completeRequest]
-
-    }, inviteCompletedCb);
-
-  };
-
-  this.transferKeysRequest = function(keylistId, userId, keys, transferKeysCb) {
-
-    Syme.Crypto.executeJobWithLock({
-
-      method: 'transferKeysRequest',
-      params: [keylistId, userId, keys]
-
-    }, transferKeysCb);
-
-  };
-
-  this.addUsersRequest = function(addUsersRequest, addedUsersCb) {
-
-    Syme.Crypto.executeJobWithLock({
-
-      method: 'addUsersRequest',
-      params: [addUsersRequest]
-
-    }, addedUsersCb);
-
-  };
-
+  
+  
+  // Wrapper for keyfile callback
+  this.keyfileCallback =  function (args, wrapper) {
+    
+    var lastEl   = args.length - 1,
+        callback = args[lastEl];
+    
+    args[lastEl] = function () {
+      _this.getEncryptedKeyfile(callback);
+    };
+    
+    return args;
+    
+  }
+  
+  /*
+   * Keyfile-related methods
+   */
+  
+  // Initialize the keyfile in WebWorker memory.
   this.initializeKeyfile = function (userId, password, encKeyfile, encryptedKeyfileCb) {
 
     var _this = this;
 
     Syme.Crypto.workerPool.broadcastJob({
-
+      
       method: 'initializeKeyfile',
       params: [userId, password, encKeyfile]
 
@@ -334,18 +174,143 @@ Syme.Crypto = function (workerUrl) {
     });
 
   };
+  
+  // getEncryptedKeyfile(callback)
+  this.getEncryptedKeyfile = function () {
+    this.executeJob('getEncryptedKeyfile', arguments);
+  };
+  
+  // getSerializedKeyfile(callback)
+  this.getSerializedKeyfile = function () {
+    this.executeJob('getSerializedKeyfile', arguments);
+  };
+  
+  /* 
+   * Keylist-related methods
 
-  this.encryptMessage = function(keylistId, message, encryptedMessageCb) {
+  /*
+   * Create a keylist in the keyfile
+   */
+  this.createKeylist = function () {
+    var args = this.keyfileCallback(arguments);
+    this.executeJob('createKeylist', args);
+  };
 
-    Syme.Crypto.executeJobWithoutLock({
+  /* 
+   * Delete a keylist in the keyfile
+   */
+  this.deleteKeylist = function () {
+    var args = this.keyfileCallback(arguments);
+    this.executeJob('deleteKeylist', args);
+  };
+  
+  /*
+  * Key transfer-related methods
+  */
 
-      method: 'encryptMessage',
-      params: [keylistId, message]
+  // createInviteRequests(keylistId, userAliases, inviteCreatedCb)
+  this.createInviteRequests = function () {
+    this.executeJob('createInviteRequests', arguments);
+  };
 
-    }, encryptedMessageCb);
+  // acceptInviteRequest(inviteRequest, inviteAcceptedCb)
+  this.acceptInviteRequest = function () {
+    this.executeJob('acceptInviteRequest', arguments);
+  };
+
+  // confirmInviteRequest(keylistId, inviteeId, inviteRequest, keysJson, inviteAcceptedCb)
+  this.confirmInviteRequest = function () {
+    this.executeJob('confirmInviteRequest', arguments);
+  };
+
+  // completeInviteRequest(completeRequest, inviteCompletedCb)
+  this.completeInviteRequest = function () {
+    this.executeJob('completeInviteRequest', arguments); 
+  };
+
+  // transferKeysRequest(keylistId, userId, keys, transferKeysCb);
+  this.transferKeysRequest = function() {
+    this.executeJob('transferKeysRequest', arguments);
+  };
+
+  // addUsersRequest(addUsersRequest, addedUsersCb)
+  this.addUsersRequest = function() {
+    this.executeJob('addUsersRequest', arguments);
+  };
+  
+  // getKeyFingerprint(keylistId, userAlias, userRole,
+  // inviteePublicKey, keyFingerprintCb
+  this.getKeyFingerprint = function () {
+    this.executeJob('getKeyFingerprint', arguments);
+  };
+  
+  /* 
+   * Random generation methods
+   */
+   
+  // generateRandomKeys() 
+  this.generateRandomKeys = function() {
+    _this.executeJob('generateRandomHex', arguments);
+  };
+  
+  // Initialize each worker 
+  this.seedRandom = function () {
+
+    _this.workerPool.scatterJob({
+      
+      method: 'seedRandom',
+      fn: _this.getRandomValues
+      
+    });
 
   };
 
+  // Get random values from native sources of entropy
+  this.getRandomValues = function () {
+
+    var uint32Array = new Uint32Array(32);
+    window.crypto.getRandomValues(uint32Array);
+    
+    var array = _.map(uint32Array,
+      function (i) { return i });
+    
+    return [array];
+
+  };
+  
+  
+  /*
+   * Key derivation methods
+   */
+  
+   // deriveKeys(password, salt, bits, derivedKeysCb)
+   this.deriveKeys = function() {
+     this.executeJob('deriveKeys', arguments);
+   };
+  
+  /*
+   * File transfer-related methods
+   */
+  // uploadChunk(chunkInfo, uploadedChunkCb)
+  this.uploadChunk = function () {
+    this.executeJob('uploadChunk', arguments);
+  };
+
+  // downloadChunk(chunkInfo, downloadedChunkCb)
+  this.downloadChunk = function () {
+    this.executeJob('downloadChunk', arguments);
+  };
+  
+  /*
+   * Encryption-related methods
+   */
+   
+  // encryptMessage(keylistId, message, encryptedMessageCb)
+  this.encryptMessage = function(encryptMessage) {
+    this.executeJob('encryptMessage', arguments);
+  };
+
+  // decryptMessage(keylistId, text, decryptedMessageCb)  /* TO REFACTOR */
   this.decryptMessage = function (keylistId, text, decryptedMessageCb) {
 
     // Check that keys exist for current user.
@@ -356,7 +321,7 @@ Syme.Crypto = function (workerUrl) {
     if (message.keys[userId] == undefined)
       decryptedMessageCb('There was a problem with the decryption');
 
-    Syme.Crypto.executeJobWithoutLock({
+    Syme.Crypto._executeJob(false, {
 
       method: 'decryptMessage',
       params: [keylistId, text]
@@ -372,7 +337,10 @@ Syme.Crypto = function (workerUrl) {
     });
 
   };
-
+  
+  // decrypt(key, content, callback)
+  this.decrypt = function () { this.executeJob('decrypt', arguments); };
+  
   this.getMissingKey = function (missingKey) {
 
     var baseUrl       = Syme.Url.fromGroup(missingKey.groupId),
@@ -394,76 +362,21 @@ Syme.Crypto = function (workerUrl) {
     });
 
   };
-
-  this.uploadChunk = function (chunkInfo, uploadedChunkCb) {
-
-    Syme.Crypto.executeJobWithoutLock(chunkInfo, uploadedChunkCb);
-
-  };
-
-  this.downloadChunk = function (chunkInfo, downloadedChunkCb) {
-
-    Syme.Crypto.executeJobWithoutLock(chunkInfo, downloadedChunkCb);
-
-  };
-
-  this.generateRandomKeys = function(generatedKeysCb) {
-
-    Syme.Crypto.executeJobWithoutLock({
-
-      method: 'generateRandomHex',
-      params: [256]
-
-    }, generatedKeysCb);
-
-  };
-
-  this.deriveKeys = function(password, salt, bits, generatedKeysCb) {
-
-    Syme.Crypto.executeJobWithoutLock({
-
-      method: 'deriveKeys',
-      params: [password, salt, bits]
-
-    }, generatedKeysCb);
-
-  };
-
-  this.getKeyFingerprint = function (keylistId, userAlias, userRole, inviteePublicKey, keyFingerprintCb) {
-
-    Syme.Crypto.executeJobWithoutLock({
-
-      method: 'getKeyFingerprint',
-      params: [keylistId, userAlias, userRole, inviteePublicKey]
-
-    }, keyFingerprintCb);
-
-  };
-
-  var _this = this;
-
-  this.seedRandom = function () {
-
-    _this.workerPool.scatterJob({
-      method: 'seedRandom', fn: function () {
-
-        var array = new Uint32Array(32);
-        window.crypto.getRandomValues(array);
-        array = _.map(array, function (i) { return i });
-        return [array];
-
-      } });
-
-  };
-
+  
+  /*
+   * Initialization of Crypto
+   */
+  
+  // Create the worker pool
   this.workerPool = new WorkerPool2(workerUrl, 4);
 
-  // Add some initial entropy to the PRNG.
+  // Add some initial entropy to the PRNG
   this.seedRandom();
 
-  // Add some entropy every minute.
+  // Add some entropy every minute
   setInterval(this.seedRandom, 60000);
 
 };
 
-Syme.Crypto = new Syme.Crypto('workers/app.js');
+// Initialize an instance of Crypto
+Syme.Crypto = new Syme.Crypto(Syme.Settings.appWorkerPath);

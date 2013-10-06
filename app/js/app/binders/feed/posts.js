@@ -104,23 +104,6 @@ Syme.Binders.add('feed', { posts: function(){
 
       Syme.FileManager.saveToDisk(url, filename);
 
-      // link.on('click', function () {
-
-      //   var xhr = new XMLHttpRequest();
-      //   xhr.open('GET', url, true);
-      //   xhr.responseType = 'blob';
-
-      //   xhr.onload = function(e) {
-      //     if (this.status == 200) {
-      //       var blob = this.response;
-      //       saveAs(blob, filename);
-      //     }
-      //   };
-
-      //   xhr.send();
-
-      // });
-
       progress.remove();
 
     });
@@ -167,6 +150,5 @@ Syme.Binders.add('feed', { posts: function(){
     $.post(route, { post_id: post_id, comment_id: comment_id });
 
   });
-
 
 } }); // Syme.Binders.add();

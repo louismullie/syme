@@ -16,7 +16,7 @@ end
 use Rack::Session::Memcache,
   key: 'session',
   expire_after: 60 * 60 * 24 * 3,
-  secure: $secure,
+  secure: $env == :production,
   sidbits: 256,
   path: '/',
   secret: '8dg236rgd31238fb13vd65'

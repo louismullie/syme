@@ -114,7 +114,7 @@ Syme.Binders.add('feed', { feed: function(){
         $('#feed .post').last().css({ 'border-bottom': 'none' });
 
         // Decrypt new content
-        Syme.Crypto.batchDecrypt(function(){
+        Syme.Decryptor.batchDecrypt(function(){
 
           // Show or hide load-more
           $('#load-more').hide();

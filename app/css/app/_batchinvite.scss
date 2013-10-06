@@ -21,6 +21,11 @@ $batchInviteHeight:  40px;
 
     cursor: text;
 
+    /* Small inputs in modal */
+    &.small {
+      width: 30px;
+    }
+    
     &.invalid {
       border-color: $danger !important;
     }

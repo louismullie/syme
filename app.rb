@@ -8,11 +8,11 @@ module Syme
 
     Bundler.require :default, settings.environment
 
+    # Configure with globals defined in config.ru
     configure do
-      set store:        $store
-      set secure:       $secure
-      set environment:  $env
       set :root,        $root
+      set store:        $store
+      set environment:  $env
     end
 
     configure { require_all 'config' }

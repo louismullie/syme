@@ -5,6 +5,9 @@ Syme = {
     updatedPosts: {},
     updatedComments: {}
   },
+  Settings: {
+    appWorkerPath: 'workers/app.js'
+  },
   version: '0.2.0'
 
 };

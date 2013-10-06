@@ -1,5 +1,4 @@
-importScripts('sjcl.js');
-importScripts('ecc.js');
+importScripts('primitives.js');
 importScripts('underscore.min.js');
 
 importScripts('crypto.js');
@@ -19,8 +18,7 @@ self.onmessage = function(event) {
   var result = Crypto[method].apply(Crypto, params);
   
   postMessage({
-    status: 'ok', id: id, result: result,
-    debug: method
+    status: 'ok', id: id, result: result, debug: method
   });
 
 };

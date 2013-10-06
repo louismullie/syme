@@ -1,25 +1,33 @@
 # Email sending helper. All email helpers call it.
 def send_email_to(email, subject, body)
 
-  return if settings.environment != :production && !ENV['_'].index('tux')
+  return if settings.environment != :production && !settings.running_tux
   
-  Pony.mail({
-    to: email,
-    from: "Syme <team@getsyme.com>",
-    subject: subject,
-    headers: { 'Content-Type' => "text/html" },
-    body: body,
-    via: :smtp,
-    via_options: {
-      address: 'smtp.mandrillapp.com',
-      port: '587',
-      user_name: 'louis.mullie@gmail.com',
-      password: 'tjCX49k-tDIYzmqnW0ZjYw',
-      authentication: :plain,
-      domain: "localhost.localdomain"
-    }
-  })
+  begin
 
+    Pony.mail({
+      to: email,
+      from: "Syme <team@getsyme.com>",
+      subject: subject,
+      headers: { 'Content-Type' => "text/html" },
+      body: body,
+      via: :smtp,
+      via_options: {
+        address: 'smtp.mandrillapp.com',
+        port: '587',
+        user_name: 'louis.mullie@gmail.com',
+        password: 'tjCX49k-tDIYzmqnW0ZjYw',
+        authentication: :plain,
+        domain: "localhost.localdomain"
+      }
+    })
+    
+  rescue Exception => e
+    
+    warn "**** FAILED TO SEND EMAIL ****"
+    
+  end
+  
 end
 
 # Manual HAML rendering in order to put mail templates

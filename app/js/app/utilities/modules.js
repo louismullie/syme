@@ -1,4 +1,6 @@
-Syme.Countable = function (collection, incrementCallback, doneCallback) {
+Syme.Modules = {};
+  
+Syme.Modules.Countable = function (collection, incrementCallback, doneCallback) {
 
   var decryptCounter    = 0,
       startTime         = new Date,
@@ -25,6 +27,6 @@ Syme.Countable = function (collection, incrementCallback, doneCallback) {
 
     }
 
-  };
-
+  }
+  
 };

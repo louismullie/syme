@@ -247,7 +247,7 @@ Crypto = {
   generateRandomHex: function (bytes) {
 
     // Generate some random words.
-    var randomWords = sjcl.random.randomWords(bytes / 8, 0);
+    var randomWords = sjcl.random.randomWords((bytes || 256) / 8, 0);
     
     // Convert the bytes to hexadecimal format.
     return sjcl.codec.hex.fromBits(randomWords);
@@ -378,7 +378,7 @@ Crypto = {
     var encSymKeyTxt64 = messageJson.keys[keyfile.userId];
     
     if (!encSymKeyTxt64 || encSymKeyTxt64 == '') {
-      throw 'Key is missing.'
+      return 'Key is missing.';
     }
     
     var decryptedSymKey = this.decryptMessageKey(

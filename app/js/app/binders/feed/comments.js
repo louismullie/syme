@@ -214,7 +214,7 @@ Syme.Binders.add('feed', { comments: function(){
     };
 
     if ( $toDecrypt.length ) {
-      Syme.Crypto.batchDecrypt(showCommentsCallback, $toDecrypt);
+      Syme.Decryptor.batchDecrypt(showCommentsCallback, $toDecrypt);
     } else {
       showCommentsCallback();
     }
