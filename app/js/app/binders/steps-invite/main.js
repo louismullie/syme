@@ -1,4 +1,4 @@
-Syme.Binders.add('batchinviter', { main: function() {
+Syme.Binders.add('steps-invite', { main: function() {
 
   var currentUserEmail = Syme.CurrentSession.getUser().get('email');
 

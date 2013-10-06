@@ -1,4 +1,4 @@
-Syme.Binders.add('login', { main: function(){
+Syme.Binders.add('auth-login', { main: function(){
 
   // Focus on first input[type="text"]
   $(document).find('input[type="text"]').first().focus();

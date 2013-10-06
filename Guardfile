@@ -3,7 +3,6 @@ haml_config = {
   output: './.hbs',
   default_ext: 'hbs',
   run_at_start: true
-  # ugly: true
 }
 
 guard 'haml', haml_config do

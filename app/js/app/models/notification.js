@@ -87,7 +87,7 @@ Notifications = (function(){
       if(notifications.length == 0) notifications = false;
 
       // Render all notifications into element
-      _this.$el.html( Syme.Template.render('notification',
+      _this.$el.html( Syme.Template.render('notifications',
         { notifications: notifications }) );
 
       // Update notification count in title, navbar and extension badge.

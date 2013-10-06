@@ -1,4 +1,4 @@
-Syme.Binders.add('register', { main: function(){
+Syme.Binders.add('auth-register', { main: function(){
 
   // Focus on first input[type="text"]
   $(document).find('input[type="text"]').first().focus();

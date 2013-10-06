@@ -5,7 +5,7 @@ Syme.Navbar = {
 
   setBreadCrumb: function(json) {
     
-    var template = Syme.Template.render('navbar-breadcrumbs', json);
+    var template = Syme.Template.render('layout-navbar-breadcrumbs', json);
     $('#navbar-breadcrumbs').html(template);
     
   }

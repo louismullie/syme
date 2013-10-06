@@ -132,11 +132,11 @@ Syme.Router = Backbone.Router.extend({
   /* LOGGED-OFF ROUTES */
 
   login: function() {
-    this.loadStaticPage('login', true);
+    this.loadStaticPage('auth-login', true);
   },
 
   register: function() {
-    this.loadStaticPage('register', true);
+    this.loadStaticPage('auth-register', true);
   },
 
   logout: function() {
@@ -283,7 +283,7 @@ Syme.Router = Backbone.Router.extend({
         if( template == 'feed' &&
             data.users.length == 1 &&
             data.invite.length == 0 ) {
-          template = 'batchinviter';
+          template = 'steps-invite';
           
         }
 
@@ -383,7 +383,7 @@ Syme.Router = Backbone.Router.extend({
         
         break;
     
-      case 'batchinviter':
+      case 'steps-invite':
         
         var groupName = data.group.name;
         
@@ -411,7 +411,7 @@ Syme.Router = Backbone.Router.extend({
   
   renderLoggedInTemplate: function() {
     // Render it
-    $('body').html( Handlebars.templates['container.hbs']() );
+    $('body').html( Handlebars.templates['layout-container.hbs']() );
 
     // Fetch notifications.
     Notifications.start();
