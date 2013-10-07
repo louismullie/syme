@@ -1,12 +1,8 @@
 *.DS_Store
-.sass-cache/**/*
-.hbs/**/*
 
 *.log
 *.pid
 *.zip
-
-*.hbs.js
 
 public/assets
 .extension
