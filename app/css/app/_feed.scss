@@ -333,9 +333,6 @@ iframe#rdbIndicator {
             border-radius: $baseBorderRadius;
           }
 
-          // During decryption
-          & > a.commenter-name { display: none; }
-
           .collapsable {
             margin-bottom: .5em;
 
@@ -343,6 +340,8 @@ iframe#rdbIndicator {
               word-break: break-word;
 
               a.commenter-name {
+                float: left;
+
                 padding-right: .4em;
                 font-weight: 600;
                 white-space: nowrap;

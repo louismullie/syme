@@ -1,36 +1,35 @@
 Syme.Binders.add('global', { decrypt: function() {
-  
-  $(document).on('decrypt', '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]', function (e, decryptedCallback) {
-    
-    var $this = $(this),
-        done  = done || $.noop;
 
-    var $collapsable  = $this.find('.collapsable').first(),
-        text          = $collapsable.text().replace(/^\s+|\s+$/g, ''),
-        groupId       = $this.closest('.post').data('group_id');
+  $(document).on('decrypt', '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]', function (e, done) {
 
-    // Fault tolerance to prevent JSON.parse from failing
-    if (!text.length) throw 'NO TEXT TO DECRYPT';
-                                                              
-    // Fault tolerance to prevent multiple decryption         
-    if ( $this.attr('data-encrypted') == "false" ) return;
+    var $this = $(this);
 
-    // Decrypt message
-    Syme.Crypto.decryptMessage(groupId, text, function(decryptedText){
+    var $encryptedContainer = $this.find('encrypted').first(),
+        trimmedContent      = $encryptedContainer.text().replace(/^\s+|\s+$/g, ''),
+        groupId             = $this.closest('.post').data('group_id');
 
-      // Replace encrypted text by decrypted text in DOM
-      $collapsable.text(decryptedText);
-      
-      // Mark the container as decrypted, and start formatting
+    var decryptedCb = function(decryptedContent) {
+
+      $encryptedContainer.replaceWith(decryptedContent);
       $this.attr('data-encrypted', false);
-      
-      // Decryption callback if there is one
-      decryptedCallback();
-      
-    });
-  
+
+      (done || $.noop)();
+
+    };
+
+    try {
+
+      Syme.Crypto.decryptMessage(groupId, trimmedContent, decryptedCb);
+
+    } catch(e) {
+
+      var error = 'Decryption of post or comment failed';
+      console.error(error); decryptedCb(error);
+
+    }
+
   });
-  
+
   // Avatar decryption
   $(document).on('decrypt', '.user-avatar', function(e, done) {
 
@@ -63,7 +62,7 @@ Syme.Binders.add('global', { decrypt: function() {
     });
 
   });
-  
+
   // Background image decryption
   $(document).on('decrypt', '.encrypted-background-image', function(e, done){
 
@@ -88,7 +87,7 @@ Syme.Binders.add('global', { decrypt: function() {
       done();
 
     }
-    
+
     var file = Syme.FileManager.buildFileInfo(imageId, groupId, keys);
 
     // Decrypt and place background-image

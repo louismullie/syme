@@ -13,11 +13,7 @@ $(document).on('format', '.post[data-formatted="false"], .comment-box[data-forma
 
   // Create a jQuery wrapper around markdown'd text
   var $content = $( marked( $collapsable.text() ) );
-  
-  // Put commenter name and comment tools in first paragraph of comment
-  $collapsable.closest('.comment-box').find('a.commenter-name')
-    .prependTo( $content.filter('p').first() );
-  
+
   // Replace mentions
   $content.find('a[href^="id:"]').each(function(){
 
@@ -36,15 +32,15 @@ $(document).on('format', '.post[data-formatted="false"], .comment-box[data-forma
 
   // Replace old content by formatted content
   $collapsable.html( $content );
-  
+
   // Oembed.
   $collapsable.oembed();
 
   // Format dynamic timestamps.
   $this.find('time.timeago').timeago();
-  
+
   $this.data('formatted', true).removeClass('hidden');
-  
+
   (formattedCallback || $.noop)();
-  
+
 });
