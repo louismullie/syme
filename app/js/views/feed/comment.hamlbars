@@ -8,9 +8,9 @@
     %i.icon-remove
   {{/if}}
 
-  -# Commenter name (will dynamically be put in .collapsable's first <p>)
   %a.commenter-name{href: '#'} {{commenter.name}}
-  <div class="collapsable">{{content}}</div>
+  .collapsable
+    {{content}}
 
   -# Footer
   .comment-footer

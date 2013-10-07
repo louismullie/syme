@@ -21,7 +21,8 @@
 
     // Post content
     .post-content
-      <div class="collapsable">{{content}}</div>
+      .collapsable
+        {{content}}
 
       // Attachment
       {{#if attachment}}

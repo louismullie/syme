@@ -4,13 +4,13 @@ Syme.Binders.add('global', { decrypt: function() {
 
     var $this = $(this);
 
-    var $encryptedContainer = $this.find('encrypted').first(),
+    var $encryptedContainer = $this.find('.collapsable').first(),
         trimmedContent      = $encryptedContainer.text().replace(/^\s+|\s+$/g, ''),
         groupId             = $this.closest('.post').data('group_id');
 
     var decryptedCb = function(decryptedContent) {
 
-      $encryptedContainer.replaceWith(decryptedContent);
+      $encryptedContainer.html(decryptedContent);
       $this.attr('data-encrypted', false);
 
       (done || $.noop)();

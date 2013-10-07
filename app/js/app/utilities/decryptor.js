@@ -6,7 +6,7 @@ Syme.Decryptor = {
 
     // Defaults
     var $postsAndComments = $collection.find(
-      '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]');
+      '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]:not(.collapsed)');
 
     // $('[data-encrypted="true"]:not(#feed[data-single-post=""] .comment-box.collapsed)');
 

@@ -333,28 +333,28 @@ iframe#rdbIndicator {
             border-radius: $baseBorderRadius;
           }
 
+          a.commenter-name {
+            float: left;
+
+            padding-right: .4em;
+            font-weight: 600;
+            white-space: nowrap;
+
+            text-decoration: none;
+
+            cursor: default;
+            color: $black; &:hover {
+              color: inherit;
+              text-decoration: none
+            }
+
+          }
+
           .collapsable {
             margin-bottom: .5em;
 
             p {
               word-break: break-word;
-
-              a.commenter-name {
-                float: left;
-
-                padding-right: .4em;
-                font-weight: 600;
-                white-space: nowrap;
-
-                text-decoration: none;
-
-                cursor: default;
-                color: $black; &:hover {
-                  color: inherit;
-                  text-decoration: none
-                }
-
-              }
 
               .expand-link-container {
                 font-size: .9em;
