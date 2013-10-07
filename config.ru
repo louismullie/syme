@@ -36,15 +36,16 @@ end
 # For development, serve assets.
 map '/assets' do
 
-  HandlebarsAssets::Config.compiler = 'handlebars.min.js'
-  HandlebarsAssets::Config.compiler_path = 
-  File.join($root, 'app', 'js', 'vendor')
-  
   environment = Sprockets::Environment.new
 
   environment.append_path 'app/js'
   environment.append_path 'app/css'
   environment.append_path 'app/views'
+  
+  HandlebarsAssets::Config.compiler = 'handlebars.min.js'
+  HandlebarsAssets::Config.compiler_path = 
+  File.join($root, 'app', 'js', 'vendor')
+
   environment.append_path HandlebarsAssets.path
   
   run environment
