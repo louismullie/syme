@@ -64,36 +64,5 @@ Syme.Binders.add('global', { main: function(){
 
   $(document).on('click', '.clear-notifications', Notifications.clearAll);
 
-  // Background image decryption
-  $(document).on('decrypt', '.encrypted-background-image', function(e, done){
-
-    var $this = $(this),
-        done  = done || $.noop;
-
-    var imageId  = $this.attr('data-attachment-id'),
-        keys      = $this.attr('data-attachment-keys'),
-        groupId  = $this.attr('data-attachment-group');
-
-    if ( !keys ) return done();
-
-    var callback = function(url) {
-
-      if (!url) return done();
-
-      $this.css("background-image", "url('" + url + "')");
-
-      // Set as decrypted
-      $this.attr('data-decrypted', true);
-
-      done();
-
-    }
-    
-    var file = Syme.FileManager.buildFileInfo(imageId, groupId, keys);
-
-    // Decrypt and place background-image
-    Syme.FileManager.getFile(file, callback);
-
-  });
 
 } }); // Syme.Binders.add();

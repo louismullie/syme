@@ -10,15 +10,30 @@ Syme.Binders.add('feed', { main: function(){
   var currentGroupUrl = groupsUrl + '/' + groupId;
 
   var currentGroupName = $('#feed').data('group-name');
-
+  
   // Initial decryption
-  Syme.Decryptor.batchDecrypt(function(){
-
+  $('.user-avatar').trigger('decrypt');
+  $('.encrypted-image').trigger('decrypt');
+  
+  Syme.Decryptor.decryptPostsAndComments($('#feed'), function(){
+    
     // Fix (hide) awful chrome bug part 2
     $('#feed-panel-column').show(0);
 
     // Initiate infinite scroller
     $(window).data('infinite-scroll-started', true);
+
+  });
+  
+  // Prevent leaving if there's unsaved content
+  $(window).bind("beforeunload", function(e) {
+
+    Syme.Cache.clear();
+
+    var unsavedContent = _.any($('textarea'),
+      function (textarea) { return textarea.value != ''; });
+
+    return unsavedContent ? Syme.Messages.error.unsavedContent : null;
 
   });
 

@@ -115,9 +115,8 @@ Syme.Socket = {
       // Decrypt
       if(decrypted){
         $post.trigger('format');
-        Syme.Decryptor.formatPostsAndComments($post);
       } else {
-        Syme.Decryptor.batchDecrypt($.noop, $post);
+        Syme.Decryptor.decryptPostsAndComments($post);
       }
 
     },
@@ -148,9 +147,9 @@ Syme.Socket = {
 
       } else {
         // If comment is not already decrypted
-        Syme.Decryptor.batchDecrypt(function(){      // Decrypt comment
+        Syme.Decryptor.decryptPostsAndComments($comment, function(){      // Decrypt comment
           $commentContainer.trigger('organize');  // Organize container
-        }, $comment);
+        });
 
       }
 
