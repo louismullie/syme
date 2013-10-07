@@ -44,7 +44,7 @@ Syme.Cache = {
     
     var _this = this;
     
-    _.each(_this.cache[id], function (url, id) {
+    _.each(_this.cache, function (url, id) {
       _this.delete(id);
     });
     
