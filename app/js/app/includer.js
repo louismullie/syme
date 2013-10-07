@@ -4,15 +4,6 @@
 //= require_tree ./utilities
 //= require_tree ./binders
 
-// Register all Handlebars templates.
-try {
-  $.each(Handlebars.templates, function (name, template) {
-    Handlebars.registerPartial(name.slice(1), template);
-  });
-} catch (e) {
-  console.error('Handlebars registration failed', e); debugger;
-}
-
 $(function(){
 
   // Set the title for the document.

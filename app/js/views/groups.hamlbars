@@ -7,22 +7,22 @@
 
     %ul
       // Invitations
-      {{> groups-invites.hbs}}
+      {{> groups-invites}}
 
       // Create group
-      {{> groups-create.hbs}}
+      {{> groups-create}}
 
       // Group Loop
-      {{#each groups}} {{> groups-group.hbs}} {{/each}}
+      {{#each groups}} {{> groups-group}} {{/each}}
 
     {{else}}
 
     %ul
       // Create group
-      {{> groups-create.hbs}}
+      {{> groups-create}}
 
       // Group Loop
-      {{#each groups}} {{> groups-group.hbs}} {{/each}}
+      {{#each groups}} {{> groups-group}} {{/each}}
 
     {{/if}}
 
@@ -37,28 +37,28 @@
 
     %ul
       // Invitations
-      {{> groups-invites.hbs}}
+      {{> groups-invites}}
 
       // Create group
-      {{> groups-create.hbs}}
+      {{> groups-create}}
 
       // Group Loop
-      {{#each groups}} {{> groups-group.hbs}} {{/each}}
+      {{#each groups}} {{> groups-group}} {{/each}}
 
     {{else}}
 
     %ul
       // Create group
-      {{> groups-create.hbs}}
+      {{> groups-create}}
 
       // Group Loop
-      {{#each groups}} {{> groups-group.hbs}} {{/each}}
+      {{#each groups}} {{> groups-group}} {{/each}}
 
     {{/if}}
 
 {{else}}
 
-{{> groups-first.hbs}}
+{{> groups-first}}
 
 {{/if}}
 {{/if}}

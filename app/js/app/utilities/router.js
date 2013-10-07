@@ -214,7 +214,7 @@ Syme.Router = Backbone.Router.extend({
   renderStaticPage: function (template) {
 
     // Render template
-    var view = Handlebars.templates[template + '.hbs']();
+    var view = Handlebars.templates[template]();
 
     // Fill body
     $('body').html(view);
@@ -411,7 +411,7 @@ Syme.Router = Backbone.Router.extend({
   
   renderLoggedInTemplate: function() {
     // Render it
-    $('body').html( Handlebars.templates['container.hbs']() );
+    $('body').html( Handlebars.templates['container']() );
 
     // Fetch notifications.
     Notifications.start();

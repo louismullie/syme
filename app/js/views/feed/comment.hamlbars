@@ -1,6 +1,6 @@
 %div{ id: '{{id}}', class: 'comment-box hidden {{#if collapsed}}collapsed{{/if}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}', :'data-formatted' => 'false', :'data-timestamp' => '{{created_at}}' }
   -# Avatar
-  {{#with commenter}} {{> feed-avatar.hbs}} {{/with}}
+  {{#with commenter}} {{> feed-avatar}} {{/with}}
 
   -# Delete button
   {{#if deletable}}
@@ -26,4 +26,4 @@
 
     // Like count
     %span{ partial: 'feed-like-count' }
-      {{> feed-like-count.hbs}}
+      {{> feed-like-count}}

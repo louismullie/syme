@@ -16,7 +16,7 @@
 
     %a.group-banner-link{ href: '/users/{{current_user_id}}/groups/{{id}}', hbs: '' }
       // Group avatar
-      {{#with avatar}} {{> groups-avatar.hbs}} {{/with}}
+      {{#with avatar}} {{> groups-avatar}} {{/with}}
 
   .group-card-content
 

@@ -1,6 +1,6 @@
 {{#if posts}} |
   {{#each posts}} |
-    {{> feed-post.hbs}} |
+    {{> feed-post}} |
   {{/each}} |
 {{else}}
 
