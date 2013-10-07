@@ -1,5 +1,4 @@
 //= require ./headers
-//= require_tree ./templates
 //= require_tree ./config
 //= require_tree ./models
 //= require_tree ./utilities

@@ -40,7 +40,9 @@ map '/assets' do
 
   environment.append_path 'app/js'
   environment.append_path 'app/css'
-
+  environment.append_path 'app/views'
+  environment.append_path HandlebarsAssets.path
+  
   run environment
 
 end if $env == :development
