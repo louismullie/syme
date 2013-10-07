@@ -9,7 +9,7 @@ Handlebars.compileTemplate = function(template, data) {
   Handlebars.currentContext = data;
 
   // Compile template
-  return Handlebars.templates[template + '.hbs'](data);
+  return Handlebars.templates[template](data);
 
 };
 
@@ -30,7 +30,7 @@ Handlebars.registerHelper("global", function(string) {
 });
 
 $.fn.renderHbsTemplate = function(data){
-  this.html( Handlebars.templates[ this.attr('partial') + '.hbs' ](data) );
+  this.html( Handlebars.templates[ this.attr('partial')](data) );
 
   return this;
 }

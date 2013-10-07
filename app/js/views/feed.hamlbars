@@ -5,7 +5,7 @@
     %input#mentioned_users{ type: 'hidden', name: 'mentioned_users', :'data-list' => '{{mention_list}}' }
   
     // Feed form
-    {{#unless single_post}} {{> feed-form.hbs}} {{/unless}}
+    {{#unless single_post}} {{> feed-form}} {{/unless}}
 
     // Feed
     #feed{ :'data-group-name' => '{{group.name}}', :'data-year' => '{{ year }}', :'data-month' => '{{ month }}', :'data-single-post' => '{{{single_post}}}' }
@@ -19,7 +19,7 @@
       {{/unless}}
 
       // Posts loop
-      {{> feed-posts.hbs}}
+      {{> feed-posts}}
 
     // Load more button.
     {{#unless single_post}}
@@ -32,4 +32,4 @@
 
   #feed-panel-column
     // Group panel
-    {{> feed-panel.hbs}}
+    {{> feed-panel}}

@@ -28,4 +28,4 @@
   {{/with}}
 
   // Userlist
-  {{> feed-users.hbs}}
+  {{> feed-users}}

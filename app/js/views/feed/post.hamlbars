@@ -1,6 +1,6 @@
 .post.hidden{ id: '{{id}}', :'data-group_id' => '{{group_id}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}', :'data-formatted' => 'false' }
   // Avatar
-  {{#with owner}} {{> feed-avatar.hbs}} {{/with}}
+  {{#with owner}} {{> feed-avatar}} {{/with}}
 
   .post-indent
     // Post header
@@ -26,7 +26,7 @@
       // Attachment
       {{#if attachment}}
       .attachment
-        {{#with attachment}} {{> feed-attachment.hbs}} {{/with}}
+        {{#with attachment}} {{> feed-attachment}} {{/with}}
       {{/if}}
 
     // Post footer
@@ -49,11 +49,11 @@
         .post-footer-informations.columns.small-12
           // Like count
           %span{ partial: 'feed-like-count' }
-            {{> feed-like-count.hbs}}
+            {{> feed-like-count}}
 
           // Comment count
           %span{ partial: 'feed-comment-count' }
-            {{> feed-comment-count.hbs}}
+            {{> feed-comment-count}}
 
     %div{ class: 'post-comments {{#unless has_comments}}no-comments{{/unless}}' }
-      {{> feed-comments.hbs}}
+      {{> feed-comments}}

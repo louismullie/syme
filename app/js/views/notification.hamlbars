@@ -28,7 +28,7 @@
     {{#with invitation}}
 
     %span.notification-actions
-      {{> feed-notification-invite_request.hbs}}
+      {{> feed-notification-invite_request}}
 
     {{/with}}
     {{/compare}}
@@ -38,7 +38,7 @@
     {{#with invitation}}
 
     %span.notification-actions
-      {{> feed-notification-invite_accept.hbs}}
+      {{> feed-notification-invite_accept}}
 
     {{/with}}
     {{/compare}}
