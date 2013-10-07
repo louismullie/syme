@@ -29,7 +29,12 @@ namespace :extensions do
     end
     
     # Copy main HTML file to extension directory.
-    FileUtils.cp('./.hbs/views/layout.hbs', '.extension/syme.html')
+    layout = File.read('./app/js/views/layout.hamlbars')
+    
+    layout_html = Haml::Engine.new(layout).render
+    File.open('.extension/syme.html', 'w+') do |file|
+      file.write(layout_html)
+    end
     
     # Copy fonts and images to extension directory.
     public_path = settings.root + '/public'

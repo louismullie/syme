@@ -17,9 +17,12 @@ set :assets_path, File.join(root, 'public', 'assets')
 
 # Setup sprockets for compilation.
 set :sprockets, (Sprockets::Environment.new(root) do |env|
+  
   env.logger = Logger.new(STDOUT)
   env.append_path 'app/js'
   env.append_path 'app/css'
   env.js_compressor = Closure::Compiler.new
   env.css_compressor = :sass
+  env.append_path HandlebarsAssets.path
+  
 end)

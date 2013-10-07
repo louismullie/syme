@@ -33,6 +33,11 @@ map '/' do
   run Syme::Application
 end
 
+# Handlebars configuration
+HandlebarsAssets::Config.compiler = 'handlebars.min.js'
+HandlebarsAssets::Config.compiler_path = 
+File.join($root, 'app', 'js', 'vendor')
+
 # For development, serve assets.
 map '/assets' do
 
@@ -41,10 +46,6 @@ map '/assets' do
   environment.append_path 'app/js'
   environment.append_path 'app/css'
   environment.append_path 'app/views'
-  
-  HandlebarsAssets::Config.compiler = 'handlebars.min.js'
-  HandlebarsAssets::Config.compiler_path = 
-  File.join($root, 'app', 'js', 'vendor')
 
   environment.append_path HandlebarsAssets.path
   

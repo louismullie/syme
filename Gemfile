@@ -40,9 +40,6 @@ gem 'sass'
 gem 'haml'
 gem 'i18n'
 
-gem 'guard'
-gem 'guard-haml'
-gem 'guard-steering'
 gem 'handlebars_assets'
 
 gem 'json'
