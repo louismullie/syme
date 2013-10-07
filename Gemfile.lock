@@ -61,6 +61,10 @@ GEM
       steering (~> 1.2.0)
     haml (4.0.3)
       tilt
+    handlebars_assets (0.14.1)
+      execjs (>= 1.2.9)
+      sprockets (>= 2.0.3)
+      tilt
     highline (1.6.19)
     hike (1.2.3)
     htmlentities (4.3.1)
@@ -175,6 +179,7 @@ DEPENDENCIES
   guard-haml
   guard-steering
   haml
+  handlebars_assets
   htmlentities
   i18n
   json

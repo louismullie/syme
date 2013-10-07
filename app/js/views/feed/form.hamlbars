@@ -7,7 +7,7 @@
       %i.icon-user
       %i.icon-spinner.icon-spin
 
-    {{> feed-avatar.hbs}}
+    {{> feed-avatar}}
   {{/with}}
 
   %input#upload_avatar.hidden{ type: 'file', name: 'account-picture' }
