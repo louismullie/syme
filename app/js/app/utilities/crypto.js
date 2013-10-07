@@ -222,6 +222,106 @@ Syme.Crypto = function (workerUrl) {
   this.confirmInviteRequest = function () {
     this.executeJob('confirmInviteRequest', arguments);
   };
+  
+  this.recryptKeys = function (keylistId, inviteeId, keysJson, recryptedCb) {
+    
+    var _this = this;
+    
+    var numWorkers = 4;
+    
+    var posts = this.splitArray(keysJson.posts, numWorkers),
+        uploads = this.splitArray(keysJson.uploads, numWorkers),
+        distribute = this.splitArray(keysJson.distribute, numWorkers);
+
+    var totalElements = _.size(posts) + _.size(uploads) +  _.size(distribute);
+          
+    
+    var recryptedPosts = [],
+        recryptedUploads = [],
+        recryptedDistribute = [];
+
+    var start = new Date().getTime();
+    
+    NProgress.start();
+    
+    var numElements = 0;
+    
+    var checkCounter = function () {
+      
+      numElements++;
+      
+      NProgress.set(numElements/totalElements);
+      
+      if (numElements == totalElements) {
+        
+        var recryptedKeys = $.base64.encode(
+          JSON.stringify({
+            posts: recryptedPosts,
+            uploads: recryptedUploads,
+            distribute: recryptedDistribute
+          })
+        );
+        
+        recryptedCb(recryptedKeys);
+        
+        var end = new Date().getTime();
+        //console.log('ELAPSED: ' + ((end - start) / 1000).toString());
+        
+      }
+        
+    };
+    
+    _.each(posts, function (postsChunk, index) {
+      
+      _this.workerPool.sendJob(index, {
+        id: Math.random()*Math.exp(40).toString(),
+        method: 'recryptPosts',
+        params: [keylistId, inviteeId, postsChunk]
+      }, function (receivedPosts) {
+        recryptedPosts = _.union(recryptedPosts, receivedPosts);
+        checkCounter();
+      })
+      
+    });
+    
+    _.each(uploads, function (uploadsChunk, index) {
+      
+      _this.workerPool.sendJob(index, {
+        id: Math.random()*Math.exp(40).toString(),
+        method: 'recryptResources',
+        params: [keylistId, inviteeId, uploadsChunk]
+      }, function (receivedUploads) {
+        recryptedUploads = _.union(recryptedUploads, receivedUploads);
+        checkCounter();
+      })
+      
+    });
+
+    _.each(distribute, function (distributeChunk, index) {
+      
+      _this.workerPool.sendJob(index, {
+        id: Math.random()*Math.exp(40).toString(),
+        method: 'recryptResources',
+        params: [keylistId, inviteeId, distributeChunk]
+      }, function (receivedDistribute) {
+        recryptedUploads = _.union(recryptedDistribute, receivedDistribute);
+        checkCounter();
+      })
+      
+    });
+    
+    return null;
+    
+  };
+  
+  this.splitArray = function (a, n) {
+    var len = a.length,out = [], i = 0;
+    while (i < len) {
+        var size = Math.ceil((len - i) / n--);
+        out.push(a.slice(i, i += size));
+    }
+    return out;
+  };
 
   // completeInviteRequest(completeRequest, inviteCompletedCb)
   this.completeInviteRequest = function () {
@@ -315,8 +415,12 @@ Syme.Crypto = function (workerUrl) {
 
     // Check that keys exist for current user.
     var userId  = Syme.CurrentSession.getUserId(),
-        message = JSON.parse($.base64.decode(text));
+        message = JSON.parse($.base64.decode(text)),
+        hash = sjcl.hash.sha256.hash(text);
 
+    if (Syme.Cache.contains(hash))
+      decryptedMessageCb(Syme.Cache.get(hash));
+    
     // Return error message to callback if they don't
     if (message.keys[userId] == undefined)
       decryptedMessageCb('There was a problem with the decryption');
@@ -332,6 +436,8 @@ Syme.Crypto = function (workerUrl) {
       if (decryptedText.error && decryptedText.error.missingKey)
         return _this.getMissingKey( decryptedText.error.missingKey );
 
+      Syme.Cache.store(hash, decryptedText);
+      
       decryptedMessageCb(decryptedText);
 
     });

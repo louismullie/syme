@@ -134,24 +134,25 @@ var User = Backbone.Model.extend({
     var invitation = new Invitation();
     invitation.set('id', invitationId);
 
+    var url = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() + '/groups/' + keylistId + '/keys';
 
-   var url = SERVER_URL + '/users/' + Syme.CurrentSession.getUserId() + '/groups/' + keylistId + '/keys';
+    Syme.Crypto.confirmInviteRequest(keylistId, inviteeId, inviteRequest, function (inviteRequestJson) {
 
-    $.getJSON(url, function (keysJson) {
+      if (inviteRequestJson.error)
+        return errorCb();
 
-      Syme.Crypto.confirmInviteRequest(keylistId, inviteeId, inviteRequest, keysJson, function (inviteRequestJson) {
+      $.getJSON(url, function (keysJson) {
 
-          if (inviteRequestJson.error)
-            return errorCb();
+        Syme.Crypto.recryptKeys(keylistId, inviteeId, keysJson, function (recryptedKeys) {
 
           Syme.Crypto.getEncryptedKeyfile(function (encryptedKeyfile) {
 
             _this.updateKeyfile(encryptedKeyfile, function () {
 
                 invitation.save(
-                  { integrate: inviteRequestJson.confirm.inviteConfirmation,
-                    distribute: inviteRequestJson.confirm.addUserRequest,
-                    transfer: inviteRequestJson.keys },
+                  { integrate: inviteRequestJson.inviteConfirmation,
+                    distribute: inviteRequestJson.addUserRequest,
+                    transfer: recryptedKeys },
                   {
                     success: inviteConfirmedCb,
                     error: errorCb
@@ -161,10 +162,12 @@ var User = Backbone.Model.extend({
 
           });
 
+        });
+
       });
 
     });
-
+    
   },
 
   completeInviteRequest: function (groupId, invitationId, completeRequest, inviteCompletedCb, errorCb) {
