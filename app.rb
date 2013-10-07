@@ -10,7 +10,7 @@ module Syme
 
     # Configure with globals defined in config.ru
     configure do
-      set :root,        $root
+      set root:         $root
       set store:        $store
       set environment:  $env
     end

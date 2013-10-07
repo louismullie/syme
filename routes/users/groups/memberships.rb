@@ -73,7 +73,7 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
     user.notify({
       action: :boot_from_group,
       create: { actor_ids: [ @user.id.to_s ]}
-    }, group)
+    }, group) unless @user.id.to_s == member_id
     
     user.save!
     
