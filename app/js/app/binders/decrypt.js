@@ -5,12 +5,16 @@ Syme.Binders.add('global', { decrypt: function() {
     var $this = $(this);
 
     var $encryptedContainer = $this.find('.collapsable').first(),
-        trimmedContent      = $encryptedContainer.text().replace(/^\s+|\s+$/g, ''),
+        // Commenter name hack part 1
+        trimmedContent      = $encryptedContainer.clone().children().remove().end().text().replace(/^\s+|\s+$/g, ''),
         groupId             = $this.closest('.post').data('group_id');
 
     var decryptedCb = function(decryptedContent) {
 
-      $encryptedContainer.html(decryptedContent);
+      // Commenter name hack part 2
+      var replacedHtml = $encryptedContainer.html().replace(trimmedContent, decryptedContent);
+
+      $encryptedContainer.html(replacedHtml);
       $this.attr('data-encrypted', false);
 
       (done || $.noop)();
@@ -36,9 +40,9 @@ Syme.Binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || $.noop;
 
-    var groupId  = Syme.CurrentSession.getGroupId(),
-        user_id   = $this.attr('data-user-id'),
-        avatarId = $this.attr('data-avatar-id'),
+    var groupId   = Syme.CurrentSession.getGroupId(),
+        userId    = $this.attr('data-user-id'),
+        avatarId  = $this.attr('data-avatar-id'),
         keys      = $this.attr('data-keys');
 
     if ( !keys ) return done();
@@ -51,7 +55,7 @@ Syme.Binders.add('global', { decrypt: function() {
       if (!url) return done();
 
       // Set new src to master and slaves
-      $this.add('.slave-avatar[data-user-id="' + user_id + '"]')
+      $this.add('.slave-avatar[data-user-id="' + userId + '"]')
         .attr('src', url);
 
       // Set as decrypted
@@ -69,9 +73,9 @@ Syme.Binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || $.noop;
 
-    var imageId  = $this.attr('data-attachment-id'),
-        keys      = $this.attr('data-attachment-keys'),
-        groupId  = $this.attr('data-attachment-group');
+    var imageId = $this.attr('data-attachment-id'),
+        keys    = $this.attr('data-attachment-keys'),
+        groupId = $this.attr('data-attachment-group');
 
     if ( !keys ) return done();
 
@@ -101,10 +105,10 @@ Syme.Binders.add('global', { decrypt: function() {
     var $this = $(this),
         done  = done || $.noop;
 
-    var mediaId   = $this.attr('data-attachment-id'),
-        keys      = $this.attr('data-attachment-keys'),
-        type      = $this.attr('data-attachment-type'),
-        groupId   = $this.attr('data-attachment-group');
+    var mediaId = $this.attr('data-attachment-id'),
+        keys    = $this.attr('data-attachment-keys'),
+        type    = $this.attr('data-attachment-type'),
+        groupId = $this.attr('data-attachment-group');
 
     if ( !keys ) {
       console.log('NO KEYS FOR MESSAGE');
@@ -123,6 +127,7 @@ Syme.Binders.add('global', { decrypt: function() {
       $this.attr('data-encrypted', false);
 
       done();
+
     };
 
     // Decrypt and place media
@@ -134,11 +139,10 @@ Syme.Binders.add('global', { decrypt: function() {
   // Synchronize slaves to master avatars
   $(document).on('sync', '.slave-avatar', function(){
 
-    var $this = $(this),
-        done  = done || $.noop;
+    var $this = $(this);
 
-    var user_id     = $this.attr('data-user-id'),
-        master      = $('.user-avatar[data-user-id="' + user_id + '"]');
+    var userId  = $this.attr('data-user-id'),
+        master  = $('.user-avatar[data-user-id="' + userId + '"]');
 
     $this.attr('src', master.attr('src'));
 

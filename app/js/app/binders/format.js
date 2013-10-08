@@ -1,7 +1,11 @@
 $(document).on('format', '.post[data-formatted="false"], .comment-box[data-formatted="false"]', function (e, formattedCallback) {
 
-  var $this         = $(this),
-      $collapsable  = $this.find('.collapsable').first();
+  var $this           = $(this),
+      $collapsable    = $this.find('.collapsable').first(),
+      // Commenter name hack part 3
+      trimmedContent  = $collapsable.find('a.commenter-name').length ?
+        $collapsable.clone().children().remove().end().text() :
+        $collapsable.text();
 
   // Sync slave avatars
   $this.find('.slave-avatar').trigger('sync');
@@ -12,7 +16,7 @@ $(document).on('format', '.post[data-formatted="false"], .comment-box[data-forma
   $this.find('.encrypted-image').trigger('decrypt');
 
   // Create a jQuery wrapper around markdown'd text
-  var $content = $( marked( $collapsable.text() ) );
+  var $content = $( marked(trimmedContent) );
 
   // Replace mentions
   $content.find('a[href^="id:"]').each(function(){
@@ -31,7 +35,12 @@ $(document).on('format', '.post[data-formatted="false"], .comment-box[data-forma
   $content.find('a:not([href="#"])').attr('target', '_blank');
 
   // Replace old content by formatted content
-  $collapsable.html( $content );
+  // Commenter name hack part 4
+  var replacedHtml = $content[0] ?
+    $collapsable.html().replace(trimmedContent, $content[0].outerHTML) :
+    $content.html();
+
+  $collapsable.html(replacedHtml);
 
   // Oembed.
   $collapsable.oembed();

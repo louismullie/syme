@@ -336,7 +336,6 @@ iframe#rdbIndicator {
           a.commenter-name {
             float: left;
 
-            padding-right: .4em;
             font-weight: 600;
             white-space: nowrap;
 
@@ -348,6 +347,10 @@ iframe#rdbIndicator {
               text-decoration: none
             }
 
+            // Space after it
+            &::after {
+              content: "\00a0";
+            }
           }
 
           .collapsable {

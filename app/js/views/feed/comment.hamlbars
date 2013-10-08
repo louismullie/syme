@@ -8,9 +8,7 @@
     %i.icon-remove
   {{/if}}
 
-  %a.commenter-name{href: '#'} {{commenter.name}}
-  .collapsable
-    {{content}}
+  <div class="collapsable"><a href="#" class="commenter-name">{{commenter.name}}</a>{{content}}</div>
 
   -# Footer
   .comment-footer
