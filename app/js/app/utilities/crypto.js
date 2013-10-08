@@ -425,8 +425,11 @@ Syme.Crypto = function (workerUrl) {
         message = JSON.parse($.base64.decode(text)),
         hash = sjcl.hash.sha256.hash(text);
 
-    if (Syme.Cache.contains(hash))
-      decryptedMessageCb(Syme.Cache.get(hash));
+    // If cache fails, rescue and download file
+    if (Syme.Cache.contains(hash)) {
+      try { decryptedMessageCb(Syme.Cache.get(hash)); } catch (e) {}
+    }
+    
     
     // Return error message to callback if they don't
     if (message.keys[userId] == undefined)
