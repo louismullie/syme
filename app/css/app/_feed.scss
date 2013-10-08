@@ -4,6 +4,10 @@
 @media #{$breakpointLarge} {
   #feed-column {
     @include grid-column(12, false, false, 3);
+
+    &.centered {
+      @include grid-column(12, true, true);
+    }
   }
 }
 
@@ -11,6 +15,10 @@
 @media #{$breakpointMedium} {
   #feed-column {
     @include grid-column(13, false, false, 2);
+
+    &.centered {
+      @include grid-column(15, true, true);
+    }
   }
 }
 
@@ -336,6 +344,7 @@ iframe#rdbIndicator {
           a.commenter-name {
             float: left;
 
+            font-size: .9em;
             font-weight: 600;
             white-space: nowrap;
 
@@ -348,9 +357,7 @@ iframe#rdbIndicator {
             }
 
             // Space after it
-            &::after {
-              content: "\00a0";
-            }
+            &::after { content: "\00a0"; }
           }
 
           .collapsable {

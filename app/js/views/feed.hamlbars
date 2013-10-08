@@ -1,9 +1,9 @@
 .row
-  #feed-column
-  
+  #feed-column{ class: '{{#if single_post}}centered{{/if}}' }
+
     // Hidden mentioned users input
     %input#mentioned_users{ type: 'hidden', name: 'mentioned_users', :'data-list' => '{{mention_list}}' }
-  
+
     // Feed form
     {{#unless single_post}} {{> feed-form}} {{/unless}}
 
@@ -27,9 +27,9 @@
     #load-more
       %span
         Loading more posts...
-    
+
     {{/unless}}
 
-  #feed-panel-column
+  #feed-panel-column{ class: '{{#if single_post}}hidden{{/if}}' }
     // Group panel
     {{> feed-panel}}
