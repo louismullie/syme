@@ -1,8 +1,5 @@
 Syme.Binders.add('feed', { main: function(){
 
-  // Fix (hide) awful chrome bug part 1
-  $('#feed-panel-column').hide();
-
   var userId = Syme.CurrentSession.getUserId(),
       groupId = Syme.CurrentSession.getGroupId();
 
@@ -16,9 +13,6 @@ Syme.Binders.add('feed', { main: function(){
   $('.encrypted-image').trigger('decrypt');
 
   Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
-
-    // Fix (hide) awful chrome bug part 2
-    $('#feed-panel-column').show(0);
 
     // Initiate infinite scroller
     $(window).data('infinite-scroll-started', true);
