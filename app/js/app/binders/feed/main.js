@@ -15,13 +15,8 @@ Syme.Binders.add('feed', { main: function(){
   if ($('#feed').attr('data-single-post') == 'true') {
     $('#feed-panel').hide();
   }
-  
-  Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
 
-    // Initiate infinite scroller
-    $(window).data('infinite-scroll-started', true);
-
-  });
+  Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'));
 
   // Prevent leaving if there's unsaved content
   $(window).bind("beforeunload", function(e) {

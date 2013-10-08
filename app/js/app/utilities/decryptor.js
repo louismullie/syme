@@ -33,11 +33,12 @@ Syme.Decryptor = {
         } else if (NProgress.status < index / length) {
           NProgress.set( index / length );
         }
-        
+
       },
 
       // Done
       function (elapsedTime) {
+
         _this.formatPostsAndComments($collection, (decryptCallback || $.noop));
 
       }
@@ -52,7 +53,10 @@ Syme.Decryptor = {
   formatPostsAndComments: function ($postsAndComments, formattedCallback) {
 
     var formatCounter = new Syme.Modules.Countable(
-      $postsAndComments, $.noop, ( formattedCallback || $.noop )
+      $postsAndComments, $.noop, function () {
+        $(window).data('infinite-scroll-started', true); // Temporary fix
+        formattedCallback();
+      }
     );
 
     $postsAndComments.trigger('format', formatCounter.increment);
