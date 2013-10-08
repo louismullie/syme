@@ -10,13 +10,13 @@ Syme.Binders.add('feed', { main: function(){
   var currentGroupUrl = groupsUrl + '/' + groupId;
 
   var currentGroupName = $('#feed').data('group-name');
-  
+
   // Initial decryption
   $('.user-avatar').trigger('decrypt');
   $('.encrypted-image').trigger('decrypt');
-  
-  Syme.Decryptor.decryptPostsAndComments($('#feed'), function(){
-    
+
+  Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
+
     // Fix (hide) awful chrome bug part 2
     $('#feed-panel-column').show(0);
 
@@ -24,7 +24,7 @@ Syme.Binders.add('feed', { main: function(){
     $(window).data('infinite-scroll-started', true);
 
   });
-  
+
   // Prevent leaving if there's unsaved content
   $(window).bind("beforeunload", function(e) {
 

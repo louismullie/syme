@@ -1,17 +1,22 @@
 Syme.Decryptor = {
 
-  decryptPostsAndComments: function($collection, batchDecryptCallback){
+  decryptPostsAndCommentsInContainer : function($container, decryptCallback) {
+
+    var selector    = '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]:not(.collapsed)',
+        $collection = $container.find(selector);
+
+    this.decryptPostsAndComments($collection, decryptCallback);
+
+  },
+
+  decryptPostsAndComments: function($collection, decryptCallback){
 
     var _this = this;
-
-    // Defaults
-    var $postsAndComments = $collection.find(
-      '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]:not(.collapsed)');
 
     // $('[data-encrypted="true"]:not(#feed[data-single-post=""] .comment-box.collapsed)');
 
     // Asynchronous counter for decryption
-    var decryptCounter = new Syme.Modules.Countable( $postsAndComments,
+    var decryptCounter = new Syme.Modules.Countable( $collection,
 
       // Increment
       function(index, length) {
@@ -24,14 +29,14 @@ Syme.Decryptor = {
 
       // Done
       function (elapsedTime) {
-        _this.formatPostsAndComments($postsAndComments, (batchDecryptCallback || $.noop));
+        _this.formatPostsAndComments($collection, (decryptCallback || $.noop));
 
       }
 
     );
 
     // Trigger decrypt on every element
-    $postsAndComments.trigger('decrypt', decryptCounter.increment);
+    $collection.trigger('decrypt', decryptCounter.increment);
 
   },
 

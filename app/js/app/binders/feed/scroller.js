@@ -90,7 +90,7 @@ Syme.Binders.add('feed', { scroller: function(){
         $('#feed .post').last().css({ 'border-bottom': 'none' });
 
         // Decrypt new content
-        Syme.Decryptor.decryptPostsAndComments($('#feed'), function(){
+        Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
 
           // Show or hide load-more
           $('#load-more').hide();
