@@ -59,6 +59,7 @@ iframe#rdbIndicator {
 // Indicator for socket-added posts
 #newcontent {
   margin-bottom: 1em;
+  border-top: 0 !important;
 
   display: none;
   text-align: center;
