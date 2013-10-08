@@ -375,10 +375,15 @@ Syme.Router = Backbone.Router.extend({
       case 'feed':
         
         var groupName = data.group.name;
-      
+        
+        var currentGroupRoute = Syme.Url.join(
+          'users', Syme.CurrentSession.getUserId(),
+          'groups', Syme.CurrentSession.getGroupId()
+        );
+    
         var crumbs = [
           { title: 'My groups', href: '/' },
-          { title: groupName, href: Syme.Router.currentRoute }
+          { title: groupName, href: currentGroupRoute }
         ];
         
         break;
