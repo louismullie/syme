@@ -86,9 +86,6 @@ Syme.Binders.add('feed', { scroller: function(){
         // Append generated templates
         $('#feed').append( html );
 
-        // Please Chris, look at this
-        $('#feed .post').last().css({ 'border-bottom': 'none' });
-
         // Decrypt new content
         Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
 
