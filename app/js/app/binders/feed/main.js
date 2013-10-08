@@ -13,7 +13,7 @@ Syme.Binders.add('feed', { main: function(){
   $('.encrypted-image').trigger('decrypt');
 
   if ($('#feed').attr('data-single-post') == 'true') {
-    $('#feed-panel').hide().show();
+    $('#feed-panel').hide();
   }
   
   Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){

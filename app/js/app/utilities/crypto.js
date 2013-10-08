@@ -63,8 +63,6 @@ Syme.Crypto = function (workerUrl) {
   
   this._executeJob = function (needsLock, job, successCb) {
     
-   console.log('[Crypto] ' + job.method + '() ' + (needsLock ? '[LOCK]' : ''));
-      
     var jobsQueued = (_this.onLockRelease.length != 0);
     
     // If there are no jobs queued, and we are 
@@ -250,13 +248,7 @@ Syme.Crypto = function (workerUrl) {
       
       numElements++;
       
-      // Fix nasty NProgress bug
-      if (numElements == totalElements) {
-        NProgress.remove();
-        NProgress.done();
-      } else {
-        NProgress.set(numElements/totalElements);
-      }
+      NProgress.set(numElements/totalElements);
      
       
       if (numElements == totalElements) {
@@ -427,9 +419,10 @@ Syme.Crypto = function (workerUrl) {
 
     // If cache fails, rescue and download file
     if (Syme.Cache.contains(hash)) {
-      try { decryptedMessageCb(Syme.Cache.get(hash)); } catch (e) {}
+      try {
+        return decryptedMessageCb(Syme.Cache.get(hash));
+      } catch (e) { }
     }
-    
     
     // Return error message to callback if they don't
     if (message.keys[userId] == undefined)

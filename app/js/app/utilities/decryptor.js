@@ -24,10 +24,16 @@ Syme.Decryptor = {
       // Increment
       function(index, length) {
 
+        // Nasty hack to fix NProgress
+        if (index == length) {
+          NProgress.remove();
+          NProgress.done();
         // Prevent jumps in progress bar if multiple
         // batchDecrypt run at the same time
-        if (NProgress.status < index / length)
+        } else if (NProgress.status < index / length) {
           NProgress.set( index / length );
+        }
+        
       },
 
       // Done
