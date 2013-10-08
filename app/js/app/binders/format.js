@@ -30,13 +30,12 @@ $(document).on('format', '.post[data-encrypted="false"], .comment-box[data-encry
   $content.find('a:not([href="#"])').attr('target', '_blank');
 
   // Append the formatted content to collapsable
-  $collapsable
-    .append($content)
-    .oembed()
-    .find('time.timeago').timeago();
+  $collapsable.append($content);
 
-  // Clean container and display it
+  // Format, clean container and display it
   $this
+    .find('time.timeago').timeago().end()
+    .oembed()
     .removeAttr('data-encrypted')
     .removeAttr('data-content')
     .removeClass('hidden');
