@@ -2,7 +2,7 @@ Syme.Decryptor = {
 
   decryptPostsAndCommentsInContainer : function($container, decryptCallback) {
 
-    var selector    = '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]:not(.collapsed)',
+    var selector    = '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]:not(#feed[data-single-post=""] .collapsed)',
         $collection = $container.find(selector);
 
     this.decryptPostsAndComments($collection, decryptCallback);
@@ -12,8 +12,6 @@ Syme.Decryptor = {
   decryptPostsAndComments: function($collection, decryptCallback){
 
     var _this = this;
-
-    // $('[data-encrypted="true"]:not(#feed[data-single-post=""] .comment-box.collapsed)');
 
     // Asynchronous counter for decryption
     var decryptCounter = new Syme.Modules.Countable( $collection,
