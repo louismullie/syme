@@ -12,6 +12,10 @@ Syme.Binders.add('feed', { main: function(){
   $('.user-avatar').trigger('decrypt');
   $('.encrypted-image').trigger('decrypt');
 
+  if ($('#feed').attr('data-single-post') == 'true') {
+    $('#feed-panel').hide().show();
+  }
+  
   Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
 
     // Initiate infinite scroller
