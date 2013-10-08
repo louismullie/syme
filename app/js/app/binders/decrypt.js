@@ -4,18 +4,15 @@ Syme.Binders.add('global', { decrypt: function() {
 
     var $this = $(this);
 
-    var $encryptedContainer = $this.find('.collapsable').first(),
-        // Commenter name hack part 1
-        trimmedContent      = $encryptedContainer.clone().children().remove().end().text().replace(/^\s+|\s+$/g, ''),
-        groupId             = $this.closest('.post').data('group_id');
+    var groupId           = $this.closest('.post').data('group_id'),
+        encryptedContent  = $this.attr('data-content'),
+        $contentContainer = $this.find('.collapsable').first();
 
     var decryptedCb = function(decryptedContent) {
 
-      // Commenter name hack part 2
-      var replacedHtml = $encryptedContainer.html().replace(trimmedContent, decryptedContent);
-
-      $encryptedContainer.html(replacedHtml);
-      $this.attr('data-encrypted', false);
+      $this
+        .attr('data-encrypted', false)
+        .attr('data-content', decryptedContent);
 
       (done || $.noop)();
 
@@ -23,10 +20,11 @@ Syme.Binders.add('global', { decrypt: function() {
 
     try {
 
-      Syme.Crypto.decryptMessage(groupId, trimmedContent, decryptedCb);
+      Syme.Crypto.decryptMessage(groupId, encryptedContent, decryptedCb);
 
     } catch(e) {
 
+      debugger;
       var error = 'Decryption of post or comment failed';
       console.error(error); decryptedCb(error);
 

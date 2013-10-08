@@ -2,8 +2,13 @@ Syme.Decryptor = {
 
   decryptPostsAndCommentsInContainer : function($container, decryptCallback) {
 
-    var selector    = '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]:not(#feed[data-single-post=""] .collapsed)',
-        $collection = $container.find(selector);
+    // Default children to seek in the container
+    var selector  = // Encrypted posts, and...
+                    '.post[data-encrypted="true"], ' +
+                    // encrypted comments excluding the collapsed ones, excepted in single post.
+                    '.comment-box[data-encrypted="true"]:not(#feed[data-single-post=""] .collapsed)';
+
+    var $collection = $container.find(selector);
 
     this.decryptPostsAndComments($collection, decryptCallback);
 

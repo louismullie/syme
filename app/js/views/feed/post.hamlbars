@@ -1,4 +1,4 @@
-.post.hidden{ id: '{{id}}', :'data-group_id' => '{{group_id}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}', :'data-formatted' => 'false' }
+.post.hidden{ id: '{{id}}', :'data-group_id' => '{{group_id}}', :'data-encrypted' => '{{encrypted}}', :'data-content' => '{{content}}' }
   // Avatar
   {{#with owner}} {{> feed-avatar}} {{/with}}
 
@@ -21,7 +21,8 @@
 
     // Post content
     .post-content
-      <div class="collapsable">{{content}}</div>
+      .collapsable
+        -# Decrypted content will be inserted here
 
       // Attachment
       {{#if attachment}}

@@ -1,4 +1,4 @@
-%div{ id: '{{id}}', class: 'comment-box hidden {{#if collapsed}}collapsed{{/if}}', :'data-encrypted' => '{{#if encrypted}}true{{/if}}', :'data-formatted' => 'false', :'data-timestamp' => '{{created_at}}' }
+%div{ id: '{{id}}', class: 'comment-box hidden {{#if collapsed}}collapsed{{/if}}', :'data-encrypted' => '{{encrypted}}', :'data-content' => '{{content}}', :'data-timestamp' => '{{created_at}}' }
   -# Avatar
   {{#with commenter}} {{> feed-avatar}} {{/with}}
 
@@ -8,7 +8,9 @@
     %i.icon-remove
   {{/if}}
 
-  <div class="collapsable"><a href="#" class="commenter-name">{{commenter.name}}</a>{{content}}</div>
+  .collapsable
+    %a.commenter-name{ href: '#' } {{commenter.name}}
+    -# Decrypted content will be inserted here
 
   -# Footer
   .comment-footer
