@@ -250,7 +250,14 @@ Syme.Crypto = function (workerUrl) {
       
       numElements++;
       
-      NProgress.set(numElements/totalElements);
+      // Fix nasty NProgress bug
+      if (numElements == totalElements) {
+        NProgress.remove();
+        NProgress.done();
+      } else {
+        NProgress.set(numElements/totalElements);
+      }
+     
       
       if (numElements == totalElements) {
         
