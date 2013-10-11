@@ -1,4 +1,4 @@
-$batchInvitePadding: 10px;
+$batchInvitePadding: 4px;
 $batchInviteMargin:  4px;
 $batchInviteHeight:  40px;
 
@@ -8,73 +8,82 @@ $batchInviteHeight:  40px;
     font: 200 1.2em/1.3em $opensans;
   }
 
-  #tags {
-
+  #tags-container {
     margin-top: 2em;
 
-    overflow: auto;
     border: $baseBorderStyle;
-    border-radius: $baseBorderRadius;
-    padding: $batchInvitePadding;
+    box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
+    padding: 10px;
 
-    border: 2px solid $success;
+    #tags {
+      overflow: auto;
+      border: $baseBorderStyle;
+      border-radius: $baseBorderRadius;
+      padding: $batchInvitePadding;
 
-    cursor: text;
-
-    /* Small inputs in modal */
-    &.small {
-      width: 30px;
-    }
-    
-    &.invalid {
-      border-color: $danger !important;
-    }
-
-    input {
-      height: $batchInviteHeight;
-      min-width: 250px;
-
-      float: left;
-      background: white;
-      border: 0;
-      margin: $batchInviteMargin;
-      padding: 5px 0;
-      border: 0;
-      width: auto;
+      border: 2px solid $success;
 
       cursor: text;
 
-      &.no-placeholder {
-        @include placeholder {
-          opacity: 0;
+      /* Small inputs in modal */
+      &.small {
+        width: 30px;
+      }
+
+      &.invalid {
+        border-color: $danger !important;
+      }
+
+      input {
+        height: $batchInviteHeight;
+        min-width: 250px;
+
+        float: left;
+        background: white;
+        border: 0;
+        margin: $batchInviteMargin;
+        padding: 5px 0;
+        border: 0;
+        width: auto;
+
+        cursor: text;
+
+        &[disabled] {
+          background-color: white !important;
+        }
+
+        &.no-placeholder {
+          @include placeholder {
+            opacity: 0;
+          }
         }
       }
-    }
 
-    span.tag {
-      line-height: $batchInviteHeight - $batchInvitePadding * 2 - 2;
-
-      border-radius: $baseBorderRadius;
-      border: $baseBorderStyle;
-      font-size: .9em;
-      font-weight: normal;
-      color: #fff;
-      display: block;
-      float: left;
-      padding: $batchInvitePadding #{$batchInvitePadding * 2};
-      margin: $batchInviteMargin;
-
-      background: $success;
-
-      cursor: default;
-
-      @include transition(background 0.45s ease-in-out);
-
-      span.delete {
+      span.tag {
         line-height: $batchInviteHeight - $batchInvitePadding * 2 - 2;
-        cursor: pointer;
-        font-size: 1em;
-        padding-left: $batchInvitePadding;
+
+        border-radius: $baseBorderRadius;
+        border: $baseBorderStyle;
+        font-size: .9em;
+        font-weight: normal;
+        color: #fff;
+        display: block;
+        float: left;
+        padding: $batchInvitePadding #{$batchInvitePadding * 2};
+        margin: $batchInviteMargin;
+
+        background: $success;
+
+        cursor: default;
+
+        @include transition(background 0.45s ease-in-out);
+
+        span.delete {
+          line-height: $batchInviteHeight - $batchInvitePadding * 2 - 2;
+          cursor: pointer;
+          font-size: 1em;
+          padding-left: $batchInvitePadding;
+        }
       }
     }
   }
@@ -91,6 +100,13 @@ $batchInviteHeight:  40px;
 
     @extend .btn;
     @extend .btn-success;
+
+    span.empty { display: none; }
+
+    &.empty {
+      span.empty { display: inline; }
+      span.full { display: none; }
+    }
 
     i { margin-left: .5em; }
 

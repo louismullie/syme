@@ -25,4 +25,4 @@
 
       %a#create-first-group-link.disabled{ href: '#', role: 'submit' }
         Create a group
-        %i.icon-angle-right
+        %i.icon-arrow-right

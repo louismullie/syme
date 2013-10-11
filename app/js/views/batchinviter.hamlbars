@@ -20,12 +20,17 @@
     %h3
       Invite people by email
 
-    #tags
-      %input{ type: 'text', placeholder: 'Enter a list of emails', maxlength: 50 }
+    #tags-container
+      #tags
+        %input{ type: 'text', placeholder: 'Enter a list of emails', maxlength: 50 }
 
-    %a#batchinvite-link.disabled{ href: '#' }
-      %span
+    %a#batchinvite-link.empty{ href: '#' }
+      %span.empty
+        Add email
+        %i.icon-plus
+
+      %span.full
         Start sharing
-        %i.icon-angle-right
+        %i.icon-arrow-right
 
       <div class="nprogress-spinner"><div class="nprogress-spinner-icon"></div></div>

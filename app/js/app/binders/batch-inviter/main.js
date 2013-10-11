@@ -7,7 +7,7 @@ Syme.Binders.add('batchinviter', { main: function() {
   $('#main, #responsive-modal').on('changeState', '#batchinvite a#batchinvite-link', function(e){
 
     var enable = $('#batchinvite #tags .tag').length > 0;
-    $(this)[enable ? 'removeClass' : 'addClass']('disabled');
+    $(this)[enable ? 'removeClass' : 'addClass']('empty');
     $('#batchinvite input')[enable ? 'addClass' : 'removeClass']('no-placeholder');
 
   });
@@ -74,7 +74,7 @@ Syme.Binders.add('batchinviter', { main: function() {
         $input        = $('input', $batchinvite);
 
     // Return if button is disabled or the batchinviter is active
-    if( $this.hasClass('disabled') || !!$batchinvite.attr('data-active') ) return;
+    if( $this.hasClass('empty') || !!$batchinvite.attr('data-active') ) return;
 
     // Mark the batchinviter as active
     $batchinvite.attr('data-active', true);
