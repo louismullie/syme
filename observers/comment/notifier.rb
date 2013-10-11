@@ -41,16 +41,14 @@ module CommentObserver::Notifier
 
     other_commenters(comment, commenter).each do |user|
 
-      next if user.id.to_s == commenter.id.to_s
-
-      #user.notify({
-      #  action: :comment_on_same_post,
-      #  unread: { post_id: post.id.to_s },
-      #  create: {
-      #    post_id: post.id.to_s,
-      #    comment_id: comment.id.to_s,
-      #    actor_ids: [commenter.id.to_s]
-      #}}, group)
+      user.notify({
+        action: :comment_on_same_post,
+        unread: { post_id: post.id.to_s },
+        create: {
+          post_id: post.id.to_s,
+          comment_id: comment.id.to_s,
+          actor_ids: [commenter.id.to_s]
+      }}, group)
 
     end
 
@@ -67,7 +65,9 @@ module CommentObserver::Notifier
 
     post_owner = comment.post.owner
 
-    commenters.uniq.reject do |id|
+    commenters.uniq!
+    
+    commenters.reject! do |id|
       id == commenter.id.to_s ||
       id == post_owner.id.to_s
     end
