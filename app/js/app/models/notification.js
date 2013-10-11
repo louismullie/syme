@@ -78,7 +78,7 @@ Notifications = (function(){
                 notification.action == 'invite_cancel'  ||
                 notification.action == 'delete_group'   ||
                 notification.action == 'boot_from_group'
-            ? false : data.link
+            ? '/' : data.link
         });
 
       });
