@@ -84,6 +84,14 @@ post '/users/:user_id/groups/:group_id/invitations', auth: [] do |user_id, group
       { invitation_id: invitation.id.to_s,
         group_id: group.id.to_s })
   
+    if User.where(email: email).first.nil?
+      track(email,
+        'New user was invited to group',
+        { invitation_id: invitation.id.to_s,
+          group_id: group.id.to_s
+      })
+    end
+    
     send_invite(invitation.email)
 
   end

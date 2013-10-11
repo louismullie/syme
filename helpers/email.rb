@@ -99,10 +99,8 @@ def send_invite(email)
   invitee = User.where(email: email).first
 
   template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
-
-  message = email_template template, email
   
-  warn message
+  message = email_template template, email
   
   send_email_to(email, subject, message)
 
