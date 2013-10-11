@@ -15,7 +15,7 @@
 
     {{#each invite}}
 
-    %li.invite
+    %li.invite{ 'data-email' => '{{email}}' }
       %span{ title: '{{invitee_full_name}}' } {{invitee_full_name}}
 
       .invite-actions<
@@ -57,7 +57,7 @@
 
   {{#each users}}
 
-  %li{ id: '{{id}}' }
+  %li{ id: '{{id}}', 'data-email' => '{{email}}' }
 
     -# Delete button
     {{#if deletable}}

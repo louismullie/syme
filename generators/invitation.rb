@@ -12,6 +12,7 @@ class InvitationGenerator
       invitee_id: invitation.invitee_id,
       invitee_full_name: invitation.invitee ?
         invitation.invitee.full_name : nil,
+      invitee_email: invitation.email,
       
       group_id: invitation.group.id.to_s,
       group_name: invitation.group.name,

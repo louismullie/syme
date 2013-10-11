@@ -63,6 +63,7 @@ class FeedGenerator
 
     {
       id: user.id.to_s,
+      email: user.email,
       is_current_user: current_user.id == user.id,
       full_name: user.full_name,
       deletable: membership.deletable_by?(current_user),

@@ -17,6 +17,10 @@ Syme.Binders.add('batchinviter', { main: function() {
     // Return if batchinviter is active
     if( !!$('#batchinvite').attr('data-active') ) return;
 
+    var userEmails = $('ul#userlist li').map(function () {
+      return $(this).attr('data-email');
+    });
+    
     var mail = this.value.toLowerCase().replace(/(\s+|,|;)/g, '');
 
     if ( mail == '' ) return $(this).removeClass('invalid');
@@ -25,9 +29,10 @@ Syme.Binders.add('batchinviter', { main: function() {
     // current user's email, and must not be already entered.
     var is_valid        = $.ndbValidator.regexps.email.test(mail),
         is_not_current  = mail != currentUserEmail,
-        is_new          = $('span.tag[data-mail="' + mail + '"]').length == 0;
+        is_new          = $('span.tag[data-mail="' + mail + '"]').length == 0,
+        is_not_already_invited = !_.contains(userEmails, mail);
 
-    if( is_valid && is_not_current && is_new ){
+    if( is_valid && is_not_current && is_new && is_not_already_invited ){
 
       $(this).before('<span class="tag" data-mail="' + mail + '">'+ mail +'<span class="delete">×</span></span>');
       $(this).val('').parent().removeClass('invalid');

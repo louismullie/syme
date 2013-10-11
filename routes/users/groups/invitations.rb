@@ -57,6 +57,13 @@ post '/users/:user_id/groups/:group_id/invitations', auth: [] do |user_id, group
     if group.users.where(email: email).any?
       error 400, 'already_joined'
     end
+    
+    # If the invitee has already been invited by the
+    # current user, don't allow to invite again.
+    if group.invitations.where(email: email)
+      .any? { |inv| inv['inviter_id'] == @user.id.to_s }
+      error 400, 'already_invited'
+    end
   
     # Allow multiple people inviting the same user
     # to a group, but not if the invitee has already
@@ -66,7 +73,6 @@ post '/users/:user_id/groups/:group_id/invitations', auth: [] do |user_id, group
       error 400, 'already_invited'
     end
     
-
     # Create the invitation in the database.
     invitation = group.invitations.create!(
       inviter_id: @user.id.to_s,
