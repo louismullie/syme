@@ -36,6 +36,7 @@
   .show-more              { display: none   !important; }
   .comment-box.collapsed  { display: block  !important; }
   textarea                { display: block  !important; }
+  .post                   { border-top: 0px !important; }
 }
 
 iframe#rdbIndicator {
@@ -101,6 +102,7 @@ iframe#rdbIndicator {
   }
 
   .post {
+    
     padding-top: $bodyPadding / 2;
     margin-top: $bodyPadding / 2;
 
