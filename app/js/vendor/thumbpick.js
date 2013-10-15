@@ -28,7 +28,7 @@ ThumbPick.prototype = {
     var mimeType = options.mime;
     var desiredWidth = options.width;
     var desiredHeight = options.height;
-    var compression = options.compression;
+    var compression = options.compression || 1;
 
     var urlCallback = urlCallback || function (){};
 
@@ -90,7 +90,7 @@ ThumbPick.prototype = {
     }
 
     // Get the data URI for the final image.
-    var url = canvas.toDataURL(mimeType, 0.6);
+    var url = canvas.toDataURL(mimeType, compression);
 
     urlCallback(url);
 

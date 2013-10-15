@@ -298,7 +298,7 @@ Syme.FileManager.prototype = {
 
       var compressor = new ThumbPick('#canvas');
 
-      compressor.compress({ image: this, mime: file.type }, callback);
+      compressor.compress({ image: this, mime: file.type, compression: 0.6 }, callback);
 
     };
 
@@ -333,8 +333,7 @@ Syme.FileManager.prototype = {
 
       thumbnailer.thumbnail({
         image: this, mime: file.type,
-        width: 680, height: 500,
-        compression: 0.6 }, callback);
+        width: 680, height: 500 }, callback);
 
     };
 
