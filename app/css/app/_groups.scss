@@ -204,31 +204,10 @@
           }
         }
 
-        .fingerprint-box {
+        .fingerpring-box {
           margin-top: .5em;
           padding-top: .5em;
           border-top: $baseBorderStyle;
-
-          text-align: center;
-
-          span {
-            position: relative;
-            top: 2px;
-
-            padding: 4px 7px;
-            padding-bottom: 1px;
-            border-radius: 3px;
-
-            color: white;
-            background: $concrete;
-            font-family: $codeFontFamily;
-
-            cursor: help;
-
-            &.you {
-              margin-right: 1em;
-            }
-          }
         }
       }
     }

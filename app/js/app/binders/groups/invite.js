@@ -28,19 +28,15 @@ Syme.Binders.add('groups', { invite: function() {
     var groupId   = $inviteLink.data('invite-group_id'),
         inviterId = $inviteLink.data('invite-inviter_id');
 
-    var trimFingerprint = function(fullFingerprint) {
-      return fullFingerprint.replace(/:/g, '').substr(0, 6);
-    }
-
-    Syme.Crypto.getKeyFingerprint(groupId, inviterId, 'invitee', null, function (fingerprint) {
+    Syme.Crypto.getKeyFingerprint(groupId, inviterId, 'invitee', null, function (fingerprints) {
 
       // Insert asynchronously gotten fingerprints
       $('.you', $fingerprintBox)
-        .text(trimFingerprint(fingerprint.inviteeFingerprint))
+        .text(Syme.Helpers.shortenFingerprint(fingerprints.inviteeFingerprint))
         .attr('title', fingerprint.inviteeFingerprint);
 
       $('.inviter', $fingerprintBox)
-        .text(trimFingerprint(fingerprint.inviterFingerprint))
+        .text(Syme.Helpers.shortenFingerprint(fingerprints.inviterFingerprint))
         .attr('title', fingerprint.inviterFingerprint);
 
       // Make link a toggler and toggle it

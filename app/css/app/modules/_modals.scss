@@ -212,7 +212,10 @@
           background: darken($bodyBackgroundColor2, 10%);
         }
       }
-    }
 
+      .fingerprint-box {
+        margin: 1em 0;
+      }
+    }
   }
 }

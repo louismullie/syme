@@ -5,23 +5,22 @@ Syme.Binders.add('feed', { invite: function() {
 
     var $this = $(this);
 
-    var groupId = $(this).data('invite-group_id'),
-        inviteeId = $(this).data('invite-email');
+    var groupId = $this.data('invite-group_id'),
+        inviteeId = $this.data('invite-email'),
+        inviteeName = $this.closest('li.invite').find('span').text();
 
     // Temporary fix...
     var acceptInviteRequest = JSON.parse(
-      $.base64.decode($(this).data('invite-accept')));
+      $.base64.decode($this.data('invite-accept')));
 
     var inviteePublicKey = acceptInviteRequest.inviteePublicKey;
     // End temporary fix
 
-    Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', inviteePublicKey,
-
-      function (fingerprints) {
+    Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', inviteePublicKey, function (fingerprints) {
 
       Confirm.show(
 
-        Syme.Template.render('feed-modals-invite-confirm', fingerprints),
+        Syme.Template.render('feed-modals-invite-confirm', { invitee_name: inviteeName }),
 
         {
           closable: true,
@@ -29,10 +28,18 @@ Syme.Binders.add('feed', { invite: function() {
           submit: 'Confirm',
           cancel: 'Cancel',
 
+          onshow: function() {
+            $('#responsive-modal .you')
+              .text(Syme.Helpers.shortenFingerprint(fingerprints.inviteeFingerprint))
+              .attr('title', fingerprints.inviteeFingerprint);
+
+            $('#responsive-modal .invitee')
+              .text(Syme.Helpers.shortenFingerprint(fingerprints.inviterFingerprint))
+              .attr('title', fingerprints.inviterFingerprint);
+          },
+
           onsubmit: function() {
-
             Invitation.confirmInvitationRequest($this);
-
           }
 
         }

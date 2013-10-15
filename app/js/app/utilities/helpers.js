@@ -97,6 +97,10 @@ Syme.Helpers = {
 
     });
 
+  },
+
+  shortenFingerprint: function(fullFingerprint) {
+    return fullFingerprint.replace(/:/g, '').substr(0, 6);
   }
 
 };

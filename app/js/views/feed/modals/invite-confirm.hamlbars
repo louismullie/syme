@@ -1,6 +1,7 @@
-%p
-  Your fingerprint: <b>{{inviterFingerprint}}</b>
-%p
-  Invitee's fingerprint: <b>{{inviteeFingerprint}}</b>
-%p
-  Confirm invitation? 
+For extra security, you can cross-check your fingerprints with {{invitee_name}}'s.
+
+.fingerprint-box
+  You: <span class="you"></span>
+  {{invitee_name}}: <span class="invitee"></span>
+
+%p Are you sure you want to confirm?
