@@ -90,8 +90,8 @@ ThumbPick.prototype = {
     }
 
     // Get the data URI for the final image.
-    var url = canvas.toDataURL(mimeType, 0.6);
-
+    var url = canvas.toDataURL(mimeType, 0.65);
+    
     urlCallback(url);
 
     // Pass the image to callback as a Blob.
