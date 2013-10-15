@@ -125,9 +125,52 @@ Notifications = (function(){
     },
 
     confirmInvitation: function (e) {
+      
       var $this = $(e.currentTarget);
+      
+      if ($this.data('active')) return;
+      $this.data('active', true);
+      
       $('.popover').hide();
-      Invitation.confirmInvitationRequest($this);
+      
+      var groupId = $this.data('invite-group_id'),
+          inviteeId = $this.data('invite-email');
+
+      // Temporary fix...
+      var acceptInviteRequest = JSON.parse($.base64.decode($this.data('invite-accept')));
+
+      var inviteePublicKey = acceptInviteRequest.inviteePublicKey;
+      // End temporary fix
+
+      Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', inviteePublicKey,
+
+        function (fingerprints) {
+
+        Confirm.show(
+
+          Syme.Template.render('feed-modals-invite-confirm', fingerprints),
+
+          {
+            closable: true,
+            title: 'Confirm invitation',
+            submit: 'Confirm',
+            cancel: 'Cancel',
+
+            onhide: function () {
+              $this.data('active', false);
+            },
+            
+            onsubmit: function() {
+
+              Invitation.confirmInvitationRequest($this);
+
+            }
+
+          }
+        );
+
+      });
+
     },
 
     cancelInvitation: function (e) {
