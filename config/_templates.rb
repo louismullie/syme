@@ -23,6 +23,11 @@ set :sprockets, (Sprockets::Environment.new(root) do |env|
   env.append_path 'app/css'
   env.js_compressor = Closure::Compiler.new
   env.css_compressor = :sass
+  
+  HandlebarsAssets::Config.compiler = 'handlebars.min.js'
+  HandlebarsAssets::Config.compiler_path = 
+  File.join(settings.root, 'app', 'js', 'vendor')
+  
   env.append_path HandlebarsAssets.path
 
 end)
