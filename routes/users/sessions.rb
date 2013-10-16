@@ -89,6 +89,7 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
   end
   
   unless session[:proof]
+    warn session[:proof].inspect
     warn "Invalid due to no proof"
     error 403, 'invalid_session'
   end
