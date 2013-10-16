@@ -73,12 +73,13 @@ namespace :extensions do
     app_path = File.join(build_path, 'assets', 'app.js')
     
     # Edit SERVER_URL to poll remote server.
-    search = /SERVER_URL[\s]*=[\s]*[^;]*/
-    replace = 'SERVER_URL="https://getsyme.com:81"'
+    search = /SERVER_URL[\s]*=[\s]*window\.location\.origin;/
+    replace = 'SERVER_URL="https://getsyme.com:81";'
     
     # Replace SERVER_URL in the app.js file.
+    content = File.read(app_path)
     File.open(app_path, 'w+') do |f|
-      f.write(f.read.gsub(search, replace))
+      f.write(content.gsub(search, replace))
     end
   
     # Create zip file in builds/chrome folder.
