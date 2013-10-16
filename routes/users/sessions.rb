@@ -83,10 +83,13 @@ end
 put '/users/:user_id/sessions/:session_id' do |_, session_id|
 
   if session_id != session.id.to_s
+    warn "Given: #{session_id}"
+    warn "True: #{session.id.to_s}"
     error 403, 'invalid_session'
   end
   
   unless session[:proof]
+    warn "Invalid due to no proof"
     error 403, 'invalid_session'
   end
   
