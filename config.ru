@@ -14,7 +14,7 @@ end
 
 # Setup server-side sessions.
 use Rack::Session::Memcache,
-  key: 'session',
+  key: 'sess',
   expire_after: 60 * 60 * 24 * 3,
   secure: $env == :production,
   sidbits: 256,
