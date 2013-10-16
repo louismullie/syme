@@ -111,7 +111,7 @@ Syme.Auth = {
             var u = srp.calculateU(A, B);
             var Sc = srp.calculateS(B, salt, u, a);
 
-            var K = srp.calcHashHex(Sc.toString(16));
+            var K = calcSHA1Hex(Sc.toString(16));
             var M = srp.calculateM(email, salt, A, B, K);
 
             var params = { M: M.toString(16), remember: remember };

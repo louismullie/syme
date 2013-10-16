@@ -3,8 +3,12 @@
  * password, and the bits identifying the 
  * group (1024 [default], 1536 or 2048 bits).
  */
-SRPClient = function (username, password, group, hashBits) {
+SRPClient = function (username, password, group) {
   
+  // Verify presence of username.
+  if (!username)
+    throw 'Username cannot be empty.'
+    
   // Store username/password.
   this.username = username;
   this.password = password;
@@ -13,31 +17,19 @@ SRPClient = function (username, password, group, hashBits) {
   var group = group || 1024;
   var initVal = this.initVals[group];
   
-  // Set hashing function.
-  this.calcHash = function (string) {
-    return this.calcHashFn(string, hashBits, false);
-  };
-  
-  // Hashing function with hex packing.
-  this.calcHashHex = function (string) {
-    return this.calcHashFn(string, hashBits, true);
-  };
-  
   // Set N and g from initialization values.
   this.N = new BigInteger(initVal.N, 16);
   this.g = new BigInteger(initVal.g, 16);
-  
-  // Pre-compute the hex-BigInteger for g.
-  var hashFn = hashBits == 256 ? 'SHA256' : 'SHA1';
-  this.gBn = new BigInteger(initVal.gBn[hashFn], 16);
+  this.gBn = new BigInteger(initVal.gBn, 16);
   
   // Pre-compute k from N and g.
-  this.k = this.calculateK();
+  this.k = this.k();
   
   // Convenience big integer objects for 1 and 2.
   this.one = new BigInteger("1", 16);
   this.two = new BigInteger("2", 16);
 
+  
 };
 
 /*
@@ -50,7 +42,7 @@ SRPClient.prototype = {
    * Calculate k = H(N || g), which is used
    * throughout various SRP calculations.
    */
-  calculateK: function() {
+  k: function() {
     
     // Convert to hex values.
     var toHash = [
@@ -68,15 +60,21 @@ SRPClient.prototype = {
    */
   calculateX: function (saltHex) {
     
+    // Verify presence of parameters.
+    if (!saltHex) throw 'Missing parameter.'
+    
+    if (!this.username || !this.password)
+      throw 'Username and password cannot be empty.';
+    
     // Hash the concatenated username and password.
     var usernamePassword = this.username + ":" + this.password;
-    var usernamePasswordHash = this.calcHash(usernamePassword);
+    var usernamePasswordHash = calcSHA1(usernamePassword);
     
     // Calculate the padding for the salt.
     var spad = (saltHex.length % 2 != 0) ? '0' : '';
     
     // Calculate the hash of salt + hash(username:password).
-    var X = this.calcHashHex(spad + saltHex + usernamePasswordHash);
+    var X = calcSHA1Hex(spad + saltHex + usernamePasswordHash);
     
     // Return X as a BigInteger.
     return new BigInteger(X, 16);
@@ -87,6 +85,9 @@ SRPClient.prototype = {
    * Calculate v = g^x % N
    */
   calculateV: function(salt) {
+    
+    // Verify presence of parameters.
+    if (!salt) throw 'Missing parameter.';
     
     // Get X from the salt value.
     var x = this.calculateX(salt);
@@ -103,6 +104,14 @@ SRPClient.prototype = {
    */
   calculateU: function(A, B) {
     
+    // Verify presence of parameters.
+    if (!A || !B) throw 'Missing parameter(s).';
+    
+    // Verify value of A and B.
+    if (A.mod(this.N).toString() == '0' ||
+        B.mod(this.N).toString() == '0')
+      throw 'Illegal parameter(s).';
+    
     // Convert A and B to hexadecimal.
     var toHash = [A.toString(16), B.toString(16)];
     
@@ -117,6 +126,12 @@ SRPClient.prototype = {
    */
   calculateA: function(a) {
     
+    // Verify presence of parameter.
+    if (!a) throw 'Missing parameter.';
+    
+    if (Math.ceil(a.bitLength() / 8) < 256/8)
+      throw 'Client key length is less than 256 bits.'
+    
     // Return A as a BigInteger.
     return this.g.modPow(a, this.N);
     
@@ -127,15 +142,24 @@ SRPClient.prototype = {
    */
   calculateM: function (username, salt, A, B, K) {
     
+    // Verify presence of parameters.
+    if (!username || !salt || !A || !B || !K)
+      throw 'Missing parameter(s).';
+    
+    // Verify value of A and B.
+    if (A.mod(this.N).toString() == '0' ||
+        B.mod(this.N).toString() == '0')
+      throw 'Illegal parameter(s).';
+    
     var aHex = A.toString(16);
     var bHex = B.toString(16);
     
-    var hn = this.calcHashHex(this.N.toString(16));
+    var hn = calcSHA1Hex(this.N.toString(16));
     var hnBn = new BigInteger(hn, 16);
     
     var hxor = hnBn.xor(this.gBn).toString(16);
     
-    var hi = this.calcHash(username);
+    var hi = calcSHA1(username);
     
     var array = [hxor, hi, salt, aHex, bHex, K];
 
@@ -149,6 +173,14 @@ SRPClient.prototype = {
    */
   calculateS: function(B, salt, uu, aa) {
     
+    // Verify presence of parameters.
+    if (!B || !salt || !uu || !aa)
+      throw 'Missing parameters.';
+    
+    // Verify value of B.
+    if (B.mod(this.N).toString() == '0')
+      throw 'Illegal parameter.';
+      
     // Calculate X from the salt.
     var x = this.calculateX(salt);
     
@@ -164,17 +196,29 @@ SRPClient.prototype = {
   
   },
   
+  calculateK: function (S) {
+    return calcSHA1Hex(S.toString(16));
+  },
+  
   /*
-   * Helper functions for random number generation.
+   * Helper functions for random number
+   * generation and format conversion.
    */
   
   /* Generate a random big integer */
   srpRandom: function() {
 
-    var r = this.randomBigInt(32);
+    var words = sjcl.random.randomWords(8,0);
+    var hex = sjcl.codec.hex.fromBits(words);
+    
+    // Verify random number large enough.
+    if (hex.length != 64)
+      throw 'Invalid random number size.'
+
+    var r = new BigInteger(hex, 16);
     
     if (r.compareTo(this.N) >= 0)
-      r = a.mod(this.N.subtract(this.one));
+    //  r = a.mod(this.N.subtract(this.one));
 
     if(r.compareTo(this.two) < 0)
       r = two;
@@ -183,23 +227,22 @@ SRPClient.prototype = {
 
   },
   
-  /* Generate a random big integer. */
-  randomBigInt: function(bytes) {
-    
-    var rng = new SecureRandom();
-    return new BigInteger(8 * bytes, rng);
-    
-  },
-  
   /* Return a random hexadecimal salt */
   randomHexSalt: function() {
+
+    var words = sjcl.random.randomWords(4,0);
+    var hex = sjcl.codec.hex.fromBits(words);
     
-    return this.randomBigInt(16).toString(16);
+    // Verify length of hexadecimal salt.
+    if (hex.length != 32)
+      throw 'Invalid salt length.'
+      
+    return hex;
     
   },
   
   /*
-   * Helper functions for padding.
+   * Helper functions for hasing/padding.
    */
 
   /*
@@ -216,7 +259,7 @@ SRPClient.prototype = {
      toHash += this.nZeros(nlen - array[i].length) + array[i];
    }
    
-   var hash = new BigInteger(this.calcHashHex(toHash), 16);
+   var hash = new BigInteger(calcSHA1Hex(toHash), 16);
    
    return hash.mod(this.N);
 
@@ -234,54 +277,6 @@ SRPClient.prototype = {
   },
   
   /*
-   * Helper functions for hashing and format conversion.
-   */
-
-   calcHashFn: function (string, bits, hexInput) {
-     
-     if (bits == 256) {
-       
-       if (hexInput) {
-         
-         return this.SHA_Interleave(string);
-        
-       } else {
-         
-         var bits = sjcl.hash.sha256.hash(string);
-         return sjcl.codec.hex.fromBits(bits);
-         
-       }
-       
-     } else {
-       
-       return hexInput ? calcSHA1Hex(string) : calcSHA1(string);
-       
-     }
-     
-   },
-   
-   /*
-    * Input is in hex format - trailing odd nibble gets a zero appended.
-    */
-   hexToBlks: function(hexString) {
-     
-     var len = (hexString.length + 1) >> 1;
-     var nblk = ((len + 8) >> 6) + 1;
-     var blks = new Array(nblk * 16);
-     
-     for(var i = 0; i < nblk * 16; i++) blks[i] = 0;
-     
-     for(i = 0; i < len; i++)
-       blks[i >> 2] |= parseInt(hexString.substr(2*i, 2), 16) << (24 - (i % 4) * 8);
-    
-     blks[i >> 2] |= 0x80 << (24 - (i % 4) * 8);
-     blks[nblk * 16 - 1] = len * 8;
-     
-     return blks;
-     
-   },
-  
-  /*
    * SRP group parameters, composed of N (hexadecimal
    * prime value) and g (decimal group generator).
    * See http://tools.ietf.org/html/rfc5054#appendix-A
@@ -294,10 +289,7 @@ SRPClient.prototype = {
          '8E495C1D6089DAD15DC7D7B46154D6B6CE8EF4AD69B15D4982559B29' +
          '7BCF1885C529F566660E57EC68EDBC3C05726CC02FD4CBF4976EAA9A' +
          'FD5138FE8376435B9FC61D2FC0EB06E3',
-      g: '2', gBn: {
-         'SHA1': 'b858cb282617fb0956d960215c8e84d1ccf909c6',
-         'SHA256': '36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068'
-      }
+      g: '2', gBn: 'b858cb282617fb0956d960215c8e84d1ccf909c6'
 
     },
     
@@ -309,10 +301,7 @@ SRPClient.prototype = {
          '6EDF019539349627DB2FD53D24B7C48665772E437D6C7F8CE442734A' +
          'F7CCB7AE837C264AE3A9BEB87F8A2FE9B8B5292E5A021FFF5E91479E' +
          '8CE7A28C2442C6F315180F93499A234DCF76E3FED135F9BB',
-      g: '2', gBn: {
-         'SHA1': 'b858cb282617fb0956d960215c8e84d1ccf909c6',
-         'SHA256': '36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068'
-      } 
+      g: '2', gBn: 'b858cb282617fb0956d960215c8e84d1ccf909c6'
     },
     
     2048: {
@@ -325,10 +314,7 @@ SRPClient.prototype = {
          '5EA77A2775D2ECFA032CFBDBF52FB3786160279004E57AE6AF874E73' +
          '03CE53299CCC041C7BC308D82A5698F3A8D0C38271AE35F8E9DBFBB6' +
          '94B5C803D89F7',
-       g: '2', gBn: {
-          'SHA1': 'b858cb282617fb0956d960215c8e84d1ccf909c6',
-          'SHA256': '36a9e7f1c95b82ffb99743e0c5c4ce95d83c9a430aac59f84ef3cbfab6145068'
-       }
+      g: '2', gBn: 'b858cb282617fb0956d960215c8e84d1ccf909c6'
     },
     
     3072: {
@@ -452,21 +438,33 @@ SRPClient.prototype = {
    * be used on the client except for debugging.
    */
   
-  /* Calculate the server's public value. */
+  /* Calculate the server's public value B. */
   calculateB: function(b, v) {
+    
+    // Verify presence of parameters.
+    if (!b || !v) throw 'Missing parameters.';
     
     var bb = this.g.modPow(b, this.N);
     var B = bb.add(v.multiply(this.k)).mod(this.N);
     
     return B;
+    
   },
 
   /* Calculate the server's premaster secret */
-  calculateServerS: function(AA, vv, uu, bb) {
+  calculateServerS: function(A, v, u, B) {
     
-    return vv.modPow(uu, this.N).multiply(AA)
-            .mod(this.N).modPow(bb, this.N);
-
+    // Verify presence of parameters.
+    if (!A || !v || !u || !B)
+      throw 'Missing parameters.';
+    
+    // Verify value of A and B.
+    if (A.mod(this.N).toString() == '0' ||
+        B.mod(this.N).toString() == '0')
+      throw 'Illegal parameter(s).';
+    
+    return v.modPow(u, this.N).multiply(A)
+           .mod(this.N).modPow(B, this.N);
   }
   
 };
