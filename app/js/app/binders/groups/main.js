@@ -78,11 +78,11 @@ Syme.Binders.add('groups', { main: function() {
   // Group delete button toggling
   $("div.group-banner").on({
     mouseenter: function(){
-      $(this).find('a.delete-group, a.leave-group')
+      $(this).find('a.delete-group, a.leave-group, a.cancel-invitation, a.decline-invitation')
         .css({ display: 'block', opacity: 1 });
     },
     mouseleave: function(){
-      $(this).find('a.delete-group, a.leave-group')
+      $(this).find('a.delete-group, a.leave-group a.cancel-invitation, a.decline-invitation')
         .css({ display: 'none', opacity: 0 });
     }
   });
@@ -325,6 +325,18 @@ Syme.Binders.add('groups', { main: function() {
     );
   });
 
+  $('#main').on('click', '.cancel-invitation', function (e) {
+    
+    Invitation.cancelInvitationRequest($(this).parent().find('.invite-link'));
+    
+  });
+  
+  $('#main').on('click', '.decline-invitation', function (e) {
+    
+    Invitation.cancelInvitationRequest($(this).parent().find('.invite-link'));
+    
+  });
+  
   // Group pictures decryption
   $('.encrypted-background-image').trigger('decrypt');
 

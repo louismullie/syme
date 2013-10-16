@@ -33,11 +33,11 @@ Syme.Binders.add('groups', { invite: function() {
       // Insert asynchronously gotten fingerprints
       $('.you', $fingerprintBox)
         .text(Syme.Helpers.shortenFingerprint(fingerprints.inviteeFingerprint))
-        .attr('title', fingerprint.inviteeFingerprint);
+        .attr('title', fingerprints.inviteeFingerprint);
 
       $('.inviter', $fingerprintBox)
         .text(Syme.Helpers.shortenFingerprint(fingerprints.inviterFingerprint))
-        .attr('title', fingerprint.inviterFingerprint);
+        .attr('title', fingerprints.inviterFingerprint);
 
       // Make link a toggler and toggle it
       $this.attr('data-toggler', true).trigger('click');

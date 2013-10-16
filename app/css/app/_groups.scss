@@ -106,7 +106,7 @@
       }
 
       .group-banner {
-        a.delete-group, a.leave-group {
+        a.delete-group, a.leave-group, a.cancel-invitation, a.decline-invitation {
           display: none;
           opacity: 0;
 

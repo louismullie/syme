@@ -3,6 +3,16 @@
 
 %li.group-card.group-invite
   .group-banner
+
+    {{#compare state 1}}
+    %a.decline-invitation.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Decline invitation' }
+      %i.icon-trash
+    {{/compare}}
+    {{#compare state 2}}
+    %a.cancel-invitation.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Cancel invitation' }
+      %i.icon-trash
+    {{/compare}}
+
     %a.group-banner-link.invite-link{ href: '#', 'data-invite-id' => '{{id}}',
                                                  'data-invite-group_id' => '{{group_id}}',
                                                  'data-invite-inviter_name' => '{{inviter_name}}',
