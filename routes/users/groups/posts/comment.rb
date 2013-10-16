@@ -34,7 +34,7 @@ post '/users/:user_id/groups/:group_id/posts/:post_id/comments', auth: [] do |us
     raise "WTF IS HAPPENING BITCH"
   end
   
-  track @user, 'User commented on post'
+   EventAnalysis.track @user, 'User commented on post'
 
   response = CommentGenerator.generate(comment, @user).to_json
   

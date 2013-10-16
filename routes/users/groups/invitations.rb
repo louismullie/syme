@@ -86,12 +86,12 @@ post '/users/:user_id/groups/:group_id/invitations', auth: [] do |user_id, group
     invitation.save!
 
     # Track user invitations.
-    track(@user, 'User invited new group member',
+    EventAnalysis.track(@user, 'User invited new group member',
       { invitation_id: invitation.id.to_s,
         group_id: group.id.to_s })
   
     if User.where(email: email).first.nil?
-      track(email,
+      EventAnalysis.track(email,
         'New user was invited to group',
         { invitation_id: invitation.id.to_s,
           group_id: group.id.to_s
@@ -129,7 +129,7 @@ put '/invitations', auth: [] do
     invitation.save! # Save the invitation.
     
     # Track the invitation accepted event.
-    track(@user, 'User accepted invitation',
+    EventAnalysis.track(@user, 'User accepted invitation',
       { invitation_id: invitation.id.to_s })
     
     # Get a list of other invitations to this group.
@@ -245,7 +245,7 @@ put '/invitations', auth: [] do
 
     invitee.save!
 
-    track(@user, 'User confirmed invitation',
+    EventAnalysis.track(@user, 'User confirmed invitation',
       { invitation_id: invitation.id.to_s })
 
   elsif params.completed
@@ -325,7 +325,7 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
         invitation: InvitationGenerator.generate(invitation)
     }}, group) if invitee
     
-    track(@user, 'User canceled invitation', 
+    EventAnalysis.track(@user, 'User canceled invitation', 
     { invitation_id: invitation_id })
     
   elsif invitee.id.to_s == @user.id.to_s
@@ -337,7 +337,7 @@ delete '/users/:user_id/groups/:group_id/invitations/:invitation_id', auth: [] d
         invitation: InvitationGenerator.generate(invitation)
     }}, group) if invitee
 
-    track(@user, 'User declined invitation', 
+    EventAnalysis.track(@user, 'User declined invitation', 
     { invitation_id: invitation_id })
     
   end

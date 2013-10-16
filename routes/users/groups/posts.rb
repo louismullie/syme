@@ -29,7 +29,7 @@ post '/users/:user_id/groups/:group_id/posts', auth: [] do |user_id, group_id|
     attachment.save!
   end
 
-  track @user, 'User created post'
+   EventAnalysis.track @user, 'User created post'
 
   response = PostGenerator.generate(post, @user).to_json
   

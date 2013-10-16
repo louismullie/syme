@@ -81,8 +81,6 @@ post '/users' do
   # Save the user in the session.
   session[:user_id] = user.id.to_s
   
-  track user, 'User started registration'
-  
   # Merge the CSRF token to the user hash.
   user_hash = UserGenerator.generate(user, user)
               .merge({ csrf: csrf_token })
@@ -122,7 +120,7 @@ put '/users', auth: [] do
       version:  1
     )
 
-    track user, 'User completed registration'
+    EventAnalysis.track user, 'User completed registration'
 
     user.verifier.save!
 
@@ -183,7 +181,7 @@ delete '/users/:user_id', auth: [] do |user_id|
     error 403, 'unauthorized'
   end
   
-  track @user, 'User deleted account'
+   EventAnalysis.track @user, 'User deleted account'
 
   # Destroy all of the user's groups.
   @user.groups.each do |group|

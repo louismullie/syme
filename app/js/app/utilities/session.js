@@ -262,28 +262,6 @@ Syme.Session = function (csrfToken) {
   };
   */
   
-  /* FOR DELETION */ /* FOR DELETION */ /* FOR DELETION */
-  this.getGroupMembers = function (groupId) {
-    
-    if (!this.groupMembers || !this.groupMembers[groupId]) {
-      console.log('No group members initialized for this group.');
-      // legacy -> change to throw
-      return [];
-    }
-    
-    return this.groupMembers[groupId];
-    
-  };
-  
-  /* FOR DELETION */ /* FOR DELETION */ /* FOR DELETION */
-  this.setGroupMembers = function (groupId) {
-    
-    this.groupMembers = groupId;
-
-    return null;
-    
-  };
-  
   this.setCsrfToken = function (csrfToken) {
     
     if (!csrfToken) throw 'Invalid CSRF token.'

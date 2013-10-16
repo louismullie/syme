@@ -71,7 +71,7 @@ post '/users/:user_id/groups', auth: [] do |_|
   @user.save!
   group.save!
 
-  track @user, 'User created new group'
+   EventAnalysis.track @user, 'User created new group'
 
   response = { id: group.id.to_s }.to_json
 
@@ -91,7 +91,7 @@ put '/users/:user_id/groups/:group_id', auth: [] do |_, group_id|
     group.save!
   end
 
-  track @user, 'User acknowledged group creation'
+   EventAnalysis.track @user, 'User acknowledged group creation'
 
   encrypt_response(empty_response)
 
@@ -153,7 +153,7 @@ delete '/users/:user_id/groups/:group_id', auth: [] do |user_id, group_id|
   group.destroy
 
   # Track the number of group deletions.
-  track @user, 'User deleted group'
+   EventAnalysis.track @user, 'User deleted group'
   
   # Return an empty response with code 200.
   empty_response

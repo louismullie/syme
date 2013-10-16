@@ -44,17 +44,6 @@ get '/users/:user_id/invitations', auth: [] do |user_id|
     
     end
   
-    invitations[:members] = {}
-  
-    @user.groups.each do |group|
-    
-      invitations[:members][group.id.to_s] =
-      group.users
-        .reject { |user| user.id == @user.id }
-        .map { |user| user.full_name }
-      
-    end
-    
     result[group.id.to_s] = invitations
     
   end

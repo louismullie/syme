@@ -82,7 +82,7 @@ post '/:group_id/file/upload/create', auth: [] do |group_id|
   dir = File.join(settings.upload_path, upload.id)
   FileUtils.mkdir(dir)
 
-  track @user, 'User started uploading file'
+   EventAnalysis.track @user, 'User started uploading file'
 
   { status: 'ok',
     upload: {
@@ -186,7 +186,7 @@ get '/:group_id/file/download/:id', auth: [] do |group_id, id|
     error 404, 'file_not_found'
   end
   
-  track @user, 'User started downloading file'
+   EventAnalysis.track @user, 'User started downloading file'
 
   {
     status: 'ok',

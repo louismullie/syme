@@ -105,7 +105,7 @@ post '/:group_id/:model/like/:operation', auth: [] do |group_id, model, operatio
       like.save!
     end
 
-    track @user, 'User liked ' + model
+     EventAnalysis.track @user, 'User liked ' + model
     
   elsif operation == 'delete'
 
@@ -113,7 +113,7 @@ post '/:group_id/:model/like/:operation', auth: [] do |group_id, model, operatio
       like.destroy
     end
     
-    track @user, 'User unliked ' + model
+     EventAnalysis.track @user, 'User unliked ' + model
 
   end
 

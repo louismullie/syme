@@ -76,7 +76,7 @@ post '/users/:user_id/sessions' do |_|
     
     warn "session proof is " + session[:proof].inspect
     
-    track user, 'User started login'
+    EventAnalysis.track user, 'User started login'
     
     srp[:challenge].merge({
       csrf: csrf_token,
@@ -119,7 +119,7 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     
     session[:password_key] = SecureRandom.uuid
     
-    track user, 'User completed login'
+    EventAnalysis.track user, 'User completed login'
     
     # session[:key] = authenticator.instance_eval { @S }
     
@@ -143,7 +143,7 @@ end
 delete '/users/:user_id/sessions/:session_id', auth: [] do |_,session_id|
   
   # Track the event.
-  track @user, 'User was logged out'
+   EventAnalysis.track @user, 'User was logged out'
   
   # Clear the current session.
   session.clear

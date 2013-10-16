@@ -101,7 +101,7 @@ delete '/users/:user_id/groups/:group_id/memberships/:member_id' do |_,group_id,
       
     end
 
-    track @user, 'User left group'
+     EventAnalysis.track @user, 'User left group'
     
     if group.users.size == 0
       group.destroy
