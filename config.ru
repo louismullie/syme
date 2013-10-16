@@ -12,14 +12,20 @@ else
   $env = :production
 end
 
+require 'dalli'
+require 'rack/session/dalli'
+
+use Rack::Session::Dalli,
+  cache: Dalli::Client.new
+
 # Setup server-side sessions.
-use Rack::Session::Memcache,
-  key: 'sess',
-  expire_after: 60 * 60 * 24 * 3,
-  secure: $env == :production,
-  sidbits: 256,
-  path: '/',
-  secret: '8dg236rgd31238fb13vd65'
+# use Rack::Session::Memcache,
+#   key: 'sess',
+#   expire_after: 60 * 60 * 24 * 3,
+#   secure: $env == :production,
+#   sidbits: 256,
+#   path: '/',
+#   secret: '8dg236rgd31238fb13vd65'
 
 # Disable caching altogether.
 require 'rack/nocache'

@@ -22,7 +22,7 @@ gem 'mongo'
 gem 'bson_ext'
 gem 'mongoid'
 gem 'magicbus'
-gem 'memcache-client'
+gem 'dalli'
 
 # * Extensions * #
 gem 'pony'
