@@ -18,7 +18,7 @@ require 'dalli'
 require 'rack/session/dalli'
 
 use Rack::Session::Dalli,
-  key: 'sess',
+  key: 'session',
   cache: Dalli::Client.new,
   expire_after: 60 * 60 * 24 * 3
 
