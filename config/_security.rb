@@ -45,7 +45,7 @@ if settings.environment == :production
   Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
 
   Rack::Attack.throttle('login/email', limit: 6, period: 60) do |req|
-    req.params['email'] if req.params['email'] && req.index('sessions')
+    req.params['email'] if req.params['email'] #&& req.index('sessions')
   end
 
 end
