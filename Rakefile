@@ -9,56 +9,82 @@ namespace :extensions do
 
   task :compile_chrome do
     
-    FileUtils.rm_rf('extension')
+    # Get the build path from the settings.
+    settings = Syme::Application.settings
+    version = Syme::Application::VERSION
     
+    # Create a random build ID
+    build_id = SecureRandom.uuid
+    
+    # Create the target build path
+    builds_path = settings.builds_path
+    build_path = File.join(builds_path,
+      'chrome', version, build_id)
+    
+    # Get shortcuts for repeated use
+    assets_path = settings.assets_path
+    deploy_path = settings.deploy_path
+    public_path = settings.public_path
+    worker_path = settings.worker_path
+    
+    # Delete old version of the extension.
+    FileUtils.mkdir_p(build_path)
+    
+    # Compile the JS and CSS assets using Sprockets.
     Rake::Task["assets:compile"].invoke
     
-    # Compile and copy assets to extension directory.
-    assets_path = Syme::Application.settings.assets_path
+    # Create the directories in the target build.
+    directories = ['assets', 'workers', 'fonts', 'img']
+    directories.each do |directory|
+      FileUtils.mkdir_p(File.join(build_path, directory))
+    end
+    
+    # Get the path to the compiled JS and CSS.
     js_path = File.join(assets_path, 'app.js')
     css_path = File.join(assets_path, 'app.css')
 
-    FileUtils.mkdir_p('extension/assets')
-    FileUtils.cp(js_path, 'extension/assets')
-    FileUtils.cp(css_path, 'extension/assets')
+    # Copy compiled JS and CSS to target /assets directory.
+    FileUtils.cp(js_path, File.join(build_path, 'assets'))
+    FileUtils.cp(css_path, File.join(build_path, 'assets'))
     
-    # Copy worker scripts to extension directory.
-    FileUtils.mkdir_p('extension/workers')
-    worker_path = settings.root + '/public/workers/*.js'
-    
-    Dir[worker_path].each do |worker|
-      FileUtils.cp(worker, 'extension/workers')
+    # Copy unminified workers to the target /workers directory.
+    Dir[File.join(worker_path, '*.js')].each do |worker|
+      FileUtils.cp(worker, File.join(build_path, 'workers'))
     end
     
     # Copy main HTML file to extension directory.
-    layout = File.read('./app/js/views/layout.hamlbars')
+    layout_path = File.join('app', 'js', 'views', 'layout.hamlbars')
+    layout_html = Haml::Engine.new(File.read(layout_path)).render
     
-    layout_html = Haml::Engine.new(layout).render
-    File.open('extension/syme.html', 'w+') do |file|
+    # Write HTML content of layout to the layout file.
+    File.open(File.join(build_path, 'syme.html'), 'w+') do |file|
       file.write(layout_html)
     end
     
     # Copy fonts and images to extension directory.
-    public_path = settings.root + '/public'
-    FileUtils.mkdir_p('extension/fonts')
-    FileUtils.mkdir_p('extension/img')
-    FileUtils.cp_r(public_path + '/fonts', 'extension')
-    FileUtils.cp_r(public_path + '/img', 'extension')
+    FileUtils.cp_r(File.join(public_path, 'fonts'), build_path)
+    FileUtils.cp_r(File.join(public_path, 'img'), build_path)
     
-    # Copy other files to extension directory (/. important!)
-    chrome_files = Dir.glob(settings.root + '/deploy/chrome/*')
-    FileUtils.cp_r(chrome_files, 'extension')
+    # Copy other files to extension directory
+    chrome_files = Dir.glob(File.join(deploy_path, '*'))
+    FileUtils.cp_r(chrome_files, build_path)
+    
+    # Build path to app.js file
+    app_path = File.join(build_path, 'assets', 'app.js')
     
     # Edit SERVER_URL to poll remote server.
-    File.open('extension/assets/app.js') do |file|
-      contents = file.read
-      contents.gsub!(/SERVER_URL[\s]*=[\s]*window\.location\.origin;/,
-                    'SERVER_URL="https://getsyme.com:81";')
-      File.open('extension/assets/app.js', "w+") { |f| f.write(contents) }
-    end
+    search = /SERVER_URL[\s]*=[\s]*[^;]*/
+    replace = 'SERVER_URL="https://getsyme.com:81"'
     
-    # Zip file and remove folder
-    `cd extension && zip -r chrome.zip . && mv chrome.zip ../chrome.zip`
+    # Replace SERVER_URL in the app.js file.
+    File.open(app_path, 'w+') do |f|
+      f.write(f.read.gsub(search, replace))
+    end
+  
+    # Create zip file in builds/chrome folder.
+    zip_dir = File.join('builds', 'chrome')
+    zip_file = File.join(zip_dir, "syme-#{version}.zip")
+    `cd #{build_path} && zip -r #{zip_file} . && mv #{zip_file} ../#{zip_file}`
     
   end
   

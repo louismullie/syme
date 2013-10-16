@@ -5,5 +5,4 @@
 *.zip
 
 public/assets
-.extension
-chrome/*
+builds/*
