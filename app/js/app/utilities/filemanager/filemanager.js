@@ -64,17 +64,9 @@ Syme.FileManager.prototype = {
         groupId = fileInfo.groupId,
         decryptionKeys = fileInfo.decryptionKeys;
 
-    // Verify if the file already exists in the cache
-    if (Syme.Cache.contains(fileId)) {
-
-      // Pass file URL to callback
-      gotFileCb(Syme.Cache.get(fileId));
-
-    // If the file is not cached, get it elsewhere
-    } else {
-
-      // Get the file from database or remote server
-      this.retrieveFile(fileInfo, function (fileUrl) {
+    // Get the file from database or remote server
+    var retrieveFile = function () {
+      _this.retrieveFile(fileInfo, function (fileUrl) {
 
         // Pass file URL to callback
         gotFileCb(fileUrl);
@@ -83,6 +75,22 @@ Syme.FileManager.prototype = {
         Syme.Cache.store(fileId, fileUrl);
 
       });
+    };
+    
+    // Verify if the file already exists in the cache
+    if (Syme.Cache.contains(fileId)) {
+
+      try { 
+        // Pass file URL to callback
+        gotFileCb(Syme.Cache.get(fileId));
+      } catch (e) {
+        retrieveFile();
+      }
+
+    // If the file is not cached, get it elsewhere
+    } else {
+
+      retrieveFile();
 
     }
 
