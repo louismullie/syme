@@ -8,7 +8,7 @@ $(function(){
 
   // Set the title for the document.
   if (Syme.Compatibility.inChromeExtension()) {
-    document.title = "Syme";
+    setTimeout(function () { document.title = "Syme" }, 200);
   }
 
   // Bind a[hbs] to router

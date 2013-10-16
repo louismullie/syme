@@ -163,10 +163,12 @@ Syme.Binders.add('feed', { comments: function(){
     var $this         = $(this),
         $comments     = $this.find('.comment-box'),
         commentsCount = $comments.length,
-        $container    = $this.closest('.post-comments');
+        $container    = $this.closest('.post-comments'),
+        textareaVal   = $container.find('textarea').val();
 
-    // Show or hide container (thus textarea)
-    var containerAction = commentsCount > 0 ? 'removeClass' : 'addClass';
+    // If there are any comments or the comment textarea contains
+    // some text, then don't add the class that hides the textarea!
+    var containerAction = (commentsCount || textareaVal) ? 'removeClass' : 'addClass';
     $container[containerAction]('no-comments');
 
     // Sort by timestamp
