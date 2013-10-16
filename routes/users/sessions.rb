@@ -31,6 +31,8 @@ end
 
 post '/users/:user_id/sessions' do |_|
 
+  warn "POSTING TO SESSIONS"
+  
   email = params[:email]
   email = email.downcase
   session[:email] = email
@@ -40,6 +42,8 @@ post '/users/:user_id/sessions' do |_|
     user = User.find_by(email: email)
 
   rescue Mongoid::Errors::DocumentNotFound
+    
+    warn "ERROR DUE TO CREDENTIALS"
     
     { status: 'error', reason: 'credentials' }.to_json
 
