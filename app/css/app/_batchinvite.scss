@@ -15,6 +15,13 @@ $batchInviteHeight:  40px;
     box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
     padding: 10px;
 
+    &.small {
+      margin-top: 0;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+
     #tags {
       overflow: auto;
       border: $baseBorderStyle;
@@ -24,11 +31,6 @@ $batchInviteHeight:  40px;
       border: 2px solid $success;
 
       cursor: text;
-
-      /* Small inputs in modal */
-      &.small {
-        width: 30px;
-      }
 
       &.invalid {
         border-color: $danger !important;

@@ -10,8 +10,9 @@
 
   %form{ action: 'post' }
     #batchinvite
-      #tags.small
-        %input{ type: 'text', placeholder: 'Add an email', maxlength: 50 }
+      #tags-container.small
+        #tags
+          %input{ type: 'text', placeholder: 'Add an email', maxlength: 50 }
 
     %a.modal-button{ href: '#' }
       %span.invite
