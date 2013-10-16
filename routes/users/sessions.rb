@@ -66,7 +66,11 @@ post '/users/:user_id/sessions' do |_|
     
     srp = authenticator.get_challenge_and_proof(*p)
     
+    warn "setting proof to " + srp[:proof].inspect
+    
     session[:proof] = srp[:proof]
+    
+    warn "session proof is " + session[:proof].inspect
     
     track user, 'User started login'
     
