@@ -6,7 +6,7 @@
 
 .modal-content
   %p.explanation
-    Enter the email addresses below:
+    Enter e-mail addresses below:
 
   %form{ action: 'post' }
     #batchinvite

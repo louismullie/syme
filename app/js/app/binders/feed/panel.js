@@ -72,6 +72,8 @@ Syme.Binders.add('feed', { panel: function(){
     var currentUserId = Syme.CurrentSession.getUserId(),
         currentGroupId = Syme.CurrentSession.getGroupId();
     
+    NProgress.showSpinner();
+    
     var modal = Syme.Messages.modals.confirm.deleteUser;
     
     Confirm.show(

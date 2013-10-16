@@ -3,5 +3,3 @@ For extra security, you can cross-check your fingerprints with {{invitee_name}}'
 .fingerprint-box
   You: <span class="you"></span>
   {{invitee_name}}: <span class="invitee"></span>
-
-%p Are you sure you want to confirm?
