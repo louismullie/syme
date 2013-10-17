@@ -4,6 +4,21 @@ Syme.Router = Backbone.Router.extend({
 
   currentRoute: '',
 
+  startHistory: function() {
+
+    // Start backbone history
+    Backbone.history.start({ pushState: true });
+
+    // Override popstate to force hash
+    Backbone.$(window)
+      .off('popstate', Backbone.history.checkUrl)
+      .on('popstate', function(e){
+        window.history.replaceState({}, undefined, '/#' + Backbone.history.fragment);
+        Backbone.history.checkUrl();
+      });
+
+  },
+
   navigate: function (fragment, options) {
 
     options = options || { trigger: true, replace: true };
@@ -14,8 +29,11 @@ Syme.Router = Backbone.Router.extend({
       fragment = Backbone.history.getFragment( fragment || '' );
       this.currentRoute = fragment;
 
+      console.log('Fragment in navigate is', fragment);
+
       // Fake pushstate and load directly
-      window.history.pushState({}, undefined, '/#' + fragment);
+      var hashurl = /^\/#/.test(fragment) ? fragment : '/#' + fragment;
+      window.history.pushState({}, undefined, hashurl);
       Backbone.history.loadUrl(fragment);
 
     } catch (e) {

@@ -16,7 +16,8 @@ Syme.Binders.add('feed', { main: function(){
     $('#feed-panel').hide();
   }
 
-  Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'));
+  Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
+  });
 
   // Prevent leaving if there's unsaved content
   $(window).bind("beforeunload", function(e) {

@@ -39,7 +39,7 @@ $(function(){
 
     Syme.FileManager.initialize(function () {
 
-      Backbone.history.start({ pushState: true });
+      Syme.Router.startHistory();
 
       // Bind global binders
       Syme.Binders.bind('global', false);
