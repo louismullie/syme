@@ -10,7 +10,7 @@
         {{owner.name}}
 
         // Post time
-        %a.time.hint--right{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{id}}', hbs: '', 'data-hint' => '{{full_time}}' }
+        %a.time.hint--bottom{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{id}}', hbs: '', 'data-hint' => '{{full_time}}' }
           %time.timeago{ datetime: '{{created_at}}' }
 
       // Delete button
