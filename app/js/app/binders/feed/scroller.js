@@ -1,39 +1,33 @@
 Syme.Binders.add('feed', { scroller: function(){
 
-  $('#feed').prop('scroller', {
+  var Scroller = function(){
+
+    var _this = this;
 
     /* Configuration */
 
-    offset: 50,
+    var screenOffset = 50;
 
     /* Elements */
 
-    $window:    $(window),
-    $document:  $(document),
-    $feed:      $('#feed'),
-    $loadMore:  $('#load-more'),
+    this.$window    = $(window),
+    this.$document  = $(document),
+    this.$feed      = $('#feed'),
+    this.$loadMore  = $('#load-more');
 
-    /* Methods */
+    /* Constructor methods */
 
-    handler: (function(self){
+    this.scroll = function(){
 
-      var _this = self;
+      var withinLimits = ( _this.$window.scrollTop() >=
+        _this.$document.height() - _this.$window.height() - screenOffset );
 
-      return _this.$window.on('scroll feedScroller.trigger', function(){
+      if ( withinLimits && _this.loadedPages && !_this.paused )
+        _this.trigger();
 
-        var withinLimits = ( _this.$window.scrollTop() >=
-          _this.$document.height() - _this.$window.height() - this.offset );
+    };
 
-        if ( withinLimits && _this.loadedPages && !_this.paused )
-          _this.trigger();
-
-      });
-
-    })(this),
-
-    trigger: function(){
-
-      var _this = this;
+    this.trigger = function(){
 
       _this.paused = true;
       _this.$loadMore.show();
@@ -60,39 +54,34 @@ Syme.Binders.add('feed', { scroller: function(){
 
       });
 
-    },
+    };
 
-    render: function(data, doneDecryptingCb) {
-
-      var _this = this;
+    this.render = function(data, doneDecryptingCb) {
 
       var $collection = $();
       _.each(data.posts, function(post){
-        $collection = $collection.add(
-          $( Syme.Template.render('feed-post', post) );
-        );
+        $template   = $( Syme.Template.render('feed-post', post) )
+        $collection = $collection.add( $template );
       });
 
       _this.$feed.append($collection);
+
       Syme.Decryptor.decryptPostsAndComments($collection, doneDecryptingCb);
 
-    },
+    };
 
-    detach: function(){
+    this.detach = function(){
 
-      var _this = this;
-
-      _this.$window.off(this.handler);
+      _this.$window.off(_this.handler);
       _this.$loadMore.remove();
 
-    }
+    };
 
-  });
+    _this.$window.on('scroll', _this.scroll);
 
-  // Load more button
-  $('#main').on('click', '#load-more a', function(e){
-    $(this).parent().fadeOut('fast');
-    $(window).trigger('infinitescroll.trigger');
-  });
+  };
+
+  // Create a new scroller as a #feed DOM property
+  $('#feed').prop('scroller', new Scroller);
 
 } }); // Syme.Binders.add();
