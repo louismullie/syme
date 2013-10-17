@@ -1,8 +1,9 @@
 Syme.FileManager = function (databaseName, initializedCb) {
 
   this.databaseName = databaseName;
-  this.adapterType = 'indexed-db';
-
+  
+  this.adapterType = Syme.Compatibility.supportedStorageType();
+  
   this.store = null;
 
 };
@@ -116,7 +117,7 @@ Syme.FileManager.prototype = {
     this.store.get(fileId, function(record) {
 
       // If the record does not exist, download and locally store file
-      if (typeof(record) == 'undefined') {
+      if (typeof(record) == 'undefined') { //  || record == null
 
         _this.downloadFile(fileInfo, gotFileCb);
 
