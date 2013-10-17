@@ -14,7 +14,8 @@ Syme.Router = Backbone.Router.extend({
       fragment = Backbone.history.getFragment( fragment || '' );
       this.currentRoute = fragment;
 
-      // Override pushstate and load url directly
+      // Fake pushstate and load directly
+      window.history.pushState({}, undefined, '/#' + fragment);
       Backbone.history.loadUrl(fragment);
 
     } catch (e) {
