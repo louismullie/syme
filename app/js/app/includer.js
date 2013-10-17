@@ -13,16 +13,19 @@ $(function(){
 
   // Bind a[hbs] to router
   $(document).on('click', 'a[hbs]', function(e){
+
     e.preventDefault();
+
+    var href = $(this).attr('href');
 
     // Reset possible hidden tooltips
     $('a[data-popover]').removeClass('hint--hidden');
-
-    // Hide popovers
     $('.popover').hide();
 
     // Follow link
-    Syme.Router.navigate( $(this).attr('href') );
+    Syme.Router.checkForUnsavedContent(function(){
+      Syme.Router.navigate(href);
+    });
 
   });
 
