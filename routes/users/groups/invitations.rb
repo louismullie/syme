@@ -156,12 +156,18 @@ put '/invitations', auth: [] do
     
     keys['posts'].each do |post_info|
 
-      post = group.complete_posts.find(post_info['id'])
+      post = begin
+        group.complete_posts.find(post_info['id'])
+      rescue; next; end
+      
       post.keys[invitee_id] = post_info['key']
 
       post_info['comments'].each do |comment_info|
 
-        comment = post.complete_comments.find(comment_info['id'])
+        comment = begin
+          post.complete_comments.find(comment_info['id'])
+        rescue; next; end
+        
         comment.keys[invitee_id] = comment_info['key']
 
         comment.save!
@@ -175,7 +181,9 @@ put '/invitations', auth: [] do
     # Transfer the upload keys to new user.
     keys['uploads'].each do |upload_info|
 
-      upload = group.uploads.find(upload_info['id'])
+      upload = begin
+        group.uploads.find(upload_info['id'])
+      rescue; next; end
       
       upload.keys[invitee_id] = upload_info['key']
       
@@ -186,7 +194,10 @@ put '/invitations', auth: [] do
     keys['distribute'].each do |distribute_info|
       
       invitation_id = distribute_info['id']
-      invitation = group.invitations.find(invitation_id)
+      invitation = begin
+        group.invitations.find(invitation_id)
+      rescue; next; end
+      
       new_key = distribute_info['key']
       
       distribute = JSON.parse(Base64

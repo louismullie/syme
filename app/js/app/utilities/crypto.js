@@ -303,7 +303,7 @@ Syme.Crypto = function (workerUrl) {
         method: 'recryptResources',
         params: [keylistId, inviteeId, distributeChunk]
       }, function (receivedDistribute) {
-        recryptedUploads = _.union(recryptedDistribute, receivedDistribute);
+        recryptedDistribute = _.union(recryptedDistribute, receivedDistribute);
         checkCounter();
       })
       
