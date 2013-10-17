@@ -23,16 +23,23 @@ Syme.Helpers = {
       Syme.globals.updatedComments[groupId] += 1;
 
     }
-
+    
+    var currentGroupId = Syme.CurrentSession.getGroupId();
+    
     // Update the counter with updated count
-    var total = Syme.globals.updatedPosts[groupId] +
-                Syme.globals.updatedComments[groupId];
+    var total = Syme.globals.updatedPosts[currentGroupId] +
+                Syme.globals.updatedComments[currentGroupId];
 
-    // Show and update container
-    newcontent.find('a span')
-      .html(total.toString());
+    if (total > 0) {
+      
+      // Show and update container
+      newcontent.find('a span')
+        .html(total.toString());
 
-    newcontent.show();
+      newcontent.show();
+      
+    }
+    
   },
 
   // Show unread posts
