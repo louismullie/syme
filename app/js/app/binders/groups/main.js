@@ -218,6 +218,8 @@ Syme.Binders.add('groups', { main: function() {
 
     var modal = Syme.Messages.modals.confirm.deleteGroup;
 
+    NProgress.showSpinner();
+    
     var callback = function(value) {
 
       var groupId = Syme.globals.toDeleteGroupId;
@@ -259,6 +261,7 @@ Syme.Binders.add('groups', { main: function() {
 
         // Callback when group deletion failed.
         error: function (response) {
+          NProgress.hideSpinner();
           Syme.Error.ajaxError(response, 'delete', 'group');
         }
 
