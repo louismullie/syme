@@ -170,11 +170,11 @@ put '/invitations', auth: [] do
         
         comment.keys[invitee_id] = comment_info['key']
 
-        comment.save!
+        comment.timeless.save!
         
       end
 
-      post.save!
+      post.timeless.save!
 
     end
     
@@ -187,7 +187,7 @@ put '/invitations', auth: [] do
       
       upload.keys[invitee_id] = upload_info['key']
       
-      upload.save!
+      upload.timeless.save!
 
     end
     
@@ -217,7 +217,7 @@ put '/invitations', auth: [] do
       
       invitation.distribute = new_distribute
       
-      invitation.save!
+      invitation.timeless.save!
       
     end
     
