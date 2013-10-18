@@ -6,7 +6,7 @@ class UserObserver < Mongoid::Observer
 
   def identify_user(user)
     
-    EventAnalysis.identify(user)
+    #EventAnalysis.identify(user)
     EventAnalysis.track(user, 'User started registration')
 
   end
