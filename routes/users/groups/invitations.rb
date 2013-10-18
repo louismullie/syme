@@ -217,7 +217,7 @@ put '/invitations', auth: [] do
       
       invitation.distribute = new_distribute
       
-      invitation.timeless.save!
+      invitation.save!
       
     end
     
