@@ -10,12 +10,7 @@ Syme.Decryptor = {
 
     var $collection = $container.find(selector);
 
-    this.decryptPostsAndComments($collection, function(){
-      // Temporary fix for decryptCallback not propagating 1 on two times
-      if ( scroller = $('#feed').prop('scroller') )
-        scroller.loadedPages = 1;
-      (decryptCallback || $.noop)();
-    });
+    this.decryptPostsAndComments($collection, (decryptCallback || $.noop));
 
   },
 
@@ -56,7 +51,7 @@ Syme.Decryptor = {
   formatPostsAndComments: function ($postsAndComments, formattedCallback) {
 
     var formatCounter = new Syme.Modules.Countable(
-      $postsAndComments, $.noop, formattedCallback
+      $postsAndComments, $.noop, (formattedCallback || $.noop)
     );
 
     $postsAndComments.trigger('format', formatCounter.increment);
