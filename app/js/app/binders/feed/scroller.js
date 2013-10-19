@@ -66,7 +66,15 @@ Syme.Binders.add('feed', { scroller: function(){
 
       _this.$feed.append($collection);
 
-      Syme.Decryptor.decryptPostsAndComments($collection, doneDecryptingCb);
+      Syme.Decryptor.decryptPostsAndComments($collection, function(){
+
+        // Because $collection contains only posts, we have to trigger
+        // comment decryption manually.
+        $collection.find('.comments').trigger('organize');
+
+        doneDecryptingCb();
+
+      });
 
     };
 
