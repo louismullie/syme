@@ -10,7 +10,7 @@
 
         .input-text-icon
           %i.icon-envelope
-          %input{type: 'text', name: 'email', placeholder: 'Email', tabindex: '1'}
+          %input{type: 'text', name: 'email', placeholder: 'Email', tabindex: '1', autocapitalize: 'off'}
 
         .input-text-icon
           %i.icon-lock
