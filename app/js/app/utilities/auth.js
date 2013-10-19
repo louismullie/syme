@@ -162,7 +162,7 @@ Syme.Auth = {
 
           fail(data.reason);
 
-        } else if (xhr.status == 401) {
+        } else if (data.status == 401) {
 
           alert('Throttling!');
 
