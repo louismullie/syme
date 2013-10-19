@@ -53,4 +53,16 @@ $(function(){
 
   }, function () { alert('Session failed!'); });
 
+  // Prevent leaving if there's unsaved content
+  $(window).bind("beforeunload", function(e) {
+
+    Syme.Cache.clear();
+
+    var unsavedContent = _.any($('textarea'),
+      function (textarea) { return textarea.value != ''; });
+
+    return unsavedContent ? Syme.Messages.error.unsavedContent : null;
+
+  });
+  
 });
