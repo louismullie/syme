@@ -43,6 +43,6 @@ $(document).on('format', '.post[data-encrypted="false"], .comment-box[data-encry
     .removeAttr('data-content')
     .removeClass('hidden');
 
-  incrementCb($this);
+  (incrementCb || $.noop)($this);
 
 });
