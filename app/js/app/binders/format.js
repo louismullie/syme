@@ -1,9 +1,9 @@
-$(document).on('format', '.post[data-encrypted="false"], .comment-box[data-encrypted="false"]', function (e, formattedCallback) {
+$(document).on('format', '.post[data-encrypted="false"], .comment-box[data-encrypted="false"]', function (e, incrementCb) {
 
   var $this           = $(this),
       $collapsable    = $this.find('.collapsable').first(),
       content         = $this.attr('data-content');
-  
+
   if ( $this.data('active') ) return;
   $this.data('active', true);
 
@@ -43,6 +43,6 @@ $(document).on('format', '.post[data-encrypted="false"], .comment-box[data-encry
     .removeAttr('data-content')
     .removeClass('hidden');
 
-  (formattedCallback || $.noop)();
+  incrementCb($this);
 
 });

@@ -24,7 +24,6 @@ Syme.Binders.add('global', { decrypt: function() {
 
     } catch(e) {
 
-      debugger;
       var error = 'Decryption of post or comment failed';
       console.error(error); decryptedCb(error);
 
