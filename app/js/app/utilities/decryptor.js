@@ -53,18 +53,9 @@ Syme.Decryptor = {
 
   formatPostsAndComments: function ($postsAndComments, formattedCallback) {
 
-    // Note:
-    // At this moment, Syme.Modules.Countable is not a reliable way
-    // of deducing an ending time to the format chain, due to a non-deterministic
-    // and timing-related issue. Calling the callback instantly is
-    // way less dangerous, because decrypted elements will not show
-    // until they are formatted anyways.
-
-    // Wonder why, but proceeding like this shortens execution
-    // time by ~8s on this particular function
-    $postsAndComments.each(function(){ $(this).trigger('format', $.noop); });
-
-    (formattedCallback || $.noop)();
+    $postsAndComments.chainTrigger('format', function(i, t){
+      console.log(i, '/', t);
+    }, formattedCallback);
 
   }
 

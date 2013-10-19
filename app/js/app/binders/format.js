@@ -4,8 +4,7 @@ $(document).on('format', '.post[data-encrypted="false"], .comment-box[data-encry
       $collapsable    = $this.find('.collapsable').first(),
       content         = $this.attr('data-content');
 
-  if ( $this.data('active') ) return;
-  $this.data('active', true);
+  if ( $this.data('active') ) return; $this.data('active', true);
 
   $this
     .find('.slave-avatar').trigger('sync').end()
@@ -43,6 +42,6 @@ $(document).on('format', '.post[data-encrypted="false"], .comment-box[data-encry
     .removeAttr('data-content')
     .removeClass('hidden');
 
-  incrementCb($this);
+  (incrementCb || $.noop)($this);
 
 });
