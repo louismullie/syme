@@ -1,122 +1,95 @@
 Syme.Binders.add('feed', { scroller: function(){
 
-  // Infinite scroller
-  $('#feed').data('pagesloaded', 1);
+  var Scroller = function(){
 
-  $(window).data('infinite-scroll-done', false)
-           .data('infinite-scroll-async', false)
-           .data('infinite-scroll-manual', false);
+    var _this = this;
 
-  $(window).on('scroll infinitescroll.trigger', function(){
+    /* Configuration */
 
-    if( !$(window).data('infinite-scroll-started') ||
-        $(window).data('infinite-scroll-done') ||
-        $(window).data('infinite-scroll-async') ||
-        $(window).data('infinite-scroll-manual') ) return;
+    var screenOffset = 50;
 
-    if($(window).scrollTop() >= $(document).height() - $(window).height() - 50){
+    /* Elements */
 
-      // Lock semaphore before AJAX request
-      $(window).data('infinite-scroll-async', true);
+    this.$window    = $(window),
+    this.$document  = $(document),
+    this.$feed      = $('#feed'),
+    this.$loadMore  = $('#load-more');
 
-      // Creates an array containing all showed posts
-      var showed_posts_id = Array();
+    /* Constructor methods */
 
-      $.each($('.post'), function(index, value){
-        showed_posts_id.push($(this).attr('id'));
-      });
+    this.scroll = function(){
 
-      // Prevent triggering scroller when no posts shown
-      if (showed_posts_id.length == 0) return;
+      var withinLimits = ( _this.$window.scrollTop() >=
+        _this.$document.height() - _this.$window.height() - screenOffset );
 
-      // Increment feed's state
-      var toload = $('#feed').data('pagesloaded') + 1;
+      if ( withinLimits && _this.loadedPages && !_this.paused )
+        _this.trigger();
 
-      // Build post request
-      var request = {
-        // Post a list of already showed posts to prevent duplication
-        'ignore': showed_posts_id,
-        'page': toload
-      };
+    };
 
-      // Add optional year and month to request
-      if($('#feed').data('year')) request['year'] = $('#feed').data('year');
-      if($('#feed').data('month')) request['month'] = $('#feed').data('month');
+    this.trigger = function(){
 
-      // Spinner and loadmore
+      _this.paused = true;
+      _this.$loadMore.show();
       NProgress.showSpinner();
-      $('#load-more').show();
 
-      var groupId = Syme.CurrentSession.getGroupId();
-      var url = SERVER_URL + '/' + groupId + '/page';
+      var url = SERVER_URL + '/' + Syme.CurrentSession.getGroupId() + '/page';
 
-      $.post(url, request, function(data){
+      $.post( url, { page: ( _this.loadedPages + 1 ) }, function(data){
 
         NProgress.hideSpinner();
 
-        // Deactivate and return if there are no
-        // more posts to load
-        if ( _.isEmpty(data) ) {
+        // Detach if there are no more pages to load
+        if ( _.isEmpty(data) ) _this.detach();
 
-          $(window).data('infinite-scroll-done', true);
-          $('#load-more').hide();
+        var doneDecryptingCb = function(){
 
-          return;
+          _this.loadedPages++;
+          _this.$loadMore.hide();
+          _this.paused = false;
 
-        }
+        };
 
-        // Deactivate if this is the last page
-        $(window).data( 'infinite-scroll-done', data.last_page ? true : false );
-
-        // Generate templates for each post
-        var html = $();
-
-        _.each(data.posts, function(post){
-
-          // Add generated post to the $html jQuery collection
-          html = html.add(
-            $( Syme.Template.render('feed-post', post) )
-          );
-
-        });
-
-        // Update counter
-        $('#feed').data('pagesloaded', toload);
-
-        // Append generated templates
-        $('#feed').append( html );
-
-        // Decrypt new content
-        Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
-
-          // Show or hide load-more
-          $('#load-more').hide();
-
-        });
-
-      }).complete(function(){
-
-        // Release lock after AJAX request
-        $(window).data('infinite-scroll-async', false);
+        _this.render(data, doneDecryptingCb);
 
       });
-    }
 
-  });
+    };
 
-  // Load more button
-  $('#main').on('click', '#load-more a', function(e){
+    this.render = function(data, doneDecryptingCb) {
 
-    e.preventDefault();
+      var $collection = $();
+      _.each(data.posts, function(post){
+        $template   = $( Syme.Template.render('feed-post', post) )
+        $collection = $collection.add( $template );
+      });
 
-    // Hide load-more container
-    $(this).parent().fadeOut('fast');
+      _this.$feed.append($collection);
 
-    // Unlock infinite scrolling and load page
-    $(window)
-      .data('infinite-scroll-manual', false)
-      .trigger('infinitescroll.trigger');
+      Syme.Decryptor.decryptPostsAndComments($collection, function(){
 
-  });
+        // Because $collection contains only posts, we have to trigger
+        // comment decryption manually.
+        $collection.find('.comments').trigger('organize');
+
+        doneDecryptingCb();
+
+      });
+
+    };
+
+    this.detach = function(){
+
+      _this.$window.off(_this.handler);
+      _this.$loadMore.remove();
+
+    };
+
+    _this.$window.on('scroll', _this.scroll);
+
+  };
+
+  // Create a new scroller as a #feed DOM property
+  $('#feed').prop('scroller', new Scroller);
 
 } }); // Syme.Binders.add();

@@ -1,40 +1,18 @@
 Syme.Binders.add('feed', { main: function(){
 
-  var userId = Syme.CurrentSession.getUserId(),
-      groupId = Syme.CurrentSession.getGroupId();
+  // Initial media decryption
+  $('.user-avatar, .encrypted-image').trigger('decrypt');
 
-  var groupsUrl = 'users/' + userId + '/groups';
-  var currentGroupUrl = groupsUrl + '/' + groupId;
+  console.time('Initial decryption/formatting');
 
-  var currentGroupName = $('#feed').data('group-name');
+  Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'), function(){
 
-  // Initial decryption
-  $('.user-avatar').trigger('decrypt');
-  $('.encrypted-image').trigger('decrypt');
+    console.timeEnd('Initial decryption/formatting');
 
-  if ($('#feed').attr('data-single-post') == 'true') {
-    $('#feed-panel').hide();
-  }
-
-  Syme.Decryptor.decryptPostsAndCommentsInContainer($('#feed'));
-
-  // Prevent leaving if there's unsaved content
-  $(window).bind("beforeunload", function(e) {
-
-    Syme.Cache.clear();
-
-    var unsavedContent = _.any($('textarea'),
-      function (textarea) { return textarea.value != ''; });
-
-    return unsavedContent ? Syme.Messages.error.unsavedContent : null;
+    // Indicate to the feed scroller that the first page has
+    // been loaded, thus initiating it.
+    $('#feed').prop('scroller').loadedPages = 1;
 
   });
-
-  /*$('#feed').on('showTutorial', function(){
-    var $feedHider = $('<div id="feed-hider" />').prependTo('body');
-    $('body').addClass('noscroll');
-  });
-
-  $('#feed').trigger('showTutorial');*/
 
 } }); // Syme.Binders.add();

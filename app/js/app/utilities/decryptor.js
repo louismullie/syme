@@ -2,6 +2,8 @@ Syme.Decryptor = {
 
   decryptPostsAndCommentsInContainer : function($container, decryptCallback) {
 
+    var decryptCallback = decryptCallback || $.noop;
+
     // Default children to seek in the container
     var selector  = // Encrypted posts, and...
                     '.post[data-encrypted="true"], ' +
@@ -16,7 +18,8 @@ Syme.Decryptor = {
 
   decryptPostsAndComments: function($collection, decryptCallback){
 
-    var _this = this;
+    var _this           = this,
+        decryptCallback = decryptCallback || $.noop;
 
     // Asynchronous counter for decryption
     var decryptCounter = new Syme.Modules.Countable( $collection,
@@ -38,9 +41,7 @@ Syme.Decryptor = {
 
       // Done
       function (elapsedTime) {
-
-        _this.formatPostsAndComments($collection, (decryptCallback || $.noop));
-
+        _this.formatPostsAndComments($collection, decryptCallback);
       }
 
     );
@@ -52,14 +53,18 @@ Syme.Decryptor = {
 
   formatPostsAndComments: function ($postsAndComments, formattedCallback) {
 
-    var formatCounter = new Syme.Modules.Countable(
-      $postsAndComments, $.noop, function () {
-        $(window).data('infinite-scroll-started', true); // Temporary fix
-        formattedCallback();
-      }
-    );
+    // Note:
+    // At this moment, Syme.Modules.Countable is not a reliable way
+    // of deducing an ending time to the format chain, due to a non-deterministic
+    // and timing-related issue. Calling the callback instantly is
+    // way less dangerous, because decrypted elements will not show
+    // until they are formatted anyways.
 
-    $postsAndComments.trigger('format', formatCounter.increment);
+    // Wonder why, but proceeding like this shortens execution
+    // time by ~8s on this particular function
+    $postsAndComments.each(function(){ $(this).trigger('format', $.noop); });
+
+    (formattedCallback || $.noop)();
 
   }
 

@@ -4,54 +4,50 @@ Syme.Router = Backbone.Router.extend({
 
   currentRoute: '',
 
+  startHistory: function() {
+    Backbone.history.start({ pushState: true });
+  },
+
   navigate: function (fragment, options) {
 
-    var _this = this;
+    options = options || { trigger: true, replace: true };
 
-    // Verify if unsaved content is present.
-    var unsavedContent = _.any($('textarea'),
-      function (textarea) { return textarea.value != ''; });
+    try {
 
-    // Show confirm modal if unsaved content exists.
-    if (unsavedContent) {
+      // Set fragment
+      fragment = Backbone.history.getFragment( fragment || '' );
+      this.currentRoute = fragment;
 
-      Confirm.show(
-        Syme.Messages.error.unsavedContent,
-        {
+      // Fake pushstate and load directly
+      Backbone.history.loadUrl(fragment);
 
-          closable: true,
-          title: 'Confirm Navigation',
-          submit: 'Leave this page',
-          cancel: 'Stay on this page',
-
-          onsubmit: function(){
-            _this.doNavigate(fragment, options);
-          }
-
-        }
-      );
-
-    } else {
-
-      try {
-        this.doNavigate(fragment, options);
-      } catch (e) {
-        console.error(e, 'Could not navigate to ' + fragment);
-      }
-
+    } catch (e) {
+      console.error(e, 'Could not navigate to ' + fragment);
     }
 
   },
 
-  doNavigate: function (fragment, options) {
+  checkForUnsavedContent: function(passCb) {
 
-    // Set fragment
-    fragment = Backbone.history.getFragment( fragment || '' );
+    // Verify if unsaved content is present.
+    var unsavedContent = _.any($('textarea'), function (textarea) {
+      return textarea.value != '';
+    });
 
-    this.currentRoute = fragment;
+    if (unsavedContent) {
 
-    // Override pushstate and load url directly
-    Backbone.history.loadUrl(fragment);
+      Confirm.show(Syme.Messages.error.unsavedContent, {
+
+        closable: true,
+        title: 'Confirm Navigation',
+        submit: 'Leave this page',
+        cancel: 'Stay on this page',
+
+        onsubmit: passCb
+
+      });
+
+    } else { passCb(); }
 
   },
 
@@ -95,18 +91,15 @@ Syme.Router = Backbone.Router.extend({
 
   root: function() {
 
-    // Helper function to navigate to a given route.
-    var navigate = function (route) {
-      Syme.Router.navigate(route, { trigger: true, replace: true });
-    }
+    var _this = this;
 
     // Verify if the user is currently authenticated or not.
-    this.authenticate(
+    _this.authenticate(
 
       // If the user is authenticated, go to groups page.
       function() {
         var userId = Syme.CurrentSession.getUserId();
-        navigate('/users/' + userId + '/groups');
+        _this.navigate('/users/' + userId + '/groups');
       },
 
       // If the user is not authenticated, show login or register.
@@ -116,12 +109,12 @@ Syme.Router = Backbone.Router.extend({
         if (Syme.Compatibility.inChromeExtension()) {
 
           chrome.storage.local.get('hasRegistered', function (setting) {
-            navigate(setting.hasRegistered ? 'login' : 'register');
+            _this.navigate(setting.hasRegistered ? 'login' : 'register');
           });
 
         // If in development mode, always go to login for convenience.
         } else {
-          navigate('login');
+          _this.navigate('login');
         }
 
       }
@@ -278,13 +271,13 @@ Syme.Router = Backbone.Router.extend({
       type: 'GET',
 
       success: function (data) {
-        
-       
+
+
         if( template == 'feed' &&
             data.users.length == 1 &&
             data.invite.length == 0 ) {
           template = 'batchinviter';
-          
+
         }
 
         // Initiate logged in template on first pageload
@@ -303,7 +296,7 @@ Syme.Router = Backbone.Router.extend({
 
         // Binders
         Syme.Binders.bind(template, true, specific_binders);
-        
+
         _this.showBreadCrumbs(template, data);
 
       },
@@ -341,8 +334,8 @@ Syme.Router = Backbone.Router.extend({
     switch(template) {
 
       case 'groups':
-      
-        if (template == 'groups' && 
+
+        if (template == 'groups' &&
             data.groups.length == 0 &&
             data.invites == false) {
 
@@ -373,47 +366,47 @@ Syme.Router = Backbone.Router.extend({
         break;
 
       case 'feed':
-        
+
         var groupName = data.group.name;
-        
+
         var currentGroupRoute = Syme.Url.join(
           'users', Syme.CurrentSession.getUserId(),
           'groups', Syme.CurrentSession.getGroupId()
         );
-    
+
         var crumbs = [
           { title: 'My groups', href: '/' },
           { title: groupName, href: currentGroupRoute }
         ];
-        
+
         break;
-    
+
       case 'batchinviter':
-        
+
         var groupName = data.group.name;
-        
+
         var crumbs = [
           { title: 'My groups', href: '/' },
           { title: 'Invite people to ' + groupName,
           href: Syme.Router.currentRoute }
         ];
-        
+
         break;
-      
+
       default:
-      
+
         throw 'Unkown action';
-        
+
     }
-    
-    
+
+
     Syme.Navbar.setBreadCrumb({
       brand_only: false,
       elements: crumbs
     });
 
   },
-  
+
   renderLoggedInTemplate: function() {
     // Render it
     $('body').html( Handlebars.templates['container']() );
