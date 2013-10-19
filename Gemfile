@@ -55,5 +55,3 @@ group :development do
   gem 'rack-nocache',
     require: 'rack/nocache'
 end
-
-gem 'htmlentities'

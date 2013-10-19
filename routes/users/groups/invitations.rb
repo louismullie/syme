@@ -45,9 +45,7 @@ post '/users/:user_id/groups/:group_id/invitations', auth: [] do |user_id, group
     group = @user.groups.find(invitation['group_id'])
   
     # Cleanup the e-mail.
-    email = invitation['email']
-    coder = HTMLEntities.new
-    email = coder.encode(email).downcase
+    email = invitation['email'].downcase
   
     if @user.email == email
       error 400, 'own_email'

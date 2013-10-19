@@ -47,7 +47,8 @@ post '/users' do
 
   # Get the full name from params.
   full_name = user.full_name
-
+  email = user.email
+  
   # Make sure email and full name are present.
   if email.blank? && full_name.blank?
     error 400, 'missing_params'
@@ -57,12 +58,6 @@ post '/users' do
   if User.where(email: email).any?
     error 400, 'email_taken'
   end
-
-  # Escape HTML entities in email and full name.
-  coder = HTMLEntities.new
-  
-  email = coder.encode(user.email)
-  full_name = coder.encode(user.full_name)
 
   # Validate and create the user.
   user = begin
@@ -134,8 +129,6 @@ put '/users', auth: [] do
   # Update the user name.
   if model.full_name
     
-    coder = HTMLEntities.new
-    full_name = coder.encode(model.full_name)
     user.full_name = full_name
     
   end
@@ -143,9 +136,7 @@ put '/users', auth: [] do
   # Update the user email.
   if model.email
     
-    coder = HTMLEntities.new
-    email = coder.encode(model.email)
-    email = email.downcase
+    email = model.email.downcase
     
     # Find existing user with e-mail.
     existing_user = User.where(
