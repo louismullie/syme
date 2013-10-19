@@ -11,7 +11,8 @@ Syme.Binders.add('feed', { main: function(){
 
     // Indicate to the feed scroller that the first page has
     // been loaded, thus initiating it.
-    $('#feed').prop('scroller').loadedPages = 1;
+    if ($('#feed').prop('scroller'))
+      $('#feed').prop('scroller').loadedPages = 1;
 
   });
 
