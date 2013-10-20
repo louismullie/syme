@@ -31,8 +31,6 @@ end
 
 post '/users/:user_id/sessions' do |_|
 
-  warn "POSTING TO SESSIONS"
-  
   email = params[:email]
   email = email.downcase
   session[:email] = email
@@ -42,8 +40,6 @@ post '/users/:user_id/sessions' do |_|
     user = User.find_by(email: email)
 
   rescue Mongoid::Errors::DocumentNotFound
-    
-    warn "ERROR DUE TO CREDENTIALS"
     
     { status: 'error', reason: 'credentials' }.to_json
 
@@ -70,11 +66,7 @@ post '/users/:user_id/sessions' do |_|
     
     srp = authenticator.get_challenge_and_proof(*p)
     
-    warn "setting proof to " + srp[:proof].inspect
-    
     session[:proof] = srp[:proof]
-    
-    warn "session proof is " + session[:proof].inspect
     
     EventAnalysis.track user, 'User started login'
     
@@ -91,14 +83,10 @@ end
 put '/users/:user_id/sessions/:session_id' do |_, session_id|
 
   if session_id != session.id.to_s
-    warn "Given: #{session_id}"
-    warn "True: #{session.id.to_s}"
     error 403, 'invalid_session'
   end
   
   unless session[:proof]
-    warn session[:proof].inspect
-    warn "Invalid due to no proof"
     error 403, 'invalid_session'
   end
   
