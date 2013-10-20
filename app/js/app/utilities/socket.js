@@ -143,7 +143,6 @@ Syme.Socket = {
         // If comment is already decrypted
         $commentContainer.trigger('organize');            // Organize container
         $comment.trigger('format');                       // Format comment
-        Syme.Decryptor.formatPostsAndComments($comment);  // Format children elements
 
       } else {
 

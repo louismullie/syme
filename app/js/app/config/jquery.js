@@ -1,3 +1,29 @@
+$.fn.chainTrigger = function(handler, incrementCb, doneCb) {
+
+  var $this = this, originalLength = $this.length;
+
+  // Attribute unique ID
+  $this.each(function(){ $(this).attr('data-unique-id', _.uniqueId()); });
+
+  var doneElement = function($el) {
+
+    // Remove unique ID from collection
+    $this = $this.not('[data-unique-id="' + $el.attr('data-unique-id') + '"]');
+
+    // Call incrementCb(index, total)
+    incrementCb( -($this.length - originalLength), originalLength );
+
+    // If collection is empty, cleanup and doneCb()
+    if( $this.length == 0 ) doneCb();
+
+  };
+
+  // Trigger each element (better for performance) passing them
+  // the doneElement callback that they must execute when they are done.
+  return $this.each(function(){ $(this).trigger(handler, doneElement); });
+
+}
+
 // CSRF token
 $.ajaxSetup({
 
