@@ -17,6 +17,8 @@ Syme.Binders.add('feed', { shared: function(){
   // Mentions and autogrow
   $('#main').on('formatTextarea', 'textarea', function(e){
 
+    e.stopPropagation();
+
     // Get list in the form [*{ id: string, name: string }]
     var mentionList = $.parseJSON( $('#mentioned_users').attr('data-list') );
 
@@ -39,23 +41,29 @@ Syme.Binders.add('feed', { shared: function(){
     });
 
   });
-  
+
   // Form feed textarea formatting (should stay here because
   // of dependency order)
   $('#feed-form textarea').trigger('formatTextarea');
 
   // Reset textarea
   $('#main').on('reset', 'textarea', function(e){
+
+    e.stopPropagation();
+
     $(this)
       // Clear and reset height
       .val('').trigger('autogrow.reset')
       // Remove mentions
       .parent().find('.mentions div').html('');
+
   });
 
   // Get textarea value with mentions markup along with mention list.
   // Calls callback({ text: string, mentioned_users: [ *id (string) ] })
   $('#main').on('getMentionsMarkup', 'textarea', function(e, callback){
+
+    e.stopPropagation();
 
     var $this = $(this);
 

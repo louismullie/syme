@@ -53,7 +53,6 @@ GEM
       tilt
     highline (1.6.19)
     hike (1.2.3)
-    htmlentities (4.3.1)
     i18n (0.6.4)
     json (1.8.0)
     libv8 (3.11.8.17)
@@ -143,7 +142,6 @@ DEPENDENCIES
   foreman
   haml
   handlebars_assets
-  htmlentities
   i18n
   json
   magicbus
