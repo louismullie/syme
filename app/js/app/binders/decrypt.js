@@ -84,7 +84,7 @@ Syme.Binders.add('global', { decrypt: function() {
 
       if (!url) return;
 
-      $this.css("background-image", "url('" + url + "')");
+      Syme.FileManager.setAsBackgroundImage($this, url);
 
       // Set as decrypted
       $this.attr('data-decrypted', true);
@@ -120,8 +120,8 @@ Syme.Binders.add('global', { decrypt: function() {
       if (!url) return;
 
       // Set src to element
-      $this.attr('src', url)
-        .removeClass('.encrypted-' + type);
+      Syme.FileManager.setAsImageSrc($this, url);
+      $this.removeClass('.encrypted-' + type);
 
       // Set as decrypted
       $this.attr('data-encrypted', false);

@@ -39,7 +39,8 @@ Syme.Binders.add('feed', { panel: function(){
       // Thumnail callback
       function(url) {
         // Replace thumbnail in DOM
-        $('#group-photo-edit img').attr('src', url);
+        $groupPhoto = $('#group-photo-edit img');
+        Syme.FileManager.setAsImageSrc($groupPhoto, url);
       },
 
       // Success callback

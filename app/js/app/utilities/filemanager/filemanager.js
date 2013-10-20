@@ -2,7 +2,7 @@ Syme.FileManager = function (databaseName, initializedCb) {
 
   this.databaseName = databaseName;
   
-  this.adapterType = Syme.Compatibility.supportedStorageType();
+  this.adapterType = 'indexed-db';
   
   this.store = null;
 
@@ -584,9 +584,63 @@ Syme.FileManager.prototype = {
   },
 
   saveToDisk: function(url, filename) {
-    var a = $("<a>").attr("href", url).attr("download", filename).appendTo("body");
-    a[0].click();
-    a.remove();
-  }
+    var a = $("<a>").attr("href", url)
+      .attr("download", filename).appendTo("body");
+    a[0].click(); a.remove();
+  },
+  
+  setAsBackgroundImage: function(element, url) {
+    
+    if (!Syme.Compatibility.inSafariOrWebView()) {
+      element.css("background-image", "url('" + url + "')");
+    } else {
+      this.getBlobUrlAsBase64(url, 'image/jpeg', function (base64) {
+        element.css("background-image", "url('" + base64 + "')");
+      });
+    }
 
+  },
+  
+  setAsImageSrc: function (image, url) {
+    
+    if (!Syme.Compatibility.inSafariOrWebView()) {
+      image.attr('src', url);
+    } else {
+      this.getBlobUrlAsBase64(url, 'image/jpeg', function (base64) {
+        image.attr('src', base64);
+      });
+    }
+    
+  },
+  
+  getBlobUrlAsBase64: function (url, mimeType, callback) {
+    
+    var _this = this;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'arraybuffer';
+    
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        var base64 = _this.arrayBufferToBase64(this.response);
+        callback("data:" + mimeType + ";base64," + base64);
+      } else {
+        alert('Oops! Something went wrong.');
+      }
+    };
+
+    xhr.send();
+    
+  },
+  
+  arrayBufferToBase64: function(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+  }
+ 
 };

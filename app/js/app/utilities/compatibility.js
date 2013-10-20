@@ -11,14 +11,10 @@ Syme.Compatibility = {
 
   },
   
-  supportedStorageType: function () {
-    if (typeof(chrome) == 'undefined') {
-      return 'dom';
-    } else {
-      return 'indexed-db';
-    }
+  inSafariOrWebView: function () {
+    return /(iPhone|iPod|iPad).*AppleWebKit/i.test(navigator.userAgent);
   },
-
+  
   inPhoneGap: function() {
     return typeof(PhoneGap) != 'undefined';
   }

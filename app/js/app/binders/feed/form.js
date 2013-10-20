@@ -199,10 +199,14 @@ Syme.Binders.add('feed', { form: function(){
 
       // Thumnail callback
       function(url) {
-        $('img.user-avatar[data-user-id="' + Syme.CurrentSession.getUserId() + '"]')
-          .attr('src', url);
+        
+        var userId = Syme.CurrentSession.getUserId();
+        
+        var $avatar = $('img.user-avatar[data-user-id="' + userId + '"]');
+        Syme.FileManager.setAsImageSrc($avatar, url);
 
-        $('.slave-avatar[data-user-id="' + Syme.CurrentSession.getUserId() + '"]').trigger('sync');
+        $('.slave-avatar[data-user-id="' + userId + '"]').trigger('sync');
+        
       },
 
       // Success callback
