@@ -1,55 +1,60 @@
 Syme.Binders.add('global', { decrypt: function() {
 
-  $(document).on('decrypt', '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]', function (e, done) {
+  $(document).on('decrypt', '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]', function (e, decryptCb) {
 
-    var $this = $(this);
+    e.stopPropagation();
+
+    var $this     = $(this),
+        decryptCb = decryptCb || $.noop;
 
     var groupId           = $this.closest('.post').data('group_id'),
         encryptedContent  = $this.attr('data-content'),
         $contentContainer = $this.find('.collapsable').first();
 
-    var decryptedCb = function(decryptedContent) {
+    var placeDecryptedContent = function(decryptedContent) {
 
-      $this
-        .attr('data-encrypted', false)
-        .attr('data-content', decryptedContent);
+      $this.attr('data-encrypted', false)
+           .attr('data-content', decryptedContent);
 
-      (done || $.noop)();
+      decryptCb($this);
 
     };
 
     try {
 
-      Syme.Crypto.decryptMessage(groupId, encryptedContent, decryptedCb);
+      Syme.Crypto.decryptMessage(groupId, encryptedContent, placeDecryptedContent);
 
     } catch(e) {
 
       var error = 'Decryption of post or comment failed';
-      console.error(error); decryptedCb(error);
+      if(DEVELOPMENT) console.error(error);
+
+      placeDecryptedContent(error);
 
     }
 
   });
 
   // Avatar decryption
-  $(document).on('decrypt', '.user-avatar', function(e, done) {
+  $(document).on('decrypt', '.user-avatar', function(e) {
 
-    var $this = $(this),
-        done  = done || $.noop;
+    e.stopPropagation();
+
+    var $this = $(this);
 
     var groupId   = Syme.CurrentSession.getGroupId(),
         userId    = $this.attr('data-user-id'),
         avatarId  = $this.attr('data-avatar-id'),
         keys      = $this.attr('data-keys');
 
-    if ( !keys ) return done();
+    if ( !keys ) return;
 
     // Decrypt and place avatar
     var file = Syme.FileManager.buildFileInfo(avatarId, groupId, keys);
 
     Syme.FileManager.getFile(file, function(url) {
 
-      if (!url) return done();
+      if (!url) return;
 
       // Set new src to master and slaves
       $this.add('.slave-avatar[data-user-id="' + userId + '"]')
@@ -58,34 +63,31 @@ Syme.Binders.add('global', { decrypt: function() {
       // Set as decrypted
       $this.attr('data-encrypted', false);
 
-      done();
-
     });
 
   });
 
   // Background image decryption
-  $(document).on('decrypt', '.encrypted-background-image', function(e, done){
+  $(document).on('decrypt', '.encrypted-background-image', function(e){
 
-    var $this = $(this),
-        done  = done || $.noop;
+    e.stopPropagation();
+
+    var $this = $(this);
 
     var imageId = $this.attr('data-attachment-id'),
         keys    = $this.attr('data-attachment-keys'),
         groupId = $this.attr('data-attachment-group');
 
-    if ( !keys ) return done();
+    if ( !keys ) return;
 
     var callback = function(url) {
 
-      if (!url) return done();
+      if (!url) return;
 
       $this.css("background-image", "url('" + url + "')");
 
       // Set as decrypted
       $this.attr('data-decrypted', true);
-
-      done();
 
     }
 
@@ -97,10 +99,11 @@ Syme.Binders.add('global', { decrypt: function() {
   });
 
   // Media decryption
-  $(document).on('decrypt', '.encrypted-image, .encrypted-video, .encrypted-audio', function(e, done){
+  $(document).on('decrypt', '.encrypted-image, .encrypted-video, .encrypted-audio', function(e){
 
-    var $this = $(this),
-        done  = done || $.noop;
+    e.stopPropagation();
+
+    var $this = $(this);
 
     var mediaId = $this.attr('data-attachment-id'),
         keys    = $this.attr('data-attachment-keys'),
@@ -108,13 +111,13 @@ Syme.Binders.add('global', { decrypt: function() {
         groupId = $this.attr('data-attachment-group');
 
     if ( !keys ) {
-      console.log('NO KEYS FOR MESSAGE');
-      return done();
+      console.log('NO KEYS FOR ENCRYPTED MEDIA');
+      return;
     }
 
     var callback = function(url){
 
-      if (!url) return done();
+      if (!url) return;
 
       // Set src to element
       $this.attr('src', url)
@@ -122,8 +125,6 @@ Syme.Binders.add('global', { decrypt: function() {
 
       // Set as decrypted
       $this.attr('data-encrypted', false);
-
-      done();
 
     };
 
@@ -134,7 +135,9 @@ Syme.Binders.add('global', { decrypt: function() {
   });
 
   // Synchronize slaves to master avatars
-  $(document).on('sync', '.slave-avatar', function(){
+  $(document).on('sync', '.slave-avatar', function(e){
+
+    e.stopPropagation();
 
     var $this = $(this);
 

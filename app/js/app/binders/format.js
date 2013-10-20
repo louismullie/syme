@@ -1,5 +1,7 @@
 $(document).on('format', '.post[data-encrypted="false"], .comment-box[data-encrypted="false"]', function (e, incrementCb) {
 
+  e.stopPropagation();
+
   var $this           = $(this),
       $collapsable    = $this.find('.collapsable').first(),
       content         = $this.attr('data-content');

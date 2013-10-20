@@ -1,8 +1,30 @@
 Syme.Decryptor = {
 
-  decryptPostsAndCommentsInContainer : function($container, decryptCallback) {
+  decryptPostsAndComments: function($collection, decryptCb){
 
-    var decryptCallback = decryptCallback || $.noop;
+    var _this     = this,
+        decryptCb = decryptCb || $.noop;
+
+    // Trigger decrypt on encrypted collection
+    $collection.chainTrigger('decrypt', function(i, t){
+
+      if (i == t) {
+        NProgress.remove();
+        NProgress.done();
+      } else if (NProgress.status < i / t) {
+        NProgress.set( i / t );
+      }
+
+    }, function(){
+
+      // Trigger format on decrypted collection, then callback
+      $collection.chainTrigger('format', $.noop, decryptCb);
+
+    });
+
+  },
+
+  decryptPostsAndCommentsInContainer : function($container, decryptCb) {
 
     // Default children to seek in the container
     var selector  = // Encrypted posts, and...
@@ -10,52 +32,7 @@ Syme.Decryptor = {
                     // encrypted comments excluding the collapsed ones, excepted in single post.
                     '.comment-box[data-encrypted="true"]:not(#feed[data-single-post=""] .collapsed)';
 
-    var $collection = $container.find(selector);
-
-    this.decryptPostsAndComments($collection, decryptCallback);
-
-  },
-
-  decryptPostsAndComments: function($collection, decryptCallback){
-
-    var _this           = this,
-        decryptCallback = decryptCallback || $.noop;
-
-    // Asynchronous counter for decryption
-    var decryptCounter = new Syme.Modules.Countable( $collection,
-
-      // Increment
-      function(index, length) {
-
-        // Nasty hack to fix NProgress
-        if (index == length) {
-          NProgress.remove();
-          NProgress.done();
-        // Prevent jumps in progress bar if multiple
-        // batchDecrypt run at the same time
-        } else if (NProgress.status < index / length) {
-          NProgress.set( index / length );
-        }
-
-      },
-
-      // Done
-      function (elapsedTime) {
-        _this.formatPostsAndComments($collection, decryptCallback);
-      }
-
-    );
-
-    // Trigger decrypt on every element
-    $collection.trigger('decrypt', decryptCounter.increment);
-
-  },
-
-  formatPostsAndComments: function ($postsAndComments, formattedCallback) {
-
-    $postsAndComments.chainTrigger('format', function(i, t){
-      console.log(i, '/', t);
-    }, formattedCallback);
+    this.decryptPostsAndComments($container.find(selector), decryptCb);
 
   }
 
