@@ -9,10 +9,7 @@ Syme.Binders.add('feed', { main: function(){
 
     console.timeEnd('Initial decryption/formatting');
 
-    // Indicate to the feed scroller that the first page has
-    // been loaded, thus initiating it.
-    if ($('#feed').prop('scroller'))
-      $('#feed').prop('scroller').loadedPages = 1;
+    $('#feed').prop('scroller', new Syme.FeedScroller);
 
   });
 
