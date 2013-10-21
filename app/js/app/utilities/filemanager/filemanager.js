@@ -590,8 +590,7 @@ Syme.FileManager.prototype = {
   },
   
   setAsBackgroundImage: function(element, url) {
-    
-    if (!Syme.Compatibility.inSafariOrWebView()) {
+    if (!Syme.Compatibility.onAppleWebKit()) {
       element.css("background-image", "url('" + url + "')");
     } else {
       this.getBlobUrlAsBase64(url, 'image/jpeg', function (base64) {
@@ -603,7 +602,7 @@ Syme.FileManager.prototype = {
   
   setAsImageSrc: function (image, url) {
     
-    if (!Syme.Compatibility.inSafariOrWebView()) {
+    if (!Syme.Compatibility.onAppleWebKit()) {
       image.attr('src', url);
     } else {
       this.getBlobUrlAsBase64(url, 'image/jpeg', function (base64) {
@@ -617,10 +616,9 @@ Syme.FileManager.prototype = {
     
     var _this = this;
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'arraybuffer';
     
     xhr.onload = function(e) {
+      
       if (this.status == 200) {
         var base64 = _this.arrayBufferToBase64(this.response);
         callback("data:" + mimeType + ";base64," + base64);
@@ -628,7 +626,15 @@ Syme.FileManager.prototype = {
         alert('Oops! Something went wrong.');
       }
     };
-
+    
+    xhr.onerror = function (e) {
+      
+      console.log(e);
+      
+    };
+    
+    xhr.open('GET', url, true);
+    xhr.responseType = 'arraybuffer';
     xhr.send();
     
   },

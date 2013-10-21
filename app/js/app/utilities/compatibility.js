@@ -11,8 +11,8 @@ Syme.Compatibility = {
 
   },
   
-  inSafariOrWebView: function () {
-    return /(iPhone|iPod|iPad).*AppleWebKit/i.test(navigator.userAgent);
+  onAppleWebKit: function () {
+    return !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
   },
   
   inPhoneGap: function() {
