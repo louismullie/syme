@@ -130,6 +130,10 @@ function Downloader(id, keys, options) {
     }
 
     var mime = { type: this.fileType };
+    
+    if (Syme.Compatibility.onAppleWebKit())
+      blobBuffer = [blobBuffer[0].buffer];
+    
     var blob = new Blob(blobBuffer, mime);
 
     return blob;
