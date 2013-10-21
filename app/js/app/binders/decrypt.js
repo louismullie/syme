@@ -1,40 +1,5 @@
 Syme.Binders.add('global', { decrypt: function() {
 
-  $(document).on('decrypt', '.post[data-encrypted="true"], .comment-box[data-encrypted="true"]', function (e, decryptCb) {
-
-    e.stopPropagation();
-
-    var $this     = $(this),
-        decryptCb = decryptCb || $.noop;
-
-    var groupId           = $this.closest('.post').data('group_id'),
-        encryptedContent  = $this.attr('data-content'),
-        $contentContainer = $this.find('.collapsable').first();
-
-    var placeDecryptedContent = function(decryptedContent) {
-
-      $this.attr('data-encrypted', false)
-           .attr('data-content', decryptedContent);
-
-      decryptCb($this);
-
-    };
-
-    try {
-
-      Syme.Crypto.decryptMessage(groupId, encryptedContent, placeDecryptedContent);
-
-    } catch(e) {
-
-      var error = 'Decryption of post or comment failed';
-      if(DEVELOPMENT) console.error(error);
-
-      placeDecryptedContent(error);
-
-    }
-
-  });
-
   // Avatar decryption
   $(document).on('decrypt', '.user-avatar', function(e) {
 
