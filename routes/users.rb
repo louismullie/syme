@@ -78,7 +78,7 @@ post '/users' do
   
   # Merge the CSRF token to the user hash.
   user_hash = UserGenerator.generate(user, user)
-              .merge({ csrf: csrf_token })
+    .merge({ csrf: csrf_token, access_token: user.access_token })
   
   # Convert the hash back to JSON.
   response = user_hash.to_json

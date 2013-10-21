@@ -11,6 +11,7 @@ Syme.Session = function (csrfToken) {
   this.password = null;
   this.passwordKey = null;
   
+  this.token = null;
   this.csrfToken = csrfToken;
   
   this.remember = null;
@@ -128,8 +129,11 @@ Syme.Session = function (csrfToken) {
     
     this.passwordKey = data.password_key;
     
+    console.log(data);
+    
     Syme.CurrentSession.setCsrfToken(data.csrf);
-
+    Syme.CurrentSession.setAccessToken(data.access_token);
+    
     _this.groups = data.groups;
     _this.groupMembers = data.group_members;
     
@@ -230,6 +234,21 @@ Syme.Session = function (csrfToken) {
     return this.getUser().get('id');
   };
 
+  this.setAccessToken = function (token) {
+    
+    if (!token)
+      throw 'Token cannot be empty.';
+    
+    this.token = token;
+    
+    return null;
+    
+  };
+  
+  this.getAccessToken = function () {
+    return this.token;
+  };
+  
   this.setGroupId = function (groupId) {
 
     this.groupId = groupId;

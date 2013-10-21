@@ -16,7 +16,10 @@ module Syme
 
     # Set global session ID check.
     set(:auth) do |*roles|
-      condition { halt 401 unless session[:user_id] }
+      condition do
+        warn env['AccessToken']
+        halt 401 unless (session[:user_id] || env['AccessToken'])
+      end
     end
 
   end

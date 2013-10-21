@@ -24,7 +24,8 @@ get '/users/:user_id/sessions/:session_id' do |_, session_id|
     password_key: session[:password_key],
     group_members: group_members,
     csrf: csrf_token,
-    groups: @user.groups.map(&:id).map(&:to_s)
+    groups: @user.groups.map(&:id).map(&:to_s),
+    access_token: @user.access_token
   }.to_json
 
 end
@@ -100,6 +101,11 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     email = session[:email]
 
     user = User.where(email: email).first
+    
+    unless user.access_token
+      user.access_token = SecureRandom.uuid
+      user.save!
+    end
     
     session.clear
 
