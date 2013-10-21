@@ -91,10 +91,10 @@ function Uploader(file, options) {
     if(msg.data['status'] == 'ok') {
 
       _this.uploadedChunks += 1;
-
       _this.progress(_this.uploadedChunks / _this.numChunks * 100);
 
       if (_this.uploadedChunks == _this.numChunks) {
+        
         _this.success(_this.uploadId);
       }
 
@@ -137,7 +137,7 @@ function Uploader(file, options) {
       throw "Abort: can't start upload.";
     }, false);
 
-    xhr.addEventListener("load", function(evt) {
+    xhr.addEventListener("load", function(event) {
 
       var data = JSON.parse(event.target.responseText);
       _this.uploadId = data.upload.id;
