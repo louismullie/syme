@@ -20,7 +20,10 @@ require 'rack/session/dalli'
 use Rack::Session::Dalli,
   key: 'session',
   cache: Dalli::Client.new,
-  expire_after: 60 * 60 * 24 * 3
+  expire_after: 60 * 60 * 24 * 3,
+  # WARNING: THIS IS DANGEROUS
+  # BUT NEEDED TO FIX A BUG WITH WWs
+  httponly: false
 
 # Disable caching altogether.
 require 'rack/nocache'

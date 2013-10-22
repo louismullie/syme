@@ -35,7 +35,7 @@ if settings.environment == :production
     'POST:/users/current/sessions'
   ]
 =end
-
+  
   require 'active_support'
   require 'rack/attack'
 

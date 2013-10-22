@@ -4,7 +4,7 @@ var Invitation = Backbone.Model.extend({
   url: SERVER_URL + '/invitations'
 
 }, {
-
+        
   acceptInvitationRequest: function (inviteLink) {
 
     var user = Syme.CurrentSession.getUser();

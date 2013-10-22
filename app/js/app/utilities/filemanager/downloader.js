@@ -21,6 +21,7 @@ function Downloader(id, keys, options) {
   this.options.baseUrl = options.baseUrl || '/file/';
   this.options.privKey = options.privKey;
   this.options.workerPath = options.workerPath || 'workers/';
+  this.options.token = options.token || '';
 
   this.mimeType = null;
   this.success = null;
@@ -84,7 +85,7 @@ function Downloader(id, keys, options) {
     var xhr     = new XMLHttpRequest();
     var fileUrl = this.options.baseUrl +
                   'download/' + this.fileId;
-
+    
     var _this = this;
 
     xhr.addEventListener('load', function(event) {
@@ -115,6 +116,7 @@ function Downloader(id, keys, options) {
       _this.key = key;
       xhr.open("GET", fileUrl);
       xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
+      xhr.setRequestHeader('AccessToken', _this.options.token);
       xhr.send();
       
     });

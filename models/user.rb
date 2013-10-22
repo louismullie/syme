@@ -28,6 +28,7 @@ class User
   field :session_id, type: String
   field :keyfile, type: String
   
+  field :access_token, type: String
   field :complete
 
 end

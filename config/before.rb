@@ -1,5 +1,7 @@
 before do
 
+  warn env['HTTP_ACCESSTOKEN'].inspect
+  
   # Get the current user's infos.
   if user_id = session[:user_id]
     begin
@@ -7,6 +9,16 @@ before do
     rescue Mongoid::Errors::DocumentNotFound
       # User deleted meanwhile
     end
+  elsif env['HTTP_ACCESSTOKEN']
+    begin
+      token = JSON.parse(env['HTTP_ACCESSTOKEN'])
+      
+      user = User.find(token['user_id'])
+      warn user.id.inspect
+      raise unless user.access_token == token['access_token']
+      warn "YESSSSS"
+      @user = user
+    rescue; end
   end
 
   # Set default content type.
@@ -19,14 +31,14 @@ before do
   # request, return only the necessary headers with status code 200.
   if request.request_method == 'OPTIONS'
 
-    response.headers['Access-Control-Allow-Origin'] = 
-    'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    # 'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani'
 
     response.headers["Access-Control-Allow-Methods"] =
     "GET, POST, OPTIONS, PUT"
 
     response.headers["Access-Control-Allow-Headers"] =
-    "X-Requested-With, X-Prototype-Version, X_CSRF_TOKEN"
+    "X-Requested-With, X-Prototype-Version, X_CSRF_TOKEN, AccessToken"
 
     response.headers['Access-Control-Max-Age'] = '1728000'
 
@@ -35,8 +47,8 @@ before do
   # For all responses, return the CORS access control headers.
   else
 
-    response.headers['Access-Control-Allow-Origin'] = 
-    'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    # 'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani'
     
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT'
     response.headers['Access-Control-Max-Age'] = "1728000"

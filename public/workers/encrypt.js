@@ -12,6 +12,7 @@ self.onmessage = function(event) {
   var worker = event.data['worker'];
   var id = event.data['id'];
   var csrf = event.data['csrf'];
+  var token = event.data['token'];
   var url = event.data['url'];
   var chunks = event.data['chunks'];
 
@@ -55,6 +56,7 @@ self.onmessage = function(event) {
   xhr.open('POST', url);
   
   xhr.setRequestHeader('X_CSRF_TOKEN', csrf);
+  xhr.setRequestHeader('AccessToken', token);
   xhr.send(fd);
 
 };

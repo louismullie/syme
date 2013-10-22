@@ -147,7 +147,10 @@ Syme.Binders.add('feed', { posts: function(){
         group       = Syme.CurrentSession.getGroupId(),
         route       = SERVER_URL + '/' + group + '/' + type + '/like/' + op;
 
-    $.post(route, { post_id: post_id, comment_id: comment_id });
+    $.ajax(route, {
+      type: 'POST',
+      data: { post_id: post_id, comment_id: comment_id }
+    });
 
   });
 

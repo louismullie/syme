@@ -157,7 +157,11 @@ Syme.FileManager.prototype = {
     var csrfToken = Syme.CurrentSession.getCsrfToken();
 
     var downloader = new Downloader(fileId, decryptionKeys, {
-      baseUrl: baseUrl, group: groupId, csrfToken: csrfToken });
+      baseUrl: baseUrl, group: groupId, csrfToken: csrfToken,
+      token: JSON.stringify({
+        user_id: Syme.CurrentSession.getUserId(),
+        access_token: Syme.CurrentSession.getAccessToken()
+      }) });
 
     downloader.start($.noop,
 
@@ -249,7 +253,11 @@ Syme.FileManager.prototype = {
 
       var uploadOptions = {
         data: data, baseUrl: baseUrl,
-        csrfToken: csrfToken
+        csrfToken: csrfToken,
+        token: JSON.stringify({
+          user_id: Syme.CurrentSession.getUserId(),
+          access_token: Syme.CurrentSession.getAccessToken()
+        })
       };
 
       var uploader = new Uploader(file, uploadOptions);

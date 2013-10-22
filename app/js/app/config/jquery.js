@@ -31,6 +31,10 @@ $.ajaxSetup({
     try {
       var token = Syme.CurrentSession.getCsrfToken();
       xhr.setRequestHeader('X_CSRF_TOKEN', token);
+      xhr.setRequestHeader('AccessToken', JSON.stringify({
+        user_id: Syme.CurrentSession.getUserId(),
+        access_token: Syme.CurrentSession.getAccessToken()
+      }));
     } catch (error) {
       console.log('Session not initialized.');
     }

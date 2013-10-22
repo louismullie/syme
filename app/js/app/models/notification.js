@@ -200,7 +200,7 @@ Notifications = (function(){
       // Fetch notifications
       this.fetch({ reset: true });
     },
-
+    
     // Show notification count in title, navbar and browser bar badges.
     showBadge: function (count) {
 

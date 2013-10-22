@@ -33,23 +33,27 @@ Syme.FeedScroller = function(){
 
     var url = SERVER_URL + '/' + Syme.CurrentSession.getGroupId() + '/page';
 
-    $.post( url, { page: ( _this.loadedPages + 1 ) }, function(data){
+    $.ajax( url, {
+      type: 'POST',
+      data: { page: ( _this.loadedPages + 1 ) },
+      success: function(data){
 
-      NProgress.hideSpinner();
+        NProgress.hideSpinner();
 
-      // Detach if there are no more pages to load
-      if ( _.isEmpty(data) ) return _this.detach();
+        // Detach if there are no more pages to load
+        if ( _.isEmpty(data) ) return _this.detach();
 
-      var doneDecryptingCb = function(){
+        var doneDecryptingCb = function(){
 
-        _this.loadedPages++;
-        _this.$loadMore.hide();
-        _this.paused = false;
+          _this.loadedPages++;
+          _this.$loadMore.hide();
+          _this.paused = false;
 
-      };
+        };
 
-      _this.render(data, doneDecryptingCb);
+        _this.render(data, doneDecryptingCb);
 
+      }
     });
 
   };

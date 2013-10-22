@@ -16,6 +16,7 @@ function Uploader(file, options) {
   this.options.numWorkers = options.numWorkers || 4;
   this.options.chunkSize  = options.chunkSize  || 1 * 1024 * 1024;
   this.options.csrfToken  = options.csrfToken  || '';
+  this.options.token      = options.token     || '';
   
   this.reader = new FileReader();
   this.workers = [];
@@ -128,7 +129,7 @@ function Uploader(file, options) {
 
     var url = this.options.baseUrl + 'upload/create';
     var xhr = new XMLHttpRequest();
-
+    
     xhr.addEventListener("error", function(evt) {
       throw "Error: can't start upload.";
     }, false);
@@ -170,6 +171,7 @@ function Uploader(file, options) {
         
         xhr.open('POST', _this.options.baseUrl + 'upload/create');
         xhr.setRequestHeader('X_CSRF_TOKEN', _this.options.csrfToken);
+        xhr.setRequestHeader('AccessToken', _this.options.token);
 
         xhr.send(fd);
         
@@ -214,7 +216,8 @@ function Uploader(file, options) {
       pass: pass, worker: worker,
       data: data, id: this.uploadId,
       url: appendUrl, chunks: _this.numChunks,
-      csrf: this.options.csrfToken
+      csrf: this.options.csrfToken,
+      token: this.options.token
     }, this);
 
     delete chunk;

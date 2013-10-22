@@ -20,6 +20,7 @@ self.onmessage = function(event) {
   var worker = event.data['worker'];
   var url = event.data['url'];
   var key = event.data['key'];
+  var token = event.data['token'];
   
   var xhr = new XMLHttpRequest();
   
@@ -64,6 +65,7 @@ self.onmessage = function(event) {
   
   xhr.open('GET', url + '/' + chunk);
   xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
+  xhr.setRequestHeader('AccessToken', token);
   xhr.send('');
   
 };
