@@ -4,7 +4,17 @@
 //= require_tree ./utilities
 //= require_tree ./binders
 
-$(function(){
+$(document).ready(function() {
+  
+  if(Syme.Compatibility.inPhoneGap()) {
+    document.addEventListener("deviceready", $.onDeviceReady, false);
+  } else {
+    $.onDeviceReady();
+  }
+  
+});
+
+$.onDeviceReady = function() {
 
   // Set the title for the document.
   if (Syme.Compatibility.inChromeExtension()) {
@@ -65,4 +75,4 @@ $(function(){
 
   });
   
-});
+};
