@@ -31,6 +31,7 @@ var User = Backbone.Model.extend({
 
   },
   */
+  
   createKeyfile: function (password, keyfileCreatedCb) {
 
     var _this = this, email = this.get('email');

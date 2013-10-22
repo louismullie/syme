@@ -68,11 +68,10 @@ Syme.Binders.add('global', { decrypt: function() {
   });
 
   // Background image decryption
-  $('.encrypted-background-image').map(function(ind, el){
+  $(document).on('decrypt', '.encrypted-background-image', function(ind, el){
 
-    var $this = $(el);
-    console.log($this);
-    var imageId = $this.attr('data-attachment-id'),
+    var $this = $(this),
+        imageId = $this.attr('data-attachment-id'),
         keys    = $this.attr('data-attachment-keys'),
         groupId = $this.attr('data-attachment-group');
 

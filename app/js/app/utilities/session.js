@@ -148,7 +148,7 @@ Syme.Session = function (csrfToken) {
     _this.user.fetch({
 
       data: { id: data.user_id },
-
+      
       success: function () {
         
         _this.startSession(callback);

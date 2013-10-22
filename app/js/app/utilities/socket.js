@@ -252,11 +252,13 @@ Syme.Socket = {
         var group = Syme.CurrentSession.getGroupId();
         var url = SERVER_URL + '/' + group + '/post/lastof/';
 
-        $.get(url + $('#feed').data('pagesloaded'),
-        function(data){ $('#feed').append(data); });
+        $.ajax(url + $('#feed').data('pagesloaded'), {
+          type: 'GET', 
+          success: function(data){ $('#feed').append(data); }
+        });
 
       }
-
+      
       // Remove the post
       $('#' + data.target).remove();
     },
