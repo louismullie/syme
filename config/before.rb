@@ -38,7 +38,7 @@ before do
     "GET, POST, OPTIONS, PUT"
 
     response.headers["Access-Control-Allow-Headers"] =
-    "X-Requested-With, X-Prototype-Version, X_CSRF_TOKEN"
+    "X-Requested-With, X-Prototype-Version, X_CSRF_TOKEN, AccessToken"
 
     response.headers['Access-Control-Max-Age'] = '1728000'
 

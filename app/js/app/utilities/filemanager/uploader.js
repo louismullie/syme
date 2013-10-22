@@ -171,7 +171,7 @@ function Uploader(file, options) {
         
         xhr.open('POST', _this.options.baseUrl + 'upload/create');
         xhr.setRequestHeader('X_CSRF_TOKEN', _this.options.csrfToken);
-        xhr.setRequestHeader('AccessToken', JSON.stringify(_this.options.token));
+        xhr.setRequestHeader('AccessToken', _this.options.token);
 
         xhr.send(fd);
         

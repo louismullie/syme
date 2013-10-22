@@ -252,12 +252,11 @@ Syme.FileManager.prototype = {
       var csrfToken = Syme.CurrentSession.getCsrfToken();
 
       var uploadOptions = {
-        data: data,
-        baseUrl: baseUrl,
+        data: data, baseUrl: baseUrl,
         csrfToken: csrfToken,
         token: JSON.stringify({
-          id: Syme.CurrentSession.getUserId(),
-          key: Syme.CurrentSession.getAccessToken()
+          user_id: Syme.CurrentSession.getUserId(),
+          access_token: Syme.CurrentSession.getAccessToken()
         })
       };
 
