@@ -1,7 +1,5 @@
 before do
 
-  warn env['HTTP_ACCESSTOKEN'].inspect
-  
   # Get the current user's infos.
   if user_id = session[:user_id]
     begin
@@ -12,11 +10,8 @@ before do
   elsif env['HTTP_ACCESSTOKEN']
     begin
       token = JSON.parse(env['HTTP_ACCESSTOKEN'])
-      
       user = User.find(token['user_id'])
-      warn user.id.inspect
       raise unless user.access_token == token['access_token']
-      warn "YESSSSS"
       @user = user
     rescue; end
   end
