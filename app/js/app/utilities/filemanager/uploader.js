@@ -220,7 +220,7 @@ function Uploader(file, options) {
       token: this.options.token
     }, this);
 
-    delete chunk;
+    chunk = null;
 
   };
 
