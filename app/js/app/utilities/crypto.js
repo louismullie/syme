@@ -415,7 +415,8 @@ Syme.Crypto = function (workerUrl) {
     // Check that keys exist for current user.
     var userId  = Syme.CurrentSession.getUserId(),
         message = JSON.parse($.base64.decode(text)),
-        hash = sjcl.hash.sha256.hash(text);
+        hash    = sjcl.codec.hex.fromBits(
+                  sjcl.hash.sha256.hash(text));
 
     // If cache fails, rescue and download file
     if (Syme.Cache.contains(hash)) {
