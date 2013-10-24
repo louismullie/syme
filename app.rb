@@ -26,7 +26,7 @@ module Syme
 
     Mongoid.observers = GroupObserver, InvitationObserver,
     UserObserver, NotificationObserver, PostObserver,
-    CommentObserver, LikeObserver
+    CommentObserver, LikeObserver 
 
     Mongoid.instantiate_observers
 
