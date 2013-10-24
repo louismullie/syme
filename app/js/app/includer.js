@@ -53,7 +53,11 @@ $.onDeviceReady = function() {
 
       // Bind global binders
       Syme.Binders.bind('global', false);
-
+      
+      if (Syme.Compatibility.onAppleWebkit()) { // change to onMobile()
+        FastClick.attach(document.body);
+      }
+      
       // Trigger root.
       if (Syme.Compatibility.inChromeExtension()) {
         Syme.Router.navigate('/');
