@@ -25,6 +25,8 @@ Syme.Session = function (csrfToken) {
     
     var version;
     
+    Syme.Binders.bind('global', false);
+    
     // Get the application version.
     if (Syme.Compatibility.inChromeExtension()) {
       version = chrome.app.getDetails().version;
