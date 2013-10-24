@@ -37,6 +37,7 @@ $.ajaxSetup({
       }));
     } catch (error) {
       console.log('Session not initialized.');
+      console.trace();
     }
   }
 

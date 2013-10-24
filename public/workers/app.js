@@ -1,6 +1,4 @@
-importScripts('primitives.js');
-importScripts('underscore.min.js');
-
+importScripts('vendor.js');
 importScripts('crypto.js');
 
 self.onmessage = function(event) {

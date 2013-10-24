@@ -1,5 +1,4 @@
-importScripts('sjcl.js');
-importScripts('formData.js');
+importScripts('vendor.js');
 
 var key = null;
 var chunk = null;
