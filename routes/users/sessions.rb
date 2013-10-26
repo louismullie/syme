@@ -103,7 +103,7 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     user = User.where(email: email).first
     
     unless user.access_token
-      
+      user.access_token = SecureRandom.uuid
       user.save!
     end
     
