@@ -212,6 +212,7 @@ get '/users/:user_id/confirm' do |user_id|
     user.save!
   end
 
-  redirect 'https://getsyme.com?confirm=1'
+  redirect 'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani/syme.html'
+
   
 end
