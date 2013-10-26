@@ -213,6 +213,5 @@ get '/users/:user_id/confirm' do |user_id|
   end
 
   redirect 'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani/syme.html'
-
   
 end
