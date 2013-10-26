@@ -1,7 +1,7 @@
 # Email sending helper. All email helpers call it.
 def send_email_to(email, subject, body)
 
-  return if settings.environment != :production && !settings.running_tux
+  # return if settings.environment != :production && !settings.running_tux
   
   begin
 
@@ -137,7 +137,7 @@ def send_confirm_email(user)
 
   subject = "Confirm your new account on Syme"
 
-  message = email_template :send_email_confirm, user.email, { user: user }
+  message = email_template(:send_email_confirm, user.email, { user: user })
 
   send_email_to(user.email, subject, message)
 

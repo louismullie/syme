@@ -123,7 +123,9 @@ put '/users', auth: [] do
 
     user.verifier.save!
     
-    send_confirm_email(user)
+    unless user.emails_sent[:confirm_email]
+      send_confirm_email(user)
+    end
     
   end
 
