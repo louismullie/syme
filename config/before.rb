@@ -15,7 +15,7 @@ before do
       @user = user
     rescue; end
   end
-
+  
   # Set default content type.
   content_type 'application/json'
   

@@ -39,7 +39,7 @@ post '/users/:user_id/sessions' do |_|
   begin
 
     user = User.find_by(email: email)
-
+    
   rescue Mongoid::Errors::DocumentNotFound
     
     { status: 'error', reason: 'credentials' }.to_json
@@ -108,6 +108,10 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     end
     
     session.clear
+    
+    if user.confirmed == false
+      return { status: 'error', reason: 'confirm' }.to_json
+    end
 
     session[:user_id] = user.id
     
@@ -116,6 +120,9 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     EventAnalysis.track user, 'User completed login'
     
     # session[:key] = authenticator.instance_eval { @S }
+    
+    user.last_seen = DateTime.now
+    user.save!
     
     response = {
       status: 'ok',

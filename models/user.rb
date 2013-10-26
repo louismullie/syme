@@ -29,6 +29,11 @@ class User
   field :keyfile, type: String
   
   field :access_token, type: String
-  field :complete
-
+  field :complete, type: Boolean
+  field :confirmed, type: Boolean, default: false
+  field :confirmation_token, type: String
+  
+  field :emails_sent, type: Hash, default: {}
+  field :last_seen, type: DateTime, default: -> { DateTime.now }
+  
 end

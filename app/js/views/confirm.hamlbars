@@ -1,0 +1,9 @@
+#auth
+  %h1 Syme
+
+  .row
+    .small-centered-column
+    
+      %p Please confirm your account.
+
+      BUTTON TO RETURN HOME

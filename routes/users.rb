@@ -60,10 +60,14 @@ post '/users' do
   end
 
   # Validate and create the user.
+  token = SecureRandom.uuid
+  warn token
+  
   user = begin
     User.create!(
       email: email,
       full_name: full_name,
+      confirmation_token: token
     )
   # Return bad request if validation fails.
   rescue Mongoid::Errors::Validations
@@ -118,7 +122,9 @@ put '/users', auth: [] do
     EventAnalysis.track user, 'User completed registration'
 
     user.verifier.save!
-
+    
+    send_confirm_email(user)
+    
   end
 
   # Update the keypair.
@@ -188,4 +194,22 @@ delete '/users/:user_id', auth: [] do |user_id|
   # Return empty JSON.
   encrypt_response(empty_response)
 
+end
+
+get '/users/:user_id/confirm' do |user_id|
+  
+  token, user = params[:token], nil
+
+  begin
+    user = User.find(user_id)
+    raise unless user.confirmation_token == token
+  rescue
+    error 403, 'unauthorized'
+  else
+    user.confirmed = true
+    user.save!
+  end
+
+  redirect 'https://getsyme.com?confirm=1'
+  
 end

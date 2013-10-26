@@ -136,7 +136,9 @@ Syme.Auth = {
               } else if (data.status == 'error') {
 
                 // Non-deterministic Heisenbug with login
-                if (hack) {
+                 if (data.reason == 'confirm') {
+                  Syme.Router.navigate('confirm');
+                 } else if (hack) {
 
                   Syme.Auth.logout(function () {
                     Syme.Router.navigate('login');

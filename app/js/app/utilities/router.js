@@ -72,6 +72,7 @@ Syme.Router = Backbone.Router.extend({
     'login':    'login',
     'register': 'register',
     'logout':   'logout',
+    'confirm': 'confirm',
 
     /* Logged-in routes */
 
@@ -136,6 +137,10 @@ Syme.Router = Backbone.Router.extend({
     Syme.Auth.logout(function () {
       window.location = '';
     });
+  },
+  
+  confirm: function () {
+    this.loadStaticPage('confirm', true);
   },
 
   /* LOGGED-IN ROUTES */

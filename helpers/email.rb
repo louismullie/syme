@@ -132,3 +132,13 @@ def notify_confirmed(invite)
   send_email_to(invitee.email, subject, message)
 
 end
+
+def send_confirm_email(user)
+
+  subject = "Confirm your new account on Syme"
+
+  message = email_template :send_email_confirm, user.email, { user: user }
+
+  send_email_to(user.email, subject, message)
+
+end
