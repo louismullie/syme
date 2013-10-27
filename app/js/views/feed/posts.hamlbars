@@ -6,10 +6,10 @@
 
 #empty-group-notice
   %h4
-    Welcome to your group.
+    {{t "introduction.steps.third.explanation"}}?
 
   %p
-    It's lonely out here... Do you want to
-    <a href="#" id="add-user-first">invite someone</a>?
+    {{t "introduction.steps.third.subtext.message"}}
+    <a href="#" id="add-user-first">{{t "introduction.steps.third.subtext.link"}}</a>?
 
 {{/if}}

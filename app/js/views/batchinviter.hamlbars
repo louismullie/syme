@@ -7,30 +7,30 @@
       #bullet-steps-container
         .bullet-step
           .bullet-title
-            Create a group
+            {{t "introduction.steps.first.action"}}
 
         .bullet-step
           .bullet-title
-            Invite people
+            {{t "introduction.steps.first.action"}}
 
         .bullet-step
           .bullet-title
-            Start sharing
+            {{t "introduction.steps.first.action"}}
 
     %h3
-      Invite people by email
+      {{t "introduction.steps.second.action"}}
 
     #tags-container
       #tags
-        %input{ type: 'text', placeholder: 'Enter a list of emails', maxlength: 50 }
+        %input{ type: 'text', placeholder: '{{t "introduction.steps.second.explanation"}}', maxlength: 50 }
 
     %a#batchinvite-link.empty{ href: '#' }
       %span.empty
-        Add email
+        {{t "introduction.steps.second.buttons.edit"}}
         %i.icon-plus
 
       %span.full
-        Start sharing
+        {{t "introduction.steps.second.buttons.submit"}}
         %i.icon-arrow-right
 
       <div class="nprogress-spinner"><div class="nprogress-spinner-icon"></div></div>

@@ -7,22 +7,22 @@
       #bullet-steps-container
         .bullet-step
           .bullet-title
-            Create a group
+            {{t "introduction.steps.first.action"}}
 
         .bullet-step
           .bullet-title
-            Invite people
+            {{t "introduction.steps.second.action"}}
 
         .bullet-step
           .bullet-title
-            Start sharing
+            {{t "introduction.steps.third.action"}}
 
-    %h3 Name your first encrypted group:
+    %h3 {{t "introduction.steps.first.explanation"}}
 
     %form#create-first-group-form{ method: 'post' }
       #create-first-group-box
-        %input{ type: 'text', name: 'name', placeholder: 'e.g. Family and friends', maxlength: 50 }
+        %input{ type: 'text', name: 'name', placeholder: '{{t "introduction.steps.first.example"}}', maxlength: 50 }
 
       %a#create-first-group-link.disabled{ href: '#', role: 'submit' }
-        Create a group
+        {{t "introduction.steps.first.action"}}
         %i.icon-arrow-right
