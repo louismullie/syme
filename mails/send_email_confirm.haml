@@ -2,13 +2,13 @@
   Hey #{locals[:user].full_name},
 
 %p{ style: 'margin: 0 0 1em 0;' }
-  Welcome to Syme, the encrypted social network. All we need to do is
+  Welcome to Syme, a simple way to share privately with groups. All we need to do is
   verify this is really your email address by clicking below:
 
-
-  %p{ style: 'margin: 2em 0;' }
-    %a{ href: ('http://localhost:5000/users/' + locals[:user].id + '/confirm?token=' + locals[:user].confirmation_token), target: '_blank', style: 'display: block; width: 70%; margin: 0 auto; text-align: center; font-size: 1.3em; font-weight: normal; background-color:#F5F5F5; padding: 15px 10px; color: #000; text-decoration: none; border-radius: 3px; line-height: 30px; border: 1px solid #ccc'}
+%p{ style: 'margin: 2em 0;' }
+   %a{ href: ('http://localhost:5000/users/' + locals[:user].id + '/confirm?token=' + locals[:user].confirmation_token), target: '_blank', style: 'display: block; width: 70%; margin: 0 auto; text-align: center; font-size: 1.3em; font-weight: normal; background-color:#F5F5F5; padding: 15px 10px; color: #000; text-decoration: none; border-radius: 3px; line-height: 30px; border: 1px solid #ccc'}
       Confirm my account
 
 %p{ style: 'margin: 0 0 1em 0;' }
-  Once you've successfully activated your account, you can throw away this e-mail.
+  Best,
+	The Team at Syme
