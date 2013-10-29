@@ -142,3 +142,13 @@ def send_confirm_email(user)
   send_email_to(user.email, subject, message)
 
 end
+
+def send_survey_email(user)
+  
+  subject = "Help us improve Syme!"
+
+  message = email_template(:survey, user.email, { user: user })
+
+  send_email_to(user.email, subject, message)
+  
+end
