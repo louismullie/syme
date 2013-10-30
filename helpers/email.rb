@@ -2,7 +2,7 @@
 def send_email_to(email, subject, body)
 
   # return if settings.environment != :production && !settings.running_tux
-  
+
   begin
 
     Pony.mail({
@@ -21,13 +21,13 @@ def send_email_to(email, subject, body)
         domain: "localhost.localdomain"
       }
     })
-    
+
   rescue Exception => e
-    
+
     warn "**** FAILED TO SEND EMAIL ****"
-    
+
   end
-  
+
 end
 
 # Manual HAML rendering in order to put mail templates
@@ -57,6 +57,22 @@ def batch_beta(emails)
   end
 end
 
+# Batch survey
+# 'emails' should be a string of email addresses separated by comma
+# ex: app.batch_beta('example@domain.com, example2@domain.com')
+def batch_survey(emails)
+  emails.delete(' ').split(',').each do |email|
+
+    begin
+      user = User.where(email: email)
+      send_beta_welcome(user)
+    rescue
+      warn "Can't find user"
+    end
+
+  end
+end
+
 # =====================================================
 # Mail helpers
 #
@@ -67,7 +83,7 @@ def send_beta_invite(email)
   subject = "Welcome to Syme beta"
 
   message = email_template :send_beta_invite, email
-  
+
   send_email_to(email, subject, message)
 
 end
@@ -87,7 +103,7 @@ def send_email_confirm(email)
   subject = "Confirm your Syme account"
 
   message = email_template :send_email_confirm, email, { user: @user }
-  
+
   send_email_to(email, subject, message)
 
 end
@@ -99,9 +115,9 @@ def send_invite(email)
   invitee = User.where(email: email).first
 
   template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
-  
+
   message = email_template template, email
-  
+
   send_email_to(email, subject, message)
 
 end
@@ -144,11 +160,11 @@ def send_confirm_email(user)
 end
 
 def send_survey_email(user)
-  
+
   subject = "Help us improve Syme!"
 
   message = email_template(:survey, user.email, { user: user })
 
   send_email_to(user.email, subject, message)
-  
+
 end
