@@ -62,7 +62,7 @@ end
 # ex: app.batch_beta('example@domain.com, example2@domain.com')
 def batch_survey(emails)
   emails.delete(' ').split(',').each do |email|
-    send_beta_welcome(email)
+    send_survey_email(email)
   end
 end
 
