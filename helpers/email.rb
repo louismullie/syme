@@ -62,14 +62,7 @@ end
 # ex: app.batch_beta('example@domain.com, example2@domain.com')
 def batch_survey(emails)
   emails.delete(' ').split(',').each do |email|
-
-    begin
-      user = User.where(email: email)
-      send_beta_welcome(user)
-    rescue
-      warn "Can't find user"
-    end
-
+    send_beta_welcome(email)
   end
 end
 
@@ -159,12 +152,12 @@ def send_confirm_email(user)
 
 end
 
-def send_survey_email(user)
+def send_survey_email(user_email)
 
   subject = "Help us improve Syme!"
 
-  message = email_template(:survey, user.email, { user: user })
+  message = email_template(:survey, user_email, { })
 
-  send_email_to(user.email, subject, message)
+  send_email_to(user_email, subject, message)
 
 end
