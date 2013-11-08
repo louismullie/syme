@@ -1,5 +1,5 @@
 #auth
-  %h1 Syme
+  %h1 {{t "application.title"}}
 
   #auth-methods.row
     .small-centered-column
@@ -10,19 +10,19 @@
 
         .input-text-icon
           %i.icon-envelope
-          %input{type: 'text', name: 'email', placeholder: 'Email', tabindex: '1', autocapitalize: 'off'}
+          %input{type: 'text', name: 'email', placeholder: '{{t "authentication.labels.email"}}', tabindex: '1', autocapitalize: 'off'}
 
         .input-text-icon
           %i.icon-lock
-          %input{type: 'password', name: 'password', placeholder: 'Password', tabindex: '2'}
+          %input{type: 'password', name: 'password', placeholder: '{{t "authentication.labels.password"}}', tabindex: '2'}
 
         %label{ for: 'remember_me' }
           %input#remember_me{type: 'checkbox', name: 'remember_me', tabindex: '3', checked: true}
-          %span Keep me logged in
+          %span {{t "authentication.labels.remember_me"}}
 
         %input{ type: 'submit', tabindex: '4' }
         %a.btn.btn-success{ href: '#', role: 'submit' }
-          Log in <i class="icon-spinner icon-spin"></i>
+          {{t "authentication.buttons.log_in"}} <i class="icon-spinner icon-spin"></i>
 
         %p.switchmode
-          Need an account? <a href="register" hbs>Create one</a>.
+          {{t "authentication.labels.need_register"}} <a href="register" hbs>{{t "authentication.buttons.create_account"}}</a>.

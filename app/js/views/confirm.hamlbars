@@ -1,9 +1,9 @@
 #auth
-  %h1 Syme
+  %h1 {{t "application.title"}}
 
   .row
     .small-centered-column
     
-      %p Please confirm your account.
+      %p {{t "account.confirmation.explanation"}}
 
-      BUTTON TO RETURN HOME
+      {{t "account.confirmation.buttons.return_home"}}

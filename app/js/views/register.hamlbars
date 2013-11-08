@@ -1,5 +1,5 @@
 #auth
-  %h1 Syme
+  %h1 {{t "application.title"}}
 
   #auth-methods.row
     .small-centered-column
@@ -12,24 +12,24 @@
         .validation-container
           .input-text-icon
             %i.icon-user
-            %input{ type: 'text', name: 'full_name', tabindex: '1', placeholder: 'Full name', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', minlength: 5, required: '' }
+            %input{ type: 'text', name: 'full_name', tabindex: '1', placeholder: '{{t "authentication.labels.full_name"}}', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', minlength: 5, required: '' }
 
         .validation-container
           .input-text-icon
             %i.icon-envelope
-            %input{ type: 'text', name: 'email', tabindex: '2', placeholder: 'Email address', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', :'data-validate-email' => 'true', required: '' }
+            %input{ type: 'text', name: 'email', tabindex: '2', placeholder: '{{t "authentication.labels.email"}}', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', :'data-validate-email' => 'true', required: '' }
 
         .validation-container
           .input-text-icon
             %i.icon-lock
-            %input{ type: 'password', name: 'password', tabindex: '3', placeholder: 'Password', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true', :'data-validate-differs-from' => 'full_name, email' }
+            %input{ type: 'password', name: 'password', tabindex: '3', placeholder: '{{t "authentication.labels.password"}}', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true', :'data-validate-differs-from' => 'full_name, email' }
 
             #password-score.validation-append.hidden
 
         .validation-container
           .input-text-icon
             %i.icon-lock
-            %input{ type: 'password', name: 'password_confirm', tabindex: '4', placeholder: 'Confirm password', :'data-validate-equals-to' => 'password' }
+            %input{ type: 'password', name: 'password_confirm', tabindex: '4', placeholder: '{{t "authentication.labels.confirm_password"}}', :'data-validate-equals-to' => 'password' }
 
         .validation-container
           %label{ for: 'i_agree' }
@@ -40,7 +40,7 @@
 
         %input{ type: 'submit' }
         %a.btn.btn-success{ href: '#', role: 'submit', tabindex: '5' }
-          Register <i class="icon-spinner icon-spin"></i>
+          {{t "authentication.buttons.register"}} <i class="icon-spinner icon-spin"></i>
 
         %p.switchmode
-          Already registered? <a href="login" hbs>Log in</a>.
+          {{t "authentication.labels.already_register"}} <a href="login" hbs>{{t "authentication.buttons.log_in"}}</a>.

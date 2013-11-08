@@ -134,7 +134,9 @@ Syme.Session = function (csrfToken) {
     console.log(data);
     
     Syme.CurrentSession.setCsrfToken(data.csrf);
-    Syme.CurrentSession.setAccessToken(data.access_token);
+    
+    if (data.access_token)
+      Syme.CurrentSession.setAccessToken(data.access_token);
     
     _this.groups = data.groups;
     _this.groupMembers = data.group_members;
@@ -248,7 +250,9 @@ Syme.Session = function (csrfToken) {
   };
   
   this.getAccessToken = function () {
+    
     return this.token;
+    
   };
   
   this.setGroupId = function (groupId) {

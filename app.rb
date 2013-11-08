@@ -29,6 +29,8 @@ module Syme
     CommentObserver, LikeObserver 
 
     Mongoid.instantiate_observers
+    
+    $cordova_fix = true
 
   end
 

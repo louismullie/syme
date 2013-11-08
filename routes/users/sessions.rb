@@ -24,9 +24,16 @@ get '/users/:user_id/sessions/:session_id' do |_, session_id|
     password_key: session[:password_key],
     group_members: group_members,
     csrf: csrf_token,
-    groups: @user.groups.map(&:id).map(&:to_s),
-    access_token: @user.access_token
-  }.to_json
+    groups: @user.groups.map(&:id).map(&:to_s)
+  }
+  
+  if $cordova_fix
+    response.merge!({
+      access_token: @user.access_token
+    })
+  end
+  
+  response.to_json
 
 end
 

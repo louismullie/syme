@@ -50,6 +50,6 @@
 // No notifications
 .notification{ id: 'empty' }
   %p.empty-notification
-    No new notifications.
+    {{t "account.notifications.labels.none_new"}}
 
 {{/unless}}

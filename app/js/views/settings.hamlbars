@@ -1,20 +1,20 @@
 #settings.row
   .small-centered-column
     %h1
-      Settings
+      {{t "account.settings.title"}}
       %i.icon-cog
 
     .settings-panel
-      %h3 Your name
+      %h3 {{t "account.settings.labels.full_name"}}
 
       %form#change-name{ method: 'post' }
         %input{ type: 'text', name: 'full_name', placeholder: '{{full_name}}', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', maxlength: '70' }
 
         %input{ type: 'submit' }
         %a#change-name-button.btn.btn-success.disabled{ href: '#', role: 'submit' }
-          %span.default Save
+          %span.default {{t "account.settings.buttons.save"}}
           %span.active
-            Saving
+            {{t "account.settings.buttons.saving"}}
             %i.icon-spinner.icon-spin
 
       //%h3 Your email
@@ -29,17 +29,15 @@
       //      Saving
       //      %i.icon-spinner.icon-spin
 
-      %h3 Delete your account
+      %h3 {{t "account.settings.labels.delete_account"}}
 
       .explanation-box
-        %p
-          <b>Warning.</b> Deleting your account is irreversible. Doing so will delete all data associated to your account, including all your posts and every group you have created.
-
-        %p Type <strong class="warning">delete</strong> to delete your account.
+        %p {{{t "account.settings.messages.delete_account"}}}
+        %p {{{t "account.settings.messages.delete_account_confirm"}}}
 
       %form#delete-account{ method: 'post' }
         %input{ type: 'text', name: 'delete', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false' }
 
         %input{ type: 'submit' }
         %a#delete-account-button.btn.btn-danger.disabled{ href: '#', role: 'submit' }
-          Delete account
+          {{t "account.settings.buttons.delete_account"}}
