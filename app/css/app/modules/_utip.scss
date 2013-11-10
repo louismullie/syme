@@ -1,0 +1,154 @@
+$utipPaddingH:    15px;
+$utipPaddingV:    10px;
+$utipOffset:      10px;
+$utipArrowSize:   10px;
+$utipArrowOffset: 10px;
+$utipBackground:  black;
+
+// Triangle mixin from git@ thoughtbot / bourbon
+@mixin triangle ($size, $color, $direction) {
+  height: 0;
+  width: 0;
+
+  @if ($direction == up) or ($direction == down) or ($direction == right) or ($direction == left) {
+    border-color: transparent;
+    border-style: solid;
+    border-width: $size / 2;
+
+    @if $direction == up {
+      border-bottom-color: $color;
+
+    } @else if $direction == right {
+      border-left-color:   $color;
+
+    } @else if $direction == down {
+      border-top-color:    $color;
+
+    } @else if $direction == left {
+      border-right-color:  $color;
+    }
+  }
+
+  @else if ($direction == up-right) or ($direction == up-left) {
+    border-top: $size solid $color;
+
+    @if $direction == up-right {
+      border-left:  $size solid transparent;
+
+    } @else if $direction == up-left {
+      border-right: $size solid transparent;
+    }
+  }
+
+  @else if ($direction == down-right) or ($direction == down-left) {
+    border-bottom: $size solid $color;
+
+    @if $direction == down-right {
+      border-left:  $size solid transparent;
+
+    } @else if $direction == down-left {
+      border-right: $size solid transparent;
+    }
+  }
+}
+
+#utip {
+  position: absolute;
+  z-index: 1000;
+
+  padding: $utipPaddingV $utipPaddingH;
+
+  border-radius: 4px;
+
+  background: black;
+  color: white;
+
+  &::before {
+    position: absolute;
+    content: '';
+  }
+
+  &[data-gravity="ne"] {
+    margin-top: -$utipOffset;
+    margin-left: -($utipArrowOffset + $utipArrowSize / 2);
+
+    &::before {
+      bottom: -$utipPaddingV;
+      left: $utipArrowOffset ;
+      @include triangle($utipArrowSize, $utipBackground, down);
+    }
+  }
+  &[data-gravity="n"] {
+    margin-top: -$utipOffset;
+
+    &::before {
+      bottom: -$utipPaddingV;
+      left: 50%;
+      margin-left: -($utipArrowSize / 2);
+      @include triangle($utipArrowSize, $utipBackground, down);
+    }
+  }
+  &[data-gravity="nw"] {
+    margin-top: -$utipOffset;
+    margin-left: $utipArrowOffset + $utipArrowSize / 2;
+
+    &::before {
+      bottom: -$utipPaddingV;
+      right: $utipArrowOffset ;
+      @include triangle($utipArrowSize, $utipBackground, down);
+    }
+  }
+
+  &[data-gravity="e"] {
+    margin-left: $utipOffset;
+
+    &::before {
+      top: 50%;
+      margin-top: -($utipArrowSize / 2);
+      left: -$utipArrowSize;
+      @include triangle($utipArrowSize, $utipBackground, left);
+    }
+  }
+
+  &[data-gravity="se"] {
+    margin-top: $utipOffset;
+    margin-left: -($utipArrowOffset + $utipArrowSize / 2);
+
+    &::before {
+      top: -$utipPaddingV;
+      left: $utipArrowOffset ;
+      @include triangle($utipArrowSize, $utipBackground, up);
+    }
+  }
+  &[data-gravity="s"] {
+    margin-top: $utipOffset;
+
+    &::before {
+      top: -$utipPaddingV;
+      left: 50%;
+      margin-left: -($utipArrowSize / 2);
+      @include triangle($utipArrowSize, $utipBackground, up);
+    }
+  }
+  &[data-gravity="sw"] {
+    margin-top: $utipOffset;
+    margin-left: $utipArrowOffset + $utipArrowSize / 2;
+
+    &::before {
+      top: -$utipPaddingV;
+      right: $utipArrowOffset ;
+      @include triangle($utipArrowSize, $utipBackground, up);
+    }
+  }
+
+  &[data-gravity="w"] {
+    margin-left: -$utipOffset;
+
+    &::before {
+      top: 50%;
+      margin-top: -($utipArrowSize / 2);
+      right: -$utipArrowSize;
+      @include triangle($utipArrowSize, $utipBackground, right);
+    }
+  }
+}
