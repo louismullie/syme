@@ -1,5 +1,8 @@
 Syme.Binders.add('global', { main: function(){
 
+  // uTip
+  $('[data-utip]').utip();
+
   // Popovers
   $(document).on('click', 'a[data-popover]', function(e){
 
@@ -11,19 +14,14 @@ Syme.Binders.add('global', { main: function(){
     // Toggle it
     if ( container.is(':visible') ) {
 
-      // Reset possible hidden tooltips
-      $(this).removeClass('hint--hidden');
-
       // Hide popover
       container.hide();
 
     } else {
 
-      // Hide possible tooltips
-      $(this).addClass('hint--hidden');
-
-      // Hide possible popovers
+      // Hide possible popovers and tooltips
       $('.popover').hide();
+      $('#utip').remove();
 
       // Show popover
       container.fadeIn(100);
@@ -35,7 +33,7 @@ Syme.Binders.add('global', { main: function(){
   // Hide popovers on outside click
   $(document).on('click', function(e){
     // Reset possible hidden tooltips
-    $('a[data-popover]').removeClass('hint--hidden');
+    $('#utip').remove();
 
     // Hide popover
     $('.popover').hide();

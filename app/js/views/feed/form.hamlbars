@@ -32,7 +32,7 @@
       %span.filename
       %span.filesize
 
-      %a.delete-upload.hint--left{ href: '#', :'data-hint' => 'Remove' }
+      %a.delete-upload{ href: '#', :'data-utip' => 'Remove', :'data-utip-gravity' => 'w' }
         %i.icon-remove
 
   .row.collapse

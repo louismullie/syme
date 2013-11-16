@@ -1,7 +1,7 @@
 .modal-title
   Invite by Email
 
-  %a.hint--left{ href: '#', role: 'close-modal', :'data-hint' => 'Close' }
+  %a{ href: '#', role: 'close-modal', :'data-utip' => 'Close', :'data-utip-gravity' => 'w' }
     %i.icon-remove-sign
 
 .modal-content

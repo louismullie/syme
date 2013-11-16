@@ -3,13 +3,13 @@
     {{#if deletable}}
 
     // Delete group
-    %a.delete-group.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Delete group' }
+    %a.delete-group.btn.btn-white{ href: '#', :'data-group-id' => '{{id}}', :'data-utip' => 'Delete group', :'data-utip-gravity' => 'w' }
       %i.icon-trash
 
     {{else}}
 
     // Leave group
-    %a.leave-group.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Leave group' }
+    %a.leave-group.btn.btn-white{ href: '#', :'data-group-id' => '{{id}}', :'data-utip' => 'Leave group', :'data-utip-gravity' => 'w' }
       %i.icon-signout
 
     {{/if}}

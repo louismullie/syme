@@ -1,9 +1,14 @@
-$utipPaddingH:    15px;
-$utipPaddingV:    10px;
+// uTip, unobtrusive tooltips for jQuery
+// Version 0.1.1
+// (c) Syme (git @ symeapp)
+// Released under the MIT license
+
+$utipPadding:     6px 15px;
 $utipOffset:      10px;
 $utipArrowSize:   10px;
 $utipArrowOffset: 10px;
 $utipBackground:  black;
+$utipFontSize:    14px;
 
 // Triangle mixin from git@ thoughtbot / bourbon
 @mixin triangle ($size, $color, $direction) {
@@ -56,12 +61,15 @@ $utipBackground:  black;
   position: absolute;
   z-index: 1000;
 
-  padding: $utipPaddingV $utipPaddingH;
+  padding: $utipPadding;
 
   border-radius: 4px;
 
   background: black;
   color: white;
+  font-size: $utipFontSize;
+
+  white-space: nowrap;
 
   &::before {
     position: absolute;
@@ -73,7 +81,7 @@ $utipBackground:  black;
     margin-left: -($utipArrowOffset + $utipArrowSize / 2);
 
     &::before {
-      bottom: -$utipPaddingV;
+      bottom: -$utipArrowSize;
       left: $utipArrowOffset ;
       @include triangle($utipArrowSize, $utipBackground, down);
     }
@@ -82,7 +90,7 @@ $utipBackground:  black;
     margin-top: -$utipOffset;
 
     &::before {
-      bottom: -$utipPaddingV;
+      bottom: -$utipArrowSize;
       left: 50%;
       margin-left: -($utipArrowSize / 2);
       @include triangle($utipArrowSize, $utipBackground, down);
@@ -93,7 +101,7 @@ $utipBackground:  black;
     margin-left: $utipArrowOffset + $utipArrowSize / 2;
 
     &::before {
-      bottom: -$utipPaddingV;
+      bottom: -$utipArrowSize;
       right: $utipArrowOffset ;
       @include triangle($utipArrowSize, $utipBackground, down);
     }
@@ -115,7 +123,7 @@ $utipBackground:  black;
     margin-left: -($utipArrowOffset + $utipArrowSize / 2);
 
     &::before {
-      top: -$utipPaddingV;
+      top: -$utipArrowSize;
       left: $utipArrowOffset ;
       @include triangle($utipArrowSize, $utipBackground, up);
     }
@@ -124,7 +132,7 @@ $utipBackground:  black;
     margin-top: $utipOffset;
 
     &::before {
-      top: -$utipPaddingV;
+      top: -$utipArrowSize;
       left: 50%;
       margin-left: -($utipArrowSize / 2);
       @include triangle($utipArrowSize, $utipBackground, up);
@@ -135,7 +143,7 @@ $utipBackground:  black;
     margin-left: $utipArrowOffset + $utipArrowSize / 2;
 
     &::before {
-      top: -$utipPaddingV;
+      top: -$utipArrowSize;
       right: $utipArrowOffset ;
       @include triangle($utipArrowSize, $utipBackground, up);
     }

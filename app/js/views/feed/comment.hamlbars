@@ -4,7 +4,7 @@
 
   -# Delete button
   {{#if deletable}}
-  %a.comment-delete.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Delete' }
+  %a.comment-delete.btn.btn-white{ href: '#', :'data-utip' => 'Delete', :'data-utip-gravity' => 'w' }
     %i.icon-remove
   {{/if}}
 
@@ -14,7 +14,7 @@
 
   -# Footer
   .comment-footer
-    %a.time.hint--bottom{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{post_id}}', hbs: '', 'data-hint' => '{{full_time}}' }
+    %a.time{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{post_id}}', hbs: '', 'data-utip' => '{{full_time}}', :'data-utip-gravity' => 's' }
       %time.timeago{ datetime: '{{created_at}}' }
 
     %span &middot;

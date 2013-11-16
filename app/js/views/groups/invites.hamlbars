@@ -5,11 +5,11 @@
   .group-banner
 
     {{#compare state 1}}
-    %a.decline-invitation.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Decline invitation' }
+    %a.decline-invitation.btn.btn-white{ href: '#', :'data-group-id' => '{{id}}', :'data-utip' => 'Decline invitation', :'data-utip-gravity' => 'w' }
       %i.icon-trash
     {{/compare}}
     {{#compare state 2}}
-    %a.cancel-invitation.btn.btn-white.hint--left{ href: '#', :'data-group-id' => '{{id}}', :'data-hint' => 'Cancel invitation' }
+    %a.cancel-invitation.btn.btn-white{ href: '#', :'data-group-id' => '{{id}}', :'data-utip' => 'Cancel invitation', :'data-utip-gravity' => 'w' }
       %i.icon-trash
     {{/compare}}
 
@@ -37,14 +37,14 @@
 
       <b>{{inviter_name}}</b> needs to confirm before you can join
       <b>{{group_name}}</b>. As soon as that's done, you're in.
-      
+
       &nbsp; &mdash; &nbsp;
-      
+
       %a.fingerprint-link{ href: '#' }
         <span class="expand">View</span>
         <span class="collapse">Hide</span>
         fingerprints
-        
+
       .fingerprint-box.hidden
         You: <span class="you"></span>
         {{inviter_name}}: <span class="inviter"></span>

@@ -2,7 +2,7 @@
   Members ({{users.length}})
 
   %span.actions
-    %a#add-user.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Send invite' }
+    %a#add-user.btn.btn-white{ href: '#', :'data-utip' => 'Send invite', :'data-utip-gravity' => 'w' }
       %i.icon-plus
 
 %ul#userlist.scrollable
@@ -23,28 +23,29 @@
         // If inviter is awaiting invitee's acceptance, show link to token
         {{#compare state 1}}
         // Replace by GET request with only invite ID, which returns the rest.
-        %a.invite-pending.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Pending' }>
+        %a.invite-pending.btn.btn-white{ href: '#', :'data-utip' => 'Pending', :'data-utip-gravity' => 'w' }>
           %i.icon-time
         {{/compare}}
 
         // If invitee is awaiting inviter's confirmation, show link to confirmation
         {{#compare state 2}}
         // Replace by GET request with only invite ID, which returns the rest.
-        %a.invite-confirm.btn.btn-white.hint--left{ href: '#',:'data-hint' => 'Confirm',
-                                                    'data-invite-id'         => '{{id}}',
-                                                    'data-invite-invitee_id' => '{{invitee_id}}',
-                                                    'data-invite-accept'     => '{{accept}}',
-                                                    'data-invite-invitee_full_name' => '{{invitee_full_name}}',
-                                                    'data-invite-email' => '{{email}}',
-                                                    'data-invite-group_id'   => '{{group_id}}' }>
+        %a.invite-confirm.btn.btn-white{ href: '#', :'data-utip' => 'Confirm', :'data-utip-gravity' => 'w',
+                                         'data-invite-id'         => '{{id}}',
+                                         'data-invite-invitee_id' => '{{invitee_id}}',
+                                         'data-invite-accept'     => '{{accept}}',
+                                         'data-invite-invitee_full_name' => '{{invitee_full_name}}',
+                                         'data-invite-email' => '{{email}}',
+                                         'data-invite-group_id'   => '{{group_id}}' }>
           %i.icon-ok
         {{/compare}}
 
         // In either case, show delete button
-        %a.invite-delete.btn.btn-white.hint--left{ href: '#',
-                                                      :'data-hint' => 'Cancel invitation',
-                                                      :'data-invite-group_id'   => '{{group_id}}',
-                                                      :'data-invite-id' => '{{id}}' }
+        %a.invite-delete.btn.btn-white{ href: '#',
+                                           :'data-utip' => 'Cancel invitation',
+                                           :'data-utip-gravity' => 'w',
+                                           :'data-invite-group_id'   => '{{group_id}}',
+                                           :'data-invite-id' => '{{id}}' }
           %i.icon-trash
 
     {{/each}}
@@ -61,7 +62,7 @@
 
     -# Delete button
     {{#if deletable}}
-    %a.user-delete.btn.btn-white.hint--left{ href: '#', :'data-hint' => 'Delete' }
+    %a.user-delete.btn.btn-white{ href: '#', :'data-utip' => 'Delete', :'data-utip-gravity' => 'w' }
       %i.icon-remove
     {{/if}}
 

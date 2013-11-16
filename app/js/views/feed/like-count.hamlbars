@@ -2,7 +2,7 @@
 {{#with likeable}}
 {{#compare like_count '>' 0}}
 %span &middot;
-%a.like-count.hint--top{ href: '#', :'data-hint' => '{{liker_names}}' }
+%a.like-count{ href: '#', :'data-utip' => '{{liker_names}}', :'data-utip-gravity' => 'n' }
   %i.icon-thumbs-up-alt
   %span {{like_count}}
 

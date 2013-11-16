@@ -10,12 +10,12 @@
         {{owner.name}}
 
         // Post time
-        %a.time.hint--bottom{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{id}}', hbs: '', 'data-hint' => '{{full_time}}' }
+        %a.time{ href: '/users/{{current_user_id}}/groups/{{current_group_id}}/posts/{{id}}', hbs: '', 'data-utip' => '{{full_time}}', :'data-utip-gravity' => 's' }
           %time.timeago{ datetime: '{{created_at}}' }
 
       // Delete button
       {{#if deletable}}
-      %a.btn.btn-white.post-delete.hint--left{ href: '#', :'data-hint' => 'Delete' }
+      %a.btn.btn-white.post-delete{ href: '#', :'data-utip' => 'Delete', :'data-utip-gravity' => 'w' }
         %i.icon-remove
       {{/if}}
 

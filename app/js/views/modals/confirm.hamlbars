@@ -2,7 +2,7 @@
   {{title}}
 
   {{#if closable}}
-  %a.hint--left{ href: '#', role: 'close-modal', :'data-hint' => 'Close' }
+  %a{ href: '#', role: 'close-modal', :'data-utip' => 'Close', :'data-utip-gravity' => 'w' }
     %i.icon-remove-sign
   {{/if}}
 
