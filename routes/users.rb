@@ -126,6 +126,7 @@ put '/users', auth: [] do
     
     unless user.emails_sent[:confirm_email]
       send_confirm_email(user)
+      warn "SENDING CONFIRM EMAIL"
       emails_sent = user.emails_sent
       emails_sent[:confirm_email] = true
       user.emails_sent = emails_sent
