@@ -1,10 +1,10 @@
 OriginWhitelist = ['chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani']
 
-#set :protection,
-#     except: [:http_origin, :frame_options],
-#     origin_whitelist: OriginWhitelist
+set :protection,
+     except: [:http_origin],
+     origin_whitelist: OriginWhitelist
 
-enable :protection
+# enable :protection
 
 EMAIL_SALT = '"a$$#!%@&Fe39n#?*4n4C$ni'
 
