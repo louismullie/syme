@@ -30,12 +30,12 @@ Syme.Binders.add('feed', { invite: function() {
 
           onshow: function() {
             $('#responsive-modal .you')
-              .text(Syme.Helpers.shortenFingerprint(fingerprints.inviteeFingerprint))
-              .attr('title', fingerprints.inviteeFingerprint);
-
-            $('#responsive-modal .invitee')
               .text(Syme.Helpers.shortenFingerprint(fingerprints.inviterFingerprint))
               .attr('title', fingerprints.inviterFingerprint);
+
+            $('#responsive-modal .invitee')
+              .text(Syme.Helpers.shortenFingerprint(fingerprints.inviteeFingerprint))
+              .attr('title', fingerprints.inviteeFingerprint);
           },
 
           onsubmit: function() {

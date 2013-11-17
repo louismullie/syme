@@ -297,8 +297,6 @@ Syme.Binders.add('groups', { main: function() {
 
           var baseUrl = Syme.Url.fromGroup(groupId);
           
-          NProgress.showSpinner();
-          
           var deleteMembershipUrl = Syme.Url.join(
             baseUrl, 'memberships', userId);
 
@@ -308,7 +306,7 @@ Syme.Binders.add('groups', { main: function() {
 
             // Callback when membership deletion succeeded.
             success: function () {
-
+              
               var user = Syme.CurrentSession.getUser();
 
               user.deleteKeylist(groupId, function () {
