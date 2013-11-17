@@ -137,7 +137,7 @@ namespace :extensions do
     FileUtils.cp(css_path, File.join(build_path, 'assets'))
     
     # Copy unminified workers to the target /workers directory.
-    Dir[File.join(worker_path, '*.js')].each do |worker|
+    Dir[File.join(worker_path, '/**/*.js')].each do |worker|
       FileUtils.cp(worker, File.join(build_path, 'workers'))
     end
     
