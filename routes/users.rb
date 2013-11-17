@@ -67,7 +67,8 @@ post '/users' do
     User.create!(
       email: email,
       full_name: full_name,
-      confirmation_token: token
+      confirmation_token: token,
+      unsubscribed: false
     )
   # Return bad request if validation fails.
   rescue Mongoid::Errors::Validations
