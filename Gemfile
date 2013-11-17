@@ -11,8 +11,6 @@ gem 'rufus-scheduler'
 gem 'rack-ssl',
   require: 'rack/ssl'
 gem 'content-security-policy'
-gem 'rack_csrf',
-  require: 'rack/csrf'
 gem 'rack-attack',
   require: 'rack/attack'
 gem 'srp-rb'
