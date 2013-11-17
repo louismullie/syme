@@ -9,9 +9,9 @@
 
     %link{rel: 'icon', href: 'img/favicon.ico'}
 
-    %link{rel: 'stylesheet', type: 'text/css', href: 'assets/app.css'}
+    %link{rel: 'stylesheet', type: 'text/css', href: '/assets/app.css'}
 
-    %script{type: 'text/javascript', src: 'assets/app.js'}
+    %script{type: 'text/javascript', src: '/assets/app.js'}
 
   %body
     %img#splashlogo{ src: 'img/logo-128x128.png'}

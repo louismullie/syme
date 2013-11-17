@@ -30,7 +30,7 @@ module Syme
 
     Mongoid.instantiate_observers
     
-    $cordova_fix = true
+    $cordova_fix = false
 
   end
 
