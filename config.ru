@@ -54,7 +54,7 @@ map '/assets' do
 
     HandlebarsAssets::Config.compiler = 'handlebars.min.js'
     HandlebarsAssets::Config.compiler_path = 
-    File.join(settings.root, 'app', 'js', 'vendor')
+    File.join($root, 'app', 'js', 'vendor')
     
   end
   
