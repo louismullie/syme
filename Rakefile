@@ -135,11 +135,7 @@ namespace :extensions do
     # Copy compiled JS and CSS to target /assets directory.
     FileUtils.cp(js_path, File.join(build_path, 'assets'))
     FileUtils.cp(css_path, File.join(build_path, 'assets'))
-    
-    # Copy unminified workers to the target /workers directory.
-    Dir[File.join(worker_path, '/**/*.js')].each do |worker|
-      FileUtils.cp(worker, File.join(build_path, 'workers'))
-    end
+    FileUtils.cp(worker_path, File.join(build_path, 'workers'))
     
     # Copy main HTML file to extension directory.
     layout_path = File.join('app', 'js', 'views', 'layout.hamlbars')
