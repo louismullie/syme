@@ -36,4 +36,6 @@ class User
   field :emails_sent, type: Hash, default: {}
   field :last_seen, type: DateTime, default: -> { DateTime.now }
   
+  field :unsubscribed, type: Boolean, default: false
+  
 end

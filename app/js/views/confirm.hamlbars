@@ -1,9 +1,13 @@
 #auth
   %h1 {{t "application.title"}}
 
-  .row
+  #auth-methods.row
     .small-centered-column
-    
-      %p {{t "account.confirmation.explanation"}}
 
-      {{t "account.confirmation.buttons.return_home"}}
+      %form#login-form.centered-text{method: 'post'}
+
+        %h2
+          Welcome to Syme
+
+        %div
+          We've sent you a confirmation e-mail with a link to activate your account. See you inside!
