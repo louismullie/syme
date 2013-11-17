@@ -296,7 +296,9 @@ Syme.Binders.add('groups', { main: function() {
         onsubmit: function(){
 
           var baseUrl = Syme.Url.fromGroup(groupId);
-
+          
+          NProgress.showSpinner();
+          
           var deleteMembershipUrl = Syme.Url.join(
             baseUrl, 'memberships', userId);
 

@@ -9,14 +9,15 @@ before do
       @user = User.find(user_id)
     rescue Mongoid::Errors::DocumentNotFound
       # User deleted meanwhile
+      warn "USER CANNOT BE FOUND"
     end
-  elsif env['HTTP_ACCESSTOKEN']
-    begin
-      token = JSON.parse(env['HTTP_ACCESSTOKEN'])
-      user = User.find(token['user_id'])
-      raise unless user.access_token == token['access_token']
-      @user = user
-    rescue; end
+  #elsif env['HTTP_ACCESSTOKEN']
+  #  begin
+  #    token = JSON.parse(env['HTTP_ACCESSTOKEN'])
+  #    user = User.find(token['user_id'])
+  #    raise unless user.access_token == token['access_token']
+  #    @user = user
+  #  rescue; end
   end
   
   # Set default content type.
