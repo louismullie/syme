@@ -1,5 +1,8 @@
 before do
-
+  
+  # Obfuscate the server type
+  response.headers['Server'] = 'syme'
+  
   # Get the current user's infos.
   if user_id = session[:user_id]
     begin
@@ -18,9 +21,6 @@ before do
   
   # Set default content type.
   content_type 'application/json'
-  
-  # Obfuscate the server type
-  response.headers['Server'] = 'syme'
   
   # If this is a preflight OPTIONS request, then short-circuit the
   # request, return only the necessary headers with status code 200.

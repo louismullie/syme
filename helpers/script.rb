@@ -1,5 +1,5 @@
 def csrf_token
-  session[:csrf] || 'null'
+  session[:csrf_token] ||= SecureRandom.uuid
 end
 
 def h(text)

@@ -20,6 +20,7 @@ function Downloader(id, keys, options) {
   this.options.numWorkers = options.numWorkers || 4;
   this.options.baseUrl = options.baseUrl || '/file/';
   this.options.privKey = options.privKey;
+  this.options.csrfToken  = options.csrfToken  || '';
   this.options.workerPath = options.workerPath || 'workers/';
   this.options.token = options.token || '';
 
@@ -116,6 +117,7 @@ function Downloader(id, keys, options) {
       _this.key = key;
       xhr.open("GET", fileUrl);
       xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
+      xhr.setRequestHeader('X_CSRF_TOKEN', _this.options.csrfToken);
       xhr.setRequestHeader('AccessToken', _this.options.token);
       xhr.send();
       
@@ -150,7 +152,7 @@ function Downloader(id, keys, options) {
     this.workerPool.queueJob({
       id: this.fileId, chunk: chunk,
       worker: worker, key: this.key,
-      url: fileUrl
+      url: fileUrl, csrf: this.options.csrfToken
     }, this);
 
   };

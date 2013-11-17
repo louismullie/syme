@@ -159,7 +159,7 @@ namespace :extensions do
     
     # Edit SERVER_URL to poll remote server.
     search = /SERVER_URL[\s]*=[\s]*window\.location\.origin;/
-    replace = 'SERVER_URL="https://getsyme.com:81";'
+    replace = 'SERVER_URL="https://getsyme.com/api";'
     
     # Replace SERVER_URL in the app.js file.
     content = File.read(app_path)
