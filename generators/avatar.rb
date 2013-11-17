@@ -25,7 +25,7 @@ class AvatarGenerator
       {
         placeholder: false,
         id: avatar.id.to_s,
-        owner_id: avatar.owner.id.to_s,
+        owner_id: owner_id,
         keys: content,
         group_id: group.id.to_s
       }
