@@ -43,7 +43,7 @@ task :stats do
   rows << ['Total new users this week', new_users.size]
   
   rows << ['Number of logins last 24h', logins_since(users, yesterday).size]
-  rows << ['Unique user logins last 24h', logins_since(users, yesterday).uniq.size]
+  #rows << ['Unique user logins last 24h', logins_since(users, yesterday).uniq.size]
   
   account_and_group = percent(users) do |users|
     users.select { |user| user.groups.size > 0 }

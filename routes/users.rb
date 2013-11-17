@@ -113,7 +113,6 @@ put '/users', auth: [] do
   if model.verifier
     
     if !user.verifier
-      warn "SENDING CONFIRMATION EMAIL with token #{user.confirmation_token}"
       send_confirm_email(user)
     end
     
