@@ -242,7 +242,11 @@ Syme.FileManager.prototype = {
       Alert.show(
         Syme.Messages.file.maxSize);
 
-      Syme.Helpers.resetFeedForm();
+        
+      var $form = $('#feed-form');
+      $form.find('#upload_id').val('');
+      $form.find('#upload-box').removeClass('active').hide();
+      $form.find('ul#attachments').show();
 
       return false;
 
