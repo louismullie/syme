@@ -12,6 +12,6 @@ Syme = {
   Settings: {
     appWorkerPath: 'workers/app.js'
   },
-  version: '0.2.5'
+  version: '0.2.6'
 
 };

@@ -4,7 +4,7 @@ module Syme
 
   class Application < Base
 
-    VERSION = '0.2.5'
+    VERSION = '0.2.6'
 
     Bundler.require :default, settings.environment
 

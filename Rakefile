@@ -135,7 +135,7 @@ namespace :extensions do
     # Copy compiled JS and CSS to target /assets directory.
     FileUtils.cp(js_path, File.join(build_path, 'assets'))
     FileUtils.cp(css_path, File.join(build_path, 'assets'))
-    FileUtils.cp(worker_path, File.join(build_path, 'workers'))
+    FileUtils.cp_r(worker_path, File.join(build_path))
     
     # Copy main HTML file to extension directory.
     layout_path = File.join('app', 'js', 'views', 'layout.hamlbars')
