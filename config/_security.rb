@@ -24,7 +24,6 @@ if settings.environment == :production
     # Leave media-src, img-src and frame-src.
   }
 
-=begin
   # Enable token protection against CSRF.
   require 'rack/csrf'
 
@@ -34,7 +33,6 @@ if settings.environment == :production
     # Allow login without CSRF.
     'POST:/users/current/sessions'
   ]
-=end
   
   require 'active_support'
   require 'rack/attack'
