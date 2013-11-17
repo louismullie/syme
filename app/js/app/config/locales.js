@@ -126,7 +126,6 @@ Handlebars.registerHelper('t',
     try {
     
       _.each(path, function (nextPath, index) {
-        console.log(nextPath);
          currentPath = currentPath[nextPath];
       });
       

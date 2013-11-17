@@ -131,8 +131,6 @@ Syme.Session = function (csrfToken) {
     
     this.passwordKey = data.password_key;
     
-    console.log(data);
-    
     Syme.CurrentSession.setCsrfToken(data.csrf);
     
     if (data.access_token)

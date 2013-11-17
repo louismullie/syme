@@ -107,8 +107,11 @@ Syme.Binders.add('global', { decrypt: function() {
         type    = $this.attr('data-attachment-type'),
         groupId = $this.attr('data-attachment-group');
 
-    if ( !keys ) {
-      console.log('NO KEYS FOR ENCRYPTED MEDIA');
+    if ( !keys) {
+      
+      if ($this.attr('src') != '/img/groupavatar.jpg')
+        console.log('NO KEYS FOR ENCRYPTED MEDIA');
+      
       return;
     }
 

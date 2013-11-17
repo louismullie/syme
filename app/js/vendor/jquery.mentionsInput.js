@@ -195,7 +195,6 @@
     function getInputBoxValue() {
       
       if ($inputBox == undefined) {
-        console.trace();
         debugger;
       }
       

@@ -36,8 +36,7 @@ $.ajaxSetup({
         access_token: Syme.CurrentSession.getAccessToken()
       }));
     } catch (error) {
-      console.log('Session not initialized.');
-      console.trace();
+      //console.log('Session not initialized.');
     }
   }
 
