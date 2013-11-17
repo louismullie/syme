@@ -145,10 +145,12 @@ Notifications = (function(){
       Syme.Crypto.getKeyFingerprint(groupId, inviteeId, 'inviter', inviteePublicKey,
 
         function (fingerprints) {
-
+        
+        var inviteeName = $this.data('invite-invitee_full_name');
+        
         Confirm.show(
 
-          Syme.Template.render('feed-modals-invite-confirm', fingerprints),
+          Syme.Template.render('feed-modals-invite-confirm', { invitee_name: inviteeName }),
 
           {
             closable: true,
@@ -156,6 +158,16 @@ Notifications = (function(){
             submit: 'Confirm',
             cancel: 'Cancel',
 
+            onshow: function() {
+              $('#responsive-modal .you')
+                .text(Syme.Helpers.shortenFingerprint(fingerprints.inviteeFingerprint))
+                .attr('title', fingerprints.inviteeFingerprint);
+
+              $('#responsive-modal .invitee')
+                .text(Syme.Helpers.shortenFingerprint(fingerprints.inviterFingerprint))
+                .attr('title', fingerprints.inviterFingerprint);
+            },
+            
             onhide: function () {
               $this.data('active', false);
             },
