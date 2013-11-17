@@ -68,15 +68,17 @@ $.onDeviceReady = function() {
   }, function () { alert('Session failed!'); });
 
   // Prevent leaving if there's unsaved content
-  $(window).bind("beforeunload", function(e) {
+  window.onbeforeunload = function(e) {
 
     var unsavedContent = _.any($('textarea'),
       function (textarea) { return textarea.value != ''; });
+    
+    alert(unsavedContent);
     
     if (!unsavedContent) Syme.Cache.clear();
 
     return unsavedContent ? Syme.Messages.error.unsavedContent : null;
 
-  });
+  };
   
 };
