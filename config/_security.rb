@@ -32,7 +32,7 @@ if settings.environment == :production
     'POST:/users',
     # Allow login without CSRF.
     'POST:/users/current/sessions'
-  ]
+  ], raise: true
   
   require 'active_support'
   require 'rack/attack'
