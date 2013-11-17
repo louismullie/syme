@@ -36,6 +36,7 @@ namespace :deploy do
   
   task :restart, roles: :app do
 
+    # thin restart -P /var/www/syme.io/shared/thin.pid -l /var/www/syme.io/shared/thin.log -O -e production -s 3 -p 3000
     pid_path = "#{shared_path}/thin.pid"
     log_path = "#{shared_path}/thin.log"
     

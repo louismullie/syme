@@ -49,8 +49,8 @@ map '/assets' do
   
   if $env != :development
     
-    env.js_compressor = Closure::Compiler.new
-    env.css_compressor = :sass
+    environment.js_compressor = Closure::Compiler.new
+    environment.css_compressor = :sass
 
     HandlebarsAssets::Config.compiler = 'handlebars.min.js'
     HandlebarsAssets::Config.compiler_path = 
