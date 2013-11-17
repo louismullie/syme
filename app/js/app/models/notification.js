@@ -73,12 +73,13 @@ Notifications = (function(){
 
         return _.extend(notification, {
           message: data.message,
-          link: notification.action == 'invite_request' ||
-                notification.action == 'invite_accept'  ||
-                notification.action == 'invite_cancel'  ||
+          link: (notification.action == 'invite_request' ||
+                notification.action == 'invite_accept') ? '' :
+                (notification.action == 'invite_cancel'  ||
                 notification.action == 'delete_group'   ||
                 notification.action == 'boot_from_group'
-            ? '/' : data.link
+                ? '/' : data.link)
+                
         });
 
       });
