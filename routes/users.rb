@@ -112,7 +112,11 @@ put '/users', auth: [] do
 
   # Update the verifier and salt.
   if model.verifier
-
+    
+    if !user.verifier
+      send_confirm_email(user)
+    end
+    
     # Build the verifier with the salt.
     user.verifier = Verifier.new(
       salt:     model.verifier.salt,
@@ -123,15 +127,6 @@ put '/users', auth: [] do
     EventAnalysis.track user, 'User completed registration'
 
     user.verifier.save!
-    
-    unless user.emails_sent[:confirm_email]
-      send_confirm_email(user)
-      warn "SENDING CONFIRM EMAIL"
-      emails_sent = user.emails_sent
-      emails_sent[:confirm_email] = true
-      user.emails_sent = emails_sent
-      user.save!
-    end
     
   end
 
