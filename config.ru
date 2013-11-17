@@ -23,7 +23,7 @@ use Rack::Session::Dalli,
   expire_after: 60 * 60 * 24 * 3,
   # WARNING: THIS IS DANGEROUS
   # BUT NEEDED TO FIX A BUG WITH WWs
-  httponly: false
+  # httponly: false
 
 # Disable caching altogether.
 require 'rack/nocache'
