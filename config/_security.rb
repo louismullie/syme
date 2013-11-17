@@ -1,7 +1,7 @@
 OriginWhitelist = ['chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani']
 
 set :protection,
-     except: [:http_origin, :remote_token, :frame_options],
+     except: [:http_origin, :frame_options],
      origin_whitelist: OriginWhitelist
 
 EMAIL_SALT = '"a$$#!%@&Fe39n#?*4n4C$ni'
@@ -24,16 +24,6 @@ if settings.environment == :production
     # Leave media-src, img-src and frame-src.
   }
 
-  # Enable token protection against CSRF.
-  require 'rack/csrf'
-
-  use Rack::Csrf, skip: [
-    # Allow registration without CSRF.
-    'POST:/users',
-    # Allow login without CSRF.
-    'POST:/users/current/sessions'
-  ], :raise => true
-  
   require 'active_support'
   require 'rack/attack'
 

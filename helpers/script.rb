@@ -1,5 +1,5 @@
 def csrf_token
-  Rack::Csrf.csrf_token(env)
+  session[:csrf]
 end
 
 def h(text)
