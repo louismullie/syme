@@ -46,7 +46,18 @@ File.join($root, 'app', 'js', 'vendor')
 map '/assets' do
 
   environment = Sprockets::Environment.new
+  
+  if $env != :development
+    
+    env.js_compressor = Closure::Compiler.new
+    env.css_compressor = :sass
 
+    HandlebarsAssets::Config.compiler = 'handlebars.min.js'
+    HandlebarsAssets::Config.compiler_path = 
+    File.join(settings.root, 'app', 'js', 'vendor')
+    
+  end
+  
   environment.append_path 'app/js'
   environment.append_path 'app/css'
   environment.append_path 'app/views'
@@ -55,4 +66,4 @@ map '/assets' do
   
   run environment
 
-end if $env == :development
+end
