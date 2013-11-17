@@ -61,7 +61,6 @@ post '/users' do
 
   # Validate and create the user.
   token = SecureRandom.uuid
-  warn token
   
   user = begin
     User.create!(
@@ -114,6 +113,7 @@ put '/users', auth: [] do
   if model.verifier
     
     if !user.verifier
+      warn "SENDING CONFIRMATION EMAIL with token #{user.confirmation_token}"
       send_confirm_email(user)
     end
     
