@@ -12,7 +12,7 @@ if settings.environment == :development
       layout = File.read(settings.layout_path)
       Haml::Engine.new(layout).render
     else
-      'Layouts have not been generated.'
+      'The layout file cannot be found.'
     end
 
   end
@@ -20,5 +20,16 @@ if settings.environment == :development
 else
 
   get('/') { status 403 }
+
+end
+
+get '/mobile' do
+
+  protected!
+  
+  content_type 'text/html'
+
+  layout = File.read(settings.layout_path)
+  Haml::Engine.new(layout).render
 
 end

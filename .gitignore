@@ -6,3 +6,5 @@
 
 public/assets
 builds/*
+
+*.dump

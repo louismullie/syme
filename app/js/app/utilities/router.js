@@ -65,6 +65,7 @@ Syme.Router = Backbone.Router.extend({
     /* Root */
 
     '': 'root',
+    'mobile': 'root',
     'syme.html': 'root',
 
     /* Logged-off routes */

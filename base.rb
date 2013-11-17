@@ -21,6 +21,19 @@ module Syme
       end
     end
 
+    def authorized?
+      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+      @auth.provided? && @auth.basic? &&
+      @auth.credentials && @auth.credentials == [ "mobile", "password"]
+    end
+
+    def protected!
+      unless authorized?
+        response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+        throw(:halt, [401, "Oops... we need your login name & password\n"])
+      end
+    end
+      
   end
 
 end
