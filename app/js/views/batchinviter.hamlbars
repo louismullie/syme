@@ -11,11 +11,11 @@
 
         .bullet-step
           .bullet-title
-            {{t "introduction.steps.first.action"}}
+            {{t "introduction.steps.second.action"}}
 
         .bullet-step
           .bullet-title
-            {{t "introduction.steps.first.action"}}
+            {{t "introduction.steps.third.action"}}
 
     %h3
       {{t "introduction.steps.second.action"}}
