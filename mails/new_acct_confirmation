@@ -1,0 +1,18 @@
+<!-- Titre: Confirm your email address for Syme -->
+
+%p{ style: 'margin: 0 0 1em 0;' }
+  Hi,
+
+%p{ style: 'margin: 0 0 1em 0;' }
+  Thanks for joining Syme. All we need to do is make sure this is your email address.
+
+%p{ style: 'margin: 2em 0;' }
+  %a{ href: 'http://localhost:5000/launch', target: '_blank', style: 'display: block; width: 70%; margin: 0 auto; text-align: center; font-size: 1.3em; font-weight: normal; background-color:#F5F5F5; padding: 15px 10px; color: #000; text-decoration: none; border-radius: 3px; line-height: 30px; border: 1px solid #ccc'}
+    Verify Address
+
+%p{ style: 'margin: 0 0 1em 0;' }
+  If you didn't create a Syme account, please let us know by replying to this email.
+
+%p{ style: 'margin: 0 0 1em 0;' }
+  Best,
+  The Team at Syme
