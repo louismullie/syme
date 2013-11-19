@@ -13,9 +13,11 @@
             %i.icon-bell-alt
 
           #notifications-container.popover
-            %a.clear-notifications{href: '#', title: 'Clear all notifications'}
-              %i.icon-trash
-            %h3.notifications-title Notifications
+            %h3.notifications-title
+              Notifications
+
+              %a.clear-notifications{href: '#', title: 'Clear all notifications'}
+                %i.icon-trash
 
             #notifications-content
 
