@@ -17,7 +17,7 @@
   border-radius: $baseBorderRadius;
 
   // As thin as a shadow can get
-  @include box-shadow(0 1px 6px rgba(0, 0, 0, 0.3));
+  @include box-shadow(0 4px 5px -1px rgba(0, 0, 0, 0.2));
 
   & > h3 {
     margin: 0;
@@ -30,6 +30,7 @@
     background: $popoverHeaderBackground;
 
     @include arrow(top, 10px, 1px, 10px, $bodyBackgroundColor, rgba(black, 0.2));
+    @include user-select(none);
   }
 
   &.popover--right {

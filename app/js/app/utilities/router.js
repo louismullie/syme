@@ -139,7 +139,7 @@ Syme.Router = Backbone.Router.extend({
       window.location = '';
     });
   },
-  
+
   confirm: function () {
     this.loadStaticPage('confirm', true);
   },
@@ -278,7 +278,6 @@ Syme.Router = Backbone.Router.extend({
 
       success: function (data) {
 
-
         if( template == 'feed' &&
             data.users.length == 1 &&
             data.invite.length == 0 ) {
@@ -384,6 +383,27 @@ Syme.Router = Backbone.Router.extend({
           { title: 'My groups', href: '/' },
           { title: groupName, href: currentGroupRoute }
         ];
+
+        // If feed is single_post, add post to breadcrumbs
+
+        if ( !!data.single_post ) {
+
+          var post = data.posts[0];
+
+          var currentPostRoute = Syme.Url.join(
+            'users', Syme.CurrentSession.getUserId(),
+            'groups', Syme.CurrentSession.getGroupId(),
+            'posts', post.id
+          );
+
+          var postTitle = $.timeago(post.created_at) +
+            " by " + post.owner.name;
+
+          crumbs.push({
+            title: postTitle, href: currentPostRoute
+          });
+
+        }
 
         break;
 
