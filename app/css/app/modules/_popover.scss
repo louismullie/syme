@@ -1,18 +1,5 @@
 .popover {
 
-  /* To cleanup */
-  a.clear-notifications {
-    float: right;
-    line-height: 3em;
-    margin-right: 20px;
-    color: black;
-  }
-
-  /* To cleanup */
-  a.clear-notifications:hover {
-    text-decoration: none;
-  }
-
   position: absolute;
   top: 100%;
 
@@ -43,12 +30,6 @@
     background: $popoverHeaderBackground;
 
     @include arrow(top, 10px, 1px, 10px, $bodyBackgroundColor, rgba(black, 0.2));
-  }
-
-  /* To cleanup */
-  h3.notifications-title {
-    width: 10em;
-    padding-left: 5.5em;
   }
 
   &.popover--right {

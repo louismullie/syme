@@ -104,6 +104,17 @@ $stripeBarHeight: 8px;
         #notifications-container {
           z-index: 3;
 
+          h3 a.clear-notifications {
+            position: absolute;
+            right: 1.5em;
+            color: $black;
+
+            &:hover {
+              color: black;
+              text-decoration: none;
+            }
+          }
+
           #notifications-content {
             max-height: 350px;
             overflow-y: auto;
