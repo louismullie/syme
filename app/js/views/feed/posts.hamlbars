@@ -6,7 +6,7 @@
 
 #empty-group-notice
   %h4
-    {{t "introduction.steps.third.explanation"}}?
+    {{t "introduction.steps.third.explanation"}}
 
   %p
     {{t "introduction.steps.third.subtext.message"}}

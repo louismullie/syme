@@ -51,7 +51,7 @@ Syme.Locales = {
 
       third: {
         action: "Start sharing",
-        explanation: "Welcome to your group.",
+        explanation: "Welcome to your group!",
         subtext: {
           message: "It's lonely out here... Do you want to",
           link: "invite someone"
