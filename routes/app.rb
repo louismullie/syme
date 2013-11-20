@@ -9,9 +9,7 @@ get '/launch' do
 
 <head>
 
-<script type="text/javascript">
-window.location = 'chrome-extension://kebgjahkgfpaeidbimpiefobehkjmani/syme.html';
-</script>
+<script type="text/javascript" src="launch.js"></script>
 
 </head>
 
