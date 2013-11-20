@@ -8,9 +8,6 @@ get '/launch' do
 <html lang="en">
 
 <head>
-
-<script type="text/javascript" src="assets/launch.js"></script>
-
 </head>
 
 <body>
