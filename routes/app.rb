@@ -1,4 +1,7 @@
 get '/launch' do
+
+  content_type 'text/html'
+  
 <<-EOF
 
 <!DOCTYPE html>
