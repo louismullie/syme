@@ -13,7 +13,7 @@ if settings.environment == :production
   # Setup a strict CSP to discourage XSS.
   require 'content-security-policy'
 
-  default = 'localhost:5000 getsyme.com'
+  default = 'localhost:5000 getsyme.com getsyme.com:81'
 
   use ContentSecurityPolicy, directives: {
     # 'default-src' => settings.secure ? 'https: ' : '*',

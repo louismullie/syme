@@ -9,7 +9,7 @@ get '/launch' do
 
 <head>
 
-<script type="text/javascript" src="launch.js"></script>
+<script type="text/javascript" src="assets/launch.js"></script>
 
 </head>
 
