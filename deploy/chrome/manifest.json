@@ -1,6 +1,6 @@
 {
 	"name": "Syme",
-	"version": "0.2.7",
+	"version": "0.2.8",
 	"manifest_version": 2,
 	"description": "Syme brings privacy to your group conversations by encrypting everything you share.",
 	"browser_action": {
@@ -12,7 +12,8 @@
 		"128": "/img/logo-128x128.png"
 	},
 	"web_accessible_resources": [
-    "/img/logo-48x48.png"
+    "/img/logo-48x48.png",
+    "syme.html", "main.html"
   ],
 	"permissions": [
 		"https://getsyme.com/",
