@@ -103,7 +103,11 @@ post '/:group_id/file/upload/append', auth: [] do |group_id|
   id = params[:id]
   chunk = params[:chunk]
   
-  upload = group.uploads.find(id)
+  upload = begin
+    group.uploads.find(id)
+  rescue Mongoid::Errors::DocumentNotFound
+    return { status: 'error' }.to_json
+  end
 
   if params[:last]
 

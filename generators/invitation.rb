@@ -1,6 +1,9 @@
 class InvitationGenerator
   
   def self.generate(invitation)
+    
+    # if invitation doesn't exist do something
+    
     {
       
       id: invitation.id.to_s,
