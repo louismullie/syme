@@ -1,6 +1,4 @@
-
 var extensionId = "kebgjahkgfpaeidbimpiefobehkjmani";
-var extensionId = "fdedbiockeecnoiadfblkcgiaepoabji";
 
 chrome.runtime.sendMessage(extensionId, { openUrlInEditor: 'syme.html' },
 function(response) {
