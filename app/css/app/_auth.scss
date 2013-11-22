@@ -4,7 +4,7 @@
   .centered-text {
     text-align: center;
   }
-  
+
   h1 {
     margin: 0;
 
@@ -95,6 +95,26 @@
       margin: 1em 0 0 0;
       text-align: center;
       font-size: .9em;
+    }
+  }
+
+  #auth-footer {
+    margin-top: 2.5em;
+    padding-top: 1.5em;
+
+    border-top: 1px dashed #ccc;
+
+    font-size: .9em;
+    font-weight: normal;
+    text-align: center;
+
+    a {
+      padding: 0 .3em;
+
+      &:first-child { padding-left: 0 }
+      &:last-child { padding-right: 0 }
+
+      color: $black;
     }
   }
 }

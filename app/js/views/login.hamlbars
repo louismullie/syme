@@ -26,3 +26,6 @@
 
         %p.switchmode
           {{t "authentication.labels.need_register"}} <a href="register" hbs>{{t "authentication.buttons.create_account"}}</a>.
+
+
+      {{> auth-footer}}

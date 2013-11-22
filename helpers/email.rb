@@ -1,7 +1,7 @@
 # Email sending helper. All email helpers call it.
 def send_email_to(email, subject, body)
 
-  # return if settings.environment != :production && !settings.running_tux
+  return if settings.environment != :production && !settings.running_tux
 
   user = begin
     User.find_by(email: email)
@@ -9,7 +9,7 @@ def send_email_to(email, subject, body)
     warn "Could not find user associated with email #{email}"
     return
   end
-  
+
   return if user.unsubscribed
 
   begin

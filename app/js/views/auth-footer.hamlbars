@@ -1,0 +1,14 @@
+#auth-footer
+  %a{ href: 'https://getsyme.com/faq', target: '_blank' } FAQ
+
+  &sdot;
+
+  %a{ href: '#', target: '_blank' } Privacy
+
+  &sdot;
+
+  %a{ href: '#', target: '_blank' } Terms
+
+  &sdot;
+
+  %a{ href: 'mailto:team@getsyme.com', target: '_blank' } Contact

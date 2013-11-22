@@ -44,3 +44,5 @@
 
         %p.switchmode
           {{t "authentication.labels.already_register"}} <a href="login" hbs>{{t "authentication.buttons.log_in"}}</a>.
+
+      {{> auth-footer}}
