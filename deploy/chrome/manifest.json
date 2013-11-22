@@ -12,9 +12,12 @@
 		"128": "/img/logo-128x128.png"
 	},
 	"web_accessible_resources": [
-    "/img/logo-48x48.png",
-    "syme.html", "main.html"
+	"/img/logo-48x48.png",
+		"syme.html", "main.html"
   ],
+	"externally_connectable": {
+	  "matches": ["https://getsyme.com/api/launch"]
+	},
 	"permissions": [
 		"https://getsyme.com/",
 		"notifications",
@@ -22,5 +25,11 @@
 	],
 	"background": {
 	  "scripts": ["open.js"]
-	}
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://getsyme.com/api/launch"],
+			"js": ["open.js"]
+	  }
+	]
 }

@@ -16,4 +16,10 @@ chrome.storage.local.get('hasBeenOpened', function (setting) {
   
 });
 
-chrome.browserAction.onClicked.addListener(openApp);
+if (chrome.browserAction)
+  chrome.browserAction.onClicked.addListener(openApp);
+
+chrome.runtime.onMessageExternal.addListener(
+  function (request, sender, sendResponse) {
+    openApp();
+});
