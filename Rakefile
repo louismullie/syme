@@ -82,9 +82,47 @@ task :stats do
   login_and_return = percent(users) do |users|
     users.select { |user| user.last_seen > user.created_at }
   end
+  
   rows << ['Percentage of users who created an account and then logged back in', login_and_return]
   
+  num_groups = Group.all.select {|group| group.users.size > 1 }.size
+  
+  rows << ['Number of groups containing more than one person', num_groups]
+  
+  active_groups = lambda do |days|
+    Group.all.select do |group|
+      group.posts.size > 0 ?
+      group.posts.desc(:created_at).first
+      .created_at > (DateTime.now - days) : nil
+    end.flatten.size
+  end
+   
+  rows << ['Number of groups with at least one post in last 24h', active_groups.call(1)]
   table = Terminal::Table.new(rows: rows)
+  
+  require 'plotly'
+  
+  plotly = PlotLy.new('louis.mullie', 'mrrsfsjfgo')
+
+  month = 1.upto(30).to_a
+  puts month.map { |d| active_groups.call(d) }.inspect
+  
+  args = [month, month.map { |d| active_groups.call(d) }]
+
+  kwargs = {
+    filename: 'post_activity',
+    fileopt: 'overwrite',
+    style: { type: 'bar' },
+    traces: [0,3,5],
+    layout: {
+      title: 'Number of groups with at least one post'
+    },
+    world_readable: true
+  }
+
+  plotly.plot(args, kwargs) do |response|
+    puts response['url']
+  end
   
   puts table
   

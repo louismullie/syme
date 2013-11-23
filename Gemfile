@@ -22,11 +22,12 @@ gem 'mongoid'
 gem 'magicbus'
 gem 'dalli'
 
-# * Extensions * #
+# * APIs * #
 gem 'pony'
 gem 'stripe'
 gem 'analytics-ruby',
   require: 'analytics-ruby'
+gem 'plotly'
 
 # * Deployment * #
 gem 'capistrano'

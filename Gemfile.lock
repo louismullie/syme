@@ -80,6 +80,8 @@ GEM
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
     origin (1.1.0)
+    plotly (0.0.1)
+      json
     polyglot (0.3.3)
     pony (1.5)
       mail (> 2.0)
@@ -146,6 +148,7 @@ DEPENDENCIES
   magicbus
   mongo
   mongoid
+  plotly
   pony
   rack
   rack-attack
