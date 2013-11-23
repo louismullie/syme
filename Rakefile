@@ -104,26 +104,42 @@ task :stats do
   
   plotly = PlotLy.new('louis.mullie', 'mrrsfsjfgo')
 
+  # Number of groups with at least one post since
   month = 1.upto(30).to_a
-  puts month.map { |d| active_groups.call(d) }.inspect
   
-  args = [month, month.map { |d| active_groups.call(d) }]
+  generate_graph = lambda do |filename, title, args|
+    
+    kwargs = {
+      filename: filename,
+      fileopt: 'overwrite',
+      style: { type: 'bar' },
+      layout: { title: title },
+      world_readable: true
+    }
 
-  kwargs = {
-    filename: 'post_activity',
-    fileopt: 'overwrite',
-    style: { type: 'bar' },
-    traces: [0,3,5],
-    layout: {
-      title: 'Number of groups with at least one post'
-    },
-    world_readable: true
-  }
-
-  plotly.plot(args, kwargs) do |response|
-    puts response['url']
+    plotly.plot(args, kwargs) do |response|
+      puts response['url']
+    end
+    
   end
   
+  args = [month, month.map { |d| active_groups.call(d) }]
+  
+  generate_graph.call('post_activity',
+    'Number of groups with at least one post since', args)
+  
+  args = [month, month.map { |d| User.where(created_at:
+    greater_than(Time.now - one_day * d)).size }]
+  
+  generate_graph.call('num_users',
+    'Cumulative number of users for past 30 days', args)
+  
+  args = [month, month.map { |d| Group.where(created_at:
+    greater_than(Time.now - one_day * d)).size }]
+      
+  generate_graph.call('num_users',
+    'Cumulative number of groups for past 30 days', args)
+      
   puts table
   
 end
