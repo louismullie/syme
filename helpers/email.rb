@@ -5,12 +5,8 @@ def send_email_to(email, subject, body)
 
   user = begin
     User.find_by(email: email)
-  rescue
-    warn "Could not find user associated with email #{email}"
-    return
-  end
-
-  return if user.unsubscribed
+    return if user.unsubscribed
+  rescue; end
 
   begin
 
@@ -112,7 +108,7 @@ end
 
 def send_invite(email)
 
-  subject = "You've been invited to a group on Syme"
+  subject = "Accept your invitation to join a group on Syme"
 
   invitee = User.where(email: email).first
 

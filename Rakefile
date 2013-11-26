@@ -139,7 +139,14 @@ task :stats do
       
   generate_graph.call('num_users',
     'Cumulative number of groups for past 30 days', args)
+
+  args = [month, month.map { |d| User.where(created_at:
+    greater_than(Time.now - one_day * d)).size }]
       
+  generate_graph.call('num_users',
+    'Cumulative number of groups for past 30 days', args)
+
+  
   puts table
   
 end
