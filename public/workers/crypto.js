@@ -264,9 +264,6 @@ Crypto = {
     // Calculate the Diffie-Hellman shared key.
     return privateKey.dh(publicKey);
     
-    // Strengthen the key by running through PBKDF2.
-    //return this.deriveKey(symKey, salt);
-    
   },
   
   encryptMessage: function (keylistId, message) {
