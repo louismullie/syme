@@ -145,7 +145,12 @@ task :stats do
       
   generate_graph.call('num_users',
     'Cumulative number of groups for past 30 days', args)
-
+    
+  args = [['Sent','Accepted','Confirmed','Completed'],
+    [1,2,3,4].map { |s| Invitation.where(state: s).size }]
+  
+  generate_graph.call('invitation_distribution', 
+    'Distribution of invitations, by state', args)
   
   puts table
   
