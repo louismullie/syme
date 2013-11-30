@@ -151,7 +151,7 @@ end
 delete '/users/:user_id/sessions/:session_id', auth: [] do |_,session_id|
   
   # Track the event.
-   EventAnalysis.track @user, 'User was logged out'
+  EventAnalysis.track @user, 'User was logged out' if @user
   
   # Clear the current session.
   session.clear
