@@ -10,6 +10,8 @@ Crypto = {
     this.userId = userId;
 
     this.keyfile = new Keyfile(userId, password, encKeyfile);
+    this.scrypt = scrypt_module_factory();
+    
     return null;
     
   },
@@ -246,8 +248,10 @@ Crypto = {
   
   deriveKeys: function (data, salt, bits, compatibility) {
 
-    // Perform PBKDF2 with 100,000 iterations of SHA256.
-    var key = sjcl.misc.pbkdf2(data, salt, 10000, bits);
+    var key = this.scrypt.crypto_scrypt(
+                scrypt.encode_utf8(data),
+                scrypt.encode_utf8(salt),
+                16384, 8, 1, bits)
     
     var x = key.splice(0, key.length/2); var y = key;
     
