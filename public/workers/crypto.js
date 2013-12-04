@@ -10,7 +10,6 @@ Crypto = {
     this.userId = userId;
 
     this.keyfile = new Keyfile(userId, password, encKeyfile);
-    this.scrypt = scrypt_module_factory();
     
     return null;
     
@@ -248,10 +247,12 @@ Crypto = {
   
   deriveKeys: function (data, salt, bits, compatibility) {
 
+    this.scrypt = this.scrypt || scrypt_module_factory();
+    
     var key = this.scrypt.crypto_scrypt(
-                scrypt.encode_utf8(data),
-                scrypt.encode_utf8(salt),
-                16384, 8, 1, bits)
+              this.scrypt.encode_utf8(data),
+              this.scrypt.encode_utf8(salt),
+              16384, 8, 1, bits)
     
     var x = key.splice(0, key.length/2); var y = key;
     
