@@ -249,18 +249,18 @@ Crypto = {
 
     this.scrypt = this.scrypt || scrypt_module_factory();
     
-    var key = this.scrypt.crypto_scrypt(
+    var buf = this.scrypt.crypto_scrypt(
               this.scrypt.encode_utf8(data),
               this.scrypt.encode_utf8(salt),
               16384, 8, 1, bits)
     
-    var x = key.splice(0, key.length/2); var y = key;
+    var key = this.scrypt.to_hex(buf);
     
-    var key1 = sjcl.codec.hex.fromBits(x);
-    var key2 = sjcl.codec.hex.fromBits(y);
+    var x = key.slice(0, key.length/2);
+    var y = key.slice(key.length/2, key.length);
     
     // Return a JSON representation of the key and salt.
-    return { key1: key1, key2: key2 };
+    return { key1: x, key2: y };
     
   },
   
