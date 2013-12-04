@@ -4,7 +4,7 @@ Syme.Auth = {
     
     var user = new User();
     
-    var srp = new SRPClient(email, password); //, 2048);
+    var srp = new SRPClient(email, password, 2048); //, 2048);
 
     user.save(
 
@@ -81,7 +81,7 @@ Syme.Auth = {
       chrome.storage.local.set({ 'hasRegistered':  true });
     }
 
-    var srp = new SRPClient(email);
+    var srp = new SRPClient(email, null, 2048);
 
     var a = srp.srpRandom();
     var A = srp.calculateA(a);
@@ -105,14 +105,14 @@ Syme.Auth = {
           
           Syme.Crypto.deriveKeys(password, salt, bits, function (keys) {
             
-            var srp = new SRPClient(email, keys.key1, group);
+            var srp = new SRPClient(email, keys.key1, 2048);
 
             var B = new BigInteger(data.B, 16);
             var u = srp.calculateU(A, B);
             var Sc = srp.calculateS(B, salt, u, a);
 
             var K = calcSHA1Hex(Sc.toString(16));
-            var M = srp.calculateM(email, salt, A, B, K);
+            var M = srp.calculateM(A, B, K);
 
             var params = { M: M.toString(16), remember: remember };
 

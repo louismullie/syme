@@ -64,6 +64,8 @@ post '/users/:user_id/sessions' do |_|
       compatibility = true
     end
     
+    srp_bits = 2048
+    
     session[:srp_bits] = srp_bits
     
     username = user.email
