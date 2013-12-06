@@ -100,6 +100,20 @@ Syme.Binders.add('register', { main: function(){
 
   });
 
+  // Password notice
+  $('#auth').on('focus blur', 'input[name="password"]', function () {
+
+    var $this = $(this);
+
+    setTimeout(function(){
+      $this
+        .closest('.validation-container')
+          .find('.validation-notice')
+            .toggleClass('hidden');
+    }, 200);
+
+  });
+
   // Registering mode
   $('#auth').on('submit', '#register-form', function(e) {
 

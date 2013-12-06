@@ -25,7 +25,6 @@
     $validationBackgroundColor: $concrete;
 
     position: relative;
-    display: block;
 
     margin-bottom: 1em;
     padding: .5em 1em;
@@ -49,5 +48,18 @@
     }
 
     &.no-arrow::before { display: none !important; }
+  }
+
+  .validation-notice {
+    // Copy .validation-message style but remove arrow
+    @extend .validation-message;
+    &::before { content: none; }
+
+    background-color: $warning;
+
+    a {
+      color: white;
+      text-decoration: underline;
+    }
   }
 }

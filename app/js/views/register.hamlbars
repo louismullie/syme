@@ -20,6 +20,10 @@
             %input{ type: 'text', name: 'email', tabindex: '2', placeholder: '{{t "authentication.labels.email"}}', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false', :'data-validate-email' => 'true', required: '' }
 
         .validation-container
+          .validation-notice.hidden
+            <strong>Be careful!</strong> There is no way for us to reset a lost password,
+            so note it well! <a href="https://getsyme.com/faq#s3e3" target="_blank">Learn why</a>.
+
           .input-text-icon
             %i.icon-lock
             %input{ type: 'password', name: 'password', tabindex: '3', placeholder: '{{t "authentication.labels.password"}}', minlength: 8, :'data-validate-password-strength' => 2, required: 'true', :'data-validate-persistent' => 'true', :'data-validate-differs-from' => 'full_name, email' }
