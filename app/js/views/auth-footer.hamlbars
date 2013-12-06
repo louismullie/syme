@@ -3,11 +3,11 @@
 
   &sdot;
 
-  %a{ href: '#', target: '_blank' } Privacy
+  %a{ href: 'https://getsyme.com/privacy', target: '_blank' } Privacy
 
   &sdot;
 
-  %a{ href: '#', target: '_blank' } Terms
+  %a{ href: 'https://getsyme.com/terms', target: '_blank' } Terms
 
   &sdot;
 

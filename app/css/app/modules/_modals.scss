@@ -148,25 +148,6 @@
       }
     }
 
-    // Terms
-    &.modal-terms {
-      @media #{$breakpointLarge}  { width: 50%; }
-      @media #{$breakpointMedium} { width: 60%; }
-
-      .modal-content {
-        text-align: left;
-
-        ul {
-          margin-left: 2em;
-          font-weight: normal;
-        }
-
-        h4 {
-          font-size: 1em;
-        }
-      }
-    }
-
     .modal-title {
       padding: .5em 1em;
 
