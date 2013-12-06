@@ -12,7 +12,10 @@ Syme.Binders.add('feed', { shared: function(){
 
     $.ajax(route, {
       type: 'POST',
-      data: { post_id: post_id, comment_id: comment_id }
+      data: { post_id: post_id, comment_id: comment_id },
+      success: function (data) {
+        Syme.Socket.update.like(data);
+      }
     });
 
   });
