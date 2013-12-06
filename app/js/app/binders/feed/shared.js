@@ -70,18 +70,31 @@ Syme.Binders.add('feed', { shared: function(){
 
     var $this = $(this);
 
-    $this.mentionsInput('val', function(text) {
-      $this.mentionsInput('getMentions', function(mentioned_users) {
+    callback({ text: $this.val(), mentioned_users: {} });
 
-        // Keep ids only
-        var mentioned_users = _.map(mentioned_users, function(mentioned_user){
-          return mentioned_user.id;
-        })
+    // Mention input bug avoiding
 
-        callback({ text: text, mentioned_users: mentioned_users});
+    try {
 
+      $this.mentionsInput('val', function(text) {
+        $this.mentionsInput('getMentions', function(mentioned_users) {
+
+          // Keep ids only
+          var mentioned_users = _.map(mentioned_users, function(mentioned_user){
+            return mentioned_user.id;
+          })
+
+          callback({ text: text, mentioned_users: mentioned_users});
+
+        });
       });
-    });
+
+    } catch (e) {
+
+      if (DEVELOPMENT) console.error('Mention input failed', e);
+      callback({ text: $this.val(), mentioned_users: {} });
+
+    }
 
   });
 

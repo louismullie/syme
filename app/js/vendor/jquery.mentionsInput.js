@@ -193,11 +193,6 @@
     }
 
     function getInputBoxValue() {
-      
-      if ($inputBox == undefined) {
-        debugger;
-      }
-      
       return $.trim($inputBox.val());
     }
 
