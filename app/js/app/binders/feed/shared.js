@@ -73,8 +73,6 @@ Syme.Binders.add('feed', { shared: function(){
 
     var $this = $(this);
 
-    callback({ text: $this.val(), mentioned_users: {} });
-
     // Mention input bug avoiding
 
     try {
