@@ -28,6 +28,8 @@ SRPClient = function (username, password, group, hashFn) {
   // Pre-compute k from N and g.
   this.k = this.k();
   
+  console.log('k: ', this.k.toString(16));
+  
   // Convenience big integer objects for 1 and 2.
   this.one = new BigInteger("1", 16);
   this.two = new BigInteger("2", 16);
@@ -51,6 +53,8 @@ SRPClient.prototype = {
       this.N.toString(16),
       this.g.toString(16)
     ];
+    
+    console.log('N,g', toHash);
     
     // Return hash as a BigInteger.
     return this.paddedHash(toHash);
@@ -94,6 +98,9 @@ SRPClient.prototype = {
     // Get X from the salt value.
     var x = this.calculateX(salt);
     
+    console.log('salt: ', salt);
+    console.log('x: ', x.toString(16));
+    
     // Calculate and return the verifier.
     return this.g.modPow(x, this.N);
     
@@ -117,6 +124,8 @@ SRPClient.prototype = {
     // Convert A and B to hexadecimal.
     var toHash = [A.toString(16), B.toString(16)];
     
+    console.log('U:', this.paddedHash(toHash).toString(16));
+    
     // Return hash as a BigInteger.
     return this.paddedHash(toHash);
 
@@ -137,8 +146,12 @@ SRPClient.prototype = {
     // Return A as a BigInteger.
     var A = this.g.modPow(a, this.N);
     
+    console.log('a: ', a.toString(16));
+    
     if (A.mod(this.N).toString() == '0')
       throw 'ABORT: illegal_parameter';
+    
+    console.log('A: ', A.toString(16));
     
     return A;
     
@@ -163,6 +176,9 @@ SRPClient.prototype = {
     
     var array = [aHex, bHex, K];
 
+    console.log('M: ', this.paddedHash(array).toString(16));
+    
+    // Return M as a BigInteger
     return this.paddedHash(array);
     
   },
@@ -191,13 +207,19 @@ SRPClient.prototype = {
     var btmp = B.add(this.N.multiply(this.k))
     .subtract(bx.multiply(this.k)).mod(this.N);
     
+    console.log('S: ', btmp.modPow(x.multiply(uu).add(aa), this.N).toString(16));
+    
     // Finish calculation of the premaster secret.
     return btmp.modPow(x.multiply(uu).add(aa), this.N);
   
   },
   
   calculateK: function (S) {
+    
+    console.log('K: ', this.hexHash(S.toString(16)));
+    
     return this.hexHash(S.toString(16));
+    
   },
   
   /*
@@ -256,9 +278,11 @@ SRPClient.prototype = {
    var toHash = '';
    
    for (var i = 0; i < array.length; i++) {
+     if (!array[i]) continue;
      toHash += this.nZeros(nlen - array[i].length) + array[i];
    }
    
+   console.log('HASH: ', toHash)
    var hash = new BigInteger(this.hexHash(toHash), 16);
    
    return hash.mod(this.N);
@@ -285,25 +309,49 @@ SRPClient.prototype = {
     }
   },
   
+  
   /*
    * Hexadecimal hashing function.
    */
   hexHash: function (str) {
-    return this.hash(this.pack(str));
+
+    switch (this.hashFn.toLowerCase()) {
+      
+      case 'sha-256':
+      
+        return sjcl.codec.hex.fromBits(
+               sjcl.hash.sha256.hash(
+                this.pack(str)));
+      
+      case 'sha-1':
+        return calcSHA1Hex(str);
+      
+      default:
+        return calcSHA1Hex(str);
+      
+    }
+    
   },
   
   /*
-   * Hex to string conversion.
+   * Hex to bytes conversion.
    */
   pack: function(hex) {
-  	i = 0; ascii = "";
-  	while (i < hex.length/2) {
-  		ascii = ascii+String.fromCharCode(parseInt(hex.substr(i*2,2),16));
-  		i++;
-  	}
-  	return ascii;
-  },
   
+    var result = [];
+    
+    // To prevent null termination byte error
+    if (hex.length % 2 != 0) hex = '0' + hex;
+    
+    while (hex.length >= 8) { 
+      result.push(parseInt(hex.substring(0, 8), 16));
+      hex = hex.substring(8, hex.length);
+    }
+
+    return result;
+
+  },
+
   /* Return a string with N zeros. */
   nZeros: function(n) {
     
@@ -485,6 +533,8 @@ SRPClient.prototype = {
     if (!b || !v) throw 'Missing parameters.';
     
     var bb = this.g.modPow(b, this.N);
+    console.log('b:', b.toString(16));
+    
     var B = bb.add(v.multiply(this.k)).mod(this.N);
     
     return B;
