@@ -7,8 +7,7 @@ set :application, 'syme'
 set :user, 'web'
 set :port, 1023
 set :domain, '198.27.65.229'
-set :use_sudo, true
-default_run_options[:pty] = true
+set :use_sudo, false
 ssh_options[:keys] = [File.join(ENV['HOME'], '.ssh', 'syme-web')]
 
 # Git login configuration.
