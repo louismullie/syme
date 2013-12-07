@@ -1,0 +1,23 @@
+; BIND data file for getsyme.com
+;
+$TTL 14400
+@ IN SOA ns1.getsyme.com. root.getsyme.com. (
+201006601 ; Serial
+7200 ; Refresh
+120 ; Retry
+2419200 ; Expire
+604800) ; Default TTL
+;
+getsyme.com. IN NS ns1.getsyme.com.
+getsyme.com. IN NS ns2.getsyme.com.
+
+;getsyme.com. IN MX 10 mail.getsyme.com.
+getsyme.com. IN A 198.27.65.229
+
+ns1 IN A 198.27.65.229
+ns2 IN A 198.27.65.229
+www IN CNAME getsyme.com.
+mail IN A 198.27.65.229
+ftp IN CNAME getsyme.com.
+getsyme.com. IN TXT "v=spf1 ip4:198.27.65.229 a mx ~all"
+mail IN TXT "v=spf1 a -all"

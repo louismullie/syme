@@ -1,0 +1,11 @@
+65.27.198.in-addr.arpa  65.27.198.in-addr.arpa~  getsyme.com.db  getsyme.com.db~
+root@ns4005040:/etc/bind/zones# cat 65.27.198.in-addr.arpa
+@ IN SOA getsyme.com. root.getsyme.com. (
+2010081401;
+28800;
+604800;
+604800;
+86400 );
+
+IN NS ns1.getsyme.com.
+4 IN PTR getsyme.com.
