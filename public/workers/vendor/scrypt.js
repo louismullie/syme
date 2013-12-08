@@ -10,7 +10,7 @@ function aa() {
   }
 }
 var q, s;
-s || (s = eval("(function() { try { return Module || {} } catch(e) { return {} } })()"));
+s || (s = (function() { try { return Module || {} } catch(e) { return {} } })());
 var ba = {}, t;
 for(t in s) {
   s.hasOwnProperty(t) && (ba[t] = s[t])
@@ -145,7 +145,6 @@ s.ccall = function(a, b, c, d) {
 function Ca(a) {
   try {
     var b = s["_" + a];
-    b || (b = eval("_" + a))
   }catch(c) {
   }
   w(b, "Cannot call unknown function " + a + " (perhaps LLVM optimizations or closure removed it?)");
