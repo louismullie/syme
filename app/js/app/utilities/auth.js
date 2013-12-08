@@ -14,11 +14,11 @@ Syme.Auth = {
           
           Syme.CurrentSession.setCsrfToken(response.csrf);
           
-          model.deriveKeys(password, 'pbkdf2', function (keys, salt) {
+          model.deriveKeys(password, 'scrypt', function (keys, salt) {
             
             var authenticationKey = keys.authenticationKey;
             
-            model.createVerifier(email, authenticationKey, salt, 
+            model.createVerifier(email, authenticationKey, salt, false,
               
               function () {
               
@@ -215,7 +215,7 @@ Syme.Auth = {
       
       var authenticationKey = keys.authenticationKey;
       
-      user.createVerifier(email, authenticationKey, salt, 
+      user.createVerifier(email, authenticationKey, salt, false,
         
         function () {
         

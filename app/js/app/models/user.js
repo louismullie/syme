@@ -47,7 +47,7 @@ var User = Backbone.Model.extend({
     
   },
   
-  createVerifier: function (email, authenticationKey, salt, verifierCreatedCb) {
+  createVerifier: function (email, authenticationKey, salt, save, verifierCreatedCb) {
     
     var srp = new SRPClient(email, authenticationKey, 2048, 'sha-256');
     
@@ -57,13 +57,11 @@ var User = Backbone.Model.extend({
     // Convert the SRP verifier to hexadecimal form.
     var verifierHex = verifierBn.toString(16);
 
-    this.save(
-      
-      { verifier: { content: verifierHex, salt: salt } },
-      
-      { success: verifierCreatedCb, error: Syme.Router.error }
+    this.set('verifier', { content: verifierHex, salt: salt });
     
-    );
+    if (!save) return verifierCreatedCb();
+      
+    this.save(null, { success: verifierCreatedCb, error: Syme.Router.error });
 
   },
   
