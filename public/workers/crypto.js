@@ -254,22 +254,42 @@ Crypto = {
 
   },
   
-  deriveKeys: function (data, salt, bits, compatibility) {
+  deriveKeys: function (data, salt, bits, kdf) {
 
-    this.scrypt = this.scrypt || scrypt_module_factory();
-    
-    var buf = this.scrypt.crypto_scrypt(
-              this.scrypt.encode_utf8(data),
-              this.scrypt.encode_utf8(salt),
-              16384, 8, 1, bits)
-    
-    var key = this.scrypt.to_hex(buf);
+    if (kdf == 'scrypt') {
+      var key = this.scrypt(data, salt, bits);
+    } else {
+      var key = this.pbkdf2(data, salt, bits);
+    }
     
     var x = key.slice(0, key.length/2);
     var y = key.slice(key.length/2, key.length);
     
-    // Return a JSON representation of the key and salt.
     return { key1: x, key2: y };
+    
+  },
+  
+  scrypt: function (data, salt, bits) {
+    
+    this._scrypt = this._scrypt || scrypt_module_factory();
+    
+    var buf = this._scrypt.crypto_scrypt(
+              this._scrypt.encode_utf8(data),
+              this._scrypt.encode_utf8(salt),
+              16384, 8, 1, bits)
+    
+    var key = this._scrypt.to_hex(buf);
+    
+    return key;
+    
+  },
+  
+  pbkdf2: function (data, salt, bits) {
+    
+    // Perform PBKDF2 with 100,000 iterations of SHA256.
+    var key = sjcl.misc.pbkdf2(data, salt, 10000, bits);
+
+    return key;
     
   },
   

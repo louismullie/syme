@@ -32,12 +32,12 @@ var User = Backbone.Model.extend({
   },
   */
   
-  deriveKeys: function (password, derivedKeysCb) {
+  deriveKeys: function (password, kdf, derivedKeysCb) {
     
     Syme.Crypto.generateRandomHex(128, function (salt) {
       
       // Derive authentication and keyfile encryption keys from password.
-      Syme.Crypto.deriveKeys(password, salt, 512, function (keys) {
+      Syme.Crypto.deriveKeys(password, salt, 512, kdf, function (keys) {
 
         derivedKeysCb({ authenticationKey: keys.key1, keyfileKey: keys.key2 }, salt);
 
@@ -49,7 +49,7 @@ var User = Backbone.Model.extend({
   
   createVerifier: function (email, authenticationKey, salt, verifierCreatedCb) {
     
-    var srp = new SRPClient(email, authenticationKey, 2048, 'sha-256'); //, 2048);
+    var srp = new SRPClient(email, authenticationKey, 2048, 'sha-256');
     
     // Calculate the SRP verifier and convert to hex.
     var verifierBn = srp.calculateV(salt);

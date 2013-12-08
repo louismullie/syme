@@ -14,7 +14,7 @@ Syme.Auth = {
           
           Syme.CurrentSession.setCsrfToken(response.csrf);
           
-          model.deriveKeys(password, function (keys, salt) {
+          model.deriveKeys(password, 'scrypt', function (keys, salt) {
             
             var authenticationKey = keys.authenticationKey;
             
@@ -76,6 +76,7 @@ Syme.Auth = {
 
     var a = srp.srpRandom();
     var A = srp.calculateA(a);
+    
     var _this = this;
 
     var params = { email: email, A: A.toString(16) };
@@ -90,13 +91,18 @@ Syme.Auth = {
 
           var salt = data.salt;
           var sessionId = data.session_id;
-
-          var bits = data.compatibility ? 256 : 512;
-          var group = data.compatibility ? 1024 : 1024; // 2048
           
-          Syme.Crypto.deriveKeys(password, salt, bits, function (keys) {
+          if (data.version == 2) {
+            var bits = 512, group = 2048, hash = 'sha-256', kdf = 'scrypt';
+          } else if (data.version == 1) {
+            var bits = 512, group = 1024, hash = 'sha-1', kdf = 'pbkdf2';
+          } else if (data.version == 0) {
+            var bits = 256, group = 1024, hash = 'sha-1', kdf = 'pbkdf2';
+          }
+          
+          Syme.Crypto.deriveKeys(password, salt, bits, kdf, function (keys) {
             
-            var srp = new SRPClient(email, keys.key1, 2048, 'sha-256');
+            var srp = new SRPClient(email, keys.key1, group, hash);
 
             var B = new BigInteger(data.B, 16);
             var u = srp.calculateU(A, B);
@@ -126,19 +132,10 @@ Syme.Auth = {
 
               } else if (data.status == 'error') {
 
-                // Non-deterministic Heisenbug with login
                  if (data.reason == 'confirm') {
                   Syme.Router.navigate('confirm');
-                 } else if (hack) {
-
-                  Syme.Auth.logout(function () {
-                    Syme.Router.navigate('login');
-                  });
-
                 } else {
-
                   fail(data.reason);
-
                 }
 
               } else {
@@ -172,7 +169,34 @@ Syme.Auth = {
     }});
 
   },
+  
+  changePassword: function (password) {
+    
+    var user = Syme.CurrentSession.getUser(),
+        email = user.get('email');
+    
+    user.deriveKeys(password, 'scrypt', function (keys, salt) {
+      
+      var authenticationKey = keys.authenticationKey;
+      
+      user.createVerifier(email, authenticationKey, salt, 
+        
+        function () {
+        
+          var keyfileKey = keys.keyfileKey;
+          
+          user.updateKeyfileKey(keyfileKey, function () {
+          
+            alert('Done');
 
+          });
+        
+      })
+      
+    });
+    
+  },
+ 
   /*
    * Deletes the server-side session, then clears
    * the session on the client and passes execution
