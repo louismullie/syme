@@ -56,19 +56,26 @@ post '/users/:user_id/sessions' do |_|
     verifier = user.verifier.content
     salt = user.verifier.salt
     
-    if user.verifier.version == 1
-      srp_bits = 1024 # 2048
-      compatibility = false
+    if user.verifier.version == 2
+      srp_bits = 2048
+      hash = 'sha-256'
+      version = 2
+    elsif user.verifier.version == 1
+      srp_bits = 1024
+      hash = 'sha-1'
+      version = 1
     else
       srp_bits = 1024
-      compatibility = true
+      hash = 'sha-1'
+      version = 0
     end
     
     session[:srp_bits] = srp_bits
+    session[:srp_hash] = hash
     
     username = user.email
 
-    authenticator = SRP::Verifier.new(srp_bits)
+    authenticator = SRP::Verifier.new(srp_bits, hash)
     
     p = [username, verifier, salt, params[:A]]
     
@@ -81,7 +88,7 @@ post '/users/:user_id/sessions' do |_|
     srp[:challenge].merge({
       csrf: csrf_token,
       session_id: session.id.to_s,
-      compatibility: compatibility
+      version: version
     }).to_json
 
   end
@@ -98,13 +105,15 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     error 403, 'invalid_session'
   end
   
-  authenticator = SRP::Verifier.new(session[:srp_bits])
+  authenticator = SRP::Verifier.new(session[:srp_bits], session[:srp_hash])
   
-  h_amk = authenticator.verify_session(
-    session[:proof], params[:M])
-  
-  if h_amk
-
+  begin
+    
+    h_amk = authenticator.verify_session(
+      session[:proof], params[:M])
+    
+    raise unless h_amk
+    
     email = session[:email]
 
     user = User.where(email: email).first
@@ -131,20 +140,18 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     user.last_seen = DateTime.now
     user.save!
     
-    response = {
+    {
       status: 'ok',
       user_id: user.id,
       h_amk: h_amk,
       csrf: csrf_token
     }.to_json
     
-  else
+  rescue
     
-    response = { status: 'error', reason: 'credentials' }.to_json
-
-  end
+    { status: 'error', reason: 'credentials' }.to_json
   
-  response
+  end
   
 end
 

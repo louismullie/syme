@@ -22,14 +22,23 @@ Syme.Binders.add('login', { main: function(){
         remember = $this.find('input[name="remember_me"]').prop("checked");
 
       // Login
-      Syme.Auth.login(email, password, remember, function(derivedKey, csrfToken, sessionKey) {
+      Syme.Auth.login(email, password, remember, function(derivedKey, csrfToken, sessionKey, upgrade) {
 
         Syme.CurrentSession = new Syme.Session(csrfToken);
         
+        var navigateCb =  function () {
+          var url = '/users/' + Syme.CurrentSession.getUserId() + '/groups';
+          Syme.Router.navigate(url, { trigger: true, replace: true });
+        };
+        
         Syme.CurrentSession.initializeWithPasswordAndKey(
           derivedKey, sessionKey, remember, function () {
-            Syme.Router.navigate('/users/' + Syme.CurrentSession.getUserId() +
-            '/groups', { trigger: true, replace: true });
+            if (upgrade) {
+              alert('Upgrading');
+              Syme.Auth.changePassword(password, navigateCb);
+            } else {
+              navigateCb();
+            }
         });
 
       }, function(reason) {

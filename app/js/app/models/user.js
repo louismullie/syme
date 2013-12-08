@@ -32,6 +32,41 @@ var User = Backbone.Model.extend({
   },
   */
   
+  deriveKeys: function (password, kdf, derivedKeysCb) {
+    
+    Syme.Crypto.generateRandomHex(128, function (salt) {
+      
+      // Derive authentication and keyfile encryption keys from password.
+      Syme.Crypto.deriveKeys(password, salt, 512, kdf, function (keys) {
+
+        derivedKeysCb({ authenticationKey: keys.key1, keyfileKey: keys.key2 }, salt);
+
+      });
+      
+    })
+    
+  },
+  
+  createVerifier: function (email, authenticationKey, salt, verifierCreatedCb) {
+    
+    var srp = new SRPClient(email, authenticationKey, 2048, 'sha-256');
+    
+    // Calculate the SRP verifier and convert to hex.
+    var verifierBn = srp.calculateV(salt);
+    
+    // Convert the SRP verifier to hexadecimal form.
+    var verifierHex = verifierBn.toString(16);
+
+    this.save(
+      
+      { verifier: { content: verifierHex, salt: salt } },
+      
+      { success: verifierCreatedCb, error: Syme.Router.error }
+    
+    );
+
+  },
+  
   createKeyfile: function (password, keyfileCreatedCb) {
 
     var _this = this, email = this.get('email');
@@ -41,7 +76,17 @@ var User = Backbone.Model.extend({
     });
 
   },
-
+  
+  updateKeyfileKey: function (encryptionKey, keyfileCreatedCb) {
+    
+    var _this = this;
+    
+    Syme.Crypto.updateKeyfileKey(encryptionKey, function (encryptedKeyfile) {
+      _this.updateKeyfile(encryptedKeyfile, keyfileCreatedCb);
+    });
+    
+  },
+  
   createKeylist: function (keylistId, keylistCreatedCb) {
 
     var _this = this;
