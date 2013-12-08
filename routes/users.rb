@@ -120,7 +120,7 @@ put '/users', auth: [] do
     user.verifier = Verifier.new(
       salt:     model.verifier.salt,
       content:  model.verifier.content,
-      version: 1
+      version: 2
     )
 
     EventAnalysis.track user, 'User completed registration'
