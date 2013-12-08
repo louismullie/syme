@@ -1,77 +1,68 @@
 Syme.Auth = {
   
-  register: function (email, password, fullName, remember, registrationError) {
+  register: function (email, password, fullName, remember, registrationErrorCb) {
     
-    var user = new User();
+    var _this = this, user = new User();
     
-    var srp = new SRPClient(email, password, 2048, 'sha-256'); //, 2048);
-
     user.save(
 
       { email: email, full_name: fullName },
 
-      { success: function (model, response) {
+      { 
         
-        // Set CSRF token for second step of authentication.
-        Syme.CurrentSession.setCsrfToken(response.csrf);
-        
-        // Generate a salt to derive keys from the password.
-        var credentialSalt = srp.randomHexSalt();
-        
-        // Derive authentication and keyfile encryption keys from password.
-        Syme.Crypto.deriveKeys(password, credentialSalt, 512, function (keys) {
-
-          srp.password = keys.key1;
+        success: function (model, response) {
           
-          // Calculate the SRP verifier and convert to hex.
-          var verifierBn = srp.calculateV(credentialSalt);
+          Syme.CurrentSession.setCsrfToken(response.csrf);
           
-          // Convert the SRP verifier to hexadecimal form.
-          var verifierHex = verifierBn.toString(16);
-
-          model.save(
+          model.deriveKeys(password, function (keys, salt) {
             
-            { verifier: { content: verifierHex, salt: credentialSalt } },
+            var authenticationKey = keys.authenticationKey;
             
-            { success: function (model, response) {
-
-              user.createKeyfile(keys.key2, function () {
+            model.createVerifier(email, authenticationKey, salt, 
+              
+              function () {
+              
+                model.createKeyfile(keys.keyfileKey, function () {
                 
-                Syme.Auth.login(email, password, remember, function(derivedKey, csrfToken, sessionKey) {
-                  
-                    Syme.CurrentSession = new Syme.Session(csrfToken);
-
-                    Syme.CurrentSession.initializeWithModelPasswordAndKey(
-                      user, keys.key2, sessionKey, remember, function () {
-                        Syme.Router.navigate('', { trigger: true, replace: true });
-                 
-                  });
-
-                }, function () { alert('An error has occurred!'); }, true);
-                
-              });
-            },
-
-            error: Syme.Router.error
-
+                  _this.firstLogin(email, password, 
+                    keys.authenticationKey, remember);
+    
+                });
+              
+            })
+            
           });
-        });
 
-      },
+        } ,
 
-      error: function (model, response) {
+        error: function (model, response) {
 
-        var textResponse = response.responseText;
-        var jsonResponse = JSON.parse(textResponse);
+          var textResponse = response.responseText;
+          var jsonResponse = JSON.parse(textResponse);
         
-        registrationError(jsonResponse.error);
+          registrationErrorCb(jsonResponse.error);
         
-        return null;
+          return null;
         
-      }
+        }
     
     });
 
+  },
+
+  firstLogin: function (email, password, authenticationKey, remember) {
+    
+    Syme.Auth.login(email, password, remember, function(derivedKey, csrfToken, sessionKey) {
+
+        Syme.CurrentSession = new Syme.Session(csrfToken);
+
+        Syme.CurrentSession.initializeWithModelPasswordAndKey(
+          user, authenticationKey, sessionKey, remember, function () {
+            Syme.Router.navigate('', { trigger: true, replace: true });
+      });
+
+    }, function () { alert('An error has occurred!'); }, true);
+    
   },
   
   login: function(email, password, remember, success, fail, hack) {
