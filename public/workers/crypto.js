@@ -22,6 +22,15 @@ Crypto = {
     
   },
   
+  updateKeyfileKey: function (encryptionKey) {
+    
+    this.password = encryptionKey;
+    this.keyfile.password = encryptionKey;
+    
+    return null;
+    
+  },
+  
   createKeylist: function (keylistId) {
     
     var keyfile = this.getKeyfile();

@@ -8,6 +8,7 @@ Syme.Crypto = function (workerUrl) {
   this.lockRequirements = {
     
     // Keyfile-related methods
+    updateKeyfileKey: true, 
     getEncryptedKeyfile: false,
     getSerializedKeyfile: false,
 
@@ -183,6 +184,22 @@ Syme.Crypto = function (workerUrl) {
     this.executeJob('getSerializedKeyfile', arguments);
   };
   
+  /*
+   * Update a keyfile's key.
+   */
+   this.updateKeyfileKey = function (key, encryptedKeyfileCb) {
+     
+     Syme.Crypto.workerPool.broadcastJob({
+
+       method: 'updateKeyfileKey',
+       params: [key]
+
+     }, function () {
+       _this.getEncryptedKeyfile(encryptedKeyfileCb);
+     });
+
+   };
+  
   /* 
    * Keylist-related methods
 
@@ -193,7 +210,7 @@ Syme.Crypto = function (workerUrl) {
     var args = this.keyfileCallback(arguments);
     this.executeJob('createKeylist', args);
   };
-
+  
   /* 
    * Delete a keylist in the keyfile
    */
@@ -349,6 +366,10 @@ Syme.Crypto = function (workerUrl) {
    
   // generateRandomKeys() 
   this.generateRandomKeys = function() {
+    _this.executeJob('generateRandomHex', arguments);
+  };
+
+  this.generateRandomHex = function() {
     _this.executeJob('generateRandomHex', arguments);
   };
   
