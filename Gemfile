@@ -13,7 +13,7 @@ gem 'rack-ssl',
 gem 'content-security-policy'
 gem 'rack-attack',
   require: 'rack/attack'
-gem 'srp-rb'
+gem 'srp-rb', '~> 1.0.1'
 
 # * Database * #
 gem 'mongo'
