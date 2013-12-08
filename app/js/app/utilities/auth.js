@@ -14,7 +14,7 @@ Syme.Auth = {
           
           Syme.CurrentSession.setCsrfToken(response.csrf);
           
-          model.deriveKeys(password, 'scrypt', function (keys, salt) {
+          model.deriveKeys(password, 'pbkdf2', function (keys, salt) {
             
             var authenticationKey = keys.authenticationKey;
             
@@ -65,14 +65,58 @@ Syme.Auth = {
     
   },
   
-  login: function(email, password, remember, success, fail, hack) {
+  login: function(email, password, remember, success, fail) {
 
     if (Syme.Compatibility.inChromeExtension()) {
       chrome.storage.local.set({ 'remember':  remember });
       chrome.storage.local.set({ 'hasRegistered':  true });
     }
+    
+    var bits = 512, group = 2048, hash = 'sha-256', kdf = 'scrypt';
+    
+    Syme.Auth.tryLogin(email, password, remember, bits, group, hash, kdf,
+      
+      // Success
+      function (derivedKey, csrfToken, sessionKey) {
+        success(derivedKey, csrfToken, sessionKey);
+      },
+      
+      // Failure
+      function () {
+        
+        var bits = 512, group = 1024, hash = 'sha-1', kdf = 'pbkdf2';
+        
+        Syme.Auth.tryLogin(email, password, remember, bits, group, hash, kdf,
+          
+          // Success
+          function (derivedKey, csrfToken, sessionKey) {
+            success(derivedKey, csrfToken, sessionKey, true);
+          },
+          
+          // Failure
+          function () {
+            
+            var bits = 256, group = 1024, hash = 'sha-1', kdf = 'pbkdf2';
+            
+            Syme.Auth.tryLogin(email, password, remember, bits, group, hash, kdf,
+              
+              function (derivedKey, csrfToken, sessionKey) {
+                success(derivedKey, csrfToken, sessionKey, true);
+              }, fail
+              
+            );
+            
+          }
+        )
+      }
+    );
 
-    var srp = new SRPClient(email, null, 2048, 'sha-256');
+    
+  },
+  
+  tryLogin: function(email, password, remember, bits, group, hash, kdf, success, fail) {
+
+    var srp = new SRPClient(email, password, group, hash);
 
     var a = srp.srpRandom();
     var A = srp.calculateA(a);
@@ -91,14 +135,6 @@ Syme.Auth = {
 
           var salt = data.salt;
           var sessionId = data.session_id;
-          
-          if (data.version == 2) {
-            var bits = 512, group = 2048, hash = 'sha-256', kdf = 'scrypt';
-          } else if (data.version == 1) {
-            var bits = 512, group = 1024, hash = 'sha-1', kdf = 'pbkdf2';
-          } else if (data.version == 0) {
-            var bits = 256, group = 1024, hash = 'sha-1', kdf = 'pbkdf2';
-          }
           
           Syme.Crypto.deriveKeys(password, salt, bits, kdf, function (keys) {
             
@@ -169,8 +205,8 @@ Syme.Auth = {
     }});
 
   },
-  
-  changePassword: function (password) {
+
+  changePassword: function (password, changedPasswordCb) {
     
     var user = Syme.CurrentSession.getUser(),
         email = user.get('email');
@@ -185,11 +221,7 @@ Syme.Auth = {
         
           var keyfileKey = keys.keyfileKey;
           
-          user.updateKeyfileKey(keyfileKey, function () {
-          
-            alert('Done');
-
-          });
+          user.updateKeyfileKey(keyfileKey, changedPasswordCb);
         
       })
       

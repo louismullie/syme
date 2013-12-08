@@ -107,11 +107,13 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
   
   authenticator = SRP::Verifier.new(session[:srp_bits], session[:srp_hash])
   
-  h_amk = authenticator.verify_session(
-    session[:proof], params[:M])
-  
-  if h_amk
-
+  begin
+    
+    h_amk = authenticator.verify_session(
+      session[:proof], params[:M])
+    
+    raise unless h_amk
+    
     email = session[:email]
 
     user = User.where(email: email).first
@@ -138,20 +140,18 @@ put '/users/:user_id/sessions/:session_id' do |_, session_id|
     user.last_seen = DateTime.now
     user.save!
     
-    response = {
+    {
       status: 'ok',
       user_id: user.id,
       h_amk: h_amk,
       csrf: csrf_token
     }.to_json
     
-  else
+  rescue
     
-    response = { status: 'error', reason: 'credentials' }.to_json
-
-  end
+    { status: 'error', reason: 'credentials' }.to_json
   
-  response
+  end
   
 end
 

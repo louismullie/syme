@@ -262,8 +262,8 @@ Crypto = {
       var key = this.pbkdf2(data, salt, bits);
     }
     
-    var x = key.slice(0, key.length/2);
-    var y = key.slice(key.length/2, key.length);
+    var x = key.slice(0, key.length / 2);
+    var y = key.slice(key.length / 2, key.length);
     
     return { key1: x, key2: y };
     
