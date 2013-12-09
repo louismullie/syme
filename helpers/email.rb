@@ -119,7 +119,7 @@ def send_invite_reminder(invitation)
   
   inviter_name = invitation.inviter.full_name
 
-  subject = "#{inviter_name} is waiting for you to join a group on Syme"
+  subject = "#{inviter_name} is waiting for you on Syme"
 
   template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
 
