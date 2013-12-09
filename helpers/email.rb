@@ -145,7 +145,7 @@ def request_confirm(invite)
   
     subject = "Grant #{invitee.full_name} access to your group on Syme"
 
-    message = email_template :request_confirm, inviter.email
+    message = email_template :request_confirm, inviter.email, { invitee_name: invitee.full_name }
 
     # inviter.email
     send_email_to(inviter.email, subject, message)
@@ -163,7 +163,7 @@ def notify_confirmed(invite)
 
     subject = "Begin sharing with #{inviter.full_name} on Syme"
 
-    message = email_template :notify_confirmed, invitee.email
+    message = email_template :notify_confirmed, invitee.email, { inviter_name: inviter.full_name }
 
     # invitee.email
     send_email_to(invitee.email, subject, message)
