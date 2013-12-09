@@ -257,15 +257,27 @@ Crypto = {
   deriveKeys: function (data, salt, bits, kdf) {
 
     if (kdf == 'scrypt') {
+      
       var key = this.scrypt(data, salt, bits);
+      
+      var key1 = key.slice(0, key.length / 2);
+      var key2 = key.slice(key.length / 2, key.length);
+
+      return { key1: key1, key2: key2 };
+      
     } else {
+      
       var key = this.pbkdf2(data, salt, bits);
+      var x = key.splice(0, key.length/2); var y = key;
+
+      var key1 = sjcl.codec.hex.fromBits(x);
+      var key2 = sjcl.codec.hex.fromBits(y);
+      
+      // Return a JSON representation of the key and salt.
+      return { key1: key1, key2: key2 };
+     
     }
     
-    var x = key.slice(0, key.length / 2);
-    var y = key.slice(key.length / 2, key.length);
-    
-    return { key1: x, key2: y };
     
   },
   
