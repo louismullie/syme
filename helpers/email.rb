@@ -106,15 +106,17 @@ def send_email_confirm(email)
 
 end
 
-def send_invite(email)
+def send_invite(invitation)
+  
+  invitee, email = invitation.invitee, email
+  
+  inviter_name = invitation.inviter.full_name
 
-  subject = "Accept your invitation to join a group on Syme"
-
-  invitee = User.where(email: email).first
+  subject = "Join #{inviter_name}'s group on Syme"
 
   template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
 
-  message = email_template template, email
+  message = email_template template, email, { inviter_name: inviter_name }
 
   send_email_to(email, subject, message)
 

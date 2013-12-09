@@ -96,7 +96,7 @@ post '/users/:user_id/groups/:group_id/invitations', auth: [] do |user_id, group
       })
     end
     
-    send_invite(invitation.email)
+    send_invite(invitation)
 
   end
 
