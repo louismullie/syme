@@ -1,6 +1,6 @@
 {
 	"name": "Syme",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"manifest_version": 2,
 	"description": "Syme brings privacy to your group conversations by encrypting everything you share.",
 	"browser_action": {
