@@ -140,29 +140,37 @@ end
 
 def request_confirm(invite)
 
-  invitee, inviter = invite.invitee, invite.inviter
+  begin
+    invitee, inviter = invite.invitee, invite.inviter
+  
+    subject = "Grant #{invitee.full_name} access to your group on Syme"
 
-  subject = "Confirm your new group member on Syme"
+    message = email_template :request_confirm, inviter.email
 
-  message = email_template :request_confirm, inviter.email
-
-  # inviter.email
-  send_email_to(inviter.email, subject, message)
+    # inviter.email
+    send_email_to(inviter.email, subject, message)
+  rescue
+    puts "Failed to send request_confirm"
+  end
 
 end
 
 
 def notify_confirmed(invite)
 
-  invitee, inviter = invite.invitee, invite.inviter
+  begin
+    invitee, inviter = invite.invitee, invite.inviter
 
-  subject = "You've joined a new group on Syme"
+    subject = "Begin sharing with #{inviter.full_name} on Syme"
 
-  message = email_template :notify_confirmed, invitee.email
+    message = email_template :notify_confirmed, invitee.email
 
-  # invitee.email
-  send_email_to(invitee.email, subject, message)
-
+    # invitee.email
+    send_email_to(invitee.email, subject, message)
+  rescue
+    puts "Failed to send notify_confirmed"
+  end
+  
 end
 
 def send_confirm_email(user)
