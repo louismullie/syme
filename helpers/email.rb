@@ -5,11 +5,12 @@ def send_email_to(email, subject, body)
 
   user = begin
     User.find_by(email: email)
-    return if user.unsubscribed
   rescue; end
 
   begin
 
+    raise if user && user.unsubscribed
+    
     Pony.mail({
       to: email,
       from: "Syme <team@getsyme.com>",
