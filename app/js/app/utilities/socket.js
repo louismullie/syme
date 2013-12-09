@@ -172,6 +172,17 @@ Syme.Socket = {
         Syme.Router.reload();
 
       Notifications.add(data);
+      
+      if (Syme.Compatibility.inChromeExtension()) {
+        /*
+        chrome.notifications.create('syme',{
+          type: "basic",
+          title: "Primary Title",
+          message: "Primary message to display",
+          iconUrl: "url_to_small_icon"
+        }, function () {  })*/
+        
+      }
 
     },
 
