@@ -97,16 +97,6 @@ def send_beta_welcome(email)
 
 end
 
-def send_email_confirm(email)
-
-  subject = "Confirm your Syme account"
-
-  message = email_template :send_email_confirm, email, { user: @user }
-
-  send_email_to(email, subject, message)
-
-end
-
 def send_invite(invitation)
   
   invitee, email = invitation.invitee, invitation.email
@@ -114,6 +104,22 @@ def send_invite(invitation)
   inviter_name = invitation.inviter.full_name
 
   subject = "Join #{inviter_name}'s group on Syme"
+
+  template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
+
+  message = email_template template, email, { inviter_name: inviter_name }
+
+  send_email_to(email, subject, message)
+
+end
+
+def send_invite_reminder(invitation)
+  
+  invitee, email = invitation.invitee, invitation.email
+  
+  inviter_name = invitation.inviter.full_name
+
+  subject = "#{inviter_name} is waiting for you to join a group on Syme"
 
   template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
 
