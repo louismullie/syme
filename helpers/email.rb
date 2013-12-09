@@ -115,17 +115,21 @@ end
 
 def send_invite_reminder(invitation)
   
-  invitee, email = invitation.invitee, invitation.email
+  begin
+    invitee, email = invitation.invitee, invitation.email
   
-  inviter_name = invitation.inviter.full_name
+    inviter_name = invitation.inviter.full_name
 
-  subject = "#{inviter_name} is waiting for you on Syme"
+    subject = "#{inviter_name} is waiting for you on Syme"
 
-  template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
+    template = invitee.nil? ? :send_invite_new_user : :send_invite_old_user
 
-  message = email_template template, email, { inviter_name: inviter_name }
+    message = email_template template, email, { inviter_name: inviter_name }
 
-  send_email_to(email, subject, message)
+    send_email_to(email, subject, message)
+  rescue
+    puts "Could not send e-mail"
+  end
 
 end
 
