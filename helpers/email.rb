@@ -116,8 +116,12 @@ end
 def send_invite_reminder(invitation)
   
   begin
-    invitee, email = invitation.invitee, invitation.email
-  
+    
+    invitee = begin
+      invitation.invitee
+    rescue; end
+    
+    email = invitation.email
     inviter_name = invitation.inviter.full_name
 
     subject = "#{inviter_name} is waiting for you on Syme"
@@ -127,6 +131,7 @@ def send_invite_reminder(invitation)
     message = email_template template, email, { inviter_name: inviter_name }
 
     send_email_to(email, subject, message)
+    
   rescue
     puts "Could not send e-mail"
   end
