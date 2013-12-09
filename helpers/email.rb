@@ -108,7 +108,7 @@ end
 
 def send_invite(invitation)
   
-  invitee, email = invitation.invitee, email
+  invitee, email = invitation.invitee, invitation.email
   
   inviter_name = invitation.inviter.full_name
 
