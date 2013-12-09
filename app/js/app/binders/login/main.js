@@ -34,7 +34,6 @@ Syme.Binders.add('login', { main: function(){
         Syme.CurrentSession.initializeWithPasswordAndKey(
           derivedKey, sessionKey, remember, function () {
             if (upgrade) {
-              alert('Upgrading');
               Syme.Auth.changePassword(password, navigateCb);
             } else {
               navigateCb();
