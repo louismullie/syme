@@ -86,7 +86,7 @@ Syme.Binders.add('feed', { form: function(){
           // Reset textarea
           $textarea.trigger('reset');
           
-          NProgress.showSpinner();
+          //NProgress.showSpinner();
           
           Syme.Crypto.encryptMessage(groupId, message, function (encryptedMessage) {
 
@@ -99,14 +99,14 @@ Syme.Binders.add('feed', { form: function(){
               data: { content: encryptedMessage },
 
               success: function () {
-                NProgress.hideSpinner();
+                //NProgress.hideSpinner();
                 $form.data('active', false);
               },
 
               error: function () {
                 
                 Alert.show(Syme.Messages.error.postingFailed);
-                NProgress.hideSpinner();
+                //NProgress.hideSpinner();
                 $form.data('active', false);
               }
 
