@@ -86,7 +86,7 @@ class PostGenerator
     
     poster_membership = begin
       post.parent_group.memberships.find_by(user_id: poster.id)
-    rescue Mongoid::Errors:DocumentNotFound
+    rescue Mongoid::Errors::DocumentNotFound
       raise "User not found"
     end
     
