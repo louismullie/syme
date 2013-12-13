@@ -22,7 +22,7 @@ task :stats do
   end
 
   def yesterday
-    Date.today.to_time - 1
+    Date.today.to_time - one_day
   end
 
   def percent(collection, &block)

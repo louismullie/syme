@@ -5,7 +5,7 @@ class PostGenerator
   def self.generate(post, current_user)
 
     comments = generate_comments(post, current_user)
-    owner = generate_owner(post, current_user)
+    owner = generate_poster(post, current_user)
     date = generate_date(post)
 
     current_key = post.key_for_user(current_user)
@@ -79,20 +79,24 @@ class PostGenerator
       year: post.updated_at.strftime('%y')
     }
   end
+  
+  def self.generate_poster(post, current_user)
 
-  def self.generate_owner(post, current_user)
-
-    membership = post.group.memberships.find_by(
-      user_id: post.owner.id)
-
-    avatar = membership.user_avatar
+    poster = post.owner
+    
+    poster_membership = begin
+      post.parent_group.memberships.find_by(user_id: poster.id)
+    rescue Mongoid::Errors:DocumentNotFound
+      raise "User not found"
+    end
+    
+    poster_avatar = poster_membership.user_avatar
 
     {
-      id: post.owner.id.to_s,
-      user: post.owner,
-      name: post.owner.full_name,
+      id: poster.id.to_s,
+      name: poster.full_name,
       avatar: AvatarGenerator.generate(
-        avatar, current_user)
+        poster_avatar, current_user)
     }
 
   end
