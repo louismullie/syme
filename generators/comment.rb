@@ -52,10 +52,7 @@ class CommentGenerator
 
     {
       id: commenter.id.to_s,
-      name: commenter.full_name,
-      # user: commenter,
-      avatar: AvatarGenerator.generate(
-        commenter_avatar, current_user)
+      name: commenter.full_name
     }
 
   end

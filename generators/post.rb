@@ -94,9 +94,7 @@ class PostGenerator
 
     {
       id: poster.id.to_s,
-      name: poster.full_name,
-      avatar: AvatarGenerator.generate(
-        poster_avatar, current_user)
+      name: poster.full_name
     }
 
   end
