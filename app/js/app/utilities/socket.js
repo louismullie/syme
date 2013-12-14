@@ -158,12 +158,17 @@ Syme.Socket = {
     notification: function(data){
 
       // Refresh if on group UI and invite state changes.
-      if (!Syme.Router.insideGroup() && (
-          data.action == 'invite_confirm' ||
+      if (data.action == 'invite_confirm' ||
           data.action == 'invite_request' ||
           data.action == 'invite_cancel'  ||
-          data.action == 'leave_group'))
-        Syme.Router.reload();
+          data.action == 'leave_group') {
+         
+        Syme.Cache.delete('groups');
+   
+        if (!Syme.Router.insideGroup())
+          Syme.Router.reload();
+        
+      }
 
       // Refresh if inside group and invite state changes.
       if (Syme.Router.insideGroup() &&

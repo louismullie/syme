@@ -30,11 +30,7 @@ Syme.Cache = {
   
   delete: function (id) {
     
-    var url = this.cache[id];
-    
-    URL.revokeObjectURL(url);
-    
-    delete url; delete id;
+    delete this.cache[id];
     
     return null;
     

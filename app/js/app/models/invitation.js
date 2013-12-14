@@ -18,6 +18,7 @@ var Invitation = Backbone.Model.extend({
 
     user.acceptInviteRequest(invitationId, request, function () {
       Notifications.fetch();
+      Syme.Cache.delete('groups');
       Syme.Router.reload();
       $('.popover').hide();
       NProgress.hideSpinner();
@@ -42,6 +43,7 @@ var Invitation = Backbone.Model.extend({
 
       success: function () {
         Notifications.fetch();
+        Syme.Cache.delete('groups');
         Syme.Router.reload();
         $('.popover').hide();
       },
@@ -89,6 +91,7 @@ var Invitation = Backbone.Model.extend({
 
           Modal.hide();
           Notifications.fetch();
+          Syme.Cache.delete('groups');
           Syme.Router.reload();
 
         });
