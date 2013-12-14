@@ -82,7 +82,7 @@ GEM
     origin (1.1.0)
     plotly (0.0.1)
       json
-    polyglot (0.3.3)
+    polyglot (0.3.4)
     pony (1.5)
       mail (> 2.0)
     rack (1.5.2)
@@ -128,7 +128,7 @@ GEM
     treetop (1.4.14)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.37)
+    tzinfo (0.3.47)
 
 PLATFORMS
   ruby
