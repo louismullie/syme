@@ -296,11 +296,30 @@ var User = Backbone.Model.extend({
     });
 
   },
+  
+  getGroupUpdates: function (groupId, updatedGroupCb) {
+    
+    var _this = this;
+    
+    var url = Syme.Url.join(Syme.Url.fromGroup(groupId), 'invitations');
+    
+    $.ajax(url, {
+      
+      success: function (updates) {
+        _this.doGroupUpdates(updates, updatedGroupCb);
+      },
+      
+      error: function () {
+        alert('Could not get group updates.');
+      }
+      
+    });
+    
+  },
 
   getAllGroupUpdates: function (updatedGroupsCb) {
 
-    var url = SERVER_URL + '/users/' + this.get('id') +
-      '/invitations';
+    var url = SERVER_URL + '/users/' + this.get('id') + '/invitations';
 
     var _this = this;
 
@@ -321,45 +340,50 @@ var User = Backbone.Model.extend({
           updatedGroupsCbWrapper();
 
         _.each(groupUpdates, function (updates, groupId) {
-
-          // Update the group member list.
-          if (updates.members) {
-            Syme.CurrentSession.setGroupMembers(updates.members);
-          }
-
-          if (updates.integrate) {
-
-            var invitationId = updates.integrate.id;
-            var groupId = updates.integrate.group_id;
-            var request = updates.integrate.request;
-            var members = updates.members;
-
-            if (updates.distribute) {
-
-              _this.completeInviteRequest(groupId, invitationId, request, function () {
-                  _this.addUsersRequest(updates.distribute,  updatedGroupsCbWrapper);
-              });
-
-            } else {
-
-              _this.completeInviteRequest(groupId, invitationId, request, updatedGroupsCbWrapper);
-
-            }
-
-          } else if (updates.distribute) {
-
-            _this.addUsersRequest(updates.distribute, updatedGroupsCbWrapper);
-
-          } else {
-
-            updatedGroupsCbWrapper();
-
-          }
-
+          _this.doGroupUpdates(updates, updatedGroupsCbWrapper);
         });
 
     });
 
+  },
+  
+  doGroupUpdates: function (updates, updatedGroupCb) {
+    
+    var _this = this;
+    
+    if (updates.members) {
+      Syme.CurrentSession.setGroupMembers(updates.members);
+    }
+
+    if (updates.integrate) {
+
+      var invitationId = updates.integrate.id;
+      var groupId = updates.integrate.group_id;
+      var request = updates.integrate.request;
+      var members = updates.members;
+
+      if (updates.distribute) {
+
+        _this.completeInviteRequest(groupId, invitationId, request, function () {
+            _this.addUsersRequest(updates.distribute,  updatedGroupCb);
+        });
+
+      } else {
+
+        _this.completeInviteRequest(groupId, invitationId, request, updatedGroupCb);
+
+      }
+
+    } else if (updates.distribute) {
+
+      _this.addUsersRequest(updates.distribute, updatedGroupCb);
+
+    } else {
+
+      updatedGroupCb();
+
+    }
+    
   },
 
   updateKeyfile: function (encryptedKeyfile, keyfileUpdatedCb) {

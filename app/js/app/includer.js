@@ -43,7 +43,7 @@ $.onDeviceReady = function() {
   Syme.Router = new Syme.Router();
 
   Syme.CurrentSession = new Syme.Session();
-  Syme.FileManager = new Syme.FileManager();
+  Syme.FileManager = new Syme.FileManager('0');
 
   Syme.CurrentSession.initialize(function () {
 

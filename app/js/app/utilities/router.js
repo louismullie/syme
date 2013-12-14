@@ -244,12 +244,20 @@ Syme.Router = Backbone.Router.extend({
         Syme.globals.updatedComments[groupId] = 0;
 
         Syme.CurrentSession.setGroupId(groupId);
-
+        
+        user.getGroupUpdates(groupId, function () {
+          Syme.Router.renderDynamicTemplate(template, specificBinders);
+        });
+        
+      } else {
+        
+        user.getAllGroupUpdates(function () {
+          Syme.Router.renderDynamicTemplate(template, specificBinders);
+        });
+        
       }
 
-      user.getAllGroupUpdates(function () {
-        Syme.Router.renderDynamicTemplate(template, specificBinders);
-      });
+      
 
     }, function() {
 
