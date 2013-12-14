@@ -29,7 +29,7 @@ Syme.FileManager.prototype = {
     var callback = function(store) {
       _this.store = store;
       initializedCb();
-    }
+    };
 
     // Create a new Lawnchair instance
     new Lawnchair(options, callback);
@@ -68,7 +68,7 @@ Syme.FileManager.prototype = {
     // Get the file from database or remote server
     var retrieveFile = function () {
       _this.retrieveFile(fileInfo, function (fileUrl) {
-
+        
         // Pass file URL to callback
         gotFileCb(fileUrl);
 
@@ -115,7 +115,7 @@ Syme.FileManager.prototype = {
 
     // Attempt to retrieve the file from the database store.
     this.store.get(fileId, function(record) {
-
+  
       // If the record does not exist, download and locally store file
       if (typeof(record) == 'undefined') { //  || record == null
 
@@ -124,15 +124,32 @@ Syme.FileManager.prototype = {
       // If the record already exists, just decrypt the file
       } else {
 
-        // Inject the file content into the file info
-        fileInfo.content = record.value.content;
-
-        // Decrypt the file with the supplied info
-        _this.decryptFile(fileInfo, gotFileCb);
-
+        var file = record.value;
+        
+        if (!file.groupId || !file.key || !file.content || !file.type) {
+          
+          _this.downloadFile(fileInfo, gotFileCb);
+          
+        } else {  
+       
+          // Decrypt the file with the supplied info
+          _this.decryptFile(fileId, file.groupId, file.type,
+            file.key, file.content, gotFileCb);
+          
+        }
+        
       }
 
     });
+
+  },
+
+  saveFile: function (fileId, groupId, mimeType, key, content) {
+    
+    this.store.save({ key: fileId, value: {
+      groupId: groupId, key: key,
+      content: content, type: mimeType
+    } });
 
   },
 
@@ -166,13 +183,13 @@ Syme.FileManager.prototype = {
     downloader.start($.noop,
 
       // Success
-      function(blob) {
-
+      function(blob, firstChunk) {
+        
         var url = URL.createObjectURL(blob);
 
         downloadedFileCb(url);
 
-        //_this.saveFile(fileId, groupId, key, blob, store);
+        _this.saveFile(fileId, groupId, blob.type, decryptionKeys, firstChunk);
 
       },
 
@@ -184,45 +201,32 @@ Syme.FileManager.prototype = {
     );
 
   },
-
-  saveFile: function (fileInfo, savedFileCb) {
-
-    var reader = new FileReader();
-
-    // Get file as base64
-    reader.onload = function(event){
-
-      // Encrypt base64 representation of file.
-      var content = sjcl.encrypt(key, event.target.result),
-          value = { groupId: group, content: content };
-
-      // Store base64
-      store.save({ key: id, value: value });
-
-      // Pass to callback
-      savedFileCb(url);
-
-    };
-
-    // Read in the blob as base64
-    reader.readAsDataURL(blob);
-
-  },
-
-  decryptFile: function (fileId, groupId, decryptionKeys, encryptedFile, decryptedFileCb) {
+  
+  decryptFile: function (fileId, groupId, mimeType, decryptionKeys, encryptedFile, decryptedFileCb) {
 
     // Decrypt message keys
     Syme.Crypto.decryptMessage(groupId, decryptionKeys, function (key) {
 
       // Decrypt message
-      Syme.Crypto.decrypt(key, encryptedFile, function (decryptedFile) {
+      Syme.Crypto.decrypt(key, encryptedFile, function (plainChunk) {
+        
+        var byteString = atob(atob(
+          plainChunk.split(',')[1]));
 
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+
+        for (var i = 0; i < byteString.length; i++) {
+           ia[i] = byteString.charCodeAt(i);
+        }
+        
         // Create blob from base 64
-        var blob = ThumbPick.prototype.dataURItoBlob(decryptedFile);
-        var url = URL.createObjectUrl(blob);
+        var blob = new Blob([ia], { type: mimeType });
+        
+        var url = URL.createObjectURL(blob);
 
         // Return ID and blod.
-        decryptedFileCb(id, blob, url);
+        decryptedFileCb(url);
 
       });
 

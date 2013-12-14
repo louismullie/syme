@@ -191,11 +191,14 @@ get '/:group_id/file/download/:id', auth: [] do |group_id, id|
   end
   
    EventAnalysis.track @user, 'User started downloading file'
-
+   
+   file = File.join(settings.upload_path, id, '0')
+   
   {
     status: 'ok',
     chunks: chunks,
-    type: upload.type
+    type: upload.type,
+    content: File.read(file)
   }.to_json
 
 end

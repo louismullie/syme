@@ -99,7 +99,7 @@ ThumbPick.prototype = {
   },
 
   // Converts a base64 data URI to a Blob.
-  dataURItoBlob: function(dataURI) {
+  dataURItoBlob: function(dataURI, mimeType) {
 
      var header = dataURI.split(',')[0];
      var isBase64 = header.indexOf('base64') >= 0;
@@ -128,9 +128,9 @@ ThumbPick.prototype = {
      if (BlobBuilder) {
        var bb = new BlobBuilder();
        bb.append(ab);
-       return bb.getBlob(mimeString);
+       return bb.getBlob(mimeType);
      } else {
-       var type = { type: mimeString };
+       var type = { type: mimeType };
        var blob = new Blob([ab], type);
        return blob;
      }

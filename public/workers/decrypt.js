@@ -16,57 +16,72 @@ self.onmessage = function(event) {
   var id = event.data['id'];
   var chunk = event.data['chunk'];
 
-  var worker = event.data['worker'];
-  var url = event.data['url'];
-  var csrf = event.data['csrf'];
-  var key = event.data['key'];
-  var token = event.data['token'];
+  var worker = event.data['worker'],
+      url = event.data['url'],
+      csrf = event.data['csrf'],
+      key = event.data['key'],
+      token = event.data['token'],
+      content = event.data['content'];
   
   var xhr = new XMLHttpRequest();
   
-  xhr.addEventListener('load', function(event) {
-
-    if (event.target.status != 200) {
-      
-      throw 'Server error (' + event.target.status + ')';
-      
-    } else {
-      
-      var cryptChunk = event.target.responseText;
-      var plainChunk = sjcl.decrypt(key, cryptChunk);
-      
-      var byteString = decodeBase64(decodeBase64(
-        plainChunk.split(',')[1]));
-
-      var ab = new ArrayBuffer(byteString.length);
-      var ia = new Uint8Array(ab);
-      
-      for (var i = 0; i < byteString.length; i++) {
-         ia[i] = byteString.charCodeAt(i);
-      }
-      
-      postMessage({
-        id: id,
-        data: ia,
-        worker: worker,
-        chunk: chunk,
-        status: 'ok'
-      });
+  var decrypt = function (key, cryptChunk) {
     
+    var plainChunk = sjcl.decrypt(key, cryptChunk);
+    
+    var byteString = decodeBase64(decodeBase64(
+      plainChunk.split(',')[1]));
+
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    
+    for (var i = 0; i < byteString.length; i++) {
+       ia[i] = byteString.charCodeAt(i);
     }
+    
+    postMessage({
+      id: id,
+      data: ia,
+      worker: worker,
+      chunk: chunk,
+      status: 'ok'
+    });
+    
+  };
   
-  });
-  
-  xhr.addEventListener(
-    "error", function () { throw "Error!"; }, false);
-  
-  xhr.addEventListener(
-    "abort", function () { throw "Abort!"; }, false);
-  
-  xhr.open('GET', url + '/' + chunk);
-  xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
-  xhr.setRequestHeader('X_CSRF_TOKEN', csrf);
-  xhr.setRequestHeader('AccessToken', token);
-  xhr.send('');
+  if (!content) {
+    
+    xhr.addEventListener('load', function(event) {
+
+      if (event.target.status != 200) {
+
+        throw 'Server error (' + event.target.status + ')';
+
+      } else {
+
+        var cryptChunk = event.target.responseText;
+        decrypt(key, cryptChunk)
+
+      }
+
+    });
+    
+    xhr.addEventListener(
+      "error", function () { throw "Error!"; }, false);
+
+    xhr.addEventListener(
+      "abort", function () { throw "Abort!"; }, false);
+
+    xhr.open('GET', url + '/' + chunk);
+    xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
+    xhr.setRequestHeader('X_CSRF_TOKEN', csrf);
+    xhr.setRequestHeader('AccessToken', token);
+    xhr.send('');
+      
+  } else {
+    
+    decrypt(key, content);
+    
+  }
   
 };

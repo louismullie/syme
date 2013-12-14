@@ -27,6 +27,7 @@ function Downloader(id, keys, options) {
   this.mimeType = null;
   this.success = null;
   this.numChunks = null;
+  this.firstChunk = null;
   this.downloadedChunks = 0;
   _this.finished = false;
 
@@ -51,7 +52,8 @@ function Downloader(id, keys, options) {
         _this.blobDict[chunk] = data;
 
         if (_this.downloadedChunks == _this.numChunks) {
-          _this.success(_this.getAsBlob());
+          var firstChunk = _this.numChunks == 1 ? _this.firstChunk : null;
+          _this.success(_this.getAsBlob(), firstChunk);
           return;
         } else if (_this.currentChunk >= _this.numChunks - 1) {
           return;
@@ -97,7 +99,9 @@ function Downloader(id, keys, options) {
       
       var data = JSON.parse(event.target.responseText);
       _this.numChunks = data.chunks;
+      
       _this.fileType = data.type;
+      _this.firstChunk = data.content;
 
       if (_this.numChunks < _this.options.numWorkers) {
         _this.options.numWorkers = _this.numChunks;
@@ -148,11 +152,14 @@ function Downloader(id, keys, options) {
 
     var fileUrl = this.options.baseUrl +
                   'download/' + this.fileId;
-                  
+    
+    var content = (chunk == 0) ? this.firstChunk : null;
+    
     this.workerPool.queueJob({
       id: this.fileId, chunk: chunk,
       worker: worker, key: this.key,
-      url: fileUrl, csrf: this.options.csrfToken
+      url: fileUrl, csrf: this.options.csrfToken,
+      content: content
     }, this);
 
   };
