@@ -161,7 +161,8 @@ Syme.Binders.add('groups', { main: function() {
 
               // Callback when group creation acknowledgement succeeds.
               success: function () {
-
+                
+                Syme.Cache.delete('groups');
                 Syme.Router.navigate(targetGroupRoute);
                 $this.data('active', false);
                 NProgress.hideSpinner();
@@ -254,6 +255,7 @@ Syme.Binders.add('groups', { main: function() {
           user.deleteKeylist(groupId, function () {
             Notifications.reset();
             Notifications.fetch();
+            Syme.Cache.delete('groups');
             Syme.Router.navigate();
           });
 
@@ -310,6 +312,7 @@ Syme.Binders.add('groups', { main: function() {
               var user = Syme.CurrentSession.getUser();
 
               user.deleteKeylist(groupId, function () {
+                Syme.Cache.delete('groups');
                 Syme.Router.reset();
               });
 
