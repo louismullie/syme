@@ -270,9 +270,19 @@ Syme.Router = Backbone.Router.extend({
 
     // Temporary fix while Backbone sync isnt encrypted
     var fn = template == 'settings' ? $.ajax : $.encryptedAjax;
-
+    
+    var adapter = function (url, hash) {
+      
+      if (template == 'groups' && Syme.Cache.contains('groups')) {
+        hash.success(Syme.Cache.get('groups'));
+      } else {
+        fn(url, hash);
+      }
+      
+    };
+    
     // Retrieve data
-    fn(url, {
+    adapter(url, {
 
       type: 'GET',
 
@@ -284,7 +294,11 @@ Syme.Router = Backbone.Router.extend({
           template = 'batchinviter';
 
         }
-
+        
+        if (template == 'groups' && !Syme.Cache.contains('groups')) {
+          Syme.Cache.store('groups', data);
+        }
+        
         // Initiate logged in template on first pageload
         if( !$('#main').length )
           Syme.Router.renderLoggedInTemplate();
