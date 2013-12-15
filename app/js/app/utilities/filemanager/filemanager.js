@@ -131,11 +131,11 @@ Syme.FileManager.prototype = {
           _this.downloadFile(fileInfo, gotFileCb);
           
         } else {  
-       
-          // Decrypt the file with the supplied info
-          _this.decryptFile(fileId, file.groupId, file.type,
-            file.key, file.content, gotFileCb);
           
+          // Decrypt the file with the supplied info
+          _this.decryptFile(fileInfo.fileId, fileInfo.groupId, file.type,
+            fileInfo.decryptionKeys, file.content, gotFileCb);
+
         }
         
       }

@@ -206,7 +206,7 @@ put '/invitations', auth: [] do
 
       post = begin
         group.complete_posts.find(post_info['id'])
-      rescue; next; end
+      rescue; warn "Cannot find post"; next; end
       
       post.keys[invitee_id] = post_info['key']
 
@@ -231,7 +231,7 @@ put '/invitations', auth: [] do
 
       upload = begin
         group.uploads.find(upload_info['id'])
-      rescue; next; end
+      rescue; warn "Cannot find upload";  next; end
       
       upload.keys[invitee_id] = upload_info['key']
       
@@ -244,7 +244,7 @@ put '/invitations', auth: [] do
       invitation_id = distribute_info['id']
       invitation = begin
         group.invitations.find(invitation_id)
-      rescue; next; end
+      rescue; warn "Cannot find distrib";  next; end
       
       new_key = distribute_info['key']
       

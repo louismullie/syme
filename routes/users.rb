@@ -67,7 +67,8 @@ post '/users' do
       email: email,
       full_name: full_name,
       confirmation_token: token,
-      unsubscribed: false
+      unsubscribed: false,
+      confirmed: true
     )
   # Return bad request if validation fails.
   rescue Mongoid::Errors::Validations

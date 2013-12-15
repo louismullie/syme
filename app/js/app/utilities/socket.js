@@ -169,6 +169,14 @@ Syme.Socket = {
           Syme.Router.reload();
         
       }
+      
+      if (data.action == 'invite_decline' ||
+          data.action == 'leave_group') {
+        
+        if (Syme.Router.insideGroup())
+          Syme.Router.reload();
+            
+      }
 
       // Refresh if inside group and invite state changes.
       if (Syme.Router.insideGroup() &&
@@ -179,15 +187,54 @@ Syme.Socket = {
       Notifications.add(data);
       
       if (Syme.Compatibility.inChromeExtension()) {
-        /*
-        chrome.notifications.create('syme',{
-          type: "basic",
-          title: "Primary Title",
-          message: "Primary message to display",
-          iconUrl: "url_to_small_icon"
-        }, function () {  })*/
         
-      }
+        function strip(html)
+        {
+           var tmp = document.createElement("DIV");
+           tmp.innerHTML = html;
+           return tmp.textContent || tmp.innerText || "";
+        }
+        
+        var message = strip(Notifications.view
+          .generateNotificationText(data).message);
+      
+        function openApp() {
+
+          var symeUrl = chrome.extension.getURL('syme.html');
+          chrome.tabs.create( {'url': symeUrl }, function(tab) { });
+
+        }
+        
+        function notify(message) {
+          
+          var havePermission = window.webkitNotifications.checkPermission();
+          
+          if (havePermission == 0) {
+ 
+            var notification = window.webkitNotifications.createNotification(
+              'https://getsyme.com/img/logo-48x48.png',
+              'New activity on Syme', message
+            );
+
+            notification.onclick = function () {
+              openApp();
+              notification.close();
+            }
+            
+            notification.show();
+            
+          } else {
+            
+            window.webkitNotifications.requestPermission();
+            
+          }
+          
+        }
+        
+        notify(message);
+        
+        
+     }
 
     },
 
