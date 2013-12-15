@@ -169,6 +169,14 @@ Syme.Socket = {
           Syme.Router.reload();
         
       }
+      
+      if (data.action == 'invite_decline' ||
+          data.action == 'leave_group') {
+        
+        if (Syme.Router.insideGroup())
+          Syme.Router.reload();
+            
+      }
 
       // Refresh if inside group and invite state changes.
       if (Syme.Router.insideGroup() &&

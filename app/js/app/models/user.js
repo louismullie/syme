@@ -160,6 +160,7 @@ var User = Backbone.Model.extend({
               success: inviteAcceptedCb,
               error: function (error) {
                 Alert.show("This invitation does not exist anymore.");
+                NProgress.hideSpinner();
               }
           });
 
