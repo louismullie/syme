@@ -296,6 +296,8 @@ Syme.Binders.add('groups', { main: function() {
         cancel: modal.cancel,
 
         onsubmit: function(){
+          
+          NProgress.showSpinner();
 
           var baseUrl = Syme.Url.fromGroup(groupId);
           
@@ -312,6 +314,7 @@ Syme.Binders.add('groups', { main: function() {
               var user = Syme.CurrentSession.getUser();
 
               user.deleteKeylist(groupId, function () {
+                NProgress.hideSpinner();
                 Syme.Cache.delete('groups');
                 Syme.Router.reset();
               });
