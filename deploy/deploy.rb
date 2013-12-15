@@ -22,6 +22,9 @@ set :deploy_via, :remote_cache
 
 set :ssh_options, { forward_agent: true }
 
+# See http://stackoverflow.com/questions/9468912/missing-folder-errors-during-capistrano-deploy
+set :normalize_asset_timestamps, false
+
 # Set location for apps.
 set :location, '198.27.65.229'
 
