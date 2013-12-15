@@ -45,12 +45,8 @@ Syme.Session = function (csrfToken) {
         success: function (data) {
           
           _this.passwordKey = data.password_key;
-          
-          _this.fetchUser(data, function () {
-        
-            _this.retrieveCredentials(callback, callback);
-            
-          });
+
+          _this.fetchUser(data, callback);
           
         },
 
@@ -130,7 +126,7 @@ Syme.Session = function (csrfToken) {
   this.fetchUser = function (data, callback) {
     
     this.passwordKey = data.password_key;
-    
+
     Syme.CurrentSession.setCsrfToken(data.csrf);
     
     if (data.access_token)
@@ -152,7 +148,6 @@ Syme.Session = function (csrfToken) {
       data: { id: data.user_id },
       
       success: function () {
-        
         _this.startSession(callback);
       },
 
@@ -168,11 +163,13 @@ Syme.Session = function (csrfToken) {
     var _this = this;
     
     var initializeKeyfile = function (password) {
+      
       Syme.Crypto.initializeKeyfile(
         _this.user.get('id'), password,
         _this.user.get('keyfile'),
         callback
       );
+      
     };
     
     if (!this.password || !this.key) {
@@ -350,7 +347,7 @@ Syme.Session = function (csrfToken) {
         
         var credentials = cursor.credentials;
         var encryptedPassword = credentials.password;
-            //encryptedKey = credentials.sessionKey;
+        //encryptedKey = credentials.sessionKey;
         
         if (!encryptedPassword) return error();
         
@@ -376,10 +373,12 @@ Syme.Session = function (csrfToken) {
         var password = sjcl.decrypt(passwordKey, encryptedPassword);
         //var key = sjcl.decrypt(passwordKey, encryptedKey);
         //_this.key = key;
-        
+
         success({ password: password }); //, key: key });
         
-     } catch (e) { error(); }
+     } catch (e) {   
+        
+      error(); }
       
     }
     

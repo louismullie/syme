@@ -24,7 +24,7 @@ Syme.Auth = {
               
                 model.createKeyfile(keys.keyfileKey, function () {
                 
-                  _this.firstLogin(email, password, 
+                  _this.firstLogin(user, email, password, 
                     keys.authenticationKey, remember);
     
                 });
@@ -50,14 +50,14 @@ Syme.Auth = {
 
   },
 
-  firstLogin: function (email, password, authenticationKey, remember) {
+  firstLogin: function (user, email, password, authenticationKey, remember) {
     
-    Syme.Auth.login(email, password, remember, function(derivedKey, csrfToken, sessionKey) {
+    Syme.Auth.login(email, password, remember, function(keyfileKey, csrfToken, sessionKey) {
 
         Syme.CurrentSession = new Syme.Session(csrfToken);
-
+        
         Syme.CurrentSession.initializeWithModelPasswordAndKey(
-          user, authenticationKey, sessionKey, remember, function () {
+          user, keyfileKey, authenticationKey, remember, function () {
             Syme.Router.navigate('', { trigger: true, replace: true });
       });
 
@@ -77,8 +77,8 @@ Syme.Auth = {
     Syme.Auth.tryLogin(email, password, remember, bits, group, hash, kdf,
       
       // Success
-      function (derivedKey, csrfToken, sessionKey) {
-        success(derivedKey, csrfToken, sessionKey);
+      function (keyfileKey, csrfToken, sessionKey) {
+        success(keyfileKey, csrfToken, sessionKey);
       },
       
       // Failure
@@ -89,8 +89,8 @@ Syme.Auth = {
         Syme.Auth.tryLogin(email, password, remember, bits, group, hash, kdf,
           
           // Success
-          function (derivedKey, csrfToken, sessionKey) {
-            success(derivedKey, csrfToken, sessionKey, true);
+          function (keyfileKey, csrfToken, sessionKey) {
+            success(keyfileKey, csrfToken, sessionKey, true);
           },
           
           // Failure
@@ -100,8 +100,8 @@ Syme.Auth = {
             
             Syme.Auth.tryLogin(email, password, remember, bits, group, hash, kdf,
               
-              function (derivedKey, csrfToken, sessionKey) {
-                success(derivedKey, csrfToken, sessionKey, true);
+              function (keyfileKey, csrfToken, sessionKey) {
+                success(keyfileKey, csrfToken, sessionKey, true);
               }, fail
               
             );
@@ -160,11 +160,11 @@ Syme.Auth = {
 
                if (data.status == 'ok') {
                 
-                var derivedKey = keys.key2;
+                var keyfileKey = keys.key2;
                 var csrfToken = data.csrf;
                 var sessionKey = Sc.toString(16);
                 
-                success(derivedKey, csrfToken, sessionKey);
+                success(keyfileKey, csrfToken, sessionKey);
 
               } else if (data.status == 'error') {
 
