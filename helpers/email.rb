@@ -1,7 +1,10 @@
 # Email sending helper. All email helpers call it.
 def send_email_to(email, subject, body)
 
-  return if settings.environment != :production && !settings.running_tux
+  begin
+    return if settings.environment != :production &&
+              !settings.running_tux
+  rescue; end;
 
   user = begin
     User.find_by(email: email)
@@ -191,4 +194,8 @@ def send_survey_email(user_email)
 
   send_email_to(user_email, subject, message)
 
+end
+
+def send_activity_email(user)
+  
 end

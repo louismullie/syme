@@ -33,6 +33,8 @@ class Invitation
   
   field :notified, type: Boolean
   
+  field :emails_sent, type: Hash, default: {}
+  
   def inviter
     User.find(inviter_id)
   end
