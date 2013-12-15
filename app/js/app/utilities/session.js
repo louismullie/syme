@@ -354,8 +354,7 @@ Syme.Session = function (csrfToken) {
         try { 
           
           var password = sjcl.decrypt(passwordKey, encryptedPassword);
-          //var key = sjcl.decrypt(passwordKey, encryptedKey);
-          //_this.key = key;
+          // _this.key = sjcl.decrypt(passwordKey, encryptedKey);
           
           success({ password: password }); //, key: key });
           
