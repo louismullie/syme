@@ -15,6 +15,11 @@ def less_than(&block)
   { "$lte" => block.call }
 end
 
+# 1) 24h / 24h
+# 2) 72h / 72h
+# 3) 24h / 48h
+# 4) 24h / 48h
+
 Emails = {
   
   confirm_account_reminder: {
@@ -27,6 +32,7 @@ Emails = {
     },
     
     threshold: -> { Time.now - 10 },
+    max_times: 2
     
     template: 'send_confirm_email'
     
@@ -42,23 +48,9 @@ Emails = {
     },
        
     threshold: -> { Time.now - 10 },
+    max_times: 2
     
     template: 'send_activity_email'
-    
-  },
-  
-  invite_confirm_reminder: {
-    
-    type: Invitation,
-    
-    selector: {
-      state: 1,
-      created_at: less_than { Time.now - 30}
-    },
-    
-    threshold: -> { Time.now - 10 },
-    
-    template: 'request_confirm'
     
   },
   
@@ -72,8 +64,25 @@ Emails = {
     },
     
     threshold: -> { Time.now - 10 },
+    max_times: 2
     
     template: 'send_invite_reminder'
+    
+  },
+  
+  invite_confirm_reminder: {
+    
+    type: Invitation,
+    
+    selector: {
+      state: 1,
+      created_at: less_than { Time.now - 30}
+    },
+    
+    threshold: -> { Time.now - 10 },
+    max_times: 2
+    
+    template: 'request_confirm'
     
   }
   
@@ -99,11 +108,20 @@ def send_emails(type)
     
     puts last_email_sent
     
-    if !last_email_sent || last_email_sent < email[:threshold].call
+    if !last_email_sent || last_email_sent[:time] < email[:threshold].call
       
-      emails_sent[type.to_s] = Time.now
-      obj.emails_sent = emails_sent
+      emails_sent[type.to_s] ||= {}
+      emails_sent[type.to_s][:time] = Time.now
+      emails_sent[type.to_s][:tries] ||= 0
+    
+      next if emails_sent[type.to_s][:tries] > email[:max_tries]
+      
       send(email[:template].intern, obj)
+      
+      emails_sent[type.to_s][:tries] += 1
+      
+      obj.emails_sent = emails_sent
+      
       obj.save!
       
     end
