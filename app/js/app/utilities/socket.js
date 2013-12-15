@@ -221,6 +221,10 @@ Syme.Socket = {
               notification.close();
             }
             
+            setTimeout(function(){
+              notification.cancel();
+            }, 2000);
+            
             notification.show();
             
           } else {
