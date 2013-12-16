@@ -1,6 +1,6 @@
 if settings.environment == :production
   # Initialize analytics API with secret key
-  Analytics.init(secret: 'n5u5pkqotj7ik7d8n954')
+  Analytics.init(secret: 'knmjjalx6v')
 else
   
   Analytics.class_eval do
