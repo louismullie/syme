@@ -162,20 +162,20 @@ Syme.Socket = {
           data.action == 'invite_request' ||
           data.action == 'invite_cancel'  ||
           data.action == 'leave_group') {
-         
+
         Syme.Cache.delete('groups');
-   
+
         if (!Syme.Router.insideGroup())
           Syme.Router.reload();
-        
+
       }
-      
+
       if (data.action == 'invite_decline' ||
           data.action == 'leave_group') {
-        
+
         if (Syme.Router.insideGroup())
           Syme.Router.reload();
-            
+
       }
 
       // Refresh if inside group and invite state changes.
@@ -185,32 +185,32 @@ Syme.Socket = {
         Syme.Router.reload();
 
       Notifications.add(data);
-      
+
       if (Syme.Compatibility.inChromeExtension()) {
-        
+
         function strip(html)
         {
            var tmp = document.createElement("DIV");
            tmp.innerHTML = html;
            return tmp.textContent || tmp.innerText || "";
         }
-        
+
         var message = strip(Notifications.view
           .generateNotificationText(data).message);
-      
+
         function openApp() {
 
           var symeUrl = chrome.extension.getURL('syme.html');
           chrome.tabs.create( {'url': symeUrl }, function(tab) { });
 
         }
-        
+
         function notify(message) {
-          
+
           var havePermission = window.webkitNotifications.checkPermission();
-          
+
           if (havePermission == 0) {
- 
+
             var notification = window.webkitNotifications.createNotification(
               'https://getsyme.com/img/logo-48x48.png',
               'New activity on Syme', message
@@ -220,24 +220,24 @@ Syme.Socket = {
               openApp();
               notification.close();
             }
-            
+
             setTimeout(function(){
               notification.cancel();
             }, 2000);
-            
+
             notification.show();
-            
+
           } else {
-            
+
             window.webkitNotifications.requestPermission();
-            
+
           }
-          
+
         }
-        
+
         notify(message);
-        
-        
+
+
      }
 
     },
@@ -313,21 +313,28 @@ Syme.Socket = {
 
     post: function(data){
 
-      // If post is on the page yet
-      if($('#' + data.target).length > 0){
+      // If post isn't on the page yet, return
+      if( !$('#' + data.target).length ) return false;
 
-        var group = Syme.CurrentSession.getGroupId();
-        var url = SERVER_URL + '/' + group + '/post/lastof/';
-
-        $.ajax(url + $('#feed').data('pagesloaded'), {
-          type: 'GET', 
-          success: function(data){ $('#feed').append(data); }
-        });
-
-      }
-      
       // Remove the post
       $('#' + data.target).remove();
+
+      var group       = Syme.CurrentSession.getGroupId(),
+          currentPage = $('#feed').prop('scroller').loadedPages,
+          url         = SERVER_URL + '/' + group + '/post/lastof/' + currentPage;
+
+      $.get(url, function(post) {
+
+        // Generate post template and append it to feed
+        var $post = $( Syme.Template.render('feed-post', post) );
+        $('#feed').append($post);
+
+        // Decrypt it
+        Syme.Decryptor.decryptPostsAndComments($post);
+
+      });
+
+
     },
 
     comment: function(data){
