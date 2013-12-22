@@ -1,5 +1,5 @@
 .validation-container {
-  display: relative;
+  position: relative;
 
   .validation-append {
     width: 100px;
@@ -25,6 +25,7 @@
     $validationBackgroundColor: $concrete;
 
     position: relative;
+    display: block;
 
     margin-bottom: 1em;
     padding: .5em 1em;
