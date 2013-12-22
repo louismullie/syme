@@ -32,13 +32,9 @@
     border: $baseBorderStyle;
     border-radius: $baseBorderRadius;
 
-    font: 200 1em/1em $opensans;
-
-    *:last-child { margin-bottom: 0; }
-
     input[type="text"] {
       margin-bottom: $marginBetween/2;
-      border: $baseBorderStyle;
+      border: 2px solid #DDD;
 
       &:focus { border-color: $success; }
     }
@@ -59,6 +55,18 @@
           span.default { display: none; }
           span.active { display: inline; }
         }
+      }
+
+      input[name="new_password"] {
+        padding-right: 108px;
+      }
+
+      #password-score {
+        &[data-strength="0"] { background: lighten($danger, 10%) }
+        &[data-strength="1"] { background: lighten($warning, 10%) }
+        &[data-strength="2"] { background: lighten($sunflower, 10%) }
+        &[data-strength="3"] { background: lighten($green, 10%) }
+        &[data-strength="4"] { background: $success }
       }
     }
 

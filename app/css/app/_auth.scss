@@ -31,10 +31,6 @@
 
     box-shadow: 0px 7px 7px -7px rgba(0, 0, 0, 0.3);
 
-    i {
-      color: $success;
-    }
-
     input[type="text"]:focus, input[type="password"]:focus {
       background: white;
       border-color: $success;

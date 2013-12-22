@@ -51,50 +51,132 @@ Syme.Binders.add('settings', { main: function(){
     ]('disabled');
   });
 
-  // 'Change email' form
-  $('#change-email').submit(function(e){
+  // 'Change password' validator
+  $('#change-password').ndbValidator({
+    showErrors: function (input, errors) {
 
-    var $this = $(this),
-        input = $this.find('input');
+      // If the form hasn't been submitted yet, don't show errors
+      // unless the concerned input is [data-validate-persistent="true"]
+      if (!input.closest('form').data('submit-failed') &&
+          !input.data('validate-persistent')) return;
 
-    var val = input.val(),
-        placeholder = input.attr('placeholder');
+      // Message table
+      var messages = {
 
-    // If not an email or equal to placeholder, return
-    if ( !$.ndbValidator.regexps.email.test(val) || val == placeholder)
-      return false;
+        new_password: {
+          minlength:          "Your password is too short",
+          password_strength:  "Your password isn't strong enough"
+        },
 
-    // Lock form
-    if(!!$this.data('active')) return false;
-    $this.data('active', true);
+        new_password_confirm: {
+          equals_to: "Passwords don't match"
+        },
 
-    $('#change-email-button').addClass('active');
+      };
 
-    var callback = function(email){
-      // Reset form and button
-      $this.data('active', false);
-      $('#change-email-button').removeClass('active');
-      
-      // Swap placeholder for value
-      if (email) {
-        input.attr('placeholder', email)
-        input.val('');
-      }
-      
-    };
+      var name = input.attr('name');
 
-    Syme.CurrentSession.getUser().save(
-      { email: val },
-      { success: function(model, response, options){
-          callback( model.get('email') )
-        }, error: function (model, response) {
-          Alert.show('This e-mail is already taken.');
-          model.set('email', input.attr('placeholder')); // ??
-          callback();
-      }}
-    );
+      // Set container as closest .validation-container
+      var container = input.closest('div.validation-container');
+
+      // Get message box
+      var box = container.find('div.validation-message').length == 0
+        // If message box doesn't exist, create it
+        ? $('<div class="validation-message" />').appendTo(container)
+        // If it exists, select it
+        : container.find('div.validation-message');
+
+      // Get the first error message of element
+      var message = typeof messages[name] !== "undefined" ||
+        typeof messages[name][errors[0]] !== "undefined"
+        // If message exists
+        ? messages[name][errors[0]]
+        // Otherwise, missing message error
+        : 'Missing message for ' + errors[0];
+
+      box
+        // Identify message box with related input name
+        .attr('data-related-input', name)
+        // Fill message box
+        .html( message );
+
+    },
+
+    hideErrors: function (input) {
+      // Remove message box
+      $('div.validation-message[data-related-input="' + input.attr('name') + '"]').remove();
+    }
+  });
+
+  // Password strength indicator
+  $('#change-password').on('input', 'input[name="new_password"]', function () {
+
+    // Get password value
+    var val = $(this).val();
+
+    var isMinLength = val.length >= $(this).attr('minlength');
+
+    // Add or remove hidden class
+    $('#password-score')[ isMinLength ? 'removeClass' : 'addClass' ]('hidden');
+
+    // Password strength
+    var strength = zxcvbn(val).score;
+
+    // Password strength indicators (5 indexes)
+    var explanations = [ 'poor', 'weak', 'good', 'great', 'perfect' ];
+
+    $('#password-score')
+      // Style accordingly to strengh level
+      .attr('data-strength', strength)
+      // Fill in strength indicator
+      .html(explanations[strength]);
 
   });
+
+  // 'Change email' form
+  //$('#change-email').submit(function(e){
+
+  //  var $this = $(this),
+  //      input = $this.find('input');
+
+  //  var val = input.val(),
+  //      placeholder = input.attr('placeholder');
+
+  //  // If not an email or equal to placeholder, return
+  //  if ( !$.ndbValidator.regexps.email.test(val) || val == placeholder)
+  //    return false;
+
+  //  // Lock form
+  //  if(!!$this.data('active')) return false;
+  //  $this.data('active', true);
+
+  //  $('#change-email-button').addClass('active');
+
+  //  var callback = function(email){
+  //    // Reset form and button
+  //    $this.data('active', false);
+  //    $('#change-email-button').removeClass('active');
+  //
+  //    // Swap placeholder for value
+  //    if (email) {
+  //      input.attr('placeholder', email)
+  //      input.val('');
+  //    }
+  //
+  //  };
+
+  //  Syme.CurrentSession.getUser().save(
+  //    { email: val },
+  //    { success: function(model, response, options){
+  //        callback( model.get('email') )
+  //      }, error: function (model, response) {
+  //        Alert.show('This e-mail is already taken.');
+  //        model.set('email', input.attr('placeholder')); // ??
+  //        callback();
+  //    }}
+  //  );
+
+  //});
 
   // 'Change name' input watcher
   $('#change-email input').keyup(function(e){
@@ -118,7 +200,7 @@ Syme.Binders.add('settings', { main: function(){
     $(this).data('active', true);
 
     var deleteUserUrl = Syme.Url.fromCurrentUser();
-    
+
     $.encryptedAjax(deleteUserUrl, {
 
       type: 'DELETE',
@@ -132,7 +214,7 @@ Syme.Binders.add('settings', { main: function(){
       error: function (response) {
         Syme.Error.ajaxError(response, 'delete', 'group member');
       }
-      
+
     });
 
   });
