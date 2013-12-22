@@ -102,7 +102,7 @@ iframe#rdbIndicator {
   }
 
   .post {
-    
+
     padding-top: $bodyPadding / 2;
     margin-top: $bodyPadding / 2;
 
@@ -233,6 +233,14 @@ iframe#rdbIndicator {
               @include transform( translateY(-50%) );
 
               text-align: right;
+
+              // States
+              span.decrypting   { display: none; }
+              &.decrypting {
+                span.default    { display: none; }
+                span.decrypting { display: inline; }
+              }
+
             }
           }
 

@@ -82,10 +82,8 @@ Syme.Binders.add('feed', { posts: function(){
         filename      = $link.data('attachment-filename'),
         groupId       = Syme.CurrentSession.getGroupId();
 
-    // Lock link (CSS THIS PLEASE)
-    $link.html('<i class="icon-cog icon-spin"></i>&nbsp;Decrypting')
-      .addClass('decrypting')
-      .data('decrypting', true);
+    // Lock link
+    $link.data('decrypting', true).addClass('decrypting');
 
     // Retrieve file
     var fileInfo = Syme.FileManager.buildFileInfo(attachmentId, groupId, keys);
@@ -98,11 +96,8 @@ Syme.Binders.add('feed', { posts: function(){
       // Automatically download
       Syme.FileManager.saveToDisk(url, filename);
 
-      // Change link status (CSS THIS PLEASE)
-      $link
-        .html('<i class="icon-arrow-down"></i>&nbsp;Download')
-        .removeClass('decrypting')
-        .data('decrypting', false);
+      // Unlock link
+      $link.data('decrypting', false).removeClass('decrypting');
 
     });
 

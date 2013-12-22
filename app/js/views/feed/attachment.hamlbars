@@ -25,9 +25,10 @@
   {{filename}} ({{to_readable_size size}})
 
   %a.encrypted-file{ href: '#', :'data-attachment-id' => '{{id}}', :'data-attachment-group' => '{{group}}', :'data-attachment-filename' => '{{filename}}', :'data-attachment-size' => '{{size}}', :'data-attachment-keys' => '{{keys}}'}
-    %i.icon-arrow-down
-    &nbsp;
-    Download
-    %span.hidden.progress_container
+    %span.default
+      <i class="icon-arrow-down"></i> Download
+
+    %span.decrypting
+      <i class="icon-cog icon-spin"></i> Decrypting
 
 {{/if}}
