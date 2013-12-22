@@ -68,46 +68,43 @@ Syme.Binders.add('feed', { posts: function(){
   // Link every encrypted file on the page.
   $('#main').on('click', '.encrypted-file', function() {
 
-    var link     = $(this),
-        progress = link.parent().find('span');
+    var $link = $(this);
 
-    // Do nothing if file is decrypting
-    if(link.data('decrypting')) return false;
+    // Follow link if file has already been decrypted
+    if( !!$link.attr('download') ) return;
 
-    // Lock link
-    link.html('<i class="icon-cog icon-spin"></i>&nbsp;Decrypting')
-        .addClass('decrypting')
-        .data('decrypting', true);
+    // Do nothing if file is decrypting, but lock link otherwise.
+    if( $link.data('decrypting') ) return; $link.data('decrypting', true);
 
-    var id       = link.data('attachment-id');
-    var groupId = Syme.CurrentSession.getGroupId();
-    var filename = link.data('attachment-filename');
-    var keys      = link.data('attachment-keys');
+    // Gather needed informations
+    var attachmentId  = $link.data('attachment-id'),
+        keys          = $link.data('attachment-keys'),
+        filename      = $link.data('attachment-filename'),
+        groupId       = Syme.CurrentSession.getGroupId();
 
-    var file = Syme.FileManager.buildFileInfo(id, groupId, keys);
+    // Lock link (CSS THIS PLEASE)
+    $link.html('<i class="icon-cog icon-spin"></i>&nbsp;Decrypting')
+      .addClass('decrypting')
+      .data('decrypting', true);
 
-    Syme.FileManager.getFile(file, function (url) {
+    // Retrieve file
+    var fileInfo = Syme.FileManager.buildFileInfo(attachmentId, groupId, keys);
 
-      if (!url) return progress.remove();
+    Syme.FileManager.getFile(fileInfo, function (url) {
 
-      link.attr('href', url)
-          .attr('download', filename)
-          // Change link status
-          .html('<i class="icon-arrow-down"></i>&nbsp;Download')
-          .removeClass('decrypting')
-          // Unbind decryption
-          .off('click');
+      // Update link for further downloads
+      $link.attr('href', url).attr('download', filename);
 
-      link.closest('.attachment').find('a.image-download')
-          .attr('href', url)
-          .attr('download', filename);
-
+      // Automatically download
       Syme.FileManager.saveToDisk(url, filename);
 
-      progress.remove();
+      // Change link status (CSS THIS PLEASE)
+      $link
+        .html('<i class="icon-arrow-down"></i>&nbsp;Download')
+        .removeClass('decrypting')
+        .data('decrypting', false);
 
     });
-
 
   });
 
