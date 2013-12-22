@@ -54,7 +54,6 @@ Syme.Binders.add('settings', { main: function(){
   $('form#change-password')
 
     // 1. Validator
-
     .ndbValidator({
       showErrors: function (input, errors) {
 
@@ -113,7 +112,6 @@ Syme.Binders.add('settings', { main: function(){
     })
 
     // 2. Password strength indicator
-
     .on('input', 'input[name="new_password"]', function () {
 
       var val         = $(this).val(),
@@ -137,7 +135,6 @@ Syme.Binders.add('settings', { main: function(){
     })
 
     // 3. Disable / enable submit
-
     .on('input', 'input', function() {
 
       var areMinLength = $('#change-password input[type="password"]')
@@ -148,6 +145,47 @@ Syme.Binders.add('settings', { main: function(){
       ]('disabled');
 
     });
+
+  // Change password submitting
+  $('#settings').on('submit', '#change-password', function(e){
+
+    var $this = $(this);
+
+    // Lock form and show spinner
+    if(!!$this.data('active')) return false; $this.data('active', true);
+    $('#change-password-button').addClass('active');
+
+    /*  @LOUIS: REPLACE THIS DUMMY FUNCTION */
+    var checkIfCurrentPassword = function(pass, fail){ pass(); };
+
+    // Check inputted 'current password'
+    checkIfCurrentPassword(function(){
+
+      var new_password = $('input[name="new_password"]', $this).val();
+
+      // Change password
+      Syme.Auth.changePassword(new_password, function(user){
+
+        // Show password changed message
+        Alert.show( Syme.Locales.account.settings.messages.password_changed_explanation, {
+          title: Syme.Locales.account.settings.messages.password_changed,
+          onhide: function(){
+
+            // Softly disconnect user
+            Syme.Auth.disconnect();
+
+          }
+        });
+
+      });
+
+    }, function(){
+
+      console.log('CURRENT PASSWORD FAIL');
+
+    });
+
+  });
 
   // 'Delete account' form
   $('#delete-account').submit(function(e){

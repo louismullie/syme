@@ -97,7 +97,9 @@ Syme.Locales = {
 
       messages: {
         delete_account: "<b>Warning.</b> Deleting your account is irreversible. Doing so will delete all data associated to your account, including all your posts and every group you have created.",
-        delete_account_confirm: "Type <strong class=\"warning\">delete</strong> to delete your account."
+        delete_account_confirm: "Type <strong class=\"warning\">delete</strong> to delete your account.",
+        password_changed: "Password changed",
+        password_changed_explanation: "Your password has been changed. You will now have to login with your new credentials."
       }
 
     },

@@ -41,7 +41,7 @@
         %a#change-password-button.btn.btn-success.disabled{ href: '#', role: 'submit' }
           %span.default {{t "account.settings.buttons.change_password"}}
           %span.active
-            {{t "account.settings.buttons.save"}}
+            {{t "account.settings.buttons.saving"}}
             %i.icon-spinner.icon-spin
 
       %h3 {{t "account.settings.labels.delete_account"}}
