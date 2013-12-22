@@ -83,8 +83,9 @@ Syme.Locales = {
       },
 
       placeholders: {
+        current_password: "Current password",
         new_password: "New password",
-        new_password_confirm: "Confirm password"
+        new_password_confirm: "Confirm new password"
       },
 
       buttons: {

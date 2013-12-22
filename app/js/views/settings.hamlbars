@@ -23,7 +23,12 @@
         .validation-container
           .input-text-icon
             %i.icon-lock
-            %input{ type: 'password', name: 'new_password', placeholder: '{{t "account.settings.placeholders.new_password"}}', minlength: 8, :'data-validate-password-strength' => 2, :'data-validate-persistent' => 'true' }
+            %input{ type: 'password', name: 'current_password', placeholder: '{{t "account.settings.placeholders.current_password"}}' }
+
+        .validation-container
+          .input-text-icon
+            %i.icon-lock
+            %input{ type: 'password', name: 'new_password', placeholder: '{{t "account.settings.placeholders.new_password"}}', minlength: 8, :'data-validate-password-strength' => 2 }
 
             #password-score.validation-append.hidden
 
@@ -33,23 +38,11 @@
             %input{ type: 'password', name: 'new_password_confirm', placeholder: '{{t "account.settings.placeholders.new_password_confirm"}}', :'data-validate-equals-to' => 'new_password' }
 
         %input{ type: 'submit' }
-        %a#change-name-button.btn.btn-success.disabled{ href: '#', role: 'submit' }
+        %a#change-password-button.btn.btn-success.disabled{ href: '#', role: 'submit' }
           %span.default {{t "account.settings.buttons.change_password"}}
           %span.active
             {{t "account.settings.buttons.save"}}
             %i.icon-spinner.icon-spin
-
-      //%h3 Your email
-      //
-      //%form#change-email{ method: 'post' }
-      //  %input{ type: 'text', name: 'email', placeholder: '{{email}}', autocomplete: 'off', autocorrect: 'off', autocapitalize: 'off', spellcheck: 'false' }
-      //
-      //  %input{ type: 'submit' }
-      //  %a#change-email-button.btn.btn-success.disabled{ href: '#', role: 'submit' }
-      //    %span.default Save
-      //    %span.active
-      //      Saving
-      //      %i.icon-spinner.icon-spin
 
       %h3 {{t "account.settings.labels.delete_account"}}
 
