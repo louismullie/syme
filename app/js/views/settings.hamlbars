@@ -25,14 +25,14 @@
             %i.icon-lock
             %input{ type: 'password', name: 'current_password', placeholder: '{{t "account.settings.placeholders.current_password"}}' }
 
-        .validation-container
+        .validation-container.hidden
           .input-text-icon
             %i.icon-lock
             %input{ type: 'password', name: 'new_password', placeholder: '{{t "account.settings.placeholders.new_password"}}', minlength: 8, :'data-validate-password-strength' => 2 }
 
             #password-score.validation-append.hidden
 
-        .validation-container
+        .validation-container.hidden
           .input-text-icon
             %i.icon-lock
             %input{ type: 'password', name: 'new_password_confirm', placeholder: '{{t "account.settings.placeholders.new_password_confirm"}}', :'data-validate-equals-to' => 'new_password' }

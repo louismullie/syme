@@ -144,6 +144,10 @@ Syme.Binders.add('settings', { main: function(){
         _.every(areMinLength) ? 'removeClass' : 'addClass'
       ]('disabled');
 
+    })
+
+    .on('focus', 'input[name="current_password"]', function(){
+      $('#change-password .validation-container').removeClass('hidden');
     });
 
   // Change password submitting
