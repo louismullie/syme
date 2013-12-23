@@ -198,4 +198,10 @@ end
 
 def send_activity_email(user)
   
+  subject = "New group activity on Syme"
+
+  message = email_template(:send_activity_email, user.email, {})
+
+  send_email_to(user.email, subject, message)
+
 end

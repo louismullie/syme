@@ -3,16 +3,16 @@ require './config/mongoid'
 require './models/user'
 
 EMAIL_SALT = '"a$$#!%@&Fe39n#?*4n4C$ni'
+INFINITY = 999999999999
+
 require './helpers/email'
 
 settings.environment = :production
 
 scheduler = Rufus::Scheduler.new
 
-one_day = 60 * 60 * 24
-
 def less_than(&block)
-  { "$lte" => block.call }
+  return -> { { "$lte" => yield } }
 end
 
 # 1) 24h / 24h
@@ -20,19 +20,27 @@ end
 # 3) 24h / 48h
 # 4) 24h / 48h
 
+def one_day
+  60 * 60 * 24
+end
+
 Emails = {
   
   confirm_account_reminder: {
     
     type: User,
     
-    selector: {
-      confirmed: false,
-      created_at: less_than { Time.now - 30 }
+    selector: { confirmed: false },
+    
+    time_selector: {
+      
+      field: :created_at,
+      time: less_than { Time.now - one_day }
+        
     },
     
-    threshold: -> { Time.now - 10 },
-    max_times: 2
+    threshold: one_day,
+    max_tries: 3,
     
     template: 'send_confirm_email'
     
@@ -42,13 +50,19 @@ Emails = {
     
     type: User,
     
-    selector: {
-      confirmed: true,
-      last_seen: less_than { Time.now - 30 }
+    selector: { confirmed: true },
+    
+    time_selector: {
+      
+      field: :last_seen,
+      time: less_than { (Time.now - one_day).to_datetime }
+        
     },
+    
+    block_selector: ->(user) { user.notifications.size > 0 },
        
-    threshold: -> { Time.now - 10 },
-    max_times: 2
+    threshold: one_day,
+    max_tries: INFINITY,
     
     template: 'send_activity_email'
     
@@ -58,13 +72,17 @@ Emails = {
     
     type: Invitation,
     
-    selector: {
-      state: 1,
-      created_at: less_than { Time.now - 30 }
+    selector: { state: 1 },
+    
+    time_selector: {
+      
+      field: :created_at,
+      time: less_than { Time.now - one_day }
+        
     },
     
-    threshold: -> { Time.now - 10 },
-    max_times: 2
+    threshold: one_day,
+    max_tries: 3,
     
     template: 'send_invite_reminder'
     
@@ -74,13 +92,17 @@ Emails = {
     
     type: Invitation,
     
-    selector: {
-      state: 1,
-      created_at: less_than { Time.now - 30}
+    selector: { state: 2 },
+    
+    time_selector: {
+      
+      field: :created_at,
+      time: less_than { Time.now - one_day }
+        
     },
     
-    threshold: -> { Time.now - 10 },
-    max_times: 2
+    threshold: one_day,
+    max_tries: 3,
     
     template: 'request_confirm'
     
@@ -92,11 +114,19 @@ def send_emails(type)
   
   email = Emails[type].dup
   
-  email[:selector][:created_at] =
-  email[:selector][:created_at].call
+  time_selector = {
+    email[:time_selector][:field] =>
+    email[:time_selector][:time].call
+  }
   
-  objs = email[:type].where(email[:selector])
+  selector = email[:selector].merge(time_selector)
+  objs = email[:type].where(selector)
   
+  if email[:block_selector]
+    objs = objs.select(&email[:block_selector])
+  end
+  
+  puts "#{objs.size} objects for #{selector}"
   
   objs.each do |obj|
     
@@ -106,23 +136,27 @@ def send_emails(type)
     
     last_email_sent = emails_sent[type.to_s]
     
-    puts last_email_sent
+    puts "last email sent: #{last_email_sent}"
     
-    if !last_email_sent || last_email_sent[:time] < email[:threshold].call
+    if !last_email_sent || (last_email_sent['time'] && 
+       (Time.now - last_email_sent['time'] > email[:threshold]))
       
       emails_sent[type.to_s] ||= {}
-      emails_sent[type.to_s][:time] = Time.now
-      emails_sent[type.to_s][:tries] ||= 0
+      emails_sent[type.to_s]['time'] = Time.now
+      emails_sent[type.to_s]['tries'] ||= 0
     
-      next if emails_sent[type.to_s][:tries] > email[:max_tries]
+      if emails_sent[type.to_s]['tries'] >= email[:max_tries]
+        puts "skipping sending email due to max tries"
+        next
+      end
       
+      puts "sending email to #{obj.email}"
       send(email[:template].intern, obj)
       
-      emails_sent[type.to_s][:tries] += 1
+      emails_sent[type.to_s]['tries'] += 1
       
-      obj.emails_sent = emails_sent
-      
-      obj.save!
+      # Use atomic operation to prevent triggering callbacks
+      obj.set :emails_sent, emails_sent
       
     end
   
