@@ -181,7 +181,21 @@ Syme.Binders.add('settings', { main: function(){
 
     }, function(){
 
-      console.log('CURRENT PASSWORD FAIL');
+      // Get the validation container for the current password field
+      var $container = $('input[name="current_password"]', $this)
+        .closest('div.validation-container');
+
+      // Create or get validation message box
+      var $box = $container.find('div.validation-message').length ?
+        $container.find('div.validation-message') :
+        $('<div class="validation-message" />').appendTo($container);
+
+      // Fill message in box
+      $box.html( Syme.Messages.error.settings.not_current_password );
+
+      // Unlock form and hide spinner
+      $this.data('active', false);
+      $('#change-password-button').removeClass('active');
 
     });
 

@@ -32,6 +32,13 @@ Syme.Messages = {
       
     },
     
+
+    settings : {
+
+      not_current_password: 'This is not your current password'
+
+    },
+
     fatal: 'An error has occured. We\'ve been notified ' +
            'and we\'ll address this as soon as possible.',
     
