@@ -35,6 +35,8 @@ Syme.Crypto = function (workerUrl) {
     // Encryption-related methods
     encryptMessage: false,
     decryptMessage: false,
+    encryptMessageKeys: false,
+    decryptMessageKey: false,
     decrypt: false
     
   };
@@ -405,7 +407,11 @@ Syme.Crypto = function (workerUrl) {
   
    // deriveKeys(password, salt, bits, derivedKeysCb)
    this.deriveKeys = function() {
-     this.executeJob('deriveKeys', arguments);
+     if (Syme.Compatibility.inPhoneGap()) {
+       this.Native.deriveKeys.apply(this.Native, arguments);
+     } else {
+       this.executeJob('deriveKeys', arguments);
+     }
    };
   
   /*
@@ -426,18 +432,26 @@ Syme.Crypto = function (workerUrl) {
    */
    
   // encryptMessage(keylistId, message, encryptedMessageCb)
-  this.encryptMessage = function(encryptMessage) {
-    this.executeJob('encryptMessage', arguments);
+  this.encryptMessage = function() {
+    if (Syme.Compatibility.inPhoneGap()) {
+      Syme.Crypto.Native.encryptMessage.apply(Syme.Crypto.Native, arguments);
+    } else {
+      this.executeJob('encryptMessage', arguments);
+    }
   };
 
+  this.encryptMessageKeys = function () {
+    this.executeJob('encryptMessageKeys', arguments);
+  };
+  
   // decryptMessage(keylistId, text, decryptedMessageCb)  /* TO REFACTOR */
-  this.decryptMessage = function (keylistId, text, decryptedMessageCb) {
+  this.decryptMessage = function (keylistId, encryptedText, decryptedMessageCb) {
 
     // Check that keys exist for current user.
     var userId  = Syme.CurrentSession.getUserId(),
-        message = JSON.parse($.base64.decode(text)),
+        message = JSON.parse($.base64.decode(encryptedText)),
         hash    = sjcl.codec.hex.fromBits(
-                  sjcl.hash.sha256.hash(text));
+                  sjcl.hash.sha256.hash(encryptedText));
 
     // If cache fails, rescue and download file
     if (Syme.Cache.contains(hash)) {
@@ -450,27 +464,39 @@ Syme.Crypto = function (workerUrl) {
     if (message.keys[userId] == undefined)
       decryptedMessageCb('There was a problem with the decryption');
 
-    Syme.Crypto._executeJob(false, {
-
-      method: 'decryptMessage',
-      params: [keylistId, text]
-
-    }, function(decryptedText){
+    var callback = function(decryptedText){
 
       // Retrieve the new key and reload if key is missing.
       if (decryptedText.error && decryptedText.error.missingKey)
         return _this.getMissingKey( decryptedText.error.missingKey );
 
       Syme.Cache.store(hash, decryptedText);
-      
+
       decryptedMessageCb(decryptedText);
 
-    });
+    };
+    
+    if (Syme.Compatibility.inPhoneGap()) {
+
+      var args = [keylistId, encryptedText, callback];
+      Syme.Crypto.Native.decryptMessage.apply(Syme.Crypto.Native, args);
+      
+    } else {
+      
+      Syme.Crypto._executeJob(false, {
+
+        method: 'decryptMessage',
+        params: [keylistId, encryptedText]
+
+      }, callback);
+      
+    }
 
   };
   
   // decrypt(key, content, callback)
   this.decrypt = function () { this.executeJob('decrypt', arguments); };
+  this.decryptMessageKey = function () { this.executeJob('decryptMessageKey', arguments); };
   
   this.getMissingKey = function (missingKey) {
 
@@ -511,3 +537,99 @@ Syme.Crypto = function (workerUrl) {
 
 // Initialize an instance of Crypto
 Syme.Crypto = new Syme.Crypto(Syme.Settings.appWorkerPath);
+
+Syme.Crypto.Native = {
+  
+	deriveKeys: function (data, salt, bits, kdf, callback) {
+
+    Syme.Crypto.Native.scrypt(data, salt, function (key) {
+      
+      var key1 = key.slice(0, key.length / 2);
+      var key2 = key.slice(key.length / 2, key.length);
+
+      callback({ key1: key1, key2: key2 });
+      
+    });
+    
+  },
+  
+  decryptMessage: function (keylistId, messageTxt64, callback) {
+    
+    // Base-64 decode and JSON-parse the received message.
+    var messageTxt = atob(messageTxt64);
+    var messageJson = JSON.parse(messageTxt);
+    
+    var encMessage = messageJson.message;
+    
+    if (!encMessage || encMessage == '')
+      throw 'Message is missing.';
+      
+    var encSymKeyTxt64 = messageJson.keys[
+      Syme.CurrentSession.getUserId()];
+    
+    if (!encSymKeyTxt64 || encSymKeyTxt64 == '') {
+      return 'Key is missing.';
+    }
+    
+    Syme.Crypto.decryptMessageKey(keylistId, encSymKeyTxt64, function (decryptedSymKey) {
+      
+      if (decryptedSymKey.missingKey) callback({ error: decryptedSymKey });
+      
+      var decryptedSymKey = sjcl.codec.base64.fromBits(decryptedSymKey);
+      
+      Syme.Crypto.Native.sjcl_decrypt(decryptedSymKey, messageJson.message, callback);
+      
+    });
+    
+
+  },
+  
+  encryptMessage: function (keylistId, message, callback) {
+    
+    Syme.Crypto.generateRandomHex(256, function (symKey) {
+      
+      Syme.Crypto.encryptMessageKeys(keylistId, message, symKey, function (encryptedKeys) {
+
+        Syme.Crypto.Native.sjcl_encrypt(symKey, message, function (encryptedMessage) {
+
+          var messageJson = { message: encryptedMessage, keys: encryptedKeys  };
+
+          callback(btoa(JSON.stringify(messageJson)));
+
+        });
+
+
+      });
+    
+    });
+  
+  },
+  
+  sjcl_encrypt: function(key, data, callback) {
+    cordova.exec(callback,
+      function(err) { console.log("ERR:" + err); },
+      "NativeCrypto",
+      "sjcl_encrypt",
+      [key, data]
+    );
+  },
+
+  sjcl_decrypt: function(key, data, callback) {
+    cordova.exec(callback,
+      function(err) { console.log("ERR:" + err); },
+      "NativeCrypto",
+      "sjcl_decrypt",
+      [key, data]
+    );
+  },
+
+  scrypt: function(password, salt, callback) {
+    cordova.exec(callback,
+      function(err) { console.log("ERR:" + err); },
+      "NativeCrypto",
+      "scrypt",
+      [password, salt]
+    );
+  }
+  
+};
