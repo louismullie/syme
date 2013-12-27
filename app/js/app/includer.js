@@ -6,11 +6,7 @@
 
 $(document).ready(function() {
   
-  if(Syme.Compatibility.inPhoneGap()) {
-    document.addEventListener("deviceready", $.onDeviceReady, false);
-  } else {
-    $.onDeviceReady();
-  }
+  $.onDeviceReady();
   
 });
 
