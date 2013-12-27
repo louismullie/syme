@@ -16,7 +16,7 @@ Syme.Compatibility = {
   },
   
   inPhoneGap: function() {
-    return typeof(PhoneGap) != 'undefined';
+    return typeof(cordova) != 'undefined';
   }
 
 };
