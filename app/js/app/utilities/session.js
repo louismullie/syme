@@ -25,7 +25,9 @@ Syme.Session = function (csrfToken) {
     
     var version;
     
-    //Syme.Binders.bind('global', false);
+    if (Syme.Compatibility.inPhoneGap()) {
+      Syme.Binders.bind('global', false);
+    }
     
     // Get the application version.
     if (Syme.Compatibility.inChromeExtension()) {
