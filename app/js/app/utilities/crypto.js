@@ -574,9 +574,6 @@ Syme.Crypto.Native = {
     Syme.Crypto.decryptMessageKey(keylistId, encSymKeyTxt64, function (decryptedSymKey) {
       
       if (decryptedSymKey.missingKey) callback({ error: decryptedSymKey });
-      
-      var decryptedSymKey = sjcl.codec.base64.fromBits(decryptedSymKey);
-      
       Syme.Crypto.Native.sjcl_decrypt(decryptedSymKey, messageJson.message, callback);
       
     });
