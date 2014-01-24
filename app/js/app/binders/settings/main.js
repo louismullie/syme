@@ -153,22 +153,19 @@ Syme.Binders.add('settings', { main: function(){
   // Change password submitting
   $('#settings').on('submit', '#change-password', function(e){
 
-    var $this = $(this);
+    var $this             = $(this),
+        current_password  = $('input[name="current_password"]', $this).val(),
+        new_password      = $('input[name="new_password"]', $this).val();
 
     // Lock form and show spinner
     if(!!$this.data('active')) return false; $this.data('active', true);
     $('#change-password-button').addClass('active');
 
-    /*  @LOUIS: REPLACE THIS DUMMY FUNCTION */
-    var checkIfCurrentPassword = function(pass, fail){ pass(); };
+    // Change password
+    Syme.Auth.changePassword(current_password, new_password,
 
-    // Check inputted 'current password'
-    checkIfCurrentPassword(function(){
-
-      var new_password = $('input[name="new_password"]', $this).val();
-
-      // Change password
-      Syme.Auth.changePassword(new_password, function(user){
+      // Succeeded authentication with current password
+      function (user){
 
         // Show password changed message
         Alert.show( Syme.Locales.account.settings.messages.password_changed_explanation, {
@@ -181,27 +178,30 @@ Syme.Binders.add('settings', { main: function(){
           }
         });
 
-      });
+      },
 
-    }, function(){
+      // Failed authentication with current password
+      function () {
 
-      // Get the validation container for the current password field
-      var $container = $('input[name="current_password"]', $this)
-        .closest('div.validation-container');
+        // Get the validation container for the current password field
+        var $container = $('input[name="current_password"]', $this)
+          .closest('div.validation-container');
 
-      // Create or get validation message box
-      var $box = $container.find('div.validation-message').length ?
-        $container.find('div.validation-message') :
-        $('<div class="validation-message" />').appendTo($container);
+        // Create or get validation message box
+        var $box = $container.find('div.validation-message').length ?
+          $container.find('div.validation-message') :
+          $('<div class="validation-message" />').appendTo($container);
 
-      // Fill message in box
-      $box.html( Syme.Messages.error.settings.not_current_password );
+        // Fill message in box
+        $box.html( Syme.Messages.error.settings.not_current_password );
 
-      // Unlock form and hide spinner
-      $this.data('active', false);
-      $('#change-password-button').removeClass('active');
+        // Unlock form and hide spinner
+        $this.data('active', false);
+        $('#change-password-button').removeClass('active');
 
-    });
+      }
+
+    );
 
   });
 

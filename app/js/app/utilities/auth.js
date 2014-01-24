@@ -206,27 +206,43 @@ Syme.Auth = {
 
   },
 
-  changePassword: function (password, changedPasswordCb) {
-    
+  changePassword: function (current_password, new_password, successCb, failCb) {
+
     var user = Syme.CurrentSession.getUser(),
         email = user.get('email');
-    
-    user.deriveKeys(password, 'scrypt', function (keys, salt) {
-      
-      var authenticationKey = keys.authenticationKey;
-      
-      user.createVerifier(email, authenticationKey, salt, false,
-        
-        function () {
-        
-          var keyfileKey = keys.keyfileKey;
-          
-          user.updateKeyfileKey(keyfileKey, changedPasswordCb);
-        
-      })
-      
-    });
-    
+
+    // Authentication version 2
+    var remember = false, bits = 512, group = 2048, hash = 'sha-256', kdf = 'scrypt';
+
+    // Try a fake login with current password
+    Syme.Auth.tryLogin(email, current_password, remember, bits, group, hash, kdf,
+
+      // On success, change it
+      function (keyfileKey, csrfToken, sessionKey) {
+
+        user.deriveKeys(new_password, 'scrypt', function (keys, salt) {
+
+          var authenticationKey = keys.authenticationKey;
+
+          user.createVerifier(email, authenticationKey, salt, false,
+
+            function () {
+
+              var keyfileKey = keys.keyfileKey;
+
+              user.updateKeyfileKey(keyfileKey, successCb);
+
+          })
+
+        });
+
+      },
+
+      // On failure, callback
+      failCb
+
+    );
+
   },
  
   /*
