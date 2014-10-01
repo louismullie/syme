@@ -41,3 +41,9 @@ foreman start
 cap deploy:setup
 cap deploy
 ```
+
+##Authors
+
+- **Christophe Marois**[@chris_marois](https://twitter.com/chris_marois)
+- **Jonathan Hershon** [@jonhershon](https://twitter.com/jonhershon)
+- **Louis Mullie**[@louismullie](https://twitter.com/louismullie)
